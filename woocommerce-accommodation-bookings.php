@@ -25,12 +25,14 @@ if ( ! function_exists( 'woothemes_queue_update' ) ) {
 	require_once( 'woo-includes/woo-functions.php' );
 }
 
+require_once( 'includes/class-wc-accommodation-dependencies.php' );
+
 /**
  * Plugin updates
  */
 // woothemes_queue_update( plugin_basename( __FILE__ ), '--', '--' );
 
-if ( is_woocommerce_active() ) {
+if ( is_woocommerce_active() && WC_Accommodation_Dependencies::dependencies_are_met() ) {
 
 /**
  * WC Accommodation Bookings class
