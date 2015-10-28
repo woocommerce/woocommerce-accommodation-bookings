@@ -49,7 +49,7 @@ class WC_Accommodation_Bookings {
 		define( 'WC_ACCOMMODATION_BOOKINGS_MAIN_FILE', __FILE__ );
 
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
-		add_action( 'woocommerce_loaded', array( $this, 'includes' ) );
+		add_action( 'woocommerce_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
 		if ( is_admin() ) {
@@ -98,12 +98,14 @@ class WC_Accommodation_Bookings {
 	 * Load Classes
 	 */
 	public function includes() {
+		include( 'includes/class-wc-product-accommodation-booking.php' );
 	}
 
 	/**
 	 * Include admin
 	 */
 	public function admin_includes() {
+		include( 'includes/admin/class-wc-accommodation-booking-admin.php' );
 	}
 
 
