@@ -20,6 +20,8 @@ class WC_Accommodation_Booking_Admin {
 		add_action( 'woocommerce_product_write_panels', array( $this, 'panels' ) );
 		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'general_product_data' ) );
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'hide_shipping_tab' ) );
+
+		add_action( 'woocommerce_process_product_meta', array( $this,'save_product_data' ), 25 );
 	}
 
 	/**
@@ -75,10 +77,67 @@ class WC_Accommodation_Booking_Admin {
 	 */
 	public function hide_shipping_tab( $tabs ) {
 		$tabs['shipping']['class'][] = 'hide_if_accommodation_booking';
-		error_log( print_r ( $tabs, 1 ) );
 		return $tabs;
 	}
 
+	/**
+	 * Save booking / accommodation data for the product
+	 *
+	 * @param  int $post_id
+	 */
+	public function save_product_data( $post_id ) {
+		global $wpdb;
+
+		$product_type         = empty( $_POST['product-type'] ) ? 'simple' : sanitize_title( stripslashes( $_POST['product-type'] ) );
+		$has_additional_costs = false;
+
+		if ( 'accommodation-booking' !== $product_type ) {
+			return;
+		}
+
+		$meta_to_save = array(
+			'_wc_accommodation_booking_calendar_display_mode'      => '',
+			'_wc_accommodation_booking_requires_confirmation'      => 'yesno',
+			'_wc_accommodation_booking_user_can_cancel'            => '',
+			'_wc_accommodation_booking_cancel_limit'               => 'int',
+			'_wc_accommodation_booking_cancel_limit_unit'          => '',
+		);
+
+		foreach ( $meta_to_save as $meta_key => $sanitize ) {
+			$value = ! empty( $_POST[ $meta_key ] ) ? $_POST[ $meta_key ] : '';
+			switch ( $sanitize ) {
+				case 'int' :
+					$value = $value ? absint( $value ) : '';
+					break;
+				case 'float' :
+					$value = $value ? floatval( $value ) : '';
+					break;
+				case 'yesno' :
+					$value = $value == 'yes' ? 'yes' : 'no';
+					break;
+				case 'issetyesno' :
+					$value = $value ? 'yes' : 'no';
+					break;
+				case 'max_date' :
+					$value = absint( $value );
+					if ( $value == 0 ) {
+						$value = 1;
+					}
+					break;
+				default :
+					$value = sanitize_text_field( $value );
+			}
+			update_post_meta( $post_id, $meta_key, $value );
+		}
+
+		update_post_meta( $post_id, '_regular_price', '' );
+		update_post_meta( $post_id, '_sale_price', '' );
+		update_post_meta( $post_id, '_manage_stock', 'no' );
+
+		// Set price so filters work - using get_base_cost()
+		$product = get_product( $post_id );
+		update_post_meta( $post_id, '_price', $product->get_base_cost() );
+	}
 
 }
 

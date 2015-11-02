@@ -38,4 +38,8 @@
 		</select>
 		<span class="description"><?php _e( 'before the start date.', 'woocommerce-accommodation-bookings' ); ?></span>
 	</p>
+
+	<script type="text/javascript">
+		jQuery( '._tax_status_field' ).closest( '.show_if_simple' ).addClass( 'show_if_accommodation_booking' );
+	</script>
 </div>
