@@ -40,7 +40,7 @@ class WC_Accommodation_Booking_Admin {
 	 * @return array
 	 */
 	public function product_type_options( $options ) {
-		$options['virtual']['wrapper_class'] .= ' show_if_accommodation_booking';
+		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation_booking';
 		return $options;
 	}
 
@@ -60,6 +60,7 @@ class WC_Accommodation_Booking_Admin {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
+		wp_enqueue_script( 'wc_bookings_writepanel_js', WC_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_BOOKINGS_VERSION, true );
 	}
 
 	/**
@@ -110,6 +111,12 @@ class WC_Accommodation_Booking_Admin {
 			'_wc_accommodation_booking_user_can_cancel'            => '',
 			'_wc_accommodation_booking_cancel_limit'               => 'int',
 			'_wc_accommodation_booking_cancel_limit_unit'          => '',
+			'_wc_accommodation_booking_max_date'                   => 'max_date',
+			'_wc_accommodation_booking_max_date_unit'              => 'max_date_unit',
+			'_wc_accommodation_booking_min_date'                   => 'int',
+			'_wc_accommodation_booking_min_date_unit'              => '',
+			'_wc_accommodation_booking_qty'                        => 'int',
+			'_wc_accommodation_booking_cost'                       => 'float',
 		);
 
 		foreach ( $meta_to_save as $meta_key => $sanitize ) {
@@ -138,6 +145,64 @@ class WC_Accommodation_Booking_Admin {
 			}
 			update_post_meta( $post_id, $meta_key, $value );
 		}
+
+		// Availability
+		$availability = array();
+		$row_size     = isset( $_POST[ 'wc_accommodation_booking_availability_type' ] ) ? sizeof( $_POST[ 'wc_accommodation_booking_availability_type' ] ) : 0;
+		for ( $i = 0; $i < $row_size; $i ++ ) {
+			$availability[ $i ]['type']     = wc_clean( $_POST[ 'wc_accommodation_booking_availability_type' ][ $i ] );
+			$availability[ $i ]['bookable'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_bookable' ][ $i ] );
+			$availability[ $i ]['priority'] = intval( $_POST[ 'wc_accommodation_booking_availability_priority' ][ $i ] );
+
+			switch ( $availability[ $i ]['type'] ) {
+				case 'custom' :
+					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_date' ][ $i ] );
+					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_date' ][ $i ] );
+				break;
+				case 'months' :
+					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_month' ][ $i ] );
+					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_month' ][ $i ] );
+				break;
+				case 'weeks' :
+					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_week' ][ $i ] );
+					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_week' ][ $i ] );
+				break;
+				case 'days' :
+					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_day_of_week' ][ $i ] );
+					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_day_of_week' ][ $i ] );
+				break;
+			}
+		}
+		update_post_meta( $post_id, '_wc_accommodation_booking_availability', $availability );
+
+		// Rates
+		$pricing = array();
+		$row_size     = isset( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) ? sizeof( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) : 0;
+		for ( $i = 0; $i < $row_size; $i ++ ) {
+			$pricing[ $i ]['type']          = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_type' ][ $i ] );
+			$pricing[ $i ]['cost']          = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_cost' ][ $i ] );
+
+			switch ( $pricing[ $i ]['type'] ) {
+				case 'custom' :
+					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_date' ][ $i ] );
+					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_date' ][ $i ] );
+				break;
+				case 'months' :
+					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_month' ][ $i ] );
+					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_month' ][ $i ] );
+				break;
+				case 'weeks' :
+					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_week' ][ $i ] );
+					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_week' ][ $i ] );
+				break;
+				case 'days' :
+					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_day_of_week' ][ $i ] );
+					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_day_of_week' ][ $i ] );
+				break;
+			}
+		}
+
+		update_post_meta( $post_id, '_wc_accommodation_booking_pricing', $pricing );
 
 		update_post_meta( $post_id, '_regular_price', '' );
 		update_post_meta( $post_id, '_sale_price', '' );
