@@ -19,7 +19,9 @@ class WC_Accommodation_Booking_Admin {
 
 		add_action( 'woocommerce_product_write_panels', array( $this, 'panels' ) );
 		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'general_product_data' ) );
+
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'hide_shipping_tab' ) );
+		add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'add_tabs' ), 5 );
 
 		add_action( 'woocommerce_process_product_meta', array( $this,'save_product_data' ), 25 );
 	}
@@ -68,8 +70,8 @@ class WC_Accommodation_Booking_Admin {
 
 		$post_id = $post->ID;
 
-		//wp_enqueue_script( 'wc_bookings_writepanel_js' );
-		//include( 'views/html-booking-persons.php' );
+		include( 'views/html-accommodation-booking-rates.php' );
+		include( 'views/html-accommodation-booking-availability.php' );
 	}
 
 	/**
@@ -78,6 +80,13 @@ class WC_Accommodation_Booking_Admin {
 	public function hide_shipping_tab( $tabs ) {
 		$tabs['shipping']['class'][] = 'hide_if_accommodation_booking';
 		return $tabs;
+	}
+
+	/**
+	 * Shows any tabs related to accommodations.
+	 */
+	public function add_tabs() {
+		include( 'views/html-accommodation-booking-tabs.php' );
 	}
 
 	/**
