@@ -9,7 +9,7 @@
 			$min_date_unit = get_post_meta( $post_id, '_wc_accommodation_booking_min_date_unit', true );
 		?>
 		<p class="form-field">
-			<label for="_wc_accommodation_booking_min_date"><?php _e( 'Requiring booking', 'woocommerce-accommodation-bookings' ); ?></label>
+			<label for="_wc_accommodation_booking_min_date"><?php _e( 'Bookings can be made starting', 'woocommerce-accommodation-bookings' ); ?></label>
 			<input type="number" name="_wc_accommodation_booking_min_date" id="_wc_accommodation_booking_min_date" value="<?php echo esc_attr( $min_date ); ?>" step="1" min="0" style="margin-right: 7px; width: 4em;">
 			<select name="_wc_accommodation_booking_min_date_unit" id="_wc_accommodation_booking_min_date_unit" class="short" style="margin-right: 7px;">
 				<option value="month" <?php selected( $min_date_unit, 'month' ); ?>><?php _e( 'Month(s)', 'woocommerce-accommodation-bookings' ); ?></option>
@@ -43,8 +43,8 @@
 					<tr>
 						<th class="sort" width="1%">&nbsp;</th>
 						<th><?php _e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'From', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'To', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php _e( 'Starting', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php _e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
 						<th><?php _e( 'Bookable', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'If not bookable, users won\'t be able to choose this room.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
 						<th><?php _e( 'Priority', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php esc_html_e( 'The lower the priority number, the earlier this rule gets applied. By default, global rules take priority over product rules which take priority over resource rules. By using priority numbers you can execute rules in different orders.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
 						<th class="remove" width="1%">&nbsp;</th>

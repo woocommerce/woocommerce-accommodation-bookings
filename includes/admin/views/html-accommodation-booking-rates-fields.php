@@ -40,10 +40,10 @@
 	<td>
 		<div class="select wc_booking_availability_type">
 			<select name="wc_accommodation_booking_pricing_type[]">
-				<option value="custom" <?php selected( $rate['type'], 'custom' ); ?>><?php _e( 'Custom date range', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="custom" <?php selected( $rate['type'], 'custom' ); ?>><?php _e( 'Range of certain nights', 'woocommerce-accommodation-bookings' ); ?></option>
 				<option value="months" <?php selected( $rate['type'], 'months' ); ?>><?php _e( 'Range of months', 'woocommerce-accommodation-bookings' ); ?></option>
 				<option value="weeks" <?php selected( $rate['type'], 'weeks' ); ?>><?php _e( 'Range of weeks', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="days" <?php selected( $rate['type'], 'days' ); ?>><?php _e( 'Range of nights', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="days" <?php selected( $rate['type'], 'days' ); ?>><?php _e( 'Range of nights during the week', 'woocommerce-accommodation-bookings' ); ?></option>
 			</select>
 		</div>
 	</td>

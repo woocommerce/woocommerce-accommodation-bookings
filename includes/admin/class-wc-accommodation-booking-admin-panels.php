@@ -117,6 +117,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 			'_wc_accommodation_booking_min_date_unit'              => '',
 			'_wc_accommodation_booking_qty'                        => 'int',
 			'_wc_accommodation_booking_cost'                       => 'float',
+			'_wc_accommodation_booking_min_duration'               => 'int',
+			'_wc_accommodation_booking_max_duration'               => 'int',
 		);
 
 		foreach ( $meta_to_save as $meta_key => $sanitize ) {
