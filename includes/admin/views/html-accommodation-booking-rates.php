@@ -13,7 +13,7 @@
 						<th class="sort" width="1%">&nbsp;</th>
 						<th><?php _e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
 						<th><?php _e( 'Starting', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>>&nbsp;<a class="tips" data-tip="<?php _e( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
+						<th><?php _e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
 						<th><?php _e( 'Cost', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'Cost for this time period.', 'woocommerce-accommodation-bookings' ); ?>" colspan='2'>[?]</a></th>
 						<th class="remove" width="1%">&nbsp;</th>
 					</tr>
