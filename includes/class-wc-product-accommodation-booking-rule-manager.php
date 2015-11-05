@@ -1,1 +1,0 @@
-WC_Product_Accommodation_Booking_Rule_Manager

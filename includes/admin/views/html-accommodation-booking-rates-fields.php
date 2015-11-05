@@ -104,7 +104,7 @@
 		</div>
 	</td>
 	<td>
-		<input type="number" step="0.01" name="wc_accommodation_booking_pricing_base_cost[]" value="<?php if ( ! empty( $rate['cost'] ) ) echo $rate['cost']; ?>" placeholder="0" />
+		<input type="number" step="0.01" name="wc_accommodation_booking_pricing_block_cost[]" value="<?php if ( ! empty( $rate['override_block'] ) ) echo $rate['override_block']; ?>" placeholder="0" />
 	</td>
 	<td class="remove">&nbsp;</td>
 </tr>
