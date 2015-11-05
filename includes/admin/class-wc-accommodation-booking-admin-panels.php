@@ -116,7 +116,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			'_wc_accommodation_booking_min_date'                   => 'int',
 			'_wc_accommodation_booking_min_date_unit'              => '',
 			'_wc_accommodation_booking_qty'                        => 'int',
-			'_wc_accommodation_booking_cost'                       => 'float',
+			'_wc_accommodation_booking_base_cost'                  => 'float',
 			'_wc_accommodation_booking_min_duration'               => 'int',
 			'_wc_accommodation_booking_max_duration'               => 'int',
 		);
@@ -145,6 +145,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 				default :
 					$value = sanitize_text_field( $value );
 			}
+
+			$meta_key = str_replace( '_wc_accommodation_booking_', '_wc_booking_', $meta_key );
 			update_post_meta( $post_id, $meta_key, $value );
 		}
 
@@ -175,14 +177,18 @@ class WC_Accommodation_Booking_Admin_Panels {
 				break;
 			}
 		}
-		update_post_meta( $post_id, '_wc_accommodation_booking_availability', $availability );
+		update_post_meta( $post_id, '_wc_booking_availability', $availability );
 
 		// Rates
 		$pricing = array();
 		$row_size     = isset( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) ? sizeof( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) : 0;
 		for ( $i = 0; $i < $row_size; $i ++ ) {
 			$pricing[ $i ]['type']          = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_type' ][ $i ] );
-			$pricing[ $i ]['cost']          = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_cost' ][ $i ] );
+			$pricing[ $i ]['base_cost']     = 0;
+			$pricing[ $i ]['base_modifier'] = 'equals';
+
+			$pricing[ $i ]['cost'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_base_cost' ][ $i ] );
+			$pricing[ $i ]['modifier'] = 'equals';
 
 			switch ( $pricing[ $i ]['type'] ) {
 				case 'custom' :
@@ -204,7 +210,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			}
 		}
 
-		update_post_meta( $post_id, '_wc_accommodation_booking_pricing', $pricing );
+		update_post_meta( $post_id, '_wc_booking_pricing', $pricing );
 
 		update_post_meta( $post_id, '_regular_price', '' );
 		update_post_meta( $post_id, '_sale_price', '' );

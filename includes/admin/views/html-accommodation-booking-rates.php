@@ -1,6 +1,6 @@
 <div id="accommodation_bookings_rates" class="panel woocommerce_options_panel bookings_extension">
 	<div class="options_group">
-		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_cost', 'label' => __( 'Standard room rate', 'woocommerce-accommodation-bookings' ), 'description' => __( 'Standard cost for booking the room.', 'woocommerce-accommodation-bookings' ), 'value' => get_post_meta( $post_id, '_wc_accommodation_booking_cost', true ), 'type' => 'number', 'desc_tip' => true, 'custom_attributes' => array(
+		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_base_cost', 'label' => __( 'Standard room rate', 'woocommerce-accommodation-bookings' ), 'description' => __( 'Standard cost for booking the room.', 'woocommerce-accommodation-bookings' ), 'value' => get_post_meta( $post_id, '_wc_booking_base_cost', true ), 'type' => 'number', 'desc_tip' => true, 'custom_attributes' => array(
 			'min'   => '',
 			'step' 	=> '0.01'
 		) ) ); ?>
@@ -32,7 +32,7 @@
 				</tfoot>
 				<tbody id="rates_rows">
 					<?php
-						$values = get_post_meta( $post_id, '_wc_accommodation_booking_pricing', true );
+						$values = get_post_meta( $post_id, '_wc_booking_pricing', true );
 						if ( ! empty( $values ) && is_array( $values ) ) {
 							foreach ( $values as $rate ) {
 								include( 'html-accommodation-booking-rates-fields.php' );

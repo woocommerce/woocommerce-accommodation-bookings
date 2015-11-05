@@ -2,8 +2,8 @@
 
 	<?php
 
-		$min_duration = absint( get_post_meta( $post_id, '_wc_accommodation_booking_min_duration', true ) );
-		$max_duration = absint( get_post_meta( $post_id, '_wc_accommodation_booking_max_duration', true ) );
+		$min_duration = absint( get_post_meta( $post_id, '_wc_booking_min_duration', true ) );
+		$max_duration = absint( get_post_meta( $post_id, '_wc_booking_max_duration', true ) );
 
 		woocommerce_wp_text_input( array(
 			'id'                => '_wc_accommodation_booking_min_duration',
@@ -22,7 +22,7 @@
 			'id'                => '_wc_accommodation_booking_max_duration',
 			'label'             => __( 'Maximum number of nights allowed in a booking', 'woocommerce-accommodation-bookings' ),
 			'description'       => __( 'The maximum allowed duration the user can stay.', 'woocommerce-bookings' ),
-			'value'             => ( empty( $max_duration ) ? '' : $max_duration ),
+			'value'             => ( empty( $max_duration ) ? 7 : $max_duration ),
 			'desc_tip'          => true,
 			'type'              => 'number',
 			'custom_attributes' => array(
@@ -35,6 +35,7 @@
 			'id'          => '_wc_accommodation_booking_calendar_display_mode',
 			'label'       => __( 'Calendar display mode', 'woocommerce-accommodation-bookings' ),
 			'description' => __( 'Choose how the calendar is displayed on the booking form.', 'woocommerce-accommodation-bookings' ),
+			'value'       => get_post_meta( $post_id, '_wc_booking_calendar_display_mode', true ),
 			'options'     => array(
 				''               => __( 'Display calendar on click', 'woocommerce-accommodation-bookings' ),
 				'always_visible' => __( 'Calendar always visible', 'woocommerce-accommodation-bookings' )
@@ -46,17 +47,19 @@
 		woocommerce_wp_checkbox( array(
 			'id'          => '_wc_accommodation_booking_requires_confirmation',
 			'label'       => __( 'Requires confirmation?', 'woocommerce-accommodation-bookings' ),
-			'description' => __( 'Check this box if the booking requires admin approval/confirmation. Payment will not be taken during checkout.', 'woocommerce-accommodation-bookings' )
+			'description' => __( 'Check this box if the booking requires admin approval/confirmation. Payment will not be taken during checkout.', 'woocommerce-accommodation-bookings' ),
+			'value'       => get_post_meta( $post_id, '_wc_booking_requires_confirmation', true ),
 		) );
 
 		woocommerce_wp_checkbox( array(
 			'id'          => '_wc_accommodation_booking_user_can_cancel',
 			'label'       => __( 'Can be cancelled?', 'woocommerce-accommodation-bookings' ),
-			'description' => __( 'Check this box if the booking can be cancelled by the customer after it has been purchased. A refund will not be sent automatically.', 'woocommerce-accommodation-bookings' )
+			'description' => __( 'Check this box if the booking can be cancelled by the customer after it has been purchased. A refund will not be sent automatically.', 'woocommerce-accommodation-bookings' ),
+			'value'       => get_post_meta( $post_id, '_wc_booking_user_can_cancel', true ),
 		) );
 
-		$cancel_limit      = max( absint( get_post_meta( $post_id, '_wc_accommodation_booking_cancel_limit', true ) ), 1 );
-		$cancel_limit_unit = get_post_meta( $post_id, '_wc_accommodation_booking_cancel_limit_unit', true );
+		$cancel_limit      = max( absint( get_post_meta( $post_id, '_wc_booking_cancel_limit', true ) ), 1 );
+		$cancel_limit_unit = get_post_meta( $post_id, '_wc_booking_cancel_limit_unit', true );
 	?>
 	<p class="form-field accommodation-booking-cancel-limit">
 		<label for="_wc_accommodation_booking_cancel_limit"><?php _e( 'Cancellation up till', 'woocommerce-accommodation-bookings' ); ?></label>

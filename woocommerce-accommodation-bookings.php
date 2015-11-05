@@ -99,6 +99,8 @@ class WC_Accommodation_Bookings {
 	 */
 	public function includes() {
 		include( 'includes/class-wc-product-accommodation-booking.php' );
+		include( 'includes/class-wc-accommodation-booking.php' );
+		include( 'includes/class-wc-accommodation-booking-cart-manager.php' );
 	}
 
 	/**

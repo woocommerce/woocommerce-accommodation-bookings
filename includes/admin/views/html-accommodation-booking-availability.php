@@ -1,12 +1,12 @@
 <div id="accommodation_bookings_availability" class="panel woocommerce_options_panel bookings_extension">
 	<div class="options_group">
-		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_qty', 'label' => __( 'Number of rooms available', 'woocommerce-accommodation-bookings' ), 'description' => __( 'The maximum number of rooms available.', 'woocommerce-accommodation-bookings' ), 'value' => max( absint( get_post_meta( $post_id, '_wc_accommodation_booking_qty', true ) ), 1 ), 'desc_tip' => true, 'type' => 'number', 'custom_attributes' => array(
+		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_qty', 'label' => __( 'Number of rooms available', 'woocommerce-accommodation-bookings' ), 'description' => __( 'The maximum number of rooms available.', 'woocommerce-accommodation-bookings' ), 'value' => max( absint( get_post_meta( $post_id, '_wc_booking_qty', true ) ), 1 ), 'desc_tip' => true, 'type' => 'number', 'custom_attributes' => array(
 			'min'   => '',
 			'step' 	=> '1'
 		) ) ); ?>
 		<?php
-			$min_date      = absint( get_post_meta( $post_id, '_wc_accommodation_booking_min_date', true ) );
-			$min_date_unit = get_post_meta( $post_id, '_wc_accommodation_booking_min_date_unit', true );
+			$min_date      = absint( get_post_meta( $post_id, '_wc_booking_min_date', true ) );
+			$min_date_unit = get_post_meta( $post_id, '_wc_booking_min_date_unit', true );
 		?>
 		<p class="form-field">
 			<label for="_wc_accommodation_booking_min_date"><?php _e( 'Bookings can be made starting', 'woocommerce-accommodation-bookings' ); ?></label>
@@ -18,12 +18,12 @@
 			</select> <?php _e( 'into the future', 'woocommerce-accommodation-bookings' ); ?>
 		</p>
 		<?php
-			$max_date = get_post_meta( $post_id, '_wc_accommodation_booking_max_date', true );
+			$max_date = get_post_meta( $post_id, '_wc_booking_max_date', true );
 			if ( $max_date == '' ) {
 				$max_date = 12;
 			}
 			$max_date      = max( absint( $max_date ), 1 );
-			$max_date_unit = get_post_meta( $post_id, '_wc_accommodation_booking_max_date_unit', true );
+			$max_date_unit = get_post_meta( $post_id, '_wc_booking_max_date_unit', true );
 		?>
 		<p class="form-field">
 			<label for="_wc_accommodation_booking_max_date"><?php _e( 'Bookings can only be made', 'woocommerce-accommodation-bookings' ); ?></label>
@@ -65,7 +65,7 @@
 				</tfoot>
 				<tbody id="availability_rows">
 					<?php
-						$values = get_post_meta( $post_id, '_wc_accommodation_booking_availability', true );
+						$values = get_post_meta( $post_id, '_wc_booking_availability', true );
 						if ( ! empty( $values ) && is_array( $values ) ) {
 							foreach ( $values as $availability ) {
 								include( 'html-accommodation-booking-availability-fields.php' );
