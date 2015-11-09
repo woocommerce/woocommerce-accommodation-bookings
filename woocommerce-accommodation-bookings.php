@@ -101,6 +101,8 @@ class WC_Accommodation_Bookings {
 		include( 'includes/class-wc-product-accommodation-booking.php' );
 		include( 'includes/class-wc-accommodation-booking.php' );
 		include( 'includes/class-wc-accommodation-booking-cart-manager.php' );
+		include( 'includes/class-wc-accommodation-booking-date-picker.php' );
+		include( 'includes/class-wc-accommodation-booking-product-tabs.php' );
 	}
 
 	/**
