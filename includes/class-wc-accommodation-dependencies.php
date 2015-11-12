@@ -2,7 +2,8 @@
 /**
  * WC Accommodation Bookings Dependency Checker
  *
- * Checks if WooCommerce Bookings is enabled and the correct version for accommodations to work.
+ * Checks if WooCommerce Bookings is enabled and if it is the correct
+ * version for accommodations to work.
  */
 class WC_Accommodation_Dependencies {
 
@@ -19,10 +20,19 @@ class WC_Accommodation_Dependencies {
 		}
 	}
 
+	/**
+	 * Returns true if bookings is installed/active and false if not
+	 * @return boolean
+	 */
 	private static function is_bookings_installed() {
 		return in_array( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins ) || array_key_exists( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins );
 	}
 
+	/**
+	 * Returns true if bookings is greater than a specific version and false if not
+	 * @param  string  $verson The version to check against
+	 * @return boolean
+	 */
 	private static function is_bookings_above_or_equal_to_version( $verson ) {
 		if ( version_compare( get_option( 'wc_bookings_version' ), '1.9.0', '>=' ) ) {
 			return true;
@@ -32,7 +42,7 @@ class WC_Accommodation_Dependencies {
 
 	/**
 	 * Reports if all of the accommodation extension's dependencies are met
-	 * @return bool true if WooCommerce bookings is an active plugin, false if not.
+	 * @return boolean
 	 */
 	public static function dependencies_are_met() {
 		if ( ! self::$active_plugins ) {

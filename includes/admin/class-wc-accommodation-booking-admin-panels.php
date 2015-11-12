@@ -1,15 +1,14 @@
 <?php
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 /**
- * Accommodation booking admin panels
+ * Sets up our "write" panels for accommodations products.
  */
 class WC_Accommodation_Booking_Admin_Panels {
 
 	/**
-	 * Constructor
+	 * Hook into WordPress and WooCommerce
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles_and_scripts' ) );
@@ -28,6 +27,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 	/**
 	 * Add the accommodation booking product type
+	 * @return array
 	 */
 	public function product_type_selector( $types ) {
 		$types[ 'accommodation-booking' ] = __( 'Accommodation product', 'woocommerce-accommodation-bookings' );
@@ -35,17 +35,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	}
 
 	/**
-	 * Tweak product type options
-	 * @param  array $options
-	 * @return array
-	 */
-	public function product_type_options( $options ) {
-		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation_booking';
-		return $options;
-	}
-
-	/**
-	 * Show the accommodation booking data view
+	 * Displays the main accommodation booking settings/data view
 	 */
 	public function general_product_data() {
 		global $post;
@@ -58,21 +48,30 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 */
 	public function admin_styles_and_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
 		wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
 		//wp_enqueue_script( 'wc_bookings_writepanel_js', WC_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_BOOKINGS_VERSION, true );
 	}
 
 	/**
-	 * Show the panels related to accommodation bookings
+	 * Loads our panels related to accommodation bookings
 	 */
 	public function panels() {
 		global $post;
-
 		$post_id = $post->ID;
 
 		include( 'views/html-accommodation-booking-rates.php' );
 		include( 'views/html-accommodation-booking-availability.php' );
+	}
+
+
+	/**
+	 * Hides the "virtal" option for accommodations
+	 * @param  array $options
+	 * @return array
+	 */
+	public function product_type_options( $options ) {
+		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation_booking';
+		return $options;
 	}
 
 	/**
@@ -84,16 +83,16 @@ class WC_Accommodation_Booking_Admin_Panels {
 	}
 
 	/**
-	 * Shows any tabs related to accommodations.
+	 * Loads the HTML that is used to display the actual tab navigation
 	 */
 	public function add_tabs() {
 		include( 'views/html-accommodation-booking-tabs.php' );
 	}
 
 	/**
-	 * Save booking / accommodation data for the product
+	 * Saves booking / accommodation data for a product
 	 *
-	 * @param  int $post_id
+	 * @param int $post_id
 	 */
 	public function save_product_data( $post_id ) {
 		global $wpdb;

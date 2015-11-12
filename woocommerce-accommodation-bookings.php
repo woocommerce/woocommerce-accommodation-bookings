@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'woothemes_queue_update' ) ) {
 	require_once( 'woo-includes/woo-functions.php' );
 }
-
 require_once( 'includes/class-wc-accommodation-dependencies.php' );
 
 /**

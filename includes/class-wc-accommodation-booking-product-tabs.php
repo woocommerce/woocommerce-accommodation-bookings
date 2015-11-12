@@ -3,12 +3,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Adds some new tabs to the front end display of a accommodation product.
+ * The new tab shows check-in and check-out times.
+ * In the future, other accommodation specific tabs might show up here.
+ */
 class WC_Accommodation_Booking_Product_Tabs {
 
+	/**
+	 * Hook into WooCommerce..
+	 */
 	public function __construct() {
 		add_action( 'woocommerce_product_tabs', array( $this, 'add_time_tab' ), 30 );
 	}
 
+	/**
+	 * Let's us know if the admin actually filled out the check-in/check-out settings
+	 * @return boolean
+	 */
 	public function are_time_fields_filled_out() {
 		$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
 		$check_out = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
@@ -24,6 +36,11 @@ class WC_Accommodation_Booking_Product_Tabs {
 		return true;
 	}
 
+	/**
+	 * Adds our time tab to the list of tabs, if the product is an accommodation product and
+	 * the admin filled out the time setting fields.
+	 * @param array $tabs List of WooCommerce product tabs
+	 */
 	public function add_time_tab( $tabs = array() ) {
 		global $post, $woocommerce;
 
@@ -47,6 +64,9 @@ class WC_Accommodation_Booking_Product_Tabs {
 		return $tabs;
 	}
 
+	/**
+	 * The actual content for our time tab.
+	 */
 	public function add_time_tab_content() {
 		if ( ! $this->are_time_fields_filled_out() ) {
 			return;
