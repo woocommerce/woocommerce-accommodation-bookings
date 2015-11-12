@@ -24,17 +24,10 @@ class WC_Accommodation_Dependencies {
 	}
 
 	private static function is_bookings_above_or_equal_to_version( $verson ) {
-		error_log( print_r (  WC_BOOKINGS_VERSION, 1 ) );
-		if ( ! defined( 'WC_BOOKINGS_VERSION' ) ) {
-			return false;
+		if ( version_compare( get_option( 'wc_bookings_version' ), '1.9.0', '>=' ) ) {
+			return true;
 		}
-
-		error_log( print_r (  WC_BOOKINGS_VERSION, 1 ) );
-		if ( version_compare( WC_BOOKINGS_VERSION, '1.9.0', '<' ) ) {
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
 	/**

@@ -32,13 +32,7 @@ require_once( 'includes/class-wc-accommodation-dependencies.php' );
  */
 // woothemes_queue_update( plugin_basename( __FILE__ ), '--', '--' );
 
-add_action( 'plugins_loaded', 'woocommerce_init_accommodation_bookings' );
-
-function woocommerce_init_accommodation_bookings() {
-	if ( is_woocommerce_active() && WC_Accommodation_Dependencies::dependencies_are_met() ) {
-		new WC_Accommodation_Bookings();
-	}
-}
+if ( is_woocommerce_active() && WC_Accommodation_Dependencies::dependencies_are_met() ) {
 
 /**
  * WC Accommodation Bookings class
@@ -139,4 +133,8 @@ class WC_Accommodation_Bookings {
 
 		return (array) $links;
 	}
+}
+
+new WC_Accommodation_Bookings();
+
 }
