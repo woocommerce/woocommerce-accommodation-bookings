@@ -2,7 +2,7 @@
 /**
  * WC Accommodation Bookings Dependency Checker
  *
- * Checks if WooCommerce Bookings is enabled
+ * Checks if WooCommerce Bookings is enabled and the correct version for accommodations to work.
  */
 class WC_Accommodation_Dependencies {
 
@@ -14,8 +14,27 @@ class WC_Accommodation_Dependencies {
 	 */
 	public static function init() {
 		self::$active_plugins = (array) get_option( 'active_plugins', array() );
-		if ( is_multisite() )
+		if ( is_multisite() ) {
 			self::$active_plugins = array_merge( self::$active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+		}
+	}
+
+	private static function is_bookings_installed() {
+		return in_array( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins ) || array_key_exists( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins );
+	}
+
+	private static function is_bookings_above_or_equal_to_version( $verson ) {
+		error_log( print_r (  WC_BOOKINGS_VERSION, 1 ) );
+		if ( ! defined( 'WC_BOOKINGS_VERSION' ) ) {
+			return false;
+		}
+
+		error_log( print_r (  WC_BOOKINGS_VERSION, 1 ) );
+		if ( version_compare( WC_BOOKINGS_VERSION, '1.9.0', '<' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -23,9 +42,19 @@ class WC_Accommodation_Dependencies {
 	 * @return bool true if WooCommerce bookings is an active plugin, false if not.
 	 */
 	public static function dependencies_are_met() {
-		if ( ! self::$active_plugins ) self::init();
+		if ( ! self::$active_plugins ) {
+			self::init();
+		}
 
-		return in_array( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins ) || array_key_exists( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins );
+		if ( ! self::is_bookings_installed() ) {
+			return false;
+		}
+
+		if ( ! self::is_bookings_above_or_equal_to_version( '1.9' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
