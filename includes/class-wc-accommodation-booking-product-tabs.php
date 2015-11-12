@@ -54,7 +54,7 @@ class WC_Accommodation_Booking_Product_Tabs {
 			return $tabs;
 		}
 
-		$title = apply_filters( 'woocommerce_accommodation_booking_time_tab_title', __( 'Arriving/leaving', 'wocommerce-accommodation-bookings' ) );
+		$title = apply_filters( 'woocommerce_accommodation_booking_time_tab_title', esc_html__( 'Arriving/leaving', 'woocommerce-accommodation-bookings' ) );
 		$tabs['accommodation_booking_time'] = array(
 			'title'    => $title,
 			'priority' => 10,
@@ -74,10 +74,10 @@ class WC_Accommodation_Booking_Product_Tabs {
 		$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
 		$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
 		?>
-		<h2><?php echo esc_html( apply_filters( 'woocommerce_accommodation_booking_time_tab_heading', __( 'Arriving/leaving', 'wocommerce-accommodation-bookings' ) ) ); ?></h2>
+		<h2><?php echo esc_html( apply_filters( 'woocommerce_accommodation_booking_time_tab_heading', __( 'Arriving/leaving', 'woocommerce-accommodation-bookings' ) ) ); ?></h2>
 		<ul>
-			<li>Check-in time: <?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_in ) ) ); ?></li>
-			<li>Check-out time: <?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) ); ?></li>
+			<li><?php esc_html_e( 'Check-in time', 'woocommerce-accommodation-bookings' ); ?> <?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_in ) ) ); ?></li>
+			<li><?php esc_html_e( 'Check-out time', 'woocommerce-accommodation-bookings' ); ?> <?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) ); ?></li>
 		</ul>
 	<?php }
 
