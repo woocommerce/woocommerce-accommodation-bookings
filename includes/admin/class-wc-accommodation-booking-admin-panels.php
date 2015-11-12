@@ -30,7 +30,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * Add the accommodation booking product type
 	 */
 	public function product_type_selector( $types ) {
-		$types[ 'accommodation-booking' ] = __( 'Accommodation booking product', 'woocommerce-accommodation-bookings' );
+		$types[ 'accommodation-booking' ] = __( 'Accommodation product', 'woocommerce-accommodation-bookings' );
 		return $types;
 	}
 
