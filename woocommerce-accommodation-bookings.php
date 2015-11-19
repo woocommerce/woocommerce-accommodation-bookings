@@ -75,11 +75,6 @@ class WC_Accommodation_Bookings {
 	 */
 	public function delayed_install() {
 		global $wpdb;
-
-		//$wpdb->hide_errors();
-
-		// Update version
-		//update_option( 'wc_accommodation_bookings_version', WC_ACCOMMODATION_BOOKINGS_VERSION );
 	}
 
 	/**

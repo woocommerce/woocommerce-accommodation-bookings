@@ -1,7 +1,7 @@
 {
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "homepage": "http://www.woothemes.com/products/woocommerce-accommodation-bookings/",
   "main": "Gruntfile.js",
   "devDependencies": {
