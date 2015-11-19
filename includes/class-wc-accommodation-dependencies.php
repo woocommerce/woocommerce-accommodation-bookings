@@ -33,8 +33,8 @@ class WC_Accommodation_Dependencies {
 	 * @param  string  $verson The version to check against
 	 * @return boolean
 	 */
-	private static function is_bookings_above_or_equal_to_version( $verson ) {
-		if ( version_compare( get_option( 'wc_bookings_version' ), '1.9.0', '>=' ) ) {
+	private static function is_bookings_above_or_equal_to_version( $version ) {
+		if ( version_compare( get_option( 'wc_bookings_version' ), $version, '>=' ) ) {
 			return true;
 		}
 		return false;
@@ -53,7 +53,7 @@ class WC_Accommodation_Dependencies {
 			return false;
 		}
 
-		if ( ! self::is_bookings_above_or_equal_to_version( '1.9' ) ) {
+		if ( ! self::is_bookings_above_or_equal_to_version( '1.9.0' ) ) {
 			return false;
 		}
 
