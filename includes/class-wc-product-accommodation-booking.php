@@ -103,4 +103,26 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		return true;
 	}
 
+	/**
+	 * Get price HTML
+	 * @return string
+	 */
+	public function get_price_html( $price = '' ) {
+		$tax_display_mode = get_option( 'woocommerce_tax_display_shop' );
+		$display_price    = $tax_display_mode == 'incl' ? $this->get_price_including_tax( 1, $this->get_price() ) : $this->get_price_excluding_tax( 1, $this->get_price() );
+
+		if ( $display_price ) {
+			if ( $this->has_additional_costs() ) {
+				$price_html = sprintf( __( 'From %s per night', 'woocommerce-accommodation-bookings' ), wc_price( $display_price ) ) . $this->get_price_suffix();
+			} else {
+				$price_html = wc_price( $display_price ) . $this->get_price_suffix();
+			}
+		} elseif ( ! $this->has_additional_costs() ) {
+			$price_html = __( 'Free', 'woocommerce-accommodation-bookings' );
+		} else {
+			$price_html = '';
+		}
+		return apply_filters( 'woocommerce_get_price_html', $price_html, $this );
+	}
+
 }
