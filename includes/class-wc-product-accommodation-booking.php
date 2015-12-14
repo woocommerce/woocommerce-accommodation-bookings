@@ -95,4 +95,12 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		return true;
 	}
 
+	/**
+	 * Hotel rooms are a "virtual" product. No shipping is involved.
+	 * @return boolean
+	 */
+	public function is_virtual() {
+		return true;
+	}
+
 }
