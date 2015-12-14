@@ -50,6 +50,7 @@ class WC_Accommodation_Bookings {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 		add_action( 'woocommerce_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'booking_form_styles' ) );
 
 		if ( is_admin() ) {
 			$this->admin_includes();
@@ -106,6 +107,13 @@ class WC_Accommodation_Bookings {
 	public function admin_includes() {
 		include( 'includes/admin/class-wc-accommodation-booking-admin-panels.php' );
 		include( 'includes/admin/class-wc-accommodation-booking-admin-product-settings.php' );
+	}
+
+	/**
+	 * Frontend booking form scripts
+	 */
+	public function booking_form_styles() {
+		wp_enqueue_style( 'wc-accommodation-bookings-styles', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/css/frontend.css', null, WC_ACCOMMODATION_BOOKINGS_VERSION );
 	}
 
 	/**
