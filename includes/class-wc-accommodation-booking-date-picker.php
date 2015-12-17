@@ -14,6 +14,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	public function __construct() {
 		add_filter( 'woocommerce_bookings_date_picker_start_label', array( $this, 'start_label' ) );
 		add_filter( 'woocommerce_bookings_date_picker_end_label', array( $this, 'end_label' ) );
+		add_filter( 'woocommerce_bookings_date_picker_args', array( $this, 'date_picker_args' ), 10, 2 );
 	}
 
 	/**
@@ -32,6 +33,13 @@ class WC_Accommodation_Booking_Date_Picker {
 		return __( 'Check-out', 'woocommerce-accommodation-bookings' );
 	}
 
+	/**
+	 * Adds costs to our date picker args so we can show them in the JS.
+	 */
+	public function date_picker_args( $args, $booking_form ) {
+		$args['show_costs'] = true;
+		return $args;
+	}
 }
 
 new WC_Accommodation_Booking_Date_Picker;
