@@ -17,21 +17,13 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-/**
- * Required functions
- */
-if ( ! function_exists( 'woothemes_queue_update' ) ) {
-	require_once( 'woo-includes/woo-functions.php' );
-}
 require_once( 'includes/class-wc-accommodation-dependencies.php' );
 
 /**
  * Plugin updates
  */
-// woothemes_queue_update( plugin_basename( __FILE__ ), '--', '--' );
 
-if ( is_woocommerce_active() && WC_Accommodation_Dependencies::dependencies_are_met() ) {
+if ( WC_Accommodation_Dependencies::dependencies_are_met() ) {
 
 /**
  * WC Accommodation Bookings class
@@ -55,27 +47,6 @@ class WC_Accommodation_Bookings {
 		if ( is_admin() ) {
 			$this->admin_includes();
 		}
-
-		// Install
-		register_activation_hook( __FILE__, array( $this, 'install' ) );
-
-		if ( get_option( 'wc_accommodation_bookings_version' ) !== WC_ACCOMMODATION_BOOKINGS_VERSION ) {
-			add_action( 'shutdown', array( $this, 'delayed_install' ) );
-		}
-	}
-
-	/**
-	 * Installer
-	 */
-	public function install() {
-		add_action( 'shutdown', array( $this, 'delayed_install' ) );
-	}
-
-	/**
-	 * Installer (delayed)
-	 */
-	public function delayed_install() {
-		global $wpdb;
 	}
 
 	/**
