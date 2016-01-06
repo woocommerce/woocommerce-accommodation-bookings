@@ -6,7 +6,7 @@ Tested up to: 4.4
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-An add-on for WooCommerce Bookings, making it easier sell hotel rooms, apartments, and spaces to your customers with WooCommerce.
+An add-on for WooCommerce Bookings, making it easier to sell hotel rooms, apartments, and spaces to your customers with WooCommerce.
 
 == Description ==
 
