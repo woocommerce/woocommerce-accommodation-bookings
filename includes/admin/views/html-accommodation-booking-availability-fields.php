@@ -3,7 +3,7 @@
 
 	$intervals['months'] = array(
 		'1'  => __( 'January', 'woocommerce-accommodation-bookings' ),
-		'2'  => __( 'Febuary', 'woocommerce-accommodation-bookings' ),
+		'2'  => __( 'February', 'woocommerce-accommodation-bookings' ),
 		'3'  => __( 'March', 'woocommerce-accommodation-bookings' ),
 		'4'  => __( 'April', 'woocommerce-accommodation-bookings' ),
 		'5'  => __( 'May', 'woocommerce-accommodation-bookings' ),
