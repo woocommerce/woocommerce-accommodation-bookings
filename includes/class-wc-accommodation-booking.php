@@ -15,6 +15,7 @@ class WC_Accommodation_Booking {
 		add_filter( 'woocommerce_bookings_product_types', array( $this, 'add_product_type' ) );
 		add_filter( 'woocommerce_bookings_get_start_date_with_time', array( $this, 'add_checkin_time_to_booking_start_time' ), 10, 2 );
 		add_filter( 'woocommerce_bookings_get_end_date_with_time', array( $this, 'add_checkout_time_to_booking_end_time' ), 10, 2 );
+		add_filter( 'get_booking_products_terms', array( $this, 'add_accommodation_to_booking_product_terms' ) );
 	}
 
 	/**
@@ -50,6 +51,14 @@ class WC_Accommodation_Booking {
 		$time_format = apply_filters( 'woocommerce_bookings_time_format', ', ' . wc_time_format() );
 
 		return date_i18n( $date_format, $booking->end ) . date_i18n( $time_format, strtotime( "Today " . $check_out ) );
+	}
+
+	/**
+	 * Adds 'accommodation-booking' to the list of valid product types/terms
+	 */
+	public function add_accommodation_to_booking_product_terms( $terms ) {
+		$terms[] = 'accommodation-booking';
+		return $terms;
 	}
 
 }
