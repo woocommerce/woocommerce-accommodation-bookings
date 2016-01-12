@@ -13,7 +13,6 @@ class WC_Accommodation_Booking_Admin_Meta_Box {
 	}
 
 	public function start_time( $time, $post_id ) {
-		$product_id = get_post_meta( $post_id, '_booking_product_id', true );
 		$product = wc_get_product( get_post_meta( $post_id, '_booking_product_id', true ) );
 		if ( 'accommodation-booking' !== $product->product_type ) {
 			return $time;
@@ -23,7 +22,6 @@ class WC_Accommodation_Booking_Admin_Meta_Box {
 	}
 
 	public function end_time( $time, $post_id ) {
-		$product_id = get_post_meta( $post_id, '_booking_product_id', true );
 		$product = wc_get_product( get_post_meta( $post_id, '_booking_product_id', true ) );
 		if ( 'accommodation-booking' !== $product->product_type ) {
 			return $time;
