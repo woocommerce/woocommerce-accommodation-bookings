@@ -22,6 +22,22 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	}
 
 	/**
+	 * Tells Bookings that this product type is a bookings addon.
+	 * @return boolean
+	 */
+	public function is_bookings_addon() {
+		return true;
+	}
+
+	/**
+	 * Human readable version of the addon title
+	 * @return string
+	 */
+	public function bookings_addon_title() {
+		return __( 'Accommodation booking', 'woocommerce-accommodation-bookings' );
+	}
+
+	/**
 	 * Version 1.0.0 does not support persons/person types yet - just booking rooms
 	 * @return boolean
 	 */
