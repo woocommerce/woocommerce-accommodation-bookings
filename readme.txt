@@ -29,6 +29,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.0.2 =
+* Fix - Fix up some issues with the booking details screen to make it more useful for accommodation bookings.
+
 = 1.0.1 =
 * Fix - Typo in month names.
 * Fix - Fix check-in/check-out times in the booking list table.
