@@ -18,7 +18,7 @@ class WC_Accommodation_Booking_Admin_Meta_Box {
 			return $time;
 		}
 		$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
-		return date_i18n( get_option( 'time_format' ), strtotime( 'Today ' . $check_in ) );
+		return date_i18n( 'G:i', strtotime( 'Today ' . $check_in ) );
 	}
 
 	public function end_time( $time, $post_id ) {
@@ -27,7 +27,7 @@ class WC_Accommodation_Booking_Admin_Meta_Box {
 			return $time;
 		}
 		$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
-		return date_i18n( get_option( 'time_format' ), strtotime( 'Today ' . $check_out ) );
+		return date_i18n( 'G:i', strtotime( 'Today ' . $check_out ) );
 	}
 }
 
