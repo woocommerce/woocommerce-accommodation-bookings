@@ -48,8 +48,8 @@ class WC_Accommodation_Booking_Cart_Manager {
 			if ( ! empty( $check_out ) ) {
 				$other_data[] = array(
 					'name'    => __( 'Check-out', 'woocommerce-accommodation-bookings' ),
-					'value'   => $check_out,
-					'display' => esc_html( $end_date . __( ' at ', 'woocommerce-accommodation-bookings' ) . date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) ),
+					'value'   => esc_html( $end_date . __( ' at ', 'woocommerce-accommodation-bookings' ) . date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) ),
+					'display' => '',
 				);
 			}
 		}
