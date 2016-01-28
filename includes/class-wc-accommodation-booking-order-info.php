@@ -41,9 +41,8 @@ class WC_Accommodation_Booking_Order_Info {
 
 		<strong><?php esc_html_e( 'Check-out', 'woocommerce-accommodation-bookings' ); ?> </strong>
 		<?php
-		$duration = intval( $item['Duration'] );
-		$end_date   = strtotime( "+{$duration} day", strtotime( $item['Booking Date'] ) );
-		echo esc_html( date_i18n( get_option( 'date_format'), $end_date ) );
+		$end_date = date_i18n( get_option( 'date_format'), $this->get_end_date_timestamp( $item['Booking Date'], intval ( $item['Duration'] ) ) );
+		echo esc_html( $end_date );
 		if ( ! empty( $check_out ) ) {
 			esc_html_e( ' at ', 'woocommerce-accommodation-bookings');
 			echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) );
@@ -51,6 +50,22 @@ class WC_Accommodation_Booking_Order_Info {
 		?>
 		</p>
 		<?php
+	}
+
+	/**
+	 * Since we can't use createFromFormat, we'll need to build our own end date string from
+	 * the passed start date.
+	 * @param  string $start_date
+	 * @param  int $duration
+	 * @return string
+	 */
+	private function get_end_date_timestamp( $start_date, $duration ) {
+		$format             =  str_replace( array( 'Y','m','d' ), array( '%Y','%m','%d' ), get_option('date_format') );
+		$start_time_pieces  = strptime( $start_date, $format );
+		$end_date_timestamp = strtotime( ( $start_time_pieces['tm_mon'] + 1 ) . '/' . $start_time_pieces['tm_mday'] . '/' . ( $start_time_pieces['tm_year'] + 1900 ) );
+		$end_date           = strtotime( "+{$duration} day", $end_date_timestamp );
+
+		return $end_date;
 	}
 
 }
