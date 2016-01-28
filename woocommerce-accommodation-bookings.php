@@ -78,7 +78,6 @@ class WC_Accommodation_Bookings {
 	public function admin_includes() {
 		include( 'includes/admin/class-wc-accommodation-booking-admin-panels.php' );
 		include( 'includes/admin/class-wc-accommodation-booking-admin-product-settings.php' );
-		include( 'includes/admin/class-wc-accommodation-booking-admin-meta-box.php' );
 	}
 
 	/**
