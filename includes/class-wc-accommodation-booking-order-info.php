@@ -60,7 +60,7 @@ class WC_Accommodation_Booking_Order_Info {
 	 * @return string
 	 */
 	private function get_end_date_timestamp( $start_date, $duration ) {
-		$format             =  str_replace( array( 'Y','m','d' ), array( '%Y','%m','%d' ), get_option('date_format') );
+		$format             = str_replace( array( 'Y','m','d' ), array( '%Y','%m','%d' ), get_option('date_format') );
 		$start_time_pieces  = strptime( $start_date, $format );
 		$end_date_timestamp = strtotime( ( $start_time_pieces['tm_mon'] + 1 ) . '/' . $start_time_pieces['tm_mday'] . '/' . ( $start_time_pieces['tm_year'] + 1900 ) );
 		$end_date           = strtotime( "+{$duration} day", $end_date_timestamp );
