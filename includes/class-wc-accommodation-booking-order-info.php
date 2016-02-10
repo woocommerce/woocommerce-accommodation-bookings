@@ -41,7 +41,7 @@ class WC_Accommodation_Booking_Order_Info {
 
 		<strong><?php esc_html_e( 'Check-out', 'woocommerce-accommodation-bookings' ); ?> </strong>
 		<?php
-		$end_date = date_i18n( get_option( 'date_format'), $this->get_end_date_timestamp( $item['Booking Date'], intval ( $item['Duration'] ) ) );
+		$end_date = date_i18n( get_option( 'date_format'), $this->get_end_date_timestamp( $item['Booking Date'], intval( $item['Duration'] ) ) );
 		echo esc_html( $end_date );
 		if ( ! empty( $check_out ) ) {
 			esc_html_e( ' at ', 'woocommerce-accommodation-bookings');
@@ -53,19 +53,17 @@ class WC_Accommodation_Booking_Order_Info {
 	}
 
 	/**
-	 * Since we can't use createFromFormat, we'll need to build our own end date string from
-	 * the passed start date.
+	 * Get timestamp of checkout time based on given `$start_date` and `$duration`.
+	 *
 	 * @param  string $start_date
 	 * @param  int $duration
-	 * @return string
+	 * @return int
 	 */
 	private function get_end_date_timestamp( $start_date, $duration ) {
-		$format             = str_replace( array( 'Y','m','d' ), array( '%Y','%m','%d' ), get_option('date_format') );
-		$start_time_pieces  = strptime( $start_date, $format );
-		$end_date_timestamp = strtotime( ( $start_time_pieces['tm_mon'] + 1 ) . '/' . $start_time_pieces['tm_mday'] . '/' . ( $start_time_pieces['tm_year'] + 1900 ) );
-		$end_date           = strtotime( "+{$duration} day", $end_date_timestamp );
+		$datetime = DateTime::createFromFormat( get_option( 'date_format' ) . ' H:i:s', $start_date . ' 00:00:00' );
+		$datetime->add( new DateInterval( 'P' . $duration . 'D' ) );
 
-		return $end_date;
+		return $datetime->getTimestamp();
 	}
 
 }
