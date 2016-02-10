@@ -4,6 +4,7 @@
 			'min'   => '',
 			'step' 	=> '0.01'
 		) ) ); ?>
+		<?php do_action( 'woocommerce_accommodation_bookings_after_booking_base_cost', $post_id ); ?>
 	</div>
 	<div class="options_group">
 		<div class="table_grid">
@@ -42,5 +43,6 @@
 				</tbody>
 			</table>
 		</div>
+		<?php do_action( 'woocommerce_accommodation_bookings_after_bookings_pricing', $post_id ); ?>
 	</div>
 </div>
