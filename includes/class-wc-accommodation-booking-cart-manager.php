@@ -35,7 +35,7 @@ class WC_Accommodation_Booking_Cart_Manager {
 		if ( 'accommodation-booking' === $cart_item['data']->product_type ) {
 			$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
 			$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
-			$end_date  = date_i18n( get_option( 'date_format'), strtotime( "+{$cart_item['booking']['_duration']} day", strtotime( $cart_item['booking']['date'] ) ) );
+			$end_date  = date_i18n( get_option( 'date_format'), $cart_item['booking']['_end_date'] );
 
 			if ( ! empty( $check_in ) ) {
 				$other_data[] = array(
@@ -48,8 +48,8 @@ class WC_Accommodation_Booking_Cart_Manager {
 			if ( ! empty( $check_out ) ) {
 				$other_data[] = array(
 					'name'    => __( 'Check-out', 'woocommerce-accommodation-bookings' ),
-					'value'   => $check_out,
-					'display' => esc_html( $end_date . __( ' at ', 'woocommerce-accommodation-bookings' ) . date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) ),
+					'value'   => esc_html( $end_date . __( ' at ', 'woocommerce-accommodation-bookings' ) . date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_out ) ) ),
+					'display' => '',
 				);
 			}
 		}
