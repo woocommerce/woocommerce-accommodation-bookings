@@ -18,22 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once( 'includes/class-wc-accommodation-dependencies.php' );
-
-try {
-	WC_Accommodation_Dependencies::check_dependencies();
-	require_once( 'includes/class-wc-accommodation-bookings-plugin.php' );
-
-	new WC_Accommodation_Bookings_Plugin( __FILE__, '1.0.2' );
-
-} catch ( Exception $e ) {
-	$wc_accommodation_bookings_dependencies_not_satisfied_message = $e->getMessage();
-
-	function wc_accommodation_bookings_dependencies_not_satisfied() {
-		global $wc_accommodation_bookings_dependencies_not_satisfied_message;
-		echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( esc_html( $wc_accommodation_bookings_dependencies_not_satisfied_message ) ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
-	}
-	add_action( 'admin_notices', 'wc_accommodation_bookings_dependencies_not_satisfied' );
-
-	deactivate_plugins( plugin_basename( __FILE__ ) );
-}
+require_once( 'includes/class-wc-accommodation-bookings-plugin.php' );
+$plugin = new WC_Accommodation_Bookings_Plugin( __FILE__, '1.0.2' );
+$plugin->run();

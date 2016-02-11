@@ -9,11 +9,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Accommodation_Bookings_Plugin {
 
 	/**
-	 * Main plugin's file
+	 * Main plugin's file.
 	 *
 	 * @var string
 	 */
 	public $plugin_file;
+
+	/**
+	 * Plugin's version.
+	 *
+	 * @var string
+	 */
+	public $version;
+
+	/**
+	 * Deactivate notice message.
+	 *
+	 * @var string
+	 */
+	public $deactivate_notice_message;
 
 	/**
 	 * Constructor.
@@ -22,13 +36,39 @@ class WC_Accommodation_Bookings_Plugin {
 	 * @param string $version     Plugin's version
 	 */
 	public function __construct( $plugin_file, $version ) {
-		define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', $version );
-		define( 'WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH', untrailingslashit( plugin_dir_path( $plugin_file ) ) . '/includes/' );
-		define( 'WC_ACCOMMODATION_BOOKINGS_TEMPLATE_PATH', untrailingslashit( plugin_dir_path( $plugin_file ) ) . '/templates/' );
-		define( 'WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( $plugin_file ) ), basename( $plugin_file ) ) ) );
-		define( 'WC_ACCOMMODATION_BOOKINGS_MAIN_FILE', $plugin_file );
-
 		$this->plugin_file = $plugin_file;
+		$this->version     = $version;
+	}
+
+	/**
+	 * Run the plugin.
+	 */
+	public function run() {
+		$this->_define_constants();
+		$this->_register_hooks();
+	}
+
+	/**
+	 * Define plugin's constants.
+	 *
+	 * @return void
+	 */
+	private function _define_constants() {
+		define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', $this->version );
+		define( 'WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH', untrailingslashit( plugin_dir_path( $this->plugin_file ) ) . '/includes/' );
+		define( 'WC_ACCOMMODATION_BOOKINGS_TEMPLATE_PATH', untrailingslashit( plugin_dir_path( $this->plugin_file ) ) . '/templates/' );
+		define( 'WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( $this->plugin_file ) ), basename( $this->plugin_file ) ) ) );
+		define( 'WC_ACCOMMODATION_BOOKINGS_MAIN_FILE', $this->plugin_file );
+	}
+
+	/**
+	 * Register to hooks.
+	 *
+	 * @return void
+	 */
+	private function _register_hooks() {
+		register_activation_hook( $this->plugin_file, array( $this, 'activate' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_deactivate' ) );
 
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 		add_action( 'woocommerce_loaded', array( $this, 'includes' ), 20 );
@@ -38,6 +78,63 @@ class WC_Accommodation_Bookings_Plugin {
 		if ( is_admin() ) {
 			$this->admin_includes();
 		}
+	}
+
+	/**
+	 * Action to perform when plugin is activated.
+	 *
+	 * Callback for `register_activation_hook`.
+	 *
+	 * @return void
+	 */
+	public function activate() {
+		$result = $this->check_dependencies();
+		if ( is_wp_error( $result ) ) {
+			trigger_error( $result->get_error_message() );
+			die;
+		}
+	}
+
+	/**
+	 * Check dependencies.
+	 *
+	 * @return bool|WP_Error Return true if dependencies are satisfied, otherwise WP_Error
+	 */
+	public function check_dependencies() {
+		require_once( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-dependencies.php' );
+		try {
+			WC_Accommodation_Dependencies::check_dependencies();
+		} catch ( Exception $e ) {
+			return new WP_Error( 'unsatisfied_dependencies', $e->getMessage() );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Maybe deactivate plugin if dependencies are not satisfied.
+	 *
+	 * Hooked to `plugins_loaded`
+	 *
+	 * @return void
+	 */
+	public function maybe_deactivate() {
+		$result = $this->check_dependencies();
+		if ( is_wp_error( $result ) ) {
+			deactivate_plugins( plugin_basename( $this->plugin_file ) );
+
+			$this->deactivate_notice_message = $result->get_error_message();
+			add_action( 'admin_notices', array( $this, 'deactivate_notice' ) );
+		}
+	}
+
+	/**
+	 * Admin notice when plugin is automatically deactivated.
+	 *
+	 * @return void
+	 */
+	public function deactivate_notice() {
+		echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( esc_html( $this->deactivate_notice_message ) ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
 	}
 
 	/**
