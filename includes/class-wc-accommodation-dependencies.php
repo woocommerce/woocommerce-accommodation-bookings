@@ -41,23 +41,25 @@ class WC_Accommodation_Dependencies {
 	}
 
 	/**
-	 * Reports if all of the accommodation extension's dependencies are met
-	 * @return boolean
+	 * Check dependencies.
+	 *
+	 * @throws Exception
 	 */
-	public static function dependencies_are_met() {
+	public static function check_dependencies() {
 		if ( ! self::$active_plugins ) {
 			self::init();
 		}
 
 		if ( ! self::is_bookings_installed() ) {
-			return false;
+			throw new Exception( __( 'Accommodation Bookings requires Bookings plugin activated.', 'woocommerce-accommodation-bookings' ) );
 		}
 
 		if ( ! self::is_bookings_above_or_equal_to_version( '1.9.0' ) ) {
-			return false;
+			throw new Exception( __( 'Accommodation Bookings requires Bookings version 1.9+.', 'woocommerce-accommodation-bookings' ) );
 		}
 
-		return true;
+		if ( ! version_compare( PHP_VERSION, '5.3', '>=' ) ) {
+			throw new Exception( __( 'Accommodation Bookings requires PHP version 5.3+.', 'woocommerce-accommodation-bookings' ) );
+		}
 	}
-
 }
