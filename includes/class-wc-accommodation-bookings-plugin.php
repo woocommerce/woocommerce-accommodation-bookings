@@ -70,6 +70,10 @@ class WC_Accommodation_Bookings_Plugin {
 		register_activation_hook( $this->plugin_file, array( $this, 'check_dependencies' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_dependencies' ) );
 
+		if ( is_wp_error( $this->check_dependencies() ) ) {
+			return;
+		}
+
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 		add_action( 'woocommerce_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
@@ -95,7 +99,9 @@ class WC_Accommodation_Bookings_Plugin {
 			WC_Accommodation_Dependencies::check_dependencies();
 			$this->dependencies_check_result = true;
 		} catch ( Exception $e ) {
-			deactivate_plugins( plugin_basename( $this->plugin_file ) );
+			if ( function_exists( 'deactivate_plugins' ) ) {
+				deactivate_plugins( plugin_basename( $this->plugin_file ) );
+			}
 
 			$this->dependencies_check_result = new WP_Error( 'unsatisfied_dependencies', $e->getMessage() );
 			add_action( 'admin_notices', array( $this, 'deactivate_notice' ) );
@@ -132,10 +138,6 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Load Classes
 	 */
 	public function includes() {
-		if ( is_wp_error( $this->check_dependencies() ) ) {
-			return;
-		}
-
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking.php' );
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking.php' );
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-cart-manager.php' );
