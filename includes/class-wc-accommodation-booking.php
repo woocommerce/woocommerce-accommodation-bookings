@@ -76,7 +76,7 @@ class WC_Accommodation_Booking {
 				continue;
 			}
 
-			$terms = $args['tax_query'][ $index ]['terms'];
+			$terms = isset( $args['tax_query'][ $index ]['terms'] ) ? $args['tax_query'][ $index ]['terms'] : array( 'booking' );
 			if ( ! is_array( $terms ) ) {
 				$terms = array( $terms );
 			}
