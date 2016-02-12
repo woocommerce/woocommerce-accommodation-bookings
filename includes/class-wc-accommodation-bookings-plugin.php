@@ -23,11 +23,11 @@ class WC_Accommodation_Bookings_Plugin {
 	public $version;
 
 	/**
-	 * Deactivate notice message.
+	 * Dependencies check result.
 	 *
-	 * @var string
+	 * @var bool|WP_Error
 	 */
-	public $deactivate_notice_message;
+	public $dependencies_check_result;
 
 	/**
 	 * Constructor.
@@ -83,18 +83,25 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * Check dependencies.
 	 *
-	 * @return void
+	 * @return bool|WP_Error Returns true if dependencies are satisfied. Otherwise error.
 	 */
 	public function check_dependencies() {
+		if ( $this->dependencies_check_result ) {
+			return $this->dependencies_check_result;
+		}
+
 		require_once( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-dependencies.php' );
 		try {
 			WC_Accommodation_Dependencies::check_dependencies();
+			$this->dependencies_check_result = true;
 		} catch ( Exception $e ) {
 			deactivate_plugins( plugin_basename( $this->plugin_file ) );
 
-			$this->deactivate_notice_message = $e->getMessage();
+			$this->dependencies_check_result = new WP_Error( 'unsatisfied_dependencies', $e->getMessage() );
 			add_action( 'admin_notices', array( $this, 'deactivate_notice' ) );
 		}
+
+		return $this->dependencies_check_result;
 	}
 
 
@@ -104,7 +111,10 @@ class WC_Accommodation_Bookings_Plugin {
 	 * @return void
 	 */
 	public function deactivate_notice() {
-		echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( esc_html( $this->deactivate_notice_message ) ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
+		if ( is_wp_error( $this->dependencies_check_result ) ) {
+			$error_message = esc_html( $this->dependencies_check_result->get_error_message() );
+			echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( $error_message ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
+		}
 	}
 
 	/**
@@ -122,6 +132,10 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Load Classes
 	 */
 	public function includes() {
+		if ( is_wp_error( $this->check_dependencies() ) ) {
+			return;
+		}
+
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking.php' );
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking.php' );
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-cart-manager.php' );
