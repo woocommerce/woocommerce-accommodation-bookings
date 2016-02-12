@@ -16,6 +16,7 @@ class WC_Accommodation_Booking {
 		add_filter( 'woocommerce_bookings_get_start_date_with_time', array( $this, 'add_checkin_time_to_booking_start_time' ), 10, 2 );
 		add_filter( 'woocommerce_bookings_get_end_date_with_time', array( $this, 'add_checkout_time_to_booking_end_time' ), 10, 2 );
 		add_filter( 'get_booking_products_terms', array( $this, 'add_accommodation_to_booking_product_terms' ) );
+		add_filter( 'get_booking_products_args', array( $this, 'add_accommodation_to_booking_products_args' ) );
 	}
 
 	/**
@@ -59,6 +60,32 @@ class WC_Accommodation_Booking {
 	public function add_accommodation_to_booking_product_terms( $terms ) {
 		$terms[] = 'accommodation-booking';
 		return $terms;
+	}
+
+	/**
+	 * Adds 'accommodation-booking' to `get_booking_products` so 'accommodation-booking'
+	 * products appear in the dropdown.
+	 *
+	 * @param array $args Current query args
+	 *
+	 * @return array Query args
+	 */
+	public function add_accommodation_to_booking_products_args( $args ) {
+		foreach ( $args['tax_query'] as $index => $filter ) {
+			if ( 'product_type' !== $filter['taxonomy'] ) {
+				continue;
+			}
+
+			$terms = isset( $args['tax_query'][ $index ]['terms'] ) ? $args['tax_query'][ $index ]['terms'] : array( 'booking' );
+			if ( ! is_array( $terms ) ) {
+				$terms = array( $terms );
+			}
+			$terms[] = 'accommodation-booking';
+
+			$args['tax_query'][ $index ]['terms'] = $terms;
+		}
+
+		return $args;
 	}
 
 }
