@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors:  woothemes, jshreve
+Contributors:  woothemes, jshreve, akeda
 Tags: woocommerce, bookings, accommodations
 Requires at least: 3.8
 Tested up to: 4.4
@@ -30,6 +30,11 @@ Or use the automatic installation wizard through your admin panel, just search f
 == Changelog ==
 
 = 1.0.2 =
+* Fix - Fatal Error on submit booking request in admin bookings
+* Fix - Incorrect end date time in order info and cart
+* Fix - No manual booking if product type is Accommodations
+* Fix - Better dependencies checker
+* Fix - Fatal error when plugin is deactivated
 * Fix - Fix display of checkout times when using different date formats.
 * Fix - Fix documentation link.
 
