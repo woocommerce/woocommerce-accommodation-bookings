@@ -14,7 +14,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles_and_scripts' ) );
 
 		add_filter( 'product_type_selector' , array( $this, 'product_type_selector' ) );
-		add_filter( 'product_type_options', array( $this, 'product_type_options' ) );
+		add_filter( 'product_type_options', array( $this, 'product_type_options' ), 15 );
 
 		add_action( 'woocommerce_product_write_panels', array( $this, 'panels' ) );
 		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'general_product_data' ) );
@@ -70,6 +70,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 */
 	public function product_type_options( $options ) {
 		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation_booking';
+		$options['wc_booking_has_resources']['wrapper_class'] .= ' show_if_accommodation_booking';
 		return $options;
 	}
 
