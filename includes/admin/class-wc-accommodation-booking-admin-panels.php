@@ -104,6 +104,9 @@ class WC_Accommodation_Booking_Admin_Panels {
 		}
 
 		$meta_to_save = array(
+			'_wc_booking_has_resources'                            => 'issetyesno',
+			'_wc_booking_resources_assignment'                     => '',
+			'_wc_booking_resouce_label'                            => '',
 			'_wc_accommodation_booking_calendar_display_mode'      => '',
 			'_wc_accommodation_booking_requires_confirmation'      => 'yesno',
 			'_wc_accommodation_booking_user_can_cancel'            => '',
