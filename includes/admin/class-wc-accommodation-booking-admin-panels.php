@@ -77,7 +77,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * Hides the shipping tab for accommodoation products
 	 */
 	public function hide_shipping_tab( $tabs ) {
-		$tabs['shipping']['class'][] = 'hide_if_accommodation_booking';
+		$tabs['shipping']['class'][] = 'hide_if_accommodation-booking';
 		return $tabs;
 	}
 
