@@ -48,7 +48,6 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 */
 	public function admin_styles_and_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
 	}
 
 	/**
@@ -69,8 +68,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * @return array
 	 */
 	public function product_type_options( $options ) {
-		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation_booking';
-		$options['wc_booking_has_resources']['wrapper_class'] .= ' show_if_accommodation_booking';
+		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation-booking';
+		$options['wc_booking_has_resources']['wrapper_class'] .= ' show_if_accommodation-booking';
 		return $options;
 	}
 
