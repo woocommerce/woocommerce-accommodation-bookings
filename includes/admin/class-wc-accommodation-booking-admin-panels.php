@@ -180,6 +180,46 @@ class WC_Accommodation_Booking_Admin_Panels {
 		}
 		update_post_meta( $post_id, '_wc_booking_availability', $availability );
 
+		// Resources
+		if ( isset( $_POST['resource_id'] ) && isset( $_POST['_wc_booking_has_resources'] ) ) {
+			$resource_ids         = $_POST['resource_id'];
+			$resource_menu_order  = $_POST['resource_menu_order'];
+			$resource_base_cost   = $_POST['resource_cost'];
+			$resource_block_cost  = $_POST['resource_block_cost'];
+			$max_loop             = max( array_keys( $_POST['resource_id'] ) );
+			$resource_base_costs  = array();
+			$resource_block_costs = array();
+
+			for ( $i = 0; $i <= $max_loop; $i ++ ) {
+				if ( ! isset( $resource_ids[ $i ] ) ) {
+					continue;
+				}
+
+				$resource_id = absint( $resource_ids[ $i ] );
+
+				$wpdb->update(
+					"{$wpdb->prefix}wc_booking_relationships",
+					array(
+						'sort_order'  => $resource_menu_order[ $i ]
+					),
+					array(
+						'product_id'  => $post_id,
+						'resource_id' => $resource_id
+					)
+				);
+
+				$resource_base_costs[ $resource_id ]  = wc_clean( $resource_base_cost[ $i ] );
+				$resource_block_costs[ $resource_id ] = wc_clean( $resource_block_cost[ $i ] );
+
+				if ( ( $resource_base_cost[ $i ] + $resource_block_cost[ $i ] ) > 0 ) {
+					$has_additional_costs = true;
+				}
+			}
+
+			update_post_meta( $post_id, '_resource_base_costs', $resource_base_costs );
+			update_post_meta( $post_id, '_resource_block_costs', $resource_block_costs );
+		}
+		
 		// Rates
 		$pricing = array();
 		$row_size     = isset( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) ? sizeof( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) : 0;
