@@ -62,14 +62,6 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	}
 
 	/**
-	 * Version 1.0.0 does not extra resources
-	 * @return boolean
-	 */
-	public function has_resources() {
-		return false;
-	}
-
-	/**
 	 * We want users to be able to select their range of dates
 	 * @return boolean
 	 */
