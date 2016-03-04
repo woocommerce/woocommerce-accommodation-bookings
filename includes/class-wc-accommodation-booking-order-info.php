@@ -25,15 +25,29 @@ class WC_Accommodation_Booking_Order_Info {
 			return;
 		}
 
-		$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
+		$booking_date_key = __( 'Booking Date', 'woocommerce-bookings' );
+		$booking_date     = ! empty( $item[ $booking_date_key ] ) ? $item[ $booking_date_key ] : null;
+
+		if ( ! $booking_date ) {
+			return;
+		}
+
+		$check_in  = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
 		$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
 		?>
 		<p>
 		<strong><?php esc_html_e( 'Check-in', 'woocommerce-accommodation-bookings' ); ?> </strong>
-		<?php echo esc_html( $item['Booking Date'] );
+		<?php echo esc_html( $booking_date );
 		if ( ! empty( $check_in ) ) {
 			esc_html_e( ' at ', 'woocommerce-accommodation-bookings');
 			echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_in ) ) );
+		}
+
+		$duration_key = __( 'Duration', 'woocommerce-bookings' );
+		$duration     = intval( $item[ $duration_key ] );
+		$end_date_ts  = $this->get_end_date_timestamp( $booking_date, $duration );
+		if ( ! $end_date_ts ) {
+			return;
 		}
 		?>
 
@@ -41,7 +55,7 @@ class WC_Accommodation_Booking_Order_Info {
 
 		<strong><?php esc_html_e( 'Check-out', 'woocommerce-accommodation-bookings' ); ?> </strong>
 		<?php
-		$end_date = date_i18n( get_option( 'date_format'), $this->get_end_date_timestamp( $item['Booking Date'], intval( $item['Duration'] ) ) );
+		$end_date = date_i18n( get_option( 'date_format'), $end_date_ts );
 		echo esc_html( $end_date );
 		if ( ! empty( $check_out ) ) {
 			esc_html_e( ' at ', 'woocommerce-accommodation-bookings');
