@@ -41,7 +41,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * Version 1.0.0 does not support persons/person types yet - just booking rooms
 	 * @return boolean
 	 */
-	function has_persons() {
+	public function has_persons() {
 		return false;
 	}
 
