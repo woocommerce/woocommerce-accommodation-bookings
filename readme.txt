@@ -30,6 +30,11 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.0.3 =
+* Fix - Per Night Price Displaying Incorrect above bookings form.
+* Fix - Plugin on WordPress.org does not include assets folder.
+* Fix - Compatibility with Product Add-ons.
+
 = 1.0.2 =
 * Fix - Fatal Error on submit booking request in admin bookings
 * Fix - Incorrect end date time in order info and cart
