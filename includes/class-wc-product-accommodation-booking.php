@@ -127,6 +127,10 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		$tax_display_mode = get_option( 'woocommerce_tax_display_shop' );
 		$display_price    = $tax_display_mode == 'incl' ? $this->get_price_including_tax( 1, $this->get_price() ) : $this->get_price_excluding_tax( 1, $this->get_price() );
 
+		if ( $this->wc_booking_min_duration > 1 ) {
+			$display_price = $display_price / $this->wc_booking_min_duration;
+		}
+
 		if ( $display_price ) {
 			if ( $this->has_additional_costs() ) {
 				$price_html = sprintf( __( 'From %s per night', 'woocommerce-accommodation-bookings' ), wc_price( $display_price ) ) . $this->get_price_suffix();
