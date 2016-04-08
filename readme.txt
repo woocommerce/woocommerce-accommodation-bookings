@@ -3,7 +3,7 @@ Contributors:  woothemes, jshreve, akeda
 Tags: woocommerce, bookings, accommodations
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 1.0.2
+Stable tag: 1.0.4
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,6 +29,14 @@ This extension extends Bookings and makes it possible to:
 Or use the automatic installation wizard through your admin panel, just search for this plugins name.
 
 == Changelog ==
+
+= 1.0.4 =
+* Feature - Add support for Resources
+
+= 1.0.3 =
+* Fix - Per Night Price Displaying Incorrect above bookings form.
+* Fix - Plugin on WordPress.org does not include assets folder.
+* Fix - Compatibility with Product Add-ons.
 
 = 1.0.2 =
 * Fix - Fatal Error on submit booking request in admin bookings
