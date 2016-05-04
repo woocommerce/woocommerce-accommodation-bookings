@@ -11,8 +11,5 @@ sftp-config.json
 /deploy/
 /wc-apidocs/
 
-# Ignore all log files except for .htaccess
 /logs/*
-!/logs/.htaccess
-.*
-!.tx/
+deploy-to-wp-org.sh
