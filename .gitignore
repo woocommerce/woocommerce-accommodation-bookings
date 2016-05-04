@@ -12,4 +12,5 @@ sftp-config.json
 /wc-apidocs/
 
 /logs/*
+!/logs/.htaccess
 deploy-to-wp-org.sh

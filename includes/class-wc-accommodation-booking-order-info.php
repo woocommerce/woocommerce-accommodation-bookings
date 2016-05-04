@@ -71,10 +71,13 @@ class WC_Accommodation_Booking_Order_Info {
 	 *
 	 * @param  string $start_date
 	 * @param  int $duration
-	 * @return int
+	 * @return int | boolean
 	 */
 	private function get_end_date_timestamp( $start_date, $duration ) {
 		$datetime = DateTime::createFromFormat( get_option( 'date_format' ) . ' H:i:s', $start_date . ' 00:00:00' );
+		if ( ! $datetime ) {
+			return false;
+		}
 		$datetime->add( new DateInterval( 'P' . $duration . 'D' ) );
 
 		return $datetime->getTimestamp();
