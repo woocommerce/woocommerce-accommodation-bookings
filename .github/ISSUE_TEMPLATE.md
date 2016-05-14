@@ -18,4 +18,11 @@ PLEASE NOTE
 - Everything is optional, but try to add as many details as possible.
 - Screenshot worth a thousand words, use screenshots if possible.
 - If requesting a new feature, explain why you'd like to see it added.
-->
+- Please apply appropriate labels on the issue
+-->
+
+
+-------------------
+
+- [ ] Issue assigned to next milestone.
+- [ ] Issue assigned a priority (will be assessed by maintainers).
