@@ -1,4 +1,4 @@
-<div class="options_group show_if_accommodation_booking">
+<div class="options_group show_if_accommodation-booking">
 
 	<?php
 
