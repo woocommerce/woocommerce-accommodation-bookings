@@ -30,6 +30,11 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.0.4 =
+* Feature - Add support for Persons
+* Feature - Add support for Resources
+* Fix - Full compatibility with Product Add-ons.
+
 = 1.0.3 =
 * Fix - Per Night Price Displaying Incorrect above bookings form.
 * Fix - Plugin on WordPress.org does not include assets folder.
