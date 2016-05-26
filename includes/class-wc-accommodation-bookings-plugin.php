@@ -144,6 +144,7 @@ class WC_Accommodation_Bookings_Plugin {
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-date-picker.php' );
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-product-tabs.php' );
 		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-order-info.php' );
+		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'integrations/class-wc-accommodation-booking-addons.php' );
 	}
 
 	/**
