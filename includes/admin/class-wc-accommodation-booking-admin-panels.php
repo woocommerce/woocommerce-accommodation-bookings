@@ -14,7 +14,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles_and_scripts' ) );
 
 		add_filter( 'product_type_selector' , array( $this, 'product_type_selector' ) );
-		add_filter( 'product_type_options', array( $this, 'product_type_options' ) );
+		add_filter( 'product_type_options', array( $this, 'product_type_options' ), 15 );
 
 		add_action( 'woocommerce_product_write_panels', array( $this, 'panels' ) );
 		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'general_product_data' ) );
@@ -69,7 +69,9 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * @return array
 	 */
 	public function product_type_options( $options ) {
-		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation_booking';
+		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation-booking';
+		$options['wc_booking_has_resources']['wrapper_class'] .= ' show_if_accommodation-booking';
+		$options['wc_booking_has_persons']['wrapper_class'] .= ' show_if_accommodation-booking';
 		return $options;
 	}
 
@@ -77,7 +79,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * Hides the shipping tab for accommodoation products
 	 */
 	public function hide_shipping_tab( $tabs ) {
-		$tabs['shipping']['class'][] = 'hide_if_accommodation_booking';
+		$tabs['shipping']['class'][] = 'hide_if_accommodation-booking';
 		return $tabs;
 	}
 
@@ -104,6 +106,15 @@ class WC_Accommodation_Booking_Admin_Panels {
 		}
 
 		$meta_to_save = array(
+			'_wc_booking_has_persons'                => 'issetyesno',
+			'_wc_booking_person_qty_multiplier'      => 'yesno',
+			'_wc_booking_person_cost_multiplier'     => 'yesno',
+			'_wc_booking_min_persons_group'          => 'int',
+			'_wc_booking_max_persons_group'          => 'int',
+			'_wc_booking_has_person_types'           => 'yesno',
+			'_wc_booking_has_resources'                            => 'issetyesno',
+			'_wc_booking_resources_assignment'                     => '',
+			'_wc_booking_resouce_label'                            => '',
 			'_wc_accommodation_booking_calendar_display_mode'      => '',
 			'_wc_accommodation_booking_requires_confirmation'      => 'yesno',
 			'_wc_accommodation_booking_user_can_cancel'            => '',
@@ -177,6 +188,46 @@ class WC_Accommodation_Booking_Admin_Panels {
 		}
 		update_post_meta( $post_id, '_wc_booking_availability', $availability );
 
+		// Resources
+		if ( isset( $_POST['resource_id'] ) && isset( $_POST['_wc_booking_has_resources'] ) ) {
+			$resource_ids         = $_POST['resource_id'];
+			$resource_menu_order  = $_POST['resource_menu_order'];
+			$resource_base_cost   = $_POST['resource_cost'];
+			$resource_block_cost  = $_POST['resource_block_cost'];
+			$max_loop             = max( array_keys( $_POST['resource_id'] ) );
+			$resource_base_costs  = array();
+			$resource_block_costs = array();
+
+			for ( $i = 0; $i <= $max_loop; $i ++ ) {
+				if ( ! isset( $resource_ids[ $i ] ) ) {
+					continue;
+				}
+
+				$resource_id = absint( $resource_ids[ $i ] );
+
+				$wpdb->update(
+					"{$wpdb->prefix}wc_booking_relationships",
+					array(
+						'sort_order'  => $resource_menu_order[ $i ]
+					),
+					array(
+						'product_id'  => $post_id,
+						'resource_id' => $resource_id
+					)
+				);
+
+				$resource_base_costs[ $resource_id ]  = wc_clean( $resource_base_cost[ $i ] );
+				$resource_block_costs[ $resource_id ] = wc_clean( $resource_block_cost[ $i ] );
+
+				if ( ( $resource_base_cost[ $i ] + $resource_block_cost[ $i ] ) > 0 ) {
+					$has_additional_costs = true;
+				}
+			}
+
+			update_post_meta( $post_id, '_resource_base_costs', $resource_base_costs );
+			update_post_meta( $post_id, '_resource_block_costs', $resource_block_costs );
+		}
+		
 		// Rates
 		$pricing = array();
 		$row_size     = isset( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) ? sizeof( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) : 0;
@@ -203,6 +254,58 @@ class WC_Accommodation_Booking_Admin_Panels {
 					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_day_of_week' ][ $i ] );
 					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_day_of_week' ][ $i ] );
 				break;
+			}
+		}
+		
+		// Person Types
+		if ( isset( $_POST['person_id'] ) && isset( $_POST['_wc_booking_has_persons'] ) ) {
+			$person_ids         = $_POST['person_id'];
+			$person_menu_order  = $_POST['person_menu_order'];
+			$person_name        = $_POST['person_name'];
+			$person_cost        = $_POST['person_cost'];
+			$person_block_cost  = $_POST['person_block_cost'];
+			$person_description = $_POST['person_description'];
+			$person_min         = $_POST['person_min'];
+			$person_max         = $_POST['person_max'];
+
+			$max_loop = max( array_keys( $_POST['person_id'] ) );
+
+			for ( $i = 0; $i <= $max_loop; $i ++ ) {
+				if ( ! isset( $person_ids[ $i ] ) ) {
+					continue;
+				}
+
+				$person_id = absint( $person_ids[ $i ] );
+
+				if ( empty( $person_name[ $i ] ) ) {
+					$person_name[ $i ] = sprintf( __( 'Person Type #%d', 'woocommerce-bookings' ), ( $i + 1 ) );
+				}
+
+				$wpdb->update(
+					$wpdb->posts,
+					array(
+						'post_title'   => stripslashes( $person_name[ $i ] ),
+						'post_excerpt' => stripslashes( $person_description[ $i ] ),
+						'menu_order'   => $person_menu_order[ $i ] ),
+					array(
+						'ID' => $person_id
+					),
+					array(
+						'%s',
+						'%s',
+						'%d'
+					),
+					array( '%d' )
+				);
+
+				update_post_meta( $person_id, 'cost', wc_clean( $person_cost[ $i ] ) );
+				update_post_meta( $person_id, 'block_cost', wc_clean( $person_block_cost[ $i ] ) );
+				update_post_meta( $person_id, 'min', wc_clean( $person_min[ $i ] ) );
+				update_post_meta( $person_id, 'max', wc_clean( $person_max[ $i ] ) );
+
+				if ( $person_cost[ $i ] > 0 || $person_block_cost[ $i ] > 0 ) {
+					$has_additional_costs = true;
+				}
 			}
 		}
 

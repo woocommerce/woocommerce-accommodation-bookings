@@ -15,7 +15,6 @@ class WC_Accommodation_Booking_Cart_Manager {
 	public function __construct() {
 		add_action( 'woocommerce_accommodation-booking_add_to_cart', array( $this, 'add_to_cart' ), 30 );
 		add_filter( 'woocommerce_get_item_data', array( $this, 'get_item_data' ), 20, 2 );
-		add_filter( 'woocommerce_product_addons_adjust_price', array( $this, 'disable_product_add_on_price_adjustment' ), 20, 2 );
 	}
 
 	/**
@@ -56,21 +55,6 @@ class WC_Accommodation_Booking_Cart_Manager {
 		}
 
 		return $other_data;
-	}
-
-	/**
-	 * Don't adjust cart item price for accommodation bookings since the booking form class adds the costs itself
-	 *
-	 * @param boolean $bool should the the addon price be added to the product price.
-	 * @param array   $cart_item the corresponding cart item.
-	 *
-	 * @return bool
-	 */
-	public function disable_product_add_on_price_adjustment( $bool, $cart_item ) {
-		if ( $cart_item['data']->is_type( 'accommodation-booking' ) ) {
-			return false;
-		}
-		return $bool;
 	}
 }
 
