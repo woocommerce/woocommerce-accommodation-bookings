@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: WooCommerce Accommodation Bookings
-Plugin URI: http://www.woothemes.com/products/woocommerce-accommodation-bookings/
+Plugin URI: https://woocommerce.com/products/woocommerce-accommodation-bookings/
 Description: An accommodations add-on for the WooCommerce Bookings extension.
 Version: 1.0.4
 Author: WooThemes
-Author URI: http://woothemes.com
+Author URI: https://woocommerce.com
 Text Domain: woocommerce-accommodation-bookings
 Domain Path: /languages
 
