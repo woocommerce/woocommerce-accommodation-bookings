@@ -130,6 +130,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			'_wc_accommodation_booking_min_date_unit'              => '',
 			'_wc_accommodation_booking_qty'                        => 'int',
 			'_wc_accommodation_booking_base_cost'                  => 'float',
+			'_wc_accommodation_booking_display_cost'               => '',
 			'_wc_accommodation_booking_min_duration'               => 'int',
 			'_wc_accommodation_booking_max_duration'               => 'int',
 		);
@@ -161,6 +162,10 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 			$meta_key = str_replace( '_wc_accommodation_booking_', '_wc_booking_', $meta_key );
 			update_post_meta( $post_id, $meta_key, $value );
+
+			if ( '_wc_booking_display_cost' == $meta_key ) {
+				update_post_meta( $post_id, '_wc_display_cost', $value );
+			}
 		}
 
 		// Availability
