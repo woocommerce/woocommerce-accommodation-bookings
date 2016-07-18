@@ -30,6 +30,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.0.5 =
+* Add - Display cost settings field.
+
 = 1.0.4 =
 * Feature - Add support for Persons
 * Feature - Add support for Resources
