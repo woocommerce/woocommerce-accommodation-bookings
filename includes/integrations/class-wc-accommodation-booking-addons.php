@@ -34,10 +34,14 @@ class WC_Accommodation_Booking_Addons {
 	 * Show options
 	 */
 	public function addon_options( $post, $addon, $loop ) {
-		$product = get_product( $post->ID );
-		$css_classes = 'show_if_accommodation-booking';
-		if ( 'accommodation-booking' !== $product->product_type ) {
-			$css_classes .= ' hide_initial_booking_addon_options';
+		$css_classes = '';
+		
+		if ( is_object( $post ) ) {
+			$product = get_product( $post->ID );
+			$css_classes .= 'show_if_accommodation-booking';
+			if ( 'accommodation-booking' !== $product->product_type ) {
+				$css_classes .= ' hide_initial_booking_addon_options';
+			}
 		}
 		?>
 		<tr class="<?php echo esc_attr( $css_classes ); ?>">
