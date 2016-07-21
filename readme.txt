@@ -32,6 +32,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 = 1.0.5 =
 * Add - Display cost settings field.
+* Fix - Undefined variable on $post using tab manager.
 
 = 1.0.4 =
 * Feature - Add support for Persons
