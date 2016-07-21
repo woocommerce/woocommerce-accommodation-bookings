@@ -44,6 +44,10 @@ class WC_Accommodation_Booking_Product_Tabs {
 	public function add_time_tab( $tabs = array() ) {
 		global $post, $woocommerce;
 
+		if ( ! is_object( $post ) ) {
+			return $tabs;
+		}
+		
 		$product = get_product( $post->ID );
 
 		if ( 'accommodation-booking' !== $product->product_type ) {
