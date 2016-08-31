@@ -32,6 +32,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 = 1.0.6 =
 * Fix - Check in/out time is not respected when booking is created
+* Tweak - Also check if booking class exists when plugin is loaded in case directory's name is not woocommerce-bookings
 
 = 1.0.5 =
 * Add - Display cost settings field.
