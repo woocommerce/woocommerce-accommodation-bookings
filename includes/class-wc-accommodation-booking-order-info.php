@@ -25,7 +25,7 @@ class WC_Accommodation_Booking_Order_Info {
 			return;
 		}
 
-		$booking_date_key = __( 'Booking Date', 'woocommerce-bookings' );
+		$booking_date_key = __( 'Booking Date', 'woocommerce-accommodation-bookings' );
 		$booking_date     = ! empty( $item[ $booking_date_key ] ) ? $item[ $booking_date_key ] : null;
 
 		if ( ! $booking_date ) {
@@ -43,7 +43,7 @@ class WC_Accommodation_Booking_Order_Info {
 			echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( "Today " . $check_in ) ) );
 		}
 
-		$duration_key = __( 'Duration', 'woocommerce-bookings' );
+		$duration_key = __( 'Duration', 'woocommerce-accommodation-bookings' );
 		$duration     = intval( $item[ $duration_key ] );
 		$end_date_ts  = $this->get_end_date_timestamp( $booking_date, $duration );
 		if ( ! $end_date_ts ) {
@@ -71,10 +71,13 @@ class WC_Accommodation_Booking_Order_Info {
 	 *
 	 * @param  string $start_date
 	 * @param  int $duration
-	 * @return int
+	 * @return int | boolean
 	 */
 	private function get_end_date_timestamp( $start_date, $duration ) {
 		$datetime = DateTime::createFromFormat( get_option( 'date_format' ) . ' H:i:s', $start_date . ' 00:00:00' );
+		if ( ! $datetime ) {
+			return false;
+		}
 		$datetime->add( new DateInterval( 'P' . $duration . 'D' ) );
 
 		return $datetime->getTimestamp();

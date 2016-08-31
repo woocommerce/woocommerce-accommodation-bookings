@@ -21,7 +21,7 @@
 		woocommerce_wp_text_input( array(
 			'id'                => '_wc_accommodation_booking_max_duration',
 			'label'             => __( 'Maximum number of nights allowed in a booking', 'woocommerce-accommodation-bookings' ),
-			'description'       => __( 'The maximum allowed duration the user can stay.', 'woocommerce-bookings' ),
+			'description'       => __( 'The maximum allowed duration the user can stay.', 'woocommerce-accommodation-bookings' ),
 			'value'             => ( empty( $max_duration ) ? 7 : $max_duration ),
 			'desc_tip'          => true,
 			'type'              => 'number',

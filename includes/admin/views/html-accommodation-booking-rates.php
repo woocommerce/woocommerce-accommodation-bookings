@@ -5,6 +5,13 @@
 			'step' 	=> '0.01'
 		) ) ); ?>
 		<?php do_action( 'woocommerce_accommodation_bookings_after_booking_base_cost', $post_id ); ?>
+
+		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_display_cost', 'label' => __( 'Display cost', 'woocommerce-accommodation-bookings' ), 'description' => __( 'The cost is displayed to the user on the frontend. Leave blank to have it calculated for you. If a booking has varying costs, this will be prefixed with the word "from:".', 'woocommerce-accommodation-bookings' ), 'value' => get_post_meta( $post_id, '_wc_display_cost', true ), 'type' => 'number', 'desc_tip' => true, 'custom_attributes' => array(
+			'min'   => '',
+			'step' 	=> '0.01'
+		) ) ); ?>
+
+        <?php do_action( 'woocommerce_accommodation_bookings_after_display_cost', $post_id ); ?>
 	</div>
 	<div class="options_group">
 		<div class="table_grid">

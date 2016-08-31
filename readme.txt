@@ -3,7 +3,7 @@ Contributors:  woothemes, jshreve, akeda
 Tags: woocommerce, bookings, accommodations
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 1.0.4
+Stable tag: 1.0.6
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,6 +29,14 @@ This extension extends Bookings and makes it possible to:
 Or use the automatic installation wizard through your admin panel, just search for this plugins name.
 
 == Changelog ==
+
+= 1.0.6 =
+* Fix - Check in/out time is not respected when booking is created
+* Tweak - Also check if booking class exists when plugin is loaded in case directory's name is not woocommerce-bookings
+
+= 1.0.5 =
+* Add - Display cost settings field.
+* Fix - Undefined variable on $post using tab manager.
 
 = 1.0.4 =
 * Feature - Add support for Persons

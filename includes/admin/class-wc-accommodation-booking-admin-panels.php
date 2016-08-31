@@ -47,8 +47,14 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * Loads any CSS or JS necessary for the admin
 	 */
 	public function admin_styles_and_scripts() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
+
+		$screen = get_current_screen();
+
+		// only load it on products
+		if ( 'product' === $screen->id ) {
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
+		}
 	}
 
 	/**
@@ -126,6 +132,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			'_wc_accommodation_booking_min_date_unit'              => '',
 			'_wc_accommodation_booking_qty'                        => 'int',
 			'_wc_accommodation_booking_base_cost'                  => 'float',
+			'_wc_accommodation_booking_display_cost'               => '',
 			'_wc_accommodation_booking_min_duration'               => 'int',
 			'_wc_accommodation_booking_max_duration'               => 'int',
 		);
@@ -157,6 +164,10 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 			$meta_key = str_replace( '_wc_accommodation_booking_', '_wc_booking_', $meta_key );
 			update_post_meta( $post_id, $meta_key, $value );
+
+			if ( '_wc_booking_display_cost' === $meta_key ) {
+				update_post_meta( $post_id, '_wc_display_cost', $value );
+			}
 		}
 
 		// Availability
