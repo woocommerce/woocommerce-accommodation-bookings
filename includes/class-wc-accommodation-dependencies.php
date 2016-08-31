@@ -22,10 +22,25 @@ class WC_Accommodation_Dependencies {
 
 	/**
 	 * Returns true if bookings is installed/active and false if not
+	 *
 	 * @return boolean
 	 */
 	private static function is_bookings_installed() {
-		return in_array( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins ) || array_key_exists( 'woocommerce-bookings/woocommmerce-bookings.php', self::$active_plugins );
+		// Notice the typo on plugin's file for Bookings <= 1.9.10.
+		$old_booking_file = 'woocommerce-bookings/woocommmerce-bookings.php';
+		$booking_file     = 'woocommerce-bookings/woocommerce-bookings.php';
+
+		return (
+			in_array( $booking_file, self::$active_plugins )
+			||
+			array_key_exists( $booking_file, self::$active_plugins )
+			||
+			class_exists( 'WC_Bookings' )
+			||
+			in_array( $old_booking_file, self::$active_plugins )
+			||
+			array_key_exists( $old_booking_file, self::$active_plugins )
+		);
 	}
 
 	/**
