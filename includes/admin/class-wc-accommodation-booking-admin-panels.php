@@ -327,7 +327,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		update_post_meta( $post_id, '_manage_stock', 'no' );
 
 		// Set price so filters work - using get_base_cost()
-		$product = get_product( $post_id );
+		$product = wc_get_product( $post_id );
 		update_post_meta( $post_id, '_price', $product->get_base_cost() );
 	}
 

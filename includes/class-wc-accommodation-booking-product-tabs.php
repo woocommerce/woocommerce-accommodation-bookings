@@ -39,16 +39,18 @@ class WC_Accommodation_Booking_Product_Tabs {
 	/**
 	 * Adds our time tab to the list of tabs, if the product is an accommodation product and
 	 * the admin filled out the time setting fields.
+	 *
 	 * @param array $tabs List of WooCommerce product tabs
+	 * @return array $tabs
 	 */
 	public function add_time_tab( $tabs = array() ) {
-		global $post, $woocommerce;
+		global $post;
 
 		if ( ! is_object( $post ) ) {
 			return $tabs;
 		}
-		
-		$product = get_product( $post->ID );
+
+		$product = wc_get_product( $post->ID );
 
 		if ( 'accommodation-booking' !== $product->product_type ) {
 			return $tabs;
@@ -62,7 +64,7 @@ class WC_Accommodation_Booking_Product_Tabs {
 		$tabs['accommodation_booking_time'] = array(
 			'title'    => $title,
 			'priority' => 10,
-			'callback' => array( $this, 'add_time_tab_content' )
+			'callback' => array( $this, 'add_time_tab_content' ),
 		);
 
 		return $tabs;
