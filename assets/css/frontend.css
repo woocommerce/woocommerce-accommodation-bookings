@@ -1,1 +1,1 @@
-.wc-bookings-date-picker-accommodation-booking td.partial_booked a{opacity:.8}.wc-bookings-date-picker-accommodation-booking td.partial_booked a:before{border-top:transparent!important;border-right:transparent!important}
+.wc-bookings-date-picker .ui-datepicker td.partial_booked a:before{display:none}.wc-bookings-date-picker .ui-datepicker td.partial_booked a:after{content:"";position:absolute;right:0;bottom:0;width:0;height:0;border-bottom:2.5em solid #C96259;border-left:2.5em solid transparent;z-index:-10;opacity:.75}
