@@ -113,4 +113,24 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		return apply_filters( 'woocommerce_get_price_html', $price_html, $this );
 	}
 
+	/**
+	 * Get an array of blocks within in a specified date range
+	 *
+	 * The WC_Product_Booking class does not account for 'nights' as a valid duration unit so it retrieves every minute of each day as a block,
+	 * severly slowing down the load time of the page.
+	 *
+	 * @param       $start_date
+	 * @param       $end_date
+	 * @param array $intervals
+	 * @param int   $resource_id
+	 * @param array $booked
+	 *
+	 * @return array
+	 */
+	public function get_blocks_in_range( $start_date, $end_date, $intervals = array(), $resource_id = 0, $booked = array() ) {
+
+		$blocks_in_range = $this->get_blocks_in_range_for_day( $start_date, $end_date, $resource_id, $booked );
+
+		return array_unique( $blocks_in_range );
+	}
 }
