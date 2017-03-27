@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors:  woothemes, jshreve, akeda
+Contributors:  woothemes, jshreve, akeda, bor0
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
 Tested up to: 4.6

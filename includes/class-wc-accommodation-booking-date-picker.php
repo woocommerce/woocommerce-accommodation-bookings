@@ -70,7 +70,7 @@ class WC_Accommodation_Booking_Date_Picker {
 			return $booked_data_array;
 		}
 
-		$existing_bookings = WC_Bookings_Controller::get_bookings_for_objects( array( $product->id ) );
+		$existing_bookings = WC_Bookings_Controller::get_bookings_for_objects( array( $product->get_id() ) );
 		$available_quantity = $product->get_available_quantity( null );
 		// Use the existing bookings to find days which are partially booked
 		foreach ( $existing_bookings as $booking ) {

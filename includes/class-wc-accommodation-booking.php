@@ -32,7 +32,7 @@ class WC_Accommodation_Booking {
 
 	public function add_checkin_time_to_booking_start_time( $date, $booking ) {
 		$product = wc_get_product( $booking->product_id );
-		if ( empty( $product ) || 'accommodation-booking' !== $product->product_type ) {
+		if ( empty( $product ) || 'accommodation-booking' !== $product->get_type() ) {
 			return $date;
 		}
 
@@ -45,7 +45,7 @@ class WC_Accommodation_Booking {
 
 	public function add_checkout_time_to_booking_end_time( $date, $booking ) {
 		$product = wc_get_product( $booking->product_id );
-		if ( empty( $product ) || 'accommodation-booking' !== $product->product_type ) {
+		if ( empty( $product ) || 'accommodation-booking' !== $product->get_type() ) {
 			return $date;
 		}
 
