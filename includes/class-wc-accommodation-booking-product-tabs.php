@@ -52,7 +52,7 @@ class WC_Accommodation_Booking_Product_Tabs {
 
 		$product = wc_get_product( $post->ID );
 
-		if ( 'accommodation-booking' !== $product->product_type ) {
+		if ( 'accommodation-booking' !== $product->get_type() ) {
 			return $tabs;
 		}
 

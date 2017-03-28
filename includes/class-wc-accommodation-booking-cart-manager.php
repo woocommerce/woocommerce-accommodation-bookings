@@ -32,7 +32,7 @@ class WC_Accommodation_Booking_Cart_Manager {
 	 * @return array
 	 */
 	public function get_item_data( $other_data, $cart_item ) {
-		if ( 'accommodation-booking' === $cart_item['data']->product_type ) {
+		if ( 'accommodation-booking' === $cart_item['data']->get_type() ) {
 			$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
 			$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
 			$end_date  = date_i18n( get_option( 'date_format'), $cart_item['booking']['_end_date'] );

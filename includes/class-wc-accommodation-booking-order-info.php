@@ -21,7 +21,7 @@ class WC_Accommodation_Booking_Order_Info {
 	public function add_checkinout_info_to_order_email( $item_id, $item, $order ) {
 		$product = wc_get_product( $item['product_id'] );
 
-		if ( 'accommodation-booking' !== $product->product_type ) {
+		if ( 'accommodation-booking' !== $product->get_type() ) {
 			return;
 		}
 

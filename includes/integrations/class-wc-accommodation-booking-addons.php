@@ -39,7 +39,7 @@ class WC_Accommodation_Booking_Addons {
 		if ( is_object( $post ) ) {
 			$product = wc_get_product( $post->ID );
 			$css_classes .= 'show_if_accommodation-booking';
-			if ( 'accommodation-booking' !== $product->product_type ) {
+			if ( 'accommodation-booking' !== $product->get_type() ) {
 				$css_classes .= ' hide_initial_booking_addon_options';
 			}
 		}
