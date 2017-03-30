@@ -48,17 +48,19 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	/**
 	 * Customers define how many nights they want to stay. There is no concept
 	 * of "fixed" durations for accommodations.
+	 * @param  string $context
 	 * @return string
 	 */
-	public function get_duration_type() {
+	public function get_duration_type( $context = 'view' ) {
 		return 'customer';
 	}
 
 	/**
 	 * Our duration is nights instead of days
+	 * @param  string $context
 	 * @return string
 	 */
-	public function get_duration_unit() {
+	public function get_duration_unit( $context = 'view' ) {
 		return 'night';
 	}
 

@@ -75,7 +75,7 @@ class WC_Accommodation_Bookings_Plugin {
 		}
 
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 5 );
-		add_action( 'woocommerce_loaded', array( $this, 'includes' ), 20 );
+		add_action( 'plugins_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'booking_form_styles' ) );
 
