@@ -9,6 +9,7 @@ Thumbs.db
 .settings*
 sftp-config.json
 /deploy/
+/build/
 /wc-apidocs/
 
 /logs/*
