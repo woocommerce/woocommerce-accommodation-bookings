@@ -13,12 +13,20 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * Set up our new type and fill out some basic info
 	 */
 	public function __construct( $product ) {
-		$this->product_type = 'accommodation-booking';
+		$this->product_type = $this->get_type();
 		parent::__construct( $product );
 
 		$this->wc_booking_duration_type = 'customer';
 		$this->wc_booking_duration_unit = 'night';
 		$this->wc_booking_duration = 1;
+	}
+
+	/**
+	 * Override product type
+	 * @return string
+	 */
+	public function get_type() {
+		return 'accommodation-booking';
 	}
 
 	/**
