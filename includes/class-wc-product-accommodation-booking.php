@@ -110,8 +110,10 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		}
 
-		if ( $this->wc_booking_min_duration > 1 ) {
-			$display_price = $display_price / $this->wc_booking_min_duration;
+		$min_duration = absint( get_post_meta( $this->get_id(), '_wc_booking_min_duration', true ) );
+
+		if ( $min_duration > 1 ) {
+			$display_price = $display_price / $min_duration;
 		}
 
 		if ( $display_price ) {
