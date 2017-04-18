@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) ) :
+
 /**
  * Class that creates our new accommodation booking product type
  * Mostly inheirted from WC_Product_Booking (code reuse!) but overrides a few methods
@@ -151,3 +153,5 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		return array_unique( $blocks_in_range );
 	}
 }
+
+endif;
