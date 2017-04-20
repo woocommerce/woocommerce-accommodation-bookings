@@ -3,7 +3,7 @@ Contributors:  woothemes, jshreve, akeda, bor0
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
 Tested up to: 4.6
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,6 +29,15 @@ This extension extends Bookings and makes it possible to:
 Or use the automatic installation wizard through your admin panel, just search for this plugins name.
 
 == Changelog ==
+
+= 1.0.9 =
+* Fix - Additional updates for WooCommerce 3.0 compatibility.
+* Fix - Min/max rules not being applied.
+* Fix - Prices not being added to cart.
+* Fix - Align panel icons.
+* Fix - Fatal error when using older version of Bookings.
+* Fix - Logic for availability of dates with checkin/checkout.
+* Fix - Resource costs not being calculated.
 
 = 1.0.8 =
 * Fix - WooCommerce 3.0 compatibility.
