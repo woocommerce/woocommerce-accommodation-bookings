@@ -64,8 +64,14 @@ class WC_Accommodation_Booking_Date_Picker {
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
 
-		$partially_booked_days = array();
-		$booked_day_counts =  array();
+		$booked_day_counts     = array();
+
+		// this array will contain the start and the end of all bookings
+		$check_in_out_days     = array(
+			'in' => array(),
+			'out' => array(),
+		);
+
 		if ( 'night' !== $product->get_duration_unit() ) {
 			return $booked_data_array;
 		}
@@ -76,6 +82,8 @@ class WC_Accommodation_Booking_Date_Picker {
 		foreach ( $existing_bookings as $booking ) {
 
 			$check_date  = $booking->start;
+			$check_in_out_days['in'][] = date( 'Y-n-j', $check_date );
+
 			// Loop over all booked days in this booking
 			while ( $check_date < $booking->end ) {
 
@@ -94,15 +102,48 @@ class WC_Accommodation_Booking_Date_Picker {
 
 				$check_date = strtotime( '+1 day', $check_date );
 			}
+
+			$check_in_out_days['out'][] = date( 'Y-n-j', $check_date );
+		}
+
+		// mark as fully booked all days that intersect the check in and check out date
+		$fully_booked = array_intersect( $check_in_out_days['in'], $check_in_out_days['out'] );
+
+		foreach ( $fully_booked as $day ) {
+			$booked_data_array['fully_booked_days'][ $day ][0] = true;
+		}
+
+		// since we're marking the fully booked checkin days as partially booked, we will exclude the intersection (fully booked ones)
+		$check_in_out_days['in'] = array_diff( $check_in_out_days['in'], $fully_booked );
+
+		// since we're marking the checkout days as partially booked, we will exclude the intersection (fully booked ones)
+		$check_in_out_days['out'] = array_diff( $check_in_out_days['out'], $fully_booked );
+
+		foreach ( $check_in_out_days['in'] as $day ) {
+			// if the first checkout day for a booking was marked as fully booked, move to partially booked
+			if ( ! empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
+				$booked_data_array['partially_booked_days'][ $day ][0] = $booked_data_array['fully_booked_days'][ $day ];
+				unset( $booked_data_array['fully_booked_days'][ $day ] );
+			}
+		}
+
+		foreach ( $check_in_out_days['out'] as $day ) {
+			// check out days should be marked as partially booked
+			$partially_booked = 1;
+
+			if ( ! empty( $booked_data_array['partially_booked_days'][ $day ] ) ) {
+				$partially_booked = $booked_data_array['partially_booked_days'][ $day ];
+				unset( $booked_data_array['partially_booked_days'][ $day ] );
+			}
+
+			$booked_data_array['partially_booked_days'][ $day ][0] = $partially_booked;
 		}
 
 		foreach ( $booked_day_counts as $booked_date => $number_of_bookings ) {
 			if ( $number_of_bookings < $available_quantity ) {
-				$partially_booked_days[ $booked_date ][0] = true;
+				$booked_data_array['partially_booked_days'][ $booked_date ][0] = true;
 			}
 		}
-
-		$booked_data_array['partially_booked_days'] += $partially_booked_days;
 
 		return $booked_data_array;
 	}
