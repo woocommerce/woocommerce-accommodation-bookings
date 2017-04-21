@@ -63,6 +63,8 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @param array $booked_data_array
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
+		$used_resources = null;
+
 		// this array will contain the start and the end of all bookings
 		$check_in_out_days     = array(
 			'in' => array(),
@@ -81,15 +83,22 @@ class WC_Accommodation_Booking_Date_Picker {
 			$check_date  = $booking->start;
 			$resource = $booking->get_resource_id();
 
-			// if the resource is not set and we have automatic assignment attempt to assign a resource
-			if ( empty( $resource ) && $product->has_resources() && $product->is_resource_assignment_type( 'automatic' ) ) {
-				$resources = $booking->get_product()->get_all_resources_availability( $booking->start, $booking->end, 1 );
-				$resources = is_array( $resources ) ? array_keys( $resources ) : array();
+			// if we have automatic assignment attempt to automatically assign a resource
+			if ( $product->has_resources() && $product->is_resource_assignment_type( 'automatic' ) ) {
+				// if the resource is not set, attempt to assign one
+				if ( empty( $resource ) ) {
+					$resources = $booking->get_product()->get_all_resources_availability( $booking->start, $booking->end, 1 );
+					$resources = is_array( $resources ) ? array_keys( $resources ) : array();
 
-				// found an available resource, automatically assign it
-				if ( count( $resources ) > 0 ) {
-					$resource = $resources[0];
-					update_post_meta( $booking->get_id(), '_booking_resource_id', $resource );
+					// found an available resource, automatically assign it
+					if ( count( $resources ) > 0 ) {
+						$resource = $resources[0];
+						update_post_meta( $booking->get_id(), '_booking_resource_id', $resource );
+						$used_resources++;
+					}
+				} else {
+					// if the resource is set already, keep count of total resources used
+					$used_resources++;
 				}
 			}
 
@@ -150,7 +159,9 @@ class WC_Accommodation_Booking_Date_Picker {
 				foreach ( $days as $day ) {
 					// if the first or the last checkout day for a booking was marked as fully booked, move to partially booked
 					if ( ! empty( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
-						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+						// if we have no resources, set the id to 0 (the date-picker.js depends on that)
+						$resource_to_set = ( ! is_null( $used_resources ) && $used_resources === count( $product->get_resources() ) ) ? 0 : $resource;
+						$booked_data_array['partially_booked_days'][ $day ][ $resource_to_set ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
 						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
 					}
 				}
