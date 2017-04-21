@@ -83,6 +83,19 @@ class WC_Accommodation_Booking_Date_Picker {
 
 			$check_date  = $booking->start;
 			$resource = $booking->get_resource_id();
+
+			// if the resource is not set and we have automatic assignment attempt to assign a resource
+			if ( empty( $resource ) && $product->has_resources() && $product->is_resource_assignment_type( 'automatic' ) ) {
+				$resources = $booking->get_product()->get_all_resources_availability( $booking->start, $booking->end, 1 );
+				$resources = is_array( $resources ) ? array_keys( $resources ) : array();
+
+				// found an available resource, automatically assign it
+				if ( count( $resources ) > 0 ) {
+					$resource = $resources[0];
+					update_post_meta( $booking->get_id(), '_booking_resource_id', $resource );
+				}
+			}
+
 			$check_in_out_days['in'][ $resource ][] = date( 'Y-n-j', $check_date );
 
 			// Loop over all booked days in this booking
@@ -108,14 +121,14 @@ class WC_Accommodation_Booking_Date_Picker {
 			$check_in_out_days['out'][ $resource ][] = date( 'Y-n-j', $check_date );
 		}
 
-		// if it has resources, remove resource id 0 from the fully and partially booked list
+		// if it has resources, remove resource id 0 from the fully and partially booked list (comes from Bookings itself)
 		if ( $product->has_resources() ) {
 			foreach ( array( 'partially_booked_days', 'fully_booked_days' ) as $which ) {
 				foreach ( $booked_data_array[ $which ] as $day => $resource ) {
 					$booked_data_array[ $which ][ $day ] = array_filter(
 						$booked_data_array[ $which ][ $day ],
 						function( $key ) {
-							return $key !== 0;
+							return 0 !== $key;
 						},
 						ARRAY_FILTER_USE_KEY
 					);
@@ -123,56 +136,38 @@ class WC_Accommodation_Booking_Date_Picker {
 			}
 		}
 
-		// mark as fully booked all days that intersect the check in and check out date
+		// get all resources that have a checkin and a checkout date
 		$resources = array_intersect( array_keys( $check_in_out_days['in'] ), array_keys( $check_in_out_days['out'] ) );
-		$fully_booked = array();
 
 		foreach ( $resources as $resource ) {
-			$single_fully_booked = array_intersect( $check_in_out_days['in'][ $resource ], $check_in_out_days['out'][ $resource ] );
+			// mark as fully booked all days that intersect the check in and check out date
+			// e.g. booking A starts from X to Y, and booking B starts from Y to Z.
+			// X and Z will be partially booked, but Y will be fully booked.
+			$fully_booked = array_intersect( $check_in_out_days['in'][ $resource ], $check_in_out_days['out'][ $resource ] );
 
-			if ( ! empty( $single_fully_booked ) ) {
-				$fully_booked[ $resource ][] = $single_fully_booked;
+			if ( ! empty( $fully_booked ) ) {
+				foreach ( $fully_booked as $day ) {
+					$booked_data_array['fully_booked_days'][ $day ][ $resource ] = true;
+				}
 
 				// since we're marking the fully booked checkin days as partially booked, we will exclude the intersection (fully booked ones)
-				$check_in_out_days['in'][ $resource ] = array_diff( $check_in_out_days['in'][ $resource ], $single_fully_booked );
+				$check_in_out_days['in'][ $resource ] = array_diff( $check_in_out_days['in'][ $resource ], $fully_booked );
 
 				// since we're marking the checkout days as partially booked, we will exclude the intersection (fully booked ones)
-				$check_in_out_days['out'][ $resource ] = array_diff( $check_in_out_days['out'][ $resource ], $single_fully_booked );
+				$check_in_out_days['out'][ $resource ] = array_diff( $check_in_out_days['out'][ $resource ], $fully_booked );
 			}
 		}
 
-		foreach ( $fully_booked as $resource => $days ) {
-			foreach ( $days as $day ) {
-				$booked_data_array['fully_booked_days'][ $day ][ $resource ] = true;
-			}
-		}
-
-		foreach ( $check_in_out_days['in'] as $resource => $days ) {
-			foreach ( $days as $day ) {
-				// if the first checkout day for a booking was marked as fully booked, move to partially booked
-				if ( ! empty( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
-					$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
-					unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
+		// go through each checkin and checkout days and mark them as partially booked
+		foreach ( array( 'in', 'out' ) as $which ) {
+			foreach ( $check_in_out_days[ $which ] as $resource => $days ) {
+				foreach ( $days as $day ) {
+					// if the first or the last checkout day for a booking was marked as fully booked, move to partially booked
+					if ( ! empty( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
+						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
+					}
 				}
-			}
-		}
-
-		foreach ( $check_in_out_days['out'] as $resource => $days ) {
-			foreach ( $days as $day ) {
-				// check out days should be marked as partially booked
-				$partially_booked = 1;
-
-				if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource ] ) ) {
-					$partially_booked = $booked_data_array['partially_booked_days'][ $day ][ $resource ];
-					unset( $booked_data_array['partially_booked_days'][ $day ][ $resource ] );
-				}
-
-				// if the last checkout day for a booking was marked as fully booked, unset as it will be partially booked
-				if ( ! empty( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
-					unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
-				}
-
-				$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $partially_booked;
 			}
 		}
 
