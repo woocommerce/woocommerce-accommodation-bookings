@@ -63,9 +63,6 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @param array $booked_data_array
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
-
-		$booked_day_counts     = array();
-
 		// this array will contain the start and the end of all bookings
 		$check_in_out_days     = array(
 			'in' => array(),
@@ -98,21 +95,10 @@ class WC_Accommodation_Booking_Date_Picker {
 
 			$check_in_out_days['in'][ $resource ][] = date( 'Y-n-j', $check_date );
 
-			// Loop over all booked days in this booking
+			// Loop over all booked days in this booking and mark them as fully booked (the last one will be filtered by check out filter)
 			while ( $check_date < $booking->end ) {
 
 				$js_date = date( 'Y-n-j', $check_date );
-
-				if ( $check_date < current_time( 'timestamp' ) ) {
-					$check_date = strtotime( '+1 day', $check_date );
-					continue;
-				}
-
-				if ( isset( $booked_day_counts[ $js_date ] ) ) {
-					$booked_day_counts[ $js_date ]++;
-				} else {
-					$booked_day_counts[ $js_date ] = 1;
-				}
 
 				$check_date = strtotime( '+1 day', $check_date );
 				$booked_data_array['fully_booked_days'][ date( 'Y-n-j', $check_date ) ][ $resource ] = true;
@@ -168,12 +154,6 @@ class WC_Accommodation_Booking_Date_Picker {
 						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
 					}
 				}
-			}
-		}
-
-		foreach ( $booked_day_counts as $booked_date => $number_of_bookings ) {
-			if ( $number_of_bookings < $available_quantity ) {
-				$booked_data_array['partially_booked_days'][ $booked_date ][0] = true;
 			}
 		}
 
