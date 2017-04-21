@@ -153,7 +153,7 @@ class WC_Accommodation_Booking_Date_Picker {
 				$full_days = array();
 
 				// if all resources were used, set the id to 0 (date-picker.js depends on that)
-				if ( $product->has_resources() && $product->is_resource_assignment_type( 'automatic' ) ) {
+				if ( $product->has_resources() && count( $product->get_resources() ) === count( array_keys( $check_in_out_days[ $which ] ) ) && $product->is_resource_assignment_type( 'automatic' ) ) {
 					$full_days = call_user_func_array( 'array_intersect', $check_in_out_days[ $which ] );
 				}
 
