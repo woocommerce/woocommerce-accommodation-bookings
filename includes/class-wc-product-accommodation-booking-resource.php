@@ -7,11 +7,16 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking_Resource' ) ) :
 
 /**
  * Class that creates our new accommodation booking product resource type
- * Mostly inheirted from WC_Product_Booking_Resource (code reuse!) but overrides a few methods
+ * Mostly inherited from WC_Product_Booking_Resource (code reuse!) but overrides a few methods
+ *
+ * @version 1.0.9
+ * @since 1.0.9
  */
 class WC_Product_Accommodation_Booking_Resource extends WC_Product_Booking_Resource {
 	/**
 	 * Return the base cost (set at parent level).
+	 * @version 1.0.9
+	 * @since 1.0.9
 	 *
 	 * @return float
 	 */
@@ -28,6 +33,8 @@ class WC_Product_Accommodation_Booking_Resource extends WC_Product_Booking_Resou
 
 	/**
 	 * Return the block cost  (set at parent level).
+	 * @version 1.0.9
+	 * @since 1.0.9
 	 *
 	 * @return float
 	 */
