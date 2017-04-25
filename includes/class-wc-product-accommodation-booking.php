@@ -23,12 +23,49 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		$this->wc_booking_duration = 1;
 	}
 
+
+	/**
+	 * Get resource by ID.
+	 * Need to override this to return the proper resource class.
+	 *
+	 * @param  int $id
+	 * @return WC_Product_Booking_Resource object
+	 */
+	public function get_resource( $id ) {
+		$resource = parent::get_resource( $id );
+
+		if ( $resource ) {
+			$resource = new WC_Product_Accommodation_Booking_Resource( $id, $this->get_id() );
+		}
+
+		return $resource;
+	}
+
 	/**
 	 * Override product type
 	 * @return string
 	 */
 	public function get_type() {
 		return 'accommodation-booking';
+	}
+
+	/**
+	 * Get resources objects.
+	 *
+	 * @param WC_Product
+	 *
+	 * @return array(
+	 *   type WC_Product_Accommodation_Booking_Resource
+	 * )
+	 */
+	public function get_resources() {
+		$product_resources = array();
+
+		foreach ( $this->get_resource_ids() as $resource_id ) {
+			$product_resources[] = new WC_Product_Accommodation_Booking_Resource( $resource_id, $this->get_id() );
+		}
+
+		return $product_resources;
 	}
 
 	/**
