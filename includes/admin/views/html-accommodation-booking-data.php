@@ -74,6 +74,6 @@
 	</p>
 
 	<script type="text/javascript">
-		jQuery( '._tax_status_field' ).closest( '.show_if_simple' ).addClass( 'show_if_accommodation_booking' );
+		jQuery( '._tax_status_field' ).closest( '.show_if_simple' ).addClass( 'show_if_accommodation-booking' );
 	</script>
 </div>
