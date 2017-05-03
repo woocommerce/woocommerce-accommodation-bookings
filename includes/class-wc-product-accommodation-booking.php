@@ -146,13 +146,6 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 			$display_price = $tax_display_mode == 'incl' ? $this->get_price_including_tax( 1, $this->get_price() ) : $this->get_price_excluding_tax( 1, $this->get_price() );
 		} else {
 			$display_price = $tax_display_mode == 'incl' ? wc_get_price_including_tax( $this, array( 'qty' => 1, 'price' => $this->get_price() ) ) : wc_get_price_excluding_tax( $this, array( 'qty' => 1, 'price' => $this->get_price() ) );
-
-		}
-
-		$min_duration = absint( get_post_meta( $this->get_id(), '_wc_booking_min_duration', true ) );
-
-		if ( $min_duration > 1 ) {
-			$display_price = $display_price / $min_duration;
 		}
 
 		if ( $display_price ) {
