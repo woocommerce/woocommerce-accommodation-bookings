@@ -157,7 +157,7 @@ class WC_Accommodation_Booking_Date_Picker {
 
 		//move check in days that occure today to fully booked as they cannot be booked
 		$today = date( 'Y-n-j', current_time( 'timestamp' ) );
-		foreach ( $check_in_out_days[ 'in' ] as $reasource => $days ) {
+		foreach ( $check_in_out_days[ 'in' ] as $resource => $days ) {
 			foreach ( $days as $key => $day ) {
 				if ( $day === $today ) {
 					unset( $check_in_out_days[ 'in' ][ $resource ][ $key ] );
