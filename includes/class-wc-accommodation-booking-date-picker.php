@@ -73,8 +73,10 @@ class WC_Accommodation_Booking_Date_Picker {
 			return $booked_data_array;
 		}
 
-		$existing_bookings = WC_Bookings_Controller::get_bookings_for_objects( array( $product->get_id() ) );
+		$existing_bookings  = WC_Bookings_Controller::get_bookings_for_objects( array( $product->get_id() ) );
 		$available_quantity = $product->get_available_quantity( null );
+		$booked_day_counts  = array();
+
 		// Use the existing bookings to find days which are partially booked
 		foreach ( $existing_bookings as $booking ) {
 
@@ -105,6 +107,12 @@ class WC_Accommodation_Booking_Date_Picker {
 
 				$check_date = strtotime( '+1 day', $check_date );
 				$booked_data_array['fully_booked_days'][ date( 'Y-n-j', $check_date ) ][ $resource ] = true;
+
+				if ( isset( $booked_day_counts[ $js_date ][ $resource ] ) ) {
+					$booked_day_counts[ $js_date ][ $resource ]++;
+				} else {
+					$booked_day_counts[ $js_date ][ $resource ] = 1;
+				}
 			}
 
 			$check_in_out_days['out'][ $resource ][] = date( 'Y-n-j', $check_date );
@@ -163,6 +171,15 @@ class WC_Accommodation_Booking_Date_Picker {
 						$booked_data_array['partially_booked_days'][ $day ][ in_array( $day, $full_days ) ? 0 : $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
 						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
 					}
+				}
+			}
+		}
+
+		foreach ( $booked_day_counts as $booked_date => $resources ) {
+			foreach ( $resources as $resource => $number_of_bookings ) {
+				if ( $number_of_bookings < $available_quantity ) {
+					$booked_data_array['partially_booked_days'][ $booked_date ][ $resource ] = true;
+					unset( $booked_data_array['fully_booked_days'][ $booked_date ][ $resource ] );
 				}
 			}
 		}
