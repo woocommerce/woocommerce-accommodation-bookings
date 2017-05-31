@@ -34,6 +34,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 * Fix - Tax fields missing.
 * Fix - Display price is showing incorrectly.
 * Fix - Availability rules being ignored.
+* Fix - Today should be shown as booked if it has check out available only
 
 = 1.0.9 =
 * Fix - Additional updates for WooCommerce 3.0 compatibility.
