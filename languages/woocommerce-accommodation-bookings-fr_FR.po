@@ -1,0 +1,464 @@
+# Copyright (C) 2016 WooThemes
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Accommodation Bookings 1.0.3\n"
+"Report-Msgid-Bugs-To: https://support.woothemes.com/hc/\n"
+"POT-Creation-Date: 2016-05-26 14:42-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-05-26 17:36-0400\n"
+"Language-Team: EMAIL@ADDRESS\n"
+"X-Generator: Poedit 1.8.7\n"
+"Last-Translator: Charles Nicholas Kellett <me@nicholaskellett.com>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+
+#: includes/admin/class-wc-accommodation-booking-admin-panels.php:33
+msgid "Accommodation product"
+msgstr "Produit pour Réservations d'hébergement"
+
+#: includes/admin/class-wc-accommodation-booking-admin-product-settings.php:29
+msgid "Accommodation Settings"
+msgstr "Paramètres pour Réservations d'hébergement"
+
+#: includes/admin/class-wc-accommodation-booking-admin-product-settings.php:35
+#: includes/class-wc-accommodation-booking-product-tabs.php:79
+msgid "Check-in time"
+msgstr "Heure d'arrivée"
+
+#: includes/admin/class-wc-accommodation-booking-admin-product-settings.php:36
+msgid "Check-in time for reservations."
+msgstr "Heure d'arrivée pour les réservations"
+
+#: includes/admin/class-wc-accommodation-booking-admin-product-settings.php:43
+#: includes/class-wc-accommodation-booking-product-tabs.php:80
+msgid "Check-out time"
+msgstr "Heure de depart"
+
+#: includes/admin/class-wc-accommodation-booking-admin-product-settings.php:44
+msgid "Check-out time for reservations."
+msgstr "Heure de depart pour les réservations"
+
+#: includes/admin/class-wc-accommodation-booking-admin-product-settings.php:60
+msgid "Accommodations"
+msgstr "Hébergement"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:5
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:5
+msgid "January"
+msgstr "Janvier"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:6
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:6
+msgid "February"
+msgstr "Février"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:7
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:7
+msgid "March"
+msgstr "Mars"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:8
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:8
+msgid "April"
+msgstr "Avril"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:9
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:9
+msgid "May"
+msgstr "Mai"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:10
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:10
+msgid "June"
+msgstr "Juin"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:11
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:11
+msgid "July"
+msgstr "Juillet"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:12
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:12
+msgid "August"
+msgstr "Août"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:13
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:13
+msgid "September"
+msgstr "Septembre"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:14
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:14
+msgid "October"
+msgstr "Octobre"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:15
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:15
+msgid "November"
+msgstr "Novembre"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:16
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:16
+msgid "December"
+msgstr "Decembre"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:20
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:20
+msgid "Monday"
+msgstr "Lundi"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:21
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:21
+msgid "Tuesday"
+msgstr "Mardi"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:22
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:22
+msgid "Wednesday"
+msgstr "Mecredi"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:23
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:23
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:24
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:24
+msgid "Friday"
+msgstr "Vendredi"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:25
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:25
+msgid "Saturday"
+msgstr "Samedi"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:26
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:26
+msgid "Sunday"
+msgstr "Dimanche"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:30
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:30
+msgid "Week %s"
+msgstr "Pourcentages pour la semaine"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:46
+msgid "Custom date range"
+msgstr "Période personnalisée "
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:47
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:44
+msgid "Range of months"
+msgstr "Période de mois"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:48
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:45
+msgid "Range of weeks"
+msgstr "Période de semaines"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:49
+msgid "Range of days"
+msgstr "Période de jours"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:108
+msgid "No"
+msgstr "Non"
+
+#: includes/admin/views/html-accommodation-booking-availability-fields.php:109
+msgid "Yes"
+msgstr "Oui"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:3
+msgid "Number of rooms available"
+msgstr "Nombre de salles disponibles"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:3
+msgid "The maximum number of rooms available."
+msgstr "Maximum nombre de salles disponsibles"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:12
+msgid "Bookings can be made starting"
+msgstr "Des réservations peuvent commencer après"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:15
+#: includes/admin/views/html-accommodation-booking-availability.php:32
+#: includes/admin/views/html-accommodation-booking-data.php:68
+msgid "Month(s)"
+msgstr "Mois"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:16
+#: includes/admin/views/html-accommodation-booking-availability.php:33
+msgid "Week(s)"
+msgstr "Semaine(s)"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:17
+#: includes/admin/views/html-accommodation-booking-availability.php:34
+#: includes/admin/views/html-accommodation-booking-data.php:69
+msgid "Day(s)"
+msgstr "Jour(s)"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:18
+#: includes/admin/views/html-accommodation-booking-availability.php:35
+msgid "into the future"
+msgstr "dans l'avenir"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:29
+msgid "Bookings can only be made"
+msgstr "Des réservations peuvent seulement   "
+
+#: includes/admin/views/html-accommodation-booking-availability.php:45
+#: includes/admin/views/html-accommodation-booking-rates.php:15
+msgid "Range type"
+msgstr "Type de gamme"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:46
+msgid "From"
+msgstr "De"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:47
+msgid "To"
+msgstr "à"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:48
+msgid "Bookable"
+msgstr "Peut être réservé"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:48
+msgid "If not bookable, users won't be able to choose this room."
+msgstr " "
+
+#: includes/admin/views/html-accommodation-booking-availability.php:49
+msgid "Priority"
+msgstr "Priorité"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:49
+msgid ""
+"The lower the priority number, the earlier this rule gets applied. By "
+"default, global rules take priority over product rules which take priority "
+"over resource rules. By using priority numbers you can execute rules in "
+"different orders."
+msgstr ""
+
+#: includes/admin/views/html-accommodation-booking-availability.php:61
+#: includes/admin/views/html-accommodation-booking-rates.php:30
+msgid "Add Range"
+msgstr "Ajouter une gamme"
+
+#: includes/admin/views/html-accommodation-booking-availability.php:62
+msgid ""
+"Rules with lower numbers will execute first. Rules further down this table "
+"with the same priority will also execute first."
+msgstr ""
+
+#: includes/admin/views/html-accommodation-booking-data.php:10
+msgid "Minimum number of nights allowed in a booking"
+msgstr "Nombre de nuits minimum par réservation"
+
+#: includes/admin/views/html-accommodation-booking-data.php:11
+msgid "The minimum allowed duration the user can stay."
+msgstr "Duration minimal le client peut rester"
+
+#: includes/admin/views/html-accommodation-booking-data.php:23
+msgid "Maximum number of nights allowed in a booking"
+msgstr "Nombre de nuits maximum par réservation  "
+
+#: includes/admin/views/html-accommodation-booking-data.php:24
+msgid "The maximum allowed duration the user can stay."
+msgstr "Duration maximum le client peut rester"
+
+#: includes/admin/views/html-accommodation-booking-data.php:36
+msgid "Calendar display mode"
+msgstr "Mode d'affichage du calendrier"
+
+#: includes/admin/views/html-accommodation-booking-data.php:37
+msgid "Choose how the calendar is displayed on the booking form."
+msgstr "Choissisez comment le calendrier se rendre sur le page réservation "
+
+#: includes/admin/views/html-accommodation-booking-data.php:40
+msgid "Display calendar on click"
+msgstr "Afficher le calendrier sur clic "
+
+#: includes/admin/views/html-accommodation-booking-data.php:41
+msgid "Calendar always visible"
+msgstr "Le calendrier est toujours visible"
+
+#: includes/admin/views/html-accommodation-booking-data.php:49
+msgid "Requires confirmation?"
+msgstr "Nécessite une confirmation?"
+
+#: includes/admin/views/html-accommodation-booking-data.php:50
+msgid ""
+"Check this box if the booking requires admin approval/confirmation. Payment "
+"will not be taken during checkout."
+msgstr ""
+"Choissisez si la réservation necessite l'approbation/confirmation par un "
+"administrateur"
+
+#: includes/admin/views/html-accommodation-booking-data.php:56
+msgid "Can be cancelled?"
+msgstr "Peut être annulé?"
+
+#: includes/admin/views/html-accommodation-booking-data.php:57
+msgid ""
+"Check this box if the booking can be cancelled by the customer after it has "
+"been purchased. A refund will not be sent automatically."
+msgstr "Choissisez si la réservation peut être annulé"
+
+#: includes/admin/views/html-accommodation-booking-data.php:65
+msgid "Cancellation up till"
+msgstr "Annulation possible jusque avant"
+
+#: includes/admin/views/html-accommodation-booking-data.php:70
+msgid "Hour(s)"
+msgstr "Heure(s)"
+
+#: includes/admin/views/html-accommodation-booking-data.php:71
+msgid "Minute(s)"
+msgstr "Minute(s)"
+
+#: includes/admin/views/html-accommodation-booking-data.php:73
+msgid "before check-in."
+msgstr "avant l'heure d'arrivée"
+
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:43
+msgid "Range of certain nights"
+msgstr "Période de certains nuits"
+
+#: includes/admin/views/html-accommodation-booking-rates-fields.php:46
+msgid "Range of nights during the week"
+msgstr "Période de nuits pendant la semaine"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:3
+msgid "Standard room rate"
+msgstr "Taux standard"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:3
+msgid "Standard cost for booking the room."
+msgstr "Taux standard pour faire une réservation"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:16
+msgid "Starting"
+msgstr "En commencent"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:17
+msgid "Ending"
+msgstr "En terminant"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:17
+msgid "Includes this date/night."
+msgstr "En incluant ce jour/soir"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:18
+msgid "Cost"
+msgstr "Coût"
+
+#: includes/admin/views/html-accommodation-booking-rates.php:18
+msgid "Cost for this time period."
+msgstr "Coût pour cette période"
+
+#: includes/admin/views/html-accommodation-booking-tabs.php:1
+msgid "Availability"
+msgstr "Disponbilité"
+
+#: includes/admin/views/html-accommodation-booking-tabs.php:2
+msgid "Rates"
+msgstr "Tarifs"
+
+#: includes/class-wc-accommodation-booking-cart-manager.php:43
+#: includes/class-wc-accommodation-booking-date-picker.php:25
+#: includes/class-wc-accommodation-booking-order-info.php:39
+msgid "Check-in"
+msgstr "Heure d'arrivée"
+
+#: includes/class-wc-accommodation-booking-cart-manager.php:44
+#: includes/class-wc-accommodation-booking-cart-manager.php:52
+#: includes/class-wc-accommodation-booking-order-info.php:42
+#: includes/class-wc-accommodation-booking-order-info.php:61
+msgid " at "
+msgstr "à"
+
+#: includes/class-wc-accommodation-booking-cart-manager.php:51
+#: includes/class-wc-accommodation-booking-date-picker.php:32
+#: includes/class-wc-accommodation-booking-order-info.php:56
+msgid "Check-out"
+msgstr "Heure de départ"
+
+#: includes/class-wc-accommodation-booking-order-info.php:28
+msgid "Booking Date"
+msgstr "Date de réservation "
+
+#: includes/class-wc-accommodation-booking-order-info.php:46
+msgid "Duration"
+msgstr "Duration"
+
+#: includes/class-wc-accommodation-booking-product-tabs.php:57
+#: includes/class-wc-accommodation-booking-product-tabs.php:77
+msgid "Arriving/leaving"
+msgstr "En Arrivant/au départ"
+
+#: includes/class-wc-accommodation-bookings-plugin.php:175
+msgid "View Documentation"
+msgstr "Voir le documentation"
+
+#: includes/class-wc-accommodation-bookings-plugin.php:175
+msgid "Docs"
+msgstr "Documents"
+
+#: includes/class-wc-accommodation-bookings-plugin.php:176
+msgid "Visit Premium Customer Support Forum"
+msgstr "Visitez le forum de soutien pour les clients premium"
+
+#: includes/class-wc-accommodation-bookings-plugin.php:176
+msgid "Premium Support"
+msgstr "Le soutien premium"
+
+#: includes/class-wc-accommodation-dependencies.php:54
+msgid "Accommodation Bookings requires Bookings plugin activated."
+msgstr ""
+"Réservations d'hébergement necessite l'activation du plugin Réservations"
+
+#: includes/class-wc-accommodation-dependencies.php:58
+msgid "Accommodation Bookings requires Bookings version 1.9+."
+msgstr ""
+"Réservations d'hébergement necessite le version du plugin Réservations 1.9+"
+
+#: includes/class-wc-accommodation-dependencies.php:62
+msgid "Accommodation Bookings requires PHP version 5.3+."
+msgstr "Réservations d'hébergement necessite le version du PHP 5.3+"
+
+#: includes/class-wc-product-accommodation-booking.php:37
+msgid "Accommodation booking"
+msgstr "Réservations"
+
+#: includes/class-wc-product-accommodation-booking.php:136
+msgid "From %s per night"
+msgstr "À partir de %s par nuit"
+
+#: includes/class-wc-product-accommodation-booking.php:141
+msgid "Free"
+msgstr "Gratuit"
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Accommodation Bookings"
+msgstr "WooCommerce Réservations d'hébergement"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.woothemes.com/products/woocommerce-accommodation-bookings/"
+msgstr "http://www.woothemes.com/products/woocommerce-accommodation-bookings/"
+
+#. Description of the plugin/theme
+msgid "An accommodations add-on for the WooCommerce Bookings extension."
+msgstr ""
+"Fonctionnalite pour faire les réservations d'hébergement en extension du "
+"plugin Réservations par WooCommerce"
+
+#. Author of the plugin/theme
+msgid "WooThemes"
+msgstr "WooThemes"
+
+#. Author URI of the plugin/theme
+msgid "http://woothemes.com"
+msgstr "http://woothemes.com"
