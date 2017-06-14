@@ -30,6 +30,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.0.X =
+* Fix - Display cost not used when presenting price to the client.
+
 = 1.0.10 =
 * Fix - Tax fields missing.
 * Fix - Display price is showing incorrectly.
