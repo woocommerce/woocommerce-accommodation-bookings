@@ -32,6 +32,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 = 1.0.X =
 * Fix - Display cost not used when presenting price to the client.
+* Feature - Add woocommerce_accommodation_bookings_range_picker_enabled to disable range picker. 
 
 = 1.0.10 =
 * Fix - Tax fields missing.

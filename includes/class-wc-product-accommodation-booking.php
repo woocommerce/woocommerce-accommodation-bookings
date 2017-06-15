@@ -89,7 +89,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * @return boolean
 	 */
 	public function is_range_picker_enabled() {
-		return true;
+		return apply_filters( 'woocommerce_accommodation_bookings_range_picker_enabled', true );
 	}
 
 	/**
