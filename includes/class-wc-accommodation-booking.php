@@ -17,6 +17,7 @@ class WC_Accommodation_Booking {
 		add_filter( 'woocommerce_bookings_get_end_date_with_time', array( $this, 'add_checkout_time_to_booking_end_time' ), 10, 2 );
 		add_filter( 'get_booking_products_terms', array( $this, 'add_accommodation_to_booking_product_terms' ) );
 		add_filter( 'get_booking_products_args', array( $this, 'add_accommodation_to_booking_products_args' ) );
+		add_filter( 'woocommerce_booking_is_booked_on_day', array( $this, 'is_booked_on_day_check' ), 10, 4 );
 
 		add_action( 'woocommerce_new_booking', array( $this, 'update_start_end_time' ) );
 		add_filter( 'woocommerce_data_stores', array( $this, 'register_data_stores' ), 10 );
@@ -146,6 +147,24 @@ class WC_Accommodation_Booking {
 		$time  = str_pad( $time, 6, '0' );
 
 		return substr( $datetime, 0, 8 ) . $time;
+	}
+	
+	/**
+	 * Verify that a booking's date range intersects with the date range of the block we are checking it against.
+	 * Designed to hook into the is_booked_on_day method of the wc-booking class, which does not make this check
+	 *
+	 * @return boolean
+	 */	
+	public function is_booked_on_day_check( $is_booked, $wc_booking, $block_start, $block_end ) {
+		$multiday_booking = date( 'Y-m-d', $wc_booking->start ) < date( 'Y-m-d', $wc_booking->end );
+		if ( $multiday_booking ) {
+			// Make sure that the booking's end date is not on or before the start date of the block we are checking it against
+			//	or that the booking's start date is not on or after the end date of the block we are checking it against
+			if ( date( 'YmdHi', $wc_booking->end ) <= date( 'YmdHi', $block_start ) || date( 'YmdHi', $wc_booking->start ) >= date( 'YmdHi', $block_end ) ) {
+				$is_booked = false;
+			}
+		}
+		return $is_booked;
 	}
 }
 

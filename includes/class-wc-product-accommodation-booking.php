@@ -187,6 +187,78 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		return array_unique( $blocks_in_range );
 	}
+	
+	/**
+	 * Check the resources availability against all the blocks.
+	 *
+	 * Identical to the get_blocks_availability function of the wc_product_booking class, except that the error returned accurately gives
+	 * the available quantity of places remaining on the day that triggered the error.
+	 *
+	 * @param  string $start_date
+	 * @param  string $end_date
+	 * @param  int    $qty
+	 * @param  int    $resource_id
+	 * @param  WC_Product_Booking_Resource|null $booking_resource
+	 * @return string|WP_Error
+	 */
+	public function get_blocks_availability( $start_date, $end_date, $qty, $resource_id, $booking_resource ) {
+		$blocks   = $this->get_blocks_in_range( $start_date, $end_date, '', $resource_id );
+		$interval = 'hour' === $this->get_duration_unit() ? $this->get_duration() * 60 : $this->get_duration();
+
+		if ( ! $blocks ) {
+			return false;
+		}
+
+		/**
+		 * Grab all existing bookings for the date range
+		 * @var array
+		 */
+		$existing_bookings = $this->get_bookings_in_date_range( $start_date, $end_date, $resource_id );
+		$available_qtys    = array();
+
+		// Check all blocks availability
+		foreach ( $blocks as $block ) {
+			$available_qty       = $this->has_resources() && $booking_resource->has_qty() ? $booking_resource->get_qty() : $this->get_qty();
+			$qty_booked_in_block = 0;
+
+			foreach ( $existing_bookings as $existing_booking ) {
+				$block_end = strtotime( "+{$interval} minutes", $block );
+				if ( $existing_booking->is_booked_on_day( $block, $block_end ) ) {
+					$qty_to_add = $this->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
+
+					if ( $this->has_resources() ) {
+						if ( $existing_booking->get_resource_id() === absint( $resource_id ) || ( ! $booking_resource->has_qty() && $existing_booking->get_resource() && ! $existing_booking->get_resource()->has_qty() ) ) {
+							$qty_booked_in_block += $qty_to_add;
+						}
+					} else {
+						$qty_booked_in_block += $qty_to_add;
+					}
+				}
+			}
+
+			$available_qty = $available_qty - $qty_booked_in_block;
+
+			// Remaining places are less than requested qty, return an error.
+			if ( $available_qty < $qty ) {
+				if ( in_array( $this->get_duration_unit(), array( 'hour', 'minute' ) ) ) {
+					return new WP_Error( 'Error', sprintf(
+						_n( 'There is %d place remaining', 'There are %d places remaining', $available_qty , 'woocommerce-bookings' ),
+						$available_qty
+					) );
+				} else {
+					return new WP_Error( 'Error', sprintf(
+						_n( 'There is %1$d place remaining on %2$s', 'There are %1$d places remaining on %2$s', $available_qty , 'woocommerce-bookings' ),
+						$available_qty,
+						date_i18n( wc_date_format(), $block )
+					) );
+				}
+			}
+
+			$available_qtys[] = $available_qty;
+		}
+
+		return min( $available_qtys );
+	}
 }
 
 endif;
