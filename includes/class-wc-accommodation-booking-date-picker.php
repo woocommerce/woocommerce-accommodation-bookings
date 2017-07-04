@@ -107,10 +107,12 @@ class WC_Accommodation_Booking_Date_Picker {
 				$check_date = strtotime( '+1 day', $check_date );
 				$booked_data_array['fully_booked_days'][ date( 'Y-n-j', $check_date ) ][ $resource ] = true;
 
+				$count = $product->get_has_person_qty_multiplier() ? $booking->get_person_counts()[ $resource ] : 1;
+
 				if ( isset( $booked_day_counts[ $js_date ][ $resource ] ) ) {
-					$booked_day_counts[ $js_date ][ $resource ]++;
+					$booked_day_counts[ $js_date ][ $resource ] += $count;
 				} else {
-					$booked_day_counts[ $js_date ][ $resource ] = 1;
+					$booked_day_counts[ $js_date ][ $resource ] = $count;
 				}
 			}
 
@@ -180,6 +182,9 @@ class WC_Accommodation_Booking_Date_Picker {
 					if ( ! empty( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
 						$booked_data_array['partially_booked_days'][ $day ][ in_array( $day, $full_days ) ? 0 : $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
 						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
+						if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
+							unset( $booked_data_array['fully_booked_days'][ $day ] );
+						}
 					}
 				}
 			}
@@ -190,6 +195,9 @@ class WC_Accommodation_Booking_Date_Picker {
 				if ( $number_of_bookings < $available_quantity ) {
 					$booked_data_array['partially_booked_days'][ $booked_date ][ $resource ] = true;
 					unset( $booked_data_array['fully_booked_days'][ $booked_date ][ $resource ] );
+					if ( empty( $booked_data_array['fully_booked_days'][ $booked_date ] ) ) {
+						unset( $booked_data_array['fully_booked_days'][ $booked_date ] );
+					}
 				}
 			}
 		}
