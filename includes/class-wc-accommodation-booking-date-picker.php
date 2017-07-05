@@ -68,6 +68,9 @@ class WC_Accommodation_Booking_Date_Picker {
 			'out' => array(),
 		);
 
+		// we create copy to be able to check original values
+		$booked_data_array_copy = $booked_data_array;
+
 		if ( 'night' !== $product->get_duration_unit() ) {
 			return $booked_data_array;
 		}
@@ -81,6 +84,10 @@ class WC_Accommodation_Booking_Date_Picker {
 
 			$check_date  = $booking->start;
 			$resource = $booking->get_resource_id();
+			if( ! array_key_exists( $resource, $check_in_out_days['in'] ) ) {
+				$check_in_out_days['in'][ $resource ] = array();
+				$check_in_out_days['out'][ $resource ] = array();
+			}
 
 			// if we have automatic assignment attempt to automatically assign a resource
 			if ( $product->has_resources() && $product->is_resource_assignment_type( 'automatic' ) ) {
@@ -97,26 +104,22 @@ class WC_Accommodation_Booking_Date_Picker {
 				}
 			}
 
-			$check_in_out_days['in'][ $resource ][] = date( 'Y-n-j', $check_date );
-
-			// Loop over all booked days in this booking and mark them as fully booked (the last one will be filtered by check out filter)
-			while ( $check_date < $booking->end ) {
-
-				$js_date = date( 'Y-n-j', $check_date );
-
-				$check_date = strtotime( '+1 day', $check_date );
-				$booked_data_array['fully_booked_days'][ date( 'Y-n-j', $check_date ) ][ $resource ] = true;
-
-				$count = $product->get_has_person_qty_multiplier() ? $booking->get_person_counts()[ $resource ] : 1;
-
-				if ( isset( $booked_day_counts[ $js_date ][ $resource ] ) ) {
-					$booked_day_counts[ $js_date ][ $resource ] += $count;
-				} else {
-					$booked_day_counts[ $js_date ][ $resource ] = $count;
-				}
+			$check_in_date = date( 'Y-n-j', $check_date );
+			if ( ! in_array( $check_in_date, $check_in_out_days['in'][ $resource ] ) ) {
+				$check_in_out_days['in'][ $resource ][] = $check_in_date;
 			}
 
-			$check_in_out_days['out'][ $resource ][] = date( 'Y-n-j', $check_date );
+			// TODO optimise
+			while ( $check_date < $booking->end ) {
+				$js_date = date( 'Y-n-j', $check_date );
+				$check_date = strtotime( '+1 day', $check_date );
+			}
+
+			$check_out_date = date( 'Y-n-j', $check_date );
+			if ( ! in_array( $check_in_date, $check_in_out_days['out'][ $resource ] ) ) {
+				$check_in_out_days['out'][ $resource ][] = $check_out_date;
+			}
+
 		}
 
 		// if it has resources, remove resource id 0 from the fully and partially booked list (comes from Bookings itself)
@@ -134,53 +137,39 @@ class WC_Accommodation_Booking_Date_Picker {
 			}
 		}
 
-		// get all resources that have a checkin and a checkout date
-		$resources = array_intersect( array_keys( $check_in_out_days['in'] ), array_keys( $check_in_out_days['out'] ) );
-
-		foreach ( $resources as $resource ) {
-			// mark as fully booked all days that intersect the check in and check out date
-			// e.g. booking A starts from X to Y, and booking B starts from Y to Z.
-			// X and Z will be partially booked, but Y will be fully booked.
-			$fully_booked = array_intersect( $check_in_out_days['in'][ $resource ], $check_in_out_days['out'][ $resource ] );
-
-			if ( ! empty( $fully_booked ) ) {
-				foreach ( $fully_booked as $day ) {
-					$booked_data_array['fully_booked_days'][ $day ][ $resource ] = true;
-				}
-
-				// since we're marking the fully booked checkin days as partially booked, we will exclude the intersection (fully booked ones)
-				$check_in_out_days['in'][ $resource ] = array_diff( $check_in_out_days['in'][ $resource ], $fully_booked );
-
-				// since we're marking the checkout days as partially booked, we will exclude the intersection (fully booked ones)
-				$check_in_out_days['out'][ $resource ] = array_diff( $check_in_out_days['out'][ $resource ], $fully_booked );
-			}
-		}
-
-		//move check in days that occure today to fully booked as they cannot be booked
-		$today = date( 'Y-n-j', current_time( 'timestamp' ) );
-		foreach ( $check_in_out_days[ 'in' ] as $resource => $days ) {
-			foreach ( $days as $key => $day ) {
-				if ( $day === $today ) {
-					unset( $check_in_out_days[ 'in' ][ $resource ][ $key ] );
-					$booked_data_array['fully_booked_days'][ $day ][ $resource ] = true;
-				}
-			}
-		}
-
 		// go through each checkin and checkout days and mark them as partially booked
 		foreach ( array( 'in', 'out' ) as $which ) {
 			foreach ( $check_in_out_days[ $which ] as $resource => $days ) {
 				$full_days = array();
 
-				// if all resources were used, set the id to 0 (date-picker.js depends on that)
-				if ( $product->has_resources() && count( $product->get_resources() ) === count( array_keys( $check_in_out_days[ $which ] ) ) && $product->is_resource_assignment_type( 'automatic' ) ) {
-					$full_days = call_user_func_array( 'array_intersect', $check_in_out_days[ $which ] );
-				}
-
 				foreach ( $days as $day ) {
-					// if the first or the last checkout day for a booking was marked as fully booked, move to partially booked
-					if ( ! empty( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
-						$booked_data_array['partially_booked_days'][ $day ][ in_array( $day, $full_days ) ? 0 : $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+					if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource ] ) ) {
+						// the day is already partially booked so lets skipp to the next day
+						continue;
+					}
+
+					if( 'in' === $which ){
+						$previous_day_timestamp = strtotime( '-1 day', strtotime( $day ) );
+						$previous_day = date( 'Y-n-j', $previous_day_timestamp );
+						$previous_day_fully_booked = array_key_exists( $previous_day, $booked_data_array_copy['fully_booked_days'] ) &&
+							array_key_exists( $resource, $booked_data_array_copy['fully_booked_days'][ $previous_day ] ) ? true : false;
+						if( $previous_day_fully_booked ) {
+							// can't switch to partially booked
+							continue;
+						}
+						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
+						if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
+							unset( $booked_data_array['fully_booked_days'][ $day ] );
+						}
+					} else {
+						$checkout_day_fully_booked = array_key_exists( $day, $booked_data_array_copy['fully_booked_days'] ) &&
+							array_key_exists( $resource, $booked_data_array_copy['fully_booked_days'][ $day ] ) ? true : false;
+						if( $checkout_day_fully_booked ) {
+							// can't switch to partially booked
+							continue;
+						}
+						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
 						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
 						if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
 							unset( $booked_data_array['fully_booked_days'][ $day ] );
@@ -190,17 +179,6 @@ class WC_Accommodation_Booking_Date_Picker {
 			}
 		}
 
-		foreach ( $booked_day_counts as $booked_date => $resources ) {
-			foreach ( $resources as $resource => $number_of_bookings ) {
-				if ( $number_of_bookings < $available_quantity ) {
-					$booked_data_array['partially_booked_days'][ $booked_date ][ $resource ] = true;
-					unset( $booked_data_array['fully_booked_days'][ $booked_date ][ $resource ] );
-					if ( empty( $booked_data_array['fully_booked_days'][ $booked_date ] ) ) {
-						unset( $booked_data_array['fully_booked_days'][ $booked_date ] );
-					}
-				}
-			}
-		}
 
 		return $booked_data_array;
 	}
