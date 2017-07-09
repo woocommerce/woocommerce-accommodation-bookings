@@ -69,6 +69,8 @@ class WC_Accommodation_Booking_Date_Picker {
 		);
 		$resource_availability = array();
 
+		$resource_availability = array();
+
 		if ( 'night' !== $product->get_duration_unit() ) {
 			return $booked_data_array;
 		}
