@@ -67,9 +67,7 @@ class WC_Accommodation_Booking_Date_Picker {
 			'in' => array(),
 			'out' => array(),
 		);
-
-		// we create copy to be able to check original values
-		$booked_data_array_copy = $booked_data_array;
+		$resource_availability = array();
 
 		if ( 'night' !== $product->get_duration_unit() ) {
 			return $booked_data_array;
@@ -89,21 +87,6 @@ class WC_Accommodation_Booking_Date_Picker {
 				$check_in_out_days['out'][ $resource ] = array();
 			}
 
-			// if we have automatic assignment attempt to automatically assign a resource
-			if ( $product->has_resources() && $product->is_resource_assignment_type( 'automatic' ) ) {
-				// if the resource is not set, attempt to assign one
-				if ( empty( $resource ) ) {
-					$resources = $booking->get_product()->get_all_resources_availability( $booking->start, $booking->end, 1 );
-					$resources = is_array( $resources ) ? array_keys( $resources ) : array();
-
-					// found an available resource, automatically assign it
-					if ( count( $resources ) > 0 ) {
-						$resource = $resources[0];
-						update_post_meta( $booking->get_id(), '_booking_resource_id', $resource );
-					}
-				}
-			}
-
 			$check_in_date = date( 'Y-n-j', $check_date );
 			if ( ! in_array( $check_in_date, $check_in_out_days['in'][ $resource ] ) ) {
 				$check_in_out_days['in'][ $resource ][] = $check_in_date;
@@ -118,22 +101,9 @@ class WC_Accommodation_Booking_Date_Picker {
 			$check_out_date = date( 'Y-n-j', $check_date );
 			if ( ! in_array( $check_in_date, $check_in_out_days['out'][ $resource ] ) ) {
 				$check_in_out_days['out'][ $resource ][] = $check_out_date;
-			}
-
-		}
-
-		// if it has resources, remove resource id 0 from the fully and partially booked list (comes from Bookings itself)
-		if ( $product->has_resources() ) {
-			foreach ( array( 'partially_booked_days', 'fully_booked_days' ) as $which ) {
-				foreach ( $booked_data_array[ $which ] as $day => $resource ) {
-					$booked_data_array[ $which ][ $day ] = array_filter(
-						$booked_data_array[ $which ][ $day ],
-						function( $key ) {
-							return 0 !== $key;
-						},
-						ARRAY_FILTER_USE_KEY
-					);
-				}
+				$blocks = $product->get_blocks_in_range_for_day( $check_date, $check_date, $resource, array() );
+				$available_blocks = wc_bookings_get_time_slots( $product, $blocks, array(), 0, $check_date, $check_date );
+				$resource_availability[ $check_out_date ][ $resource ] = ! empty( $available_blocks[ $check_date ] ) ? $available_blocks[ $check_date ][ 'available'] : 0;
 			}
 		}
 
@@ -163,8 +133,7 @@ class WC_Accommodation_Booking_Date_Picker {
 							unset( $booked_data_array['fully_booked_days'][ $day ] );
 						}
 					} else {
-						$checkout_day_fully_booked = array_key_exists( $day, $booked_data_array_copy['fully_booked_days'] ) &&
-							array_key_exists( $resource, $booked_data_array_copy['fully_booked_days'][ $day ] ) ? true : false;
+						$checkout_day_fully_booked = ! $resource_availability[ $day ][ $resource ];
 						if( $checkout_day_fully_booked ) {
 							// can't switch to partially booked
 							continue;
