@@ -22,8 +22,8 @@ class WC_Accommodation_Booking_Product_Tabs {
 	 * @return boolean
 	 */
 	public function are_time_fields_filled_out() {
-		$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
-		$check_out = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
 
 		if ( empty( $check_in ) ) {
 			return false;
@@ -77,8 +77,8 @@ class WC_Accommodation_Booking_Product_Tabs {
 		if ( ! $this->are_time_fields_filled_out() ) {
 			return;
 		}
-		$check_in = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
-		$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
 		?>
 		<h2><?php echo esc_html( apply_filters( 'woocommerce_accommodation_booking_time_tab_heading', __( 'Arriving/leaving', 'woocommerce-accommodation-bookings' ) ) ); ?></h2>
 		<ul>
