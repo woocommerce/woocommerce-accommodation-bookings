@@ -187,6 +187,23 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		return array_unique( $blocks_in_range );
 	}
+
+	/**
+	 * Get checkin and checkout times.
+	 *
+	 * @param string $type
+	 * @return string Time, either from options or default
+	 */
+	public static function get_check_times( $type ) {
+		switch ( $type ) {
+			case 'in':
+				return get_option( 'woocommerce_accommodation_bookings_check_in' ) ?: '14:00';
+			case 'out':
+				return get_option( 'woocommerce_accommodation_bookings_check_out' ) ?: '12:00';
+		}
+
+		return '';
+	}
 }
 
 endif;

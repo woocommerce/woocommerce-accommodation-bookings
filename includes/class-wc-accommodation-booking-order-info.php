@@ -32,8 +32,8 @@ class WC_Accommodation_Booking_Order_Info {
 			return;
 		}
 
-		$check_in  = get_option( 'woocommerce_accommodation_bookings_check_in', '' );
-		$check_out = get_option( 'woocommerce_accommodation_bookings_check_out', '' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
 		?>
 		<p>
 		<strong><?php esc_html_e( 'Check-in', 'woocommerce-accommodation-bookings' ); ?> </strong>
