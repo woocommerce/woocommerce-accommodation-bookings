@@ -68,7 +68,24 @@ class WC_Accommodation_Booking_Date_Picker {
 
 	/**
 	 * Add partially booked accomodation bookings
-	 * @param array $booked_data_array
+	 * If a calendar date has check-in ( a booking starts on that date ) if it is feasible we want it marked as
+	 * partially booked because some other booking could end on that date.
+	 * If a calendar date has check-out ( a booking ends on that date ) if it is feasible we want it marked as
+	 * partially booked because some other booking could start on that date.
+	 * When it is feasible to mark a date partiall booked:
+	 *  - for a check-in date we check if a day before that date has any available resources. Only if a day before
+	 *    check-in has any avaialble resources it is possible that some booking could end ( had its check-out ) on the
+	 *    check-in date we are testing.
+	 *  - for a check-out date we chack if that date has any available resources. If it does it means that some other
+	 *    booking can start ( can have its check-in ) on the check-out date that we are testing.
+	 * Function works in followin steps:
+	 *  1. gather all check-in and checko-out dates for product
+	 *  2. loop over all dates from (1):
+	 *    a. get all available resources for: day before for check-in and current for check-out
+	 *    b. test if resources are available and if yes than move fully booked day to partially booked days
+	 *
+	 * @param array                            $booked_data_array
+	 * @param WC_Product_Accommodation_Booking $product
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
 		// This function makes sesne only for duration type: night.
