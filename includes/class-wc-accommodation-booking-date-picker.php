@@ -80,7 +80,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		$available_quantity = $product->get_available_quantity( null );
 		$booked_day_counts  = array();
 
-		// Use the existing bookings to find days which are partially booked
+		// Use the existing bookings to find days which are partially booked.
 		foreach ( $existing_bookings as $booking ) {
 
 			$check_date  = $booking->start;
@@ -110,14 +110,14 @@ class WC_Accommodation_Booking_Date_Picker {
 			}
 		}
 
-		// go through each checkin and checkout days and mark them as partially booked
+		// Go through each checkin and checkout days and mark them as partially booked.
 		foreach ( array( 'in', 'out' ) as $which ) {
 			foreach ( $check_in_out_days[ $which ] as $resource => $days ) {
 				$full_days = array();
 
 				foreach ( $days as $day ) {
 					if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource ] ) ) {
-						// the day is already partially booked so lets skipp to the next day
+						// The day is already partially booked so lets skipp to the next day.
 						continue;
 					}
 
@@ -127,7 +127,7 @@ class WC_Accommodation_Booking_Date_Picker {
 						$previous_day_fully_booked = array_key_exists( $previous_day, $booked_data_array_copy['fully_booked_days'] ) &&
 							array_key_exists( $resource, $booked_data_array_copy['fully_booked_days'][ $previous_day ] ) ? true : false;
 						if( $previous_day_fully_booked ) {
-							// can't switch to partially booked
+							// Can't switch to partially booked.
 							continue;
 						}
 						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
@@ -138,7 +138,7 @@ class WC_Accommodation_Booking_Date_Picker {
 					} else {
 						$checkout_day_fully_booked = ! $resource_availability[ $day ][ $resource ];
 						if( $checkout_day_fully_booked ) {
-							// can't switch to partially booked
+							// Can't switch to partially booked.
 							continue;
 						}
 						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
