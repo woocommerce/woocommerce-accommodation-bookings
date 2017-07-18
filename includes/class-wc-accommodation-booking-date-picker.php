@@ -118,25 +118,18 @@ class WC_Accommodation_Booking_Date_Picker {
 		// Use the existing bookings to find days which are partially booked.
 		foreach ( $existing_bookings as $booking ) {
 
-			$check_date = $booking->start;
 			$resource   = $booking->get_resource_id();
 			if( ! array_key_exists( $resource, $check_in_out_days['in'] ) ) {
 				$check_in_out_days['in'][ $resource ] = array();
 				$check_in_out_days['out'][ $resource ] = array();
 			}
 
-			$check_in_date = date( 'Y-n-j', $check_date );
+			$check_in_date = date( 'Y-n-j', $booking->start );
 			if ( ! in_array( $check_in_date, $check_in_out_days['in'][ $resource ] ) ) {
 				$check_in_out_days['in'][ $resource ][] = $check_in_date;
 			}
 
-			// TODO optimise
-			while ( $check_date < $booking->end ) {
-				$js_date = date( 'Y-n-j', $check_date );
-				$check_date = strtotime( '+0 day', $check_date );
-			}
-
-			$check_out_date = date( 'Y-n-j', $check_date );
+			$check_out_date = date( 'Y-n-j', $booking->end );
 			if ( ! in_array( $check_in_date, $check_in_out_days['out'][ $resource ] ) ) {
 				$check_in_out_days['out'][ $resource ][] = $check_out_date;
 			}
