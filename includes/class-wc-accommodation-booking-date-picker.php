@@ -62,20 +62,17 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @param array $booked_data_array
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
-
 		// This function makes sesne only for duration type: night.
 		if ( 'night' !== $product->get_duration_unit() ) {
 			return $booked_data_array;
 		}
 
-		// Start and the end date of all bookings.
+		// Start and the end dates of all bookings.
 		$check_in_out_days = $this->get_check_in_and_out_days( $product );
 
 		// Go through each checkin and checkout days and mark them as partially booked.
 		foreach ( array( 'in', 'out' ) as $which ) {
 			foreach ( $check_in_out_days[ $which ] as $resource => $days ) {
-				$full_days = array();
-
 				foreach ( $days as $day ) {
 					if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource ] ) ) {
 						// The day is already partially booked so lets skipp to the next day.
@@ -89,6 +86,7 @@ class WC_Accommodation_Booking_Date_Picker {
 						$check_day = strtotime( $day );
 					}
 
+					// Check freele available blocks for resource. If some are available that means that the day is not fully booked.
 					$not_fully_booked = $this->get_product_resource_available_blocks_on_date( $product, $resource, $check_day );
 					if( $not_fully_booked ) {
 						$booked_data_array = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource, $day );
@@ -130,7 +128,7 @@ class WC_Accommodation_Booking_Date_Picker {
 			}
 
 			$check_out_date = date( 'Y-n-j', $booking->end );
-			if ( ! in_array( $check_in_date, $check_in_out_days['out'][ $resource ] ) ) {
+			if ( ! in_array( $check_out_date, $check_in_out_days['out'][ $resource ] ) ) {
 				$check_in_out_days['out'][ $resource ][] = $check_out_date;
 			}
 		}
