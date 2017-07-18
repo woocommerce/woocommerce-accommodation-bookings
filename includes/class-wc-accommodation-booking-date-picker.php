@@ -83,8 +83,8 @@ class WC_Accommodation_Booking_Date_Picker {
 		// Use the existing bookings to find days which are partially booked.
 		foreach ( $existing_bookings as $booking ) {
 
-			$check_date  = $booking->start;
-			$resource = $booking->get_resource_id();
+			$check_date = $booking->start;
+			$resource   = $booking->get_resource_id();
 			if( ! array_key_exists( $resource, $check_in_out_days['in'] ) ) {
 				$check_in_out_days['in'][ $resource ] = array();
 				$check_in_out_days['out'][ $resource ] = array();
@@ -93,6 +93,8 @@ class WC_Accommodation_Booking_Date_Picker {
 			$check_in_date = date( 'Y-n-j', $check_date );
 			if ( ! in_array( $check_in_date, $check_in_out_days['in'][ $resource ] ) ) {
 				$check_in_out_days['in'][ $resource ][] = $check_in_date;
+				$check_date_previous_day = strtotime( '-1 day', $check_date );
+				$resource_availability[ date( 'Y-n-j', $check_date_previous_day ) ][ $resource ] = $this->get_product_resource_available_blocks_on_date( $product, $resource, $check_date_previous_day );
 			}
 
 			// TODO optimise
@@ -104,9 +106,7 @@ class WC_Accommodation_Booking_Date_Picker {
 			$check_out_date = date( 'Y-n-j', $check_date );
 			if ( ! in_array( $check_in_date, $check_in_out_days['out'][ $resource ] ) ) {
 				$check_in_out_days['out'][ $resource ][] = $check_out_date;
-				$blocks = $product->get_blocks_in_range_for_day( $check_date, $check_date, $resource, array() );
-				$available_blocks = wc_bookings_get_time_slots( $product, $blocks, array(), 0, $check_date, $check_date );
-				$resource_availability[ $check_out_date ][ $resource ] = ! empty( $available_blocks[ $check_date ] ) ? $available_blocks[ $check_date ][ 'available'] : 0;
+				$resource_availability[ $check_out_date ][ $resource ] = $this->get_product_resource_available_blocks_on_date( $product, $resource, $check_date );
 			}
 		}
 
@@ -121,32 +121,20 @@ class WC_Accommodation_Booking_Date_Picker {
 						continue;
 					}
 
+					$fully_booked = false;
 					if( 'in' === $which ){
 						$previous_day_timestamp = strtotime( '-1 day', strtotime( $day ) );
 						$previous_day = date( 'Y-n-j', $previous_day_timestamp );
-						$previous_day_fully_booked = array_key_exists( $previous_day, $booked_data_array_copy['fully_booked_days'] ) &&
-							array_key_exists( $resource, $booked_data_array_copy['fully_booked_days'][ $previous_day ] ) ? true : false;
-						if( $previous_day_fully_booked ) {
-							// Can't switch to partially booked.
-							continue;
-						}
-						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
-						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
-						if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
-							unset( $booked_data_array['fully_booked_days'][ $day ] );
-						}
-					} else {
-						$checkout_day_fully_booked = ! $resource_availability[ $day ][ $resource ];
-						if( $checkout_day_fully_booked ) {
-							// Can't switch to partially booked.
-							continue;
-						}
-						$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
-						unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
-						if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
-							unset( $booked_data_array['fully_booked_days'][ $day ] );
-						}
+						$fully_booked = ! $resource_availability[ $previous_day ][ $resource ];
+					} elseif ( 'out' === $which ) {
+						$fully_booked = ! $resource_availability[ $day ][ $resource ];
 					}
+
+					if( $fully_booked ) {
+						// Can't switch to partially booked.
+						continue;
+					}
+					$booked_data_array = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource, $day );
 				}
 			}
 		}
@@ -154,6 +142,35 @@ class WC_Accommodation_Booking_Date_Picker {
 
 		return $booked_data_array;
 	}
+
+	/**
+	 * Get amount of available product resoureces on a specific date
+	 * *@param $product
+	 * *@param $resource
+	 * *@param $date
+	 */
+	private function get_product_resource_available_blocks_on_date( $product, $resource, $date ) {
+		$blocks = $product->get_blocks_in_range_for_day( $date, $date, $resource, array() );
+		$available_blocks = wc_bookings_get_time_slots( $product, $blocks, array(), 0, $date, $date );
+		return ! empty( $available_blocks[ $date ] ) ? $available_blocks[ $date ][ 'available'] : 0;
+	}
+
+	/**
+	 * Moves day from fully booked days array to partially booked days array and if the fully booked days is
+	 * array for that day is empty ( no assigned resources ) removes that empty day entry 
+	 * *@param $booked_data_array
+	 * *@param $resource
+	 * *@param $day
+	 */
+	private function move_day_from_fully_to_partially_booked( $booked_data_array, $resource, $day ) {
+		$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+		unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
+		if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
+			unset( $booked_data_array['fully_booked_days'][ $day ] );
+		}
+		return $booked_data_array;
+	}
+
 }
 
 new WC_Accommodation_Booking_Date_Picker;
