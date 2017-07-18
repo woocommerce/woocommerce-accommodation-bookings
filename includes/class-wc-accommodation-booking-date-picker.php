@@ -38,6 +38,15 @@ class WC_Accommodation_Booking_Date_Picker {
 			$data['_all_day']    = 0;
 		}
 
+		if ( $this->product->has_resources() && ! $this->product->is_resource_assignment_type( 'customer' ) ) {
+			// Assign an available resource automatically
+			$available_bookings = wc_bookings_get_total_available_bookings_for_range( $this->product, $data['_start_date'], $data['_end_date'], 0, $data['_qty'] );
+			if ( is_array( $available_bookings ) ) {
+				$data['_resource_id'] = current( array_keys( $available_bookings ) );
+				$data['type']         = get_the_title( current( array_keys( $available_bookings ) ) );
+			}
+		}
+
 		return $data;
 	}
 
