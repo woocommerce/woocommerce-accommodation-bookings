@@ -62,16 +62,19 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @param array $booked_data_array
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
-		// this array will contain the start and the end of all bookings
+
+		// This function makes sesne only for duration type: night.
+		if ( 'night' !== $product->get_duration_unit() ) {
+			return $booked_data_array;
+		}
+
+		// This array will contain the start and the end of all bookings.
 		$check_in_out_days     = array(
 			'in' => array(),
 			'out' => array(),
 		);
-		$resource_availability = array();
 
-		if ( 'night' !== $product->get_duration_unit() ) {
-			return $booked_data_array;
-		}
+		$resource_availability = array();
 
 		$existing_bookings  = WC_Bookings_Controller::get_bookings_for_objects( array( $product->get_id() ) );
 		$available_quantity = $product->get_available_quantity( null );
