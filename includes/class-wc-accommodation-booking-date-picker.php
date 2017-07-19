@@ -72,7 +72,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * partially booked because some other booking could end on that date.
 	 * If a calendar date has check-out ( a booking ends on that date ) if it is feasible we want it marked as
 	 * partially booked because some other booking could start on that date.
-	 * When it is feasible to mark a date partiall booked:
+	 * When it is feasible to mark a date partially booked:
 	 *  - for a check-in date we check if a day before that date has any available resources. Only if a day before
 	 *    check-in has any avaialble resources it is possible that some booking could end ( had its check-out ) on the
 	 *    check-in date we are testing.
