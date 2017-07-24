@@ -32,8 +32,10 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 = 1.0.X =
 * Fix - Display cost not used when presenting price to the client.
-* Feature - Add woocommerce_accommodation_bookings_range_picker_enabled to disable range picker. 
+* Feature - Add woocommerce_accommodation_bookings_range_picker_enabled to disable range picker.
 * Fix - Fallback to default checkin/checkout time values if none are set.
+* Fix - Fully booked days not showing correctly when persons are used.
+* Fix - Resource availability calculated incorrectly.
 
 = 1.0.10 =
 * Fix - Tax fields missing.
