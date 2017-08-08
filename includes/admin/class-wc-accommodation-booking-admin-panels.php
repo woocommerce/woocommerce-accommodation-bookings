@@ -64,7 +64,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 	/**
 	 * Loads our panels related to accommodation bookings
-	 * @version  1.0.10
+	 * @version  1.0.11
 	 */
 	public function panels() {
 		global $post, $bookable_product;
@@ -120,7 +120,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 	/**
 	 * Saves booking / accommodation data for a product
 	 *
-	 * @param int $post_id
+	 * @version  1.0.11
+	 * @param    int $post_id
 	 */
 	public function save_product_data( $post_id ) {
 		global $wpdb;
