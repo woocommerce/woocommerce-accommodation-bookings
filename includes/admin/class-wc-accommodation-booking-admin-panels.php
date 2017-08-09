@@ -64,10 +64,26 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 	/**
 	 * Loads our panels related to accommodation bookings
+	 * @version  1.0.11
 	 */
 	public function panels() {
-		global $post;
+		global $post, $bookable_product;
 		$post_id = $post->ID;
+
+		if ( empty( $bookable_product ) || $bookable_product->get_id() !== $post->ID ) {
+			$bookable_product = new WC_Product_Booking( $post->ID );
+		}
+
+		$restricted_meta = $bookable_product->get_restricted_days();
+
+		for ( $i=0; $i < 7; $i++) {
+
+			if ( $restricted_meta && in_array( $i, $restricted_meta ) ) {
+				$restricted_days[ $i ] = $i;
+			} else {
+				$restricted_days[ $i ] = false;
+			}
+		}
 
 		include( 'views/html-accommodation-booking-rates.php' );
 		include( 'views/html-accommodation-booking-availability.php' );
@@ -104,7 +120,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 	/**
 	 * Saves booking / accommodation data for a product
 	 *
-	 * @param int $post_id
+	 * @version  1.0.11
+	 * @param    int $post_id
 	 */
 	public function save_product_data( $post_id ) {
 		global $wpdb;
@@ -203,6 +220,11 @@ class WC_Accommodation_Booking_Admin_Panels {
 			}
 		}
 		update_post_meta( $post_id, '_wc_booking_availability', $availability );
+
+		// Restricted days.
+		update_post_meta( $post_id, '_wc_booking_has_restricted_days', isset( $_POST['_wc_accommodation_booking_has_restricted_days'] ) );
+		$restricted_days = isset( $_POST['_wc_accommodation_booking_restricted_days'] ) ? wc_clean( $_POST['_wc_accommodation_booking_restricted_days'] ) : '';
+		update_post_meta( $post_id, '_wc_booking_restricted_days', $restricted_days );
 
 		// Resources
 		if ( isset( $_POST['resource_id'] ) && isset( $_POST['_wc_booking_has_resources'] ) ) {

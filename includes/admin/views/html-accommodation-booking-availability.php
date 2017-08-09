@@ -35,6 +35,48 @@
 				</select> <?php _e( 'into the future', 'woocommerce-accommodation-bookings' ); ?>
 		</p>
 
+		<?php
+			woocommerce_wp_checkbox(
+				array(
+					'id'          => '_wc_accommodation_booking_has_restricted_days',
+					'value'       => $bookable_product->has_restricted_days( 'edit' ) ? 'yes' : 'no',
+					'label'       => __( 'Restrict start days?', 'woocommerce-bookings' ),
+					'description' => __( 'Restrict bookings so that they can only start on certain days of the week. Does not affect availability.', 'woocommerce-bookings' ),
+				)
+			);
+		?>
+
+		<div class="booking-day-restriction">
+			<table class="widefat">
+				<tbody>
+					<tr>
+						<td>&nbsp;</td>
+
+			<?php
+				$weekdays = array(
+					__( 'Sunday', 'woocommerce-bookings' ),
+					__( 'Monday', 'woocommerce-bookings' ),
+					__( 'Tuesday', 'woocommerce-bookings' ),
+					__( 'Wednesday', 'woocommerce-bookings' ),
+					__( 'Thursday', 'woocommerce-bookings' ),
+					__( 'Friday', 'woocommerce-bookings' ),
+					__( 'Saturday', 'woocommerce-bookings' ),
+					);
+
+				for ( $i=0;  $i < 7;  $i++) { 
+					?>
+						<td>
+							<label class="checkbox" for="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]"><?php echo $weekdays[ $i ]; ?>&nbsp;</label>
+							<input type="checkbox" class="checkbox" name="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]" id="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]" value="<?php echo $i; ?>" <?php checked( $restricted_days[ $i ], $i ); ?>>
+						</td>
+					<?php
+				}
+			?>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<div class="options_group">
 		<div class="table_grid">
