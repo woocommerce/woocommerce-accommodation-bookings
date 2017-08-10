@@ -70,18 +70,25 @@ class WC_Accommodation_Booking_Admin_Panels {
 		global $post, $bookable_product;
 		$post_id = $post->ID;
 
-		if ( empty( $bookable_product ) || $bookable_product->get_id() !== $post->ID ) {
-			$bookable_product = new WC_Product_Booking( $post->ID );
-		}
+		/**
+		 * Day restrictions added to Bookings 1.10.7
+		 * @todo  Remove version compare ~Aug 2018
+		 */
+		if ( version_compare( WC_BOOKINGS_VERSION, '1.10.7', '>=' ) ) {
 
-		$restricted_meta = $bookable_product->get_restricted_days();
+			if ( empty( $bookable_product ) || $bookable_product->get_id() !== $post->ID ) {
+				$bookable_product = new WC_Product_Booking( $post->ID );
+			}
 
-		for ( $i=0; $i < 7; $i++) {
+			$restricted_meta = $bookable_product->get_restricted_days();
 
-			if ( $restricted_meta && in_array( $i, $restricted_meta ) ) {
-				$restricted_days[ $i ] = $i;
-			} else {
-				$restricted_days[ $i ] = false;
+			for ( $i=0; $i < 7; $i++) {
+
+				if ( $restricted_meta && in_array( $i, $restricted_meta ) ) {
+					$restricted_days[ $i ] = $i;
+				} else {
+					$restricted_days[ $i ] = false;
+				}
 			}
 		}
 
