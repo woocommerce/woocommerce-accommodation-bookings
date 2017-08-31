@@ -30,6 +30,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.1.1 =
+* Fix - PHP Notice when fully booked array is empty.
+
 = 1.1.0 =
 * Fix - Display cost not used when presenting price to the client.
 * Add - Add woocommerce_accommodation_bookings_range_picker_enabled to disable range picker.
