@@ -32,6 +32,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 = 1.1.1 =
 * Fix - PHP Notice when fully booked array is empty.
+* Fix - Bookings outside of available range being checked for availability.
 
 = 1.1.0 =
 * Fix - Display cost not used when presenting price to the client.
