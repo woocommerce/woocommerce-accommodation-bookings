@@ -1,18 +1,20 @@
 <?php
 /*
-Plugin Name: WooCommerce Accommodation Bookings
-Plugin URI: https://woocommerce.com/products/woocommerce-accommodation-bookings/
-Description: An accommodations add-on for the WooCommerce Bookings extension.
-Version: 1.1.0
-Author: WooCommerce
-Author URI: https://woocommerce.com
-Text Domain: woocommerce-accommodation-bookings
-Domain Path: /languages
-
-Copyright: © 2015-2017 WooCommerce.
-License: GNU General Public License v3.0
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-*/
+ * Plugin Name: WooCommerce Accommodation Bookings
+ * Plugin URI: https://woocommerce.com/products/woocommerce-accommodation-bookings/
+ * Description: An accommodations add-on for the WooCommerce Bookings extension.
+ * Version: 1.1.0
+ * Author: WooCommerce
+ * Author URI: https://woocommerce.com
+ * Text Domain: woocommerce-accommodation-bookings
+ * Domain Path: /languages
+ * WC tested up to: 3.2
+ * WC requires at least: 2.6
+ *
+ * Copyright: © 2015-2017 WooCommerce.
+ * License: GNU General Public License v3.0
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
