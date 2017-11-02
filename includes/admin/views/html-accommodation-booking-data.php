@@ -26,7 +26,7 @@
 			'desc_tip'          => true,
 			'type'              => 'number',
 			'custom_attributes' => array(
-				'min'  => '',
+				'min'  => '1',
 				'step' => '1'
 			)
 		) );
