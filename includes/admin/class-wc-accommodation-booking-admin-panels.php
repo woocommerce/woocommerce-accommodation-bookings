@@ -197,6 +197,10 @@ class WC_Accommodation_Booking_Admin_Panels {
 			if ( '_wc_booking_display_cost' === $meta_key ) {
 				update_post_meta( $post_id, '_wc_display_cost', $value );
 			}
+
+			if ( '_wc_booking_base_cost' === $meta_key ) {
+				update_post_meta( $post_id, '_wc_booking_block_cost', $value );
+			}
 		}
 
 		// Availability
@@ -355,6 +359,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		}
 
 		update_post_meta( $post_id, '_wc_booking_pricing', $pricing );
+		update_post_meta( $post_id, '_wc_booking_cost', '' );
 
 		update_post_meta( $post_id, '_regular_price', '' );
 		update_post_meta( $post_id, '_sale_price', '' );
