@@ -30,6 +30,10 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.1.2 =
+* Fix - Bookable product base cost not being cleared when changing to an Accommodation product.
+* Fix - Update _wc_booking_block_cost when base cost is updated.
+
 = 1.1.1 =
 * Fix - PHP Notice when fully booked array is empty.
 * Fix - Bookings outside of available range being checked for availability.
