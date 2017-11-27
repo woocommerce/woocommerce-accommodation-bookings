@@ -30,6 +30,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.1.2 =
+* Fix - Corrupted check-in/check-out dates in DB.
+
 = 1.1.1 =
 * Fix - PHP Notice when fully booked array is empty.
 * Fix - Bookings outside of available range being checked for availability.

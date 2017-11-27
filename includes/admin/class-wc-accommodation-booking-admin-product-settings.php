@@ -37,7 +37,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings {
 				'id' 		=> 'woocommerce_accommodation_bookings_check_in',
 				'type' 		=> 'accommodation_time',
 				'class'		=> 'time-picker',
-				'default'       => '14:00 PM',
+				'default'       => '14:00',
 			),
 
 			array(
@@ -46,7 +46,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings {
 				'id' 		=> 'woocommerce_accommodation_bookings_check_out',
 				'type' 		=> 'accommodation_time',
 				'class'		=> 'time-picker',
-				'default'       => '12:00 PM',
+				'default'       => '12:00',
 			),
 
 			array( 'type' => 'sectionend', 'id' => 'accommodations' ),
