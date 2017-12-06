@@ -29,7 +29,9 @@ class WC_Accommodation_Booking {
 	 * @return array
 	 */
 	public function register_data_stores( $data_stores = array() ) {
-		$data_stores['product-accommodation-booking'] = $data_stores['product-booking'];
+		if ( isset( $data_stores['product-booking'] ) ) {
+			$data_stores['product-accommodation-booking'] = $data_stores['product-booking'];
+		}
 		return $data_stores;
 	}
 
