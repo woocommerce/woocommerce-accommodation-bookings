@@ -3,7 +3,7 @@ Contributors:  woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith00
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 = 1.1.2 =
 * Fix - Corrupted check-in/check-out dates in DB.
+* Update - WC 3.3 compatibility
 
 = 1.1.1 =
 * Fix - PHP Notice when fully booked array is empty.
