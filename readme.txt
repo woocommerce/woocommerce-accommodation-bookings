@@ -30,6 +30,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 
 == Changelog ==
 
+= 1.1.3 <not released> =
+* Fix - Undefined index notice.
+
 = 1.1.2 =
 * Fix - Corrupted check-in/check-out dates in DB.
 * Update - WC 3.3 compatibility
