@@ -31,6 +31,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 == Changelog ==
 
 = 1.1.3 <not released> =
+* Fix - Fatal error when disabling WooCommerce.
 * Fix - Undefined index notice.
 
 = 1.1.2 =
