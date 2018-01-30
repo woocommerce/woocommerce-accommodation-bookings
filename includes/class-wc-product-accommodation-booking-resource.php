@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WC_Product_Accommodation_Booking_Resource' ) ) :
+if ( ! class_exists( 'WC_Product_Accommodation_Booking_Resource' ) && class_exists( 'WC_Product_Booking_Resource' ) ) :
 
 /**
  * Class that creates our new accommodation booking product resource type
