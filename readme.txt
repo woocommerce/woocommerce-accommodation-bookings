@@ -33,6 +33,7 @@ Or use the automatic installation wizard through your admin panel, just search f
 = 1.1.3 <not released> =
 * Fix - Fatal error when disabling WooCommerce.
 * Fix - Undefined index notice.
+* Fix - Check for product before using it in order info.
 
 = 1.1.2 =
 * Fix - Corrupted check-in/check-out dates in DB.
