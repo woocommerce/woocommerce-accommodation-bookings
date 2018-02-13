@@ -28,6 +28,12 @@ This extension extends Bookings and makes it possible to:
 
 Or use the automatic installation wizard through your admin panel, just search for this plugins name.
 
+== Frequently Asked Questions ==
+
+= Why do my Accommodation Products show higher prices than I defined in the dashboard? =
+
+If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
+
 == Changelog ==
 
 = 1.1.3 <not released> =
