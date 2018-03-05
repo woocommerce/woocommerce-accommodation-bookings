@@ -279,12 +279,14 @@ class WC_Accommodation_Booking_Admin_Panels {
 		
 		// Rates
 		$pricing = array();
+		$original_base_cost = absint( get_post_meta( $post_id, '_wc_booking_base_cost', true ) );
+
 		$row_size     = isset( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) ? sizeof( $_POST[ 'wc_accommodation_booking_pricing_type' ] ) : 0;
 		for ( $i = 0; $i < $row_size; $i ++ ) {
 			$pricing[ $i ]['type']          = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_type' ][ $i ] );
-			$pricing[ $i ]['base_cost'] = $pricing[ $i ]['cost'] = 0;
-			$pricing[ $i ]['base_modifier'] = $pricing[$i]['modifier'] = 'plus';
-			$pricing[ $i ]['override_block'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_block_cost' ][ $i ] );
+			$new_cost = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_block_cost' ][ $i ] );
+			$pricing[ $i ]['base_modifier'] = $pricing[$i]['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus';
+			$pricing[ $i ]['base_cost'] = $pricing[ $i ]['cost'] = absint( $new_cost - $original_base_cost );
 
 			switch ( $pricing[ $i ]['type'] ) {
 				case 'custom' :
