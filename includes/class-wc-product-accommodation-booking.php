@@ -13,6 +13,10 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Set up our new type and fill out some basic info
+	 *
+	 * WC_Product_Accommodation_Booking constructor.
+	 *
+	 * @param $product
 	 */
 	public function __construct( $product ) {
 		$this->product_type = $this->get_type();
@@ -29,6 +33,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * Need to override this to return the proper resource class.
 	 *
 	 * @param  int $id
+	 *
 	 * @return WC_Product_Booking_Resource object
 	 */
 	public function get_resource( $id ) {
@@ -43,6 +48,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Override product type
+	 *
 	 * @return string
 	 */
 	public function get_type() {
@@ -70,6 +76,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Tells Bookings that this product type is a bookings addon.
+	 *
 	 * @return boolean
 	 */
 	public function is_bookings_addon() {
@@ -78,6 +85,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Human readable version of the addon title
+	 *
 	 * @return string
 	 */
 	public function bookings_addon_title() {
@@ -86,6 +94,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * We want users to be able to select their range of dates
+	 *
 	 * @return boolean
 	 */
 	public function is_range_picker_enabled() {
@@ -95,7 +104,9 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	/**
 	 * Customers define how many nights they want to stay. There is no concept
 	 * of "fixed" durations for accommodations.
+	 *
 	 * @param  string $context
+	 *
 	 * @return string
 	 */
 	public function get_duration_type( $context = 'view' ) {
@@ -104,7 +115,9 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Our duration is nights instead of days
+	 *
 	 * @param  string $context
+	 *
 	 * @return string
 	 */
 	public function get_duration_unit( $context = 'view' ) {
@@ -114,6 +127,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	/**
 	 * Costs can vary depending on rates (weekend rates, etc)
 	 * In the future, addons like cots can also change cost.
+	 *
 	 * @return boolean
 	 */
 	public function has_additional_costs() {
@@ -122,6 +136,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * By default, rooms will be available.
+	 *
 	 * @return boolean
 	 */
 	public function get_default_availability() {
@@ -130,6 +145,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Hotel rooms are a "virtual" product. No shipping is involved.
+	 *
 	 * @return boolean
 	 */
 	public function is_virtual() {
@@ -138,11 +154,14 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Get price HTML
+	 *
+	 * @param string $price
+	 *
 	 * @return string
 	 */
 	public function get_price_html( $price = '' ) {
 
-		// If displau cost is set - user wants that to be displayed
+		// If display cost is set - user wants that to be displayed
 		$display_price = $this->get_display_cost();
 		if ( ! $display_price ) {
 			$tax_display_mode = get_option( 'woocommerce_tax_display_shop' );
@@ -192,6 +211,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * Get checkin and checkout times.
 	 *
 	 * @param string $type
+	 *
 	 * @return string Time, either from options or default
 	 */
 	public static function get_check_times( $type ) {
