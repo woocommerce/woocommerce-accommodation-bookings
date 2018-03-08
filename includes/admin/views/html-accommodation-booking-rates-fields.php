@@ -44,6 +44,7 @@
 				<option value="months" <?php selected( $rate['type'], 'months' ); ?>><?php _e( 'Range of months', 'woocommerce-accommodation-bookings' ); ?></option>
 				<option value="weeks" <?php selected( $rate['type'], 'weeks' ); ?>><?php _e( 'Range of weeks', 'woocommerce-accommodation-bookings' ); ?></option>
 				<option value="days" <?php selected( $rate['type'], 'days' ); ?>><?php _e( 'Range of nights during the week', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="blocks" <?php selected( $rate['type'], 'blocks' ); ?>><?php _e( 'Night count', 'woocommerce-bookings' ); ?></option>
 			</select>
 		</div>
 	</td>
@@ -71,6 +72,9 @@
 		</div>
 		<div class="from_date">
 			<input type="text" class="date-picker" name="wc_accommodation_booking_pricing_from_date[]" value="<?php if ( $rate['type'] == 'custom' && ! empty( $rate['from'] ) ) echo esc_attr( $rate['from'] ) ?>" />
+		</div>
+		<div class="from">
+			<input type="number" name="wc_accommodation_booking_pricing_from_block[]" step="1" value="<?php if ( $rate['type'] == 'blocks' && ! empty( $rate['from'] ) ) echo esc_attr( $rate['from'] ) ?>" />
 		</div>
 	</td>
 	<td>
@@ -101,6 +105,10 @@
 
 		<div class="to_time">
 			<input type="time" class="time-picker" name="wc_accommodation_booking_pricing_to_time[]" value="<?php if ( strrpos( $rate['type'], 'time' ) === 0 && ! empty( $rate['to'] ) ) echo esc_attr( $rate['to'] ); ?>" placeholder="HH:MM" />
+		</div>
+
+		<div class="to">
+			<input type="number" name="wc_accommodation_booking_pricing_to_block[]" step="1" value="<?php if ( $rate['type'] == 'blocks' && ! empty( $rate['to'] ) ) echo esc_attr( $rate['to'] ); ?>" />
 		</div>
 	</td>
 	<td>
