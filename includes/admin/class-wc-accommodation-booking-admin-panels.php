@@ -303,6 +303,13 @@ class WC_Accommodation_Booking_Admin_Panels {
 					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_day_of_week' ][ $i ] );
 					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_day_of_week' ][ $i ] );
 				break;
+				case 'blocks' :
+					$pricing[ $i ]['from'] = wc_clean( $_POST['wc_accommodation_booking_pricing_from_block'][ $i ] );
+					$pricing[ $i ]['to']   = wc_clean( $_POST['wc_accommodation_booking_pricing_to_block'][ $i ] );
+
+					$pricing[ $i ]['cost']     = wc_clean( $_POST['wc_accommodation_booking_pricing_block_cost'][ $i ] );
+					$pricing[ $i ]['modifier'] = 'equals';
+				break;
 			}
 		}
 		
