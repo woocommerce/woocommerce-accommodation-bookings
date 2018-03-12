@@ -40,6 +40,7 @@ If the prices shown on the product do not match the prices defined in the dashbo
 * Fix - Fatal error when disabling WooCommerce.
 * Fix - Undefined index notice.
 * Fix - Check for product before using it in order info.
+* Tweak - Add an option to autocomplete accommodation orders by allowing virtual accommodation products.
 
 = 1.1.2 =
 * Fix - Corrupted check-in/check-out dates in DB.
