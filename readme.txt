@@ -41,6 +41,7 @@ If the prices shown on the product do not match the prices defined in the dashbo
 * Fix - Undefined index notice.
 * Fix - Check for product before using it in order info.
 * Fix - Resource Costs not added for Custom Rate - Date Ranges.
+* Fix - Remove duplicate person cost multiplier checkbox.
 
 = 1.1.2 =
 * Fix - Corrupted check-in/check-out dates in DB.
