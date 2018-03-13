@@ -6,13 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Adds some additional info (such as check-in/check-out time) to the order info line item
  */
-class WC_Accommodation_Booking_Order_Info {
+class WC_Accommodation_Booking_Order_Manager {
 
 	/**
 	 * Hook into WooCommerce..
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_order_item_meta_start', array( $this, 'add_checkinout_info_to_order_email' ), -10, 3 );
+		add_filter( 'woocommerce_payment_complete_order_status', array( $this, 'complete_order' ), 20, 2 );
 	}
 
 	/**
@@ -83,6 +84,51 @@ class WC_Accommodation_Booking_Order_Info {
 		return $datetime->getTimestamp();
 	}
 
+	/**
+	 * Complete virtual booking orders,
+	 *
+	 * Hooked into a filter that changes the status for bookings.
+	 *
+	 * @param $order_status
+	 * @param $order_id
+	 * @return string
+	 */
+	public function complete_order( $order_status, $order_id ) {
+		$order = wc_get_order( $order_id );
+		if ( 'processing' === $order_status
+			&& $order->has_status( array( 'on-hold', 'pending', 'failed' ) ) ) {
+			$virtual_booking_order = false;
+
+			if ( count( $order->get_items() ) < 1 ) {
+				return $order_status;
+			}
+
+			foreach ( $order->get_items() as $item ) {
+				if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
+					if ( 'line_item' === $item['type'] ) {
+						$product               = $order->get_product_from_item( $item );
+						$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
+					}
+				} else {
+					if ( $item->is_type( 'line_item' ) ) {
+						$product               = $item->get_product();
+						$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
+					}
+				}
+				if ( ! $virtual_booking_order ) {
+					break;
+				}
+			}
+			// virtual order, mark as completed
+			if ( $virtual_booking_order ) {
+				return 'completed';
+			}
+		}
+
+		// non-virtual order, return original status
+		return $order_status;
+	}
+
 }
 
-new WC_Accommodation_Booking_Order_Info;
+new WC_Accommodation_Booking_Order_Manager;
