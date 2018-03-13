@@ -45,10 +45,6 @@ class WC_Accommodation_Booking_Addons {
 		}
 		?>
 		<tr class="<?php echo esc_attr( $css_classes ); ?>">
-			<td class="addon_wc_booking_person_qty_multiplier addon_required" width="50%">
-				<label for="addon_wc_accommodation_booking_person_qty_multiplier_<?php echo $loop; ?>"><?php _e( 'Bookings: Multiply cost by person count', 'woocommerce-accommodation-bookings' ); ?></label>
-				<input type="checkbox" id="addon_wc_accommodation_booking_person_qty_multiplier_<?php echo $loop; ?>" name="addon_wc_accommodation_booking_person_qty_multiplier[<?php echo $loop; ?>]" <?php checked( ! empty( $addon['wc_booking_person_qty_multiplier'] ), true ) ?> />
-			</td>
 			<td class="addon_wc_booking_block_qty_multiplier addon_required" width="50%">
 				<label for="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>"><?php _e( 'Bookings: Multiply cost by number of nights', 'woocommerce-accommodation-bookings' ); ?></label>
 				<input type="checkbox" id="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>" name="addon_wc_accommodation_booking_block_qty_multiplier[<?php echo $loop; ?>]" <?php checked( ! empty( $addon['wc_booking_block_qty_multiplier'] ), true ) ?> />
