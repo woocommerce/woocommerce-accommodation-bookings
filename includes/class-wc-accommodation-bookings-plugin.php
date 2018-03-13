@@ -82,6 +82,8 @@ class WC_Accommodation_Bookings_Plugin {
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
 		}
+
+		add_action( 'shutdown', array( $this, 'install' ) );
 	}
 
 	/**
@@ -182,5 +184,48 @@ class WC_Accommodation_Bookings_Plugin {
 		}
 
 		return (array) $links;
+	}
+
+	/**
+	 * Installer
+	 */
+	public function install() {
+		global $wpdb;
+
+		$force_update = false;
+		$accommodation_bookings_version = get_option( 'wc_accommodation_bookings_version' );
+
+		if ( ! $accommodation_bookings_version ) {
+			$force_update = true;
+			$accommodation_bookings_version = $this->version;
+		}
+
+		// Data updates
+		if ( $force_update || version_compare( $accommodation_bookings_version, '1.1.3', '<' ) ) {
+			$accommodation_bookings = $wpdb->get_results( "SELECT DISTINCT post_id FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_pricing' AND meta_value LIKE '%override_block%';" );
+			foreach ( $accommodation_bookings as $accommodation_booking ) {
+				$product = wc_get_product( $accommodation_booking->post_id );
+
+				if ( 'accommodation-booking' != $product->get_type() ) {
+					continue;
+				}
+
+				$pricing = get_post_meta( $product->get_id(), '_wc_booking_pricing', true );
+				$original_base_cost = absint( get_post_meta( $product->get_id(), '_wc_booking_base_cost', true ) );
+
+				// Convert from the old to the new structure
+				foreach ( $pricing as &$pricing_row ) {
+					$new_cost = $pricing_row['override_block'];
+					unset( $pricing_row['override_block'] );
+					$pricing_row['base_modifier'] = $pricing_row['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus';
+					$pricing_row['base_cost'] = $pricing_row['cost'] = absint( $new_cost - $original_base_cost );
+				}
+
+				update_post_meta( $product->get_id(), '_wc_booking_pricing', $pricing );
+			}
+		}
+
+		// Update version
+		update_option( 'wc_accommodation_bookings_version', $this->version );
 	}
 }
