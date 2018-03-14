@@ -103,7 +103,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 * @return array
 	 */
 	public function product_type_options( $options ) {
-		$options['virtual']['wrapper_class'] .= ' hide_if_accommodation-booking';
+		$options['virtual']['wrapper_class'] .= ' show_if_accommodation-booking';
 		$options['wc_booking_has_resources']['wrapper_class'] .= ' show_if_accommodation-booking';
 		$options['wc_booking_has_persons']['wrapper_class'] .= ' show_if_accommodation-booking';
 		return $options;
