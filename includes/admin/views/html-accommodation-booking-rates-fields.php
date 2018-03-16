@@ -104,7 +104,20 @@
 		</div>
 	</td>
 	<td>
-		<input type="number" step="0.01" name="wc_accommodation_booking_pricing_block_cost[]" value="<?php if ( ! empty( $rate['override_block'] ) ) echo $rate['override_block']; ?>" placeholder="0" />
+		<input type="number" step="0.01" name="wc_accommodation_booking_pricing_block_cost[]" value="<?php
+		// Handle legacy
+		if ( ! empty( $rate['override_block'] ) ) {
+			echo $rate['override_block'];
+		} else if ( ! empty( $rate['modifier'] ) && isset( $rate['cost'] ) ) {
+			$base_cost = absint( get_post_meta( $post_id, '_wc_booking_base_cost', true ) );
+
+			if ( 'plus' == $rate['modifier'] ) {
+				echo $base_cost + $rate['cost'];
+			} else {
+				echo $base_cost - $rate['cost'];
+			}
+		}
+		?>" placeholder="0" />
 		<?php do_action( 'woocommerce_accommodation_bookings_after_booking_pricing_override_block_cost', $rate, $post_id ); ?>
 	</td>
 	<td class="remove">&nbsp;</td>
