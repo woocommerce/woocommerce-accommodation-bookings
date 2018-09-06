@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.4 - 2018-xx-xx =
+* Add - PAO 3.0 compatibility.
+
 = 1.1.3 =
 * Fix - Fatal error when disabling WooCommerce.
 * Fix - Undefined index notice.
