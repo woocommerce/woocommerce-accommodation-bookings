@@ -24,9 +24,13 @@ class WC_Accommodation_Booking_Addons {
 	 * @return bool
 	 */
 	public function addons_show_grand_total( $show_grand_total, $product ) {
-		if ( $product->is_type( 'accommodation-booking' ) ) {
+		if (
+			$product->is_type( 'accommodation-booking' ) &&
+			( defined( 'WC_PRODUCT_ADDONS_VERSION' ) && version_compare( WC_PRODUCT_ADDONS_VERSION, '3.0', '<' ) )
+		) {
 			$show_grand_total = false;
 		}
+
 		return $show_grand_total;
 	}
 
@@ -43,25 +47,35 @@ class WC_Accommodation_Booking_Addons {
 				$css_classes .= ' hide_initial_booking_addon_options';
 			}
 		}
+
+		if ( version_compare( WC_PRODUCT_ADDONS_VERSION, '3.0', '<' ) ) {
 		?>
 		<tr class="<?php echo esc_attr( $css_classes ); ?>">
 			<td class="addon_wc_booking_block_qty_multiplier addon_required" width="50%">
-				<label for="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>"><?php _e( 'Bookings: Multiply cost by number of nights', 'woocommerce-accommodation-bookings' ); ?></label>
-				<input type="checkbox" id="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>" name="addon_wc_accommodation_booking_block_qty_multiplier[<?php echo $loop; ?>]" <?php checked( ! empty( $addon['wc_booking_block_qty_multiplier'] ), true ) ?> />
+				<label for="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>"><?php esc_html_e( 'Bookings: Multiply cost by number of nights', 'woocommerce-accommodation-bookings' ); ?></label>
+
+				<input type="checkbox" id="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>" name="addon_wc_accommodation_booking_block_qty_multiplier[<?php echo $loop; ?>]" <?php checked( ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ), true ) ?> />
 			</td>
 		</tr>
 		<?php
+		} else {
+		?>
+		<div class="<?php echo esc_attr( $css_classes ); ?>">
+			<div class="addon_wc_accommodation_booking_block_qty_multiplier">
+				<label for="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>">
+					<input type="checkbox" id="addon_wc_accommodation_booking_block_qty_multiplier_<?php echo $loop; ?>" name="addon_wc_accommodation_booking_block_qty_multiplier[<?php echo $loop; ?>]" <?php checked( ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ), true ); ?> /> <?php esc_html_e( 'Bookings: Multiply cost by number of nights', 'woocommerce-accommodation-bookings' ); ?>
+				</label>
+			</div>
+		</div>
+		<?php
+		}
 	}
 
 	/**
 	 * Save options
 	 */
 	public function save_addon_options( $data, $i ) {	
-	
-		if ( 'accommodation-booking' == $_POST['product-type'] ) {
-			$data['wc_booking_person_qty_multiplier'] = isset( $_POST['addon_wc_accommodation_booking_person_qty_multiplier'][ $i ] ) ? 1 : 0;
-			$data['wc_booking_block_qty_multiplier']  = isset( $_POST['addon_wc_accommodation_booking_block_qty_multiplier'][ $i ] ) ? 1 : 0;
-		}
+		$data['wc_accommodation_booking_block_qty_multiplier'] = isset( $_POST['addon_wc_accommodation_booking_block_qty_multiplier'][ $i ] ) ? 1 : 0;
 		
 		return $data;
 	}
