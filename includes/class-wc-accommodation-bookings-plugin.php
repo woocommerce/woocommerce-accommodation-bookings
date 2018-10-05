@@ -206,6 +206,10 @@ class WC_Accommodation_Bookings_Plugin {
 			foreach ( $accommodation_bookings as $accommodation_booking ) {
 				$product = wc_get_product( $accommodation_booking->post_id );
 
+				if ( ! is_a( $product, 'WC_Product' ) ) {
+					continue;				
+				}
+
 				if ( 'accommodation-booking' != $product->get_type() ) {
 					continue;
 				}

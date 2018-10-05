@@ -38,6 +38,7 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 = 1.1.4 - 2018-xx-xx =
 * Add - PAO 3.0 compatibility.
+* Fix - Check product object before calling method to prevent errors.
 
 = 1.1.3 =
 * Fix - Fatal error when disabling WooCommerce.
