@@ -107,6 +107,7 @@
 			<select name="wc_accommodation_booking_availability_bookable[]">
 				<option value="no" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'no', true ) ?>><?php _e( 'No', 'woocommerce-accommodation-bookings' ) ;?></option>
 				<option value="yes" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'yes', true ) ?>><?php _e( 'Yes', 'woocommerce-accommodation-bookings' ) ;?></option>
+				<option value="check_out" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'check_out', true ) ?>><?php _e( 'Check-out Only', 'woocommerce-accommodation-bookings' ) ;?></option>
 			</select>
 		</div>
 	</td>
