@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.1.5 - 2018-XX-XX =
+* Fix - Allow creating of a checkout only day.
+
 = 1.1.4 - 2018-10-23 =
 * Add - PAO 3.0 compatibility.
 * Fix - Check product object before calling method to prevent errors.
