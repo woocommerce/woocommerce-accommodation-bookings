@@ -227,6 +227,8 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
 	 * Get duration.
+	 * 
+	 * Duration unit is always one night.
 	 *
 	 * @param  string $context
 	 * @return integer
