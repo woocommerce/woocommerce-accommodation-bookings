@@ -1,6 +1,6 @@
 *** Changelog ***
 
-= 1.1.5 - 2018-XX-XX =
+= 1.1.5 - 2018-11-12 =
 * Fix - Overwrite get_duration function, to fix duration calculations.
 
 = 1.1.4 - 2018-10-23 =
