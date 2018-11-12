@@ -224,6 +224,18 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		return '';
 	}
+
+	/**
+	 * Get duration.
+	 * 
+	 * Duration unit is always one night.
+	 *
+	 * @param  string $context
+	 * @return integer
+	 */
+	public function get_duration( $context = 'view' ) {
+		return 1;
+	}
 }
 
 endif;
