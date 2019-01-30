@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.1.6 - 2019-xx-xx =
+* Remove - partially booked days styling.
+
 = 1.1.5 - 2018-11-12 =
 * Fix - Overwrite get_duration function, to fix duration calculations.
 
