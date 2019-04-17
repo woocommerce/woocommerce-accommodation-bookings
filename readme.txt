@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.6 - 2019-04-17 =
+* Remove - partially booked days styling.
+* Tweak - WC tested up to 3.6
+
 = 1.1.5 - 2018-11-12 =
 * Fix - Overwrite get_duration function, to fix duration calculations.
 
