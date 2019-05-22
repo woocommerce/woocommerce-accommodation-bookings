@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.1.7 - 2019-xx-xx =
+* Fix - Mismatch function declaration causing PHP warnings.
+
 = 1.1.6 - 2019-04-17 =
 * Remove - partially booked days styling.
 * Tweak - WC tested up to 3.6
