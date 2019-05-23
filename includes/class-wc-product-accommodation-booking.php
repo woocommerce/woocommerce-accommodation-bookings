@@ -197,10 +197,11 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * @param array $intervals
 	 * @param int   $resource_id
 	 * @param array $booked
+	 * @param bool  $get_past_times
 	 *
 	 * @return array
 	 */
-	public function get_blocks_in_range( $start_date, $end_date, $intervals = array(), $resource_id = 0, $booked = array() ) {
+	public function get_blocks_in_range( $start_date, $end_date, $intervals = array(), $resource_id = 0, $booked = array(), $get_past_times = false ) {
 
 		$blocks_in_range = $this->get_blocks_in_range_for_day( $start_date, $end_date, $resource_id, $booked );
 
@@ -223,6 +224,18 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Get duration.
+	 * 
+	 * Duration unit is always one night.
+	 *
+	 * @param  string $context
+	 * @return integer
+	 */
+	public function get_duration( $context = 'view' ) {
+		return 1;
 	}
 }
 

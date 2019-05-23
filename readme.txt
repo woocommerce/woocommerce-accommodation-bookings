@@ -2,8 +2,8 @@
 Contributors:  woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith001
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
-Tested up to: 4.9
-Stable tag: 1.1.4
+Tested up to: 5.0
+Stable tag: 1.1.6
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -36,8 +36,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.1.4 - 2018-10-23 =
-* Add - PAO 3.0 compatibility.
-* Fix - Check product object before calling method to prevent errors.
+= 1.1.6 - 2019-04-17 =
+* Remove - partially booked days styling.
+* Tweak - WC tested up to 3.6
+
+= 1.1.5 - 2018-11-12 =
+* Fix - Overwrite get_duration function, to fix duration calculations.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-accommodation-bookings/master/changelog.txt).
