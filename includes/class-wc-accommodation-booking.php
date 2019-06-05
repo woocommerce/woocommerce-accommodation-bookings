@@ -44,6 +44,13 @@ class WC_Accommodation_Booking {
 		return $types;
 	}
 
+	/**
+	 * Hooks into woocommerce_bookings_product_type_rest_check and verifies that product is a correct bookings type
+	 */
+	public function vailidate_rest_product_type( $is_product_valid, $product ) {
+		return $is_product_valid || 'accommodation-booking' === $product->get_type();
+	}
+
 	public function add_checkin_time_to_booking_start_time( $date, $booking ) {
 		$product = wc_get_product( $booking->product_id );
 		if ( empty( $product ) || 'accommodation-booking' !== $product->get_type() ) {
