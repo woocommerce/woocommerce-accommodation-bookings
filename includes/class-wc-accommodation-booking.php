@@ -17,6 +17,7 @@ class WC_Accommodation_Booking {
 		add_filter( 'woocommerce_bookings_get_end_date_with_time', array( $this, 'add_checkout_time_to_booking_end_time' ), 10, 2 );
 		add_filter( 'get_booking_products_terms', array( $this, 'add_accommodation_to_booking_product_terms' ) );
 		add_filter( 'get_booking_products_args', array( $this, 'add_accommodation_to_booking_products_args' ) );
+		add_filter( 'woocommerce_bookings_product_rest_endpoint', array( $this, 'add_accommodation_to_booking_products_args' ) );
 		add_filter( 'woocommerce_bookings_product_type_rest_check', array( $this, 'vailidate_rest_product_type' ), 10, 2 ); 
 
 		add_action( 'woocommerce_new_booking', array( $this, 'update_start_end_time' ) );
