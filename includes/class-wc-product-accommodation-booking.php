@@ -206,23 +206,11 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		if ( false === $available_slots ) {
 			if ( empty( $intervals ) ) {
-				$default_interval = 'hour' === $bookable_product->get_duration_unit() ? $bookable_product->get_duration() * 60 : $bookable_product->get_duration();
-				$interval         = $bookable_product->get_min_duration() * $default_interval;
-				$intervals        = array( $interval, $default_interval );
+				$interval         = $bookable_product->get_min_duration();
+				$intervals        = array( $interval, 1 );
 			}
 
 			list( $interval, $base_interval ) = $intervals;
-			$interval = $bookable_product->get_check_start_block_only() ? $base_interval : $interval;
-
-			if ( ! $include_sold_out ) {
-				$blocks   = $bookable_product->get_available_blocks( array(
-					'blocks'      => $blocks,
-					'intervals'   => $intervals,
-					'resource_id' => $resource_id,
-					'from'        => $from,
-					'to'          => $to,
-				) );
-			}
 
 			$existing_bookings = WC_Bookings_Controller::get_all_existing_bookings( $bookable_product, $from, $to );
 
@@ -272,7 +260,8 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 				$qty_booked_in_block = 0;
 
 				foreach ( $existing_bookings as $existing_booking ) {
-					if ( $existing_booking->is_within_block( $block, strtotime( "+{$interval} minutes", $block ) ) ) {
+					$booking_product = wc_get_product( $existing_booking->get_product_id() );
+					if ( $existing_booking->is_within_block( $block, strtotime( "+{$interval} days", $block ) ) ) {
 						$qty_to_add = $bookable_product->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
 						if ( $has_resources ) {
 							if ( $existing_booking->get_resource_id() === absint( $resource_id ) ) {
@@ -298,6 +287,9 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 					'resources' => $resources,
 				);
 			}
+
+			// TODO filter soldout here include_sold_out
+			// it is better to do it here, we don't need to make a special version of get available blocks.
 
 			set_transient( $transient_name, $available_slots );
 		}
