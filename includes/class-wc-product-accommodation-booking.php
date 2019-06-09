@@ -234,13 +234,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 					foreach ( $bookable_product->get_resources() as $resource ) {
 
-						// Only include if it is available for this selection.
-						if ( ! WC_Product_Booking_Rule_Manager::check_availability_rules_against_date( $bookable_product, $resource->get_id(), $block ) ) {
-							continue;
-						}
-
-						if ( in_array( $bookable_product->get_duration_unit(), array( 'minute', 'hour' ) )
-							&& ! $bookable_product->check_availability_rules_against_time( $block, strtotime( "+{$interval} minutes", $block ), $resource->get_id() ) ) {
+						if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $block, $resource->get_id() ) ) {
 							continue;
 						}
 
@@ -250,7 +244,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 					}
 				} elseif ( $has_resources && $has_qty ) {
 					// Only include if it is available for this selection. We set this block to be bookable by default, unless some of the rules apply.
-					if ( ! $bookable_product->check_availability_rules_against_time( $block, strtotime( "+{$interval} minutes", $block ), $booking_resource->get_id() ) ) {
+					if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $booking_resource->get_id() ) ) {
 						continue;
 					}
 
