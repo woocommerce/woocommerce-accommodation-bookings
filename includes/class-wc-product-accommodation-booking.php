@@ -220,6 +220,11 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 			$has_resources    = $bookable_product->has_resources();
 
 			foreach ( $blocks as $block ) {
+				$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
+				$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+				// Blocks for accommodation products are initially calculated as days but the actuall time blocks are shifted by check in and checkout times.
+				$block_start_time = strtotime( "{$check_in}", $block );
+				$block_end_time =  strtotime( "{$check_out}", strtotime( "+1 days", $block ) );
 				$resources = array();
 
 				// Figure out how much qty have, either based on combined resource quantity,
@@ -260,8 +265,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 				$qty_booked_in_block = 0;
 
 				foreach ( $existing_bookings as $existing_booking ) {
-					$booking_product = wc_get_product( $existing_booking->get_product_id() );
-					if ( $existing_booking->is_within_block( $block, strtotime( "+{$interval} days", $block ) ) ) {
+					if ( $existing_booking->is_within_block( $block_start_time, $block_end_time ) ) {
 						$qty_to_add = $bookable_product->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
 						if ( $has_resources ) {
 							if ( $existing_booking->get_resource_id() === absint( $resource_id ) ) {
