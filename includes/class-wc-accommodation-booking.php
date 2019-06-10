@@ -19,7 +19,7 @@ class WC_Accommodation_Booking {
 		add_filter( 'get_booking_products_args', array( $this, 'add_accommodation_to_booking_products_args' ) );
 		add_filter( 'woocommerce_bookings_product_rest_endpoint', array( $this, 'add_accommodation_to_booking_products_args' ) );
 		add_filter( 'get_booking_products_args_for_slots_rest_endpoint', array( $this, 'add_accommodation_to_booking_products_args' ) );
-		add_filter( 'woocommerce_bookings_product_type_rest_check', array( $this, 'vailidate_rest_product_type' ), 10, 2 ); 
+		add_filter( 'woocommerce_bookings_product_type_rest_check', array( $this, 'validate_rest_product_type' ), 10, 2 ); 
 
 		add_action( 'woocommerce_new_booking', array( $this, 'update_start_end_time' ) );
 		add_filter( 'woocommerce_data_stores', array( $this, 'register_data_stores' ), 10 );
@@ -50,7 +50,7 @@ class WC_Accommodation_Booking {
 	/**
 	 * Hooks into woocommerce_bookings_product_type_rest_check and verifies that product is a correct bookings type
 	 */
-	public function vailidate_rest_product_type( $is_product_valid, $product ) {
+	public function validate_rest_product_type( $is_product_valid, $product ) {
 		return $is_product_valid || 'accommodation-booking' === $product->get_type();
 	}
 
