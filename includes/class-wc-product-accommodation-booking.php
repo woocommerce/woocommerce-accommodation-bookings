@@ -295,8 +295,6 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 				);
 			}
 
-			// TODO filter soldout here include_sold_out
-			// it is better to do it here, we don't need to make a special version of get available blocks.
 
 			set_transient( $transient_name, $available_slots );
 		}
