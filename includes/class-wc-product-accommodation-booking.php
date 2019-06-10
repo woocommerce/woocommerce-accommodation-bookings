@@ -187,6 +187,123 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	}
 
 	/**
+	 * Find available and booked blocks for specific resources (if any) and return them as array.
+	 *
+	 * @param  array  $blocks
+	 * @param  array  $intervals
+	 * @param  integer $resource_id
+	 * @param  integer $from The starting date for the set of blocks
+	 * @param  integer $to
+	 * @return array
+	 */
+	public function get_time_slots( $blocks, $resource_id = 0, $from = 0, $to = 0, $include_sold_out = false ) {
+		$bookable_product = $this;
+
+		$transient_name               = 'book_ts_' . md5( http_build_query( array( $bookable_product->get_id(), $resource_id, $from, $to ) ) );
+		$available_slots              = get_transient( $transient_name );
+		$booking_slots_transient_keys = array_filter( (array) get_transient( 'booking_slots_transient_keys' ) );
+
+		if ( ! isset( $booking_slots_transient_keys[ $bookable_product->get_id() ] ) ) {
+			$booking_slots_transient_keys[ $bookable_product->get_id() ] = array();
+		}
+
+		$booking_slots_transient_keys[ $bookable_product->get_id() ][] = $transient_name;
+
+		// Give array of keys a long ttl because if it expires we won't be able to flush the keys when needed.
+		// We can't use 0 to never expire because then WordPress will autoload the option on every page.
+		set_transient( 'booking_slots_transient_keys', $booking_slots_transient_keys, YEAR_IN_SECONDS );
+
+		if ( false === $available_slots ) {
+			if ( empty( $intervals ) ) {
+				$interval         = $bookable_product->get_min_duration();
+				$intervals        = array( $interval, 1 );
+			}
+
+			list( $interval, $base_interval ) = $intervals;
+
+			$existing_bookings = WC_Bookings_Controller::get_all_existing_bookings( $bookable_product, $from, $to );
+
+			$booking_resource = $resource_id ? $bookable_product->get_resource( $resource_id ) : null;
+			$available_slots  = array();
+			$has_qty          = ! is_null( $booking_resource ) ? $booking_resource->has_qty() : false;
+			$has_resources    = $bookable_product->has_resources();
+
+			foreach ( $blocks as $block ) {
+				$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
+				$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+				// Blocks for accommodation products are initially calculated as days but the actuall time blocks are shifted by check in and checkout times.
+				$block_start_time = strtotime( "{$check_in}", $block );
+				$block_end_time =  strtotime( "{$check_out}", strtotime( "+1 days", $block ) );
+				$resources = array();
+
+				// Figure out how much qty have, either based on combined resource quantity,
+				// single resource, or just product.
+				if ( $has_resources && ( ! is_a( $booking_resource, 'WC_Product_Booking_Resource' ) || ! $has_qty ) ) {
+					$available_qty = 0;
+
+					foreach ( $bookable_product->get_resources() as $resource ) {
+
+						if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $block, $resource->get_id() ) ) {
+							continue;
+						}
+
+						$qty = $resource->get_qty();
+						$available_qty += $qty;
+						$resources[ $resource->get_id() ] = $qty;
+					}
+				} elseif ( $has_resources && $has_qty ) {
+					// Only include if it is available for this selection. We set this block to be bookable by default, unless some of the rules apply.
+					if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $booking_resource->get_id() ) ) {
+						continue;
+					}
+
+					$qty = $booking_resource->get_qty();
+					$available_qty = $qty;
+					$resources[ $booking_resource->get_id() ] = $qty;
+				} else {
+					$available_qty = $bookable_product->get_qty();
+					$resources[0] = $bookable_product->get_qty();
+				}
+
+				$qty_booked_in_block = 0;
+
+				foreach ( $existing_bookings as $existing_booking ) {
+					if ( $existing_booking->is_within_block( $block_start_time, $block_end_time ) ) {
+						$qty_to_add = $bookable_product->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
+						if ( $has_resources ) {
+							if ( $existing_booking->get_resource_id() === absint( $resource_id ) ) {
+								// Include the quantity to subtract if an existing booking matches the selected resource id
+								$qty_booked_in_block += $qty_to_add;
+								$resources[ $resource_id ] = ( isset( $resources[ $resource_id ] ) ? $resources[ $resource_id ] : 0 ) - $qty_to_add;
+							} elseif ( ( is_null( $booking_resource ) || ! $has_qty ) && $existing_booking->get_resource() ) {
+								// Include the quantity to subtract if the resource is auto selected (null/resource id empty)
+								// but the existing booking includes a resource
+								$qty_booked_in_block += $qty_to_add;
+								$resources[ $existing_booking->get_resource_id() ] = ( isset( $resources[ $existing_booking->get_resource_id() ] ) ? $resources[ $existing_booking->get_resource_id() ] : 0 ) - $qty_to_add;
+							}
+						} else {
+							$qty_booked_in_block += $qty_to_add;
+							$resources[0] = ( isset( $resources[0] ) ? $resources[0] : 0 ) - $qty_to_add;
+						}
+					}
+				}
+
+				$available_slots[ $block ] = array(
+					'booked'    => $qty_booked_in_block,
+					'available' => $available_qty - $qty_booked_in_block,
+					'resources' => $resources,
+				);
+			}
+
+
+			set_transient( $transient_name, $available_slots );
+		}
+
+		return $available_slots;
+	}
+
+
+	/**
 	 * Get an array of blocks within in a specified date range
 	 *
 	 * The WC_Product_Booking class does not account for 'nights' as a valid duration unit so it retrieves every minute of each day as a block,
