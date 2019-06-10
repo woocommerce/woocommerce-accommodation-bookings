@@ -1,6 +1,6 @@
 *** Changelog ***
 
-= 1.1.8 - 2019-xx-xx =
+= 1.1.8 - 2019-06-10 =
 * Fix - Adds accommodation bookings support for WooCommerce Bookings Availability extension
 
 = 1.1.7 - 2019-06-03 =
