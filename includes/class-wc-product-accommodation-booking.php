@@ -186,7 +186,16 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		return apply_filters( 'woocommerce_get_price_html', $price_html, $this );
 	}
 
-
+	/**
+	 * Find available and booked blocks for specific resources (if any) and return them as array.
+	 *
+	 * @param  array  $blocks
+	 * @param  array  $intervals
+	 * @param  integer $resource_id
+	 * @param  integer $from The starting date for the set of blocks
+	 * @param  integer $to
+	 * @return array
+	 */
 	public function get_time_slots( $blocks, $resource_id = 0, $from = 0, $to = 0, $include_sold_out = false ) {
 		$bookable_product = $this;
 
