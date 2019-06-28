@@ -221,7 +221,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 			list( $interval, $base_interval ) = $intervals;
 
-			$existing_bookings = WC_Bookings_Controller::get_all_existing_bookings( $bookable_product, $from, $to );
+			$existing_bookings = WC_Booking_Data_Store::get_all_existing_bookings( $bookable_product, $from, $to );
 
 			$booking_resource = $resource_id ? $bookable_product->get_resource( $resource_id ) : null;
 			$available_slots  = array();

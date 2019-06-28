@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.1.9 - 2019-xx-xx =
+* Tweak - Update deprecated calls to WC_Bookings_Controller::get_all_existing_bookings since Bookings 1.15.0.
+
 = 1.1.8 - 2019-06-10 =
 * Fix - Adds accommodation bookings support for WooCommerce Bookings Availability extension
 

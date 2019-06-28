@@ -138,11 +138,11 @@ class WC_Accommodation_Booking_Date_Picker {
 
 		// Using all existing bookings we will calculate start and end time for each booking.
 		// Those times will be considered for switching particular day from full to partially booked days.
-		$existing_bookings  = WC_Bookings_Controller::get_all_existing_bookings( $product );
+		$existing_bookings  = WC_Booking_Data_Store::get_all_existing_bookings( $product );
 		foreach ( $existing_bookings as $booking ) {
 
 			$resource   = $booking->get_resource_id();
-			if( ! array_key_exists( $resource, $check_in_out_times['in'] ) ) {
+			if ( ! array_key_exists( $resource, $check_in_out_times['in'] ) ) {
 				$check_in_out_times['in'][ $resource ] = array();
 				$check_in_out_times['out'][ $resource ] = array();
 			}
