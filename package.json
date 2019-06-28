@@ -9,26 +9,39 @@
   },
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "license": "GPL-3.0+",
-  "main": "Gruntfile.js",
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-uglify": "~0.3.2",
-    "grunt-contrib-less": "~0.9.0",
-    "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-shell": "~0.6.4",
-    "grunt-contrib-watch": "~0.5.3",
-    "grunt-wp-i18n": "~0.5.0",
-    "grunt-checktextdomain": "~0.1.1",
-    "grunt-po2mo": "~0.1.2"
+    "clean-css-cli": "^4.3.0",
+    "node-sass": "^4.12.0",
+    "node-wp-i18n": "~1.2.3",
+    "uglify-js": "^3.6.0"
   },
-  "engines": {
-    "node": ">=0.8.0",
-    "npm": ">=1.1.0"
-  },
-  "dependencies": {
-    "grunt-cli": "^1.2.0"
+  "assets": {
+    "js": {
+      "min": "assets/js/*.min.js",
+      "js": "assets/js/*.js"
+    },
+    "styles": {
+      "css": "assets/css/*.css",
+      "sass": "assets/css/*.scss",
+      "cssfolder": "assets/css/"
+    }
   },
   "scripts": {
-    "start": "grunt"
+    "build": "npm run uglify && npm run makepot && npm run sass",
+    "postbuild": "npm run -s && npm run archive",
+    "archive": "composer archive --file=woocommerce-accommodation-bookings --format=zip",
+    "postarchive": "rm -rf woocommerce-accommodation-bookings && unzip woocommerce-accommodation-bookings.zip -d woocommerce-accommodation-bookings && rm woocommerce-accommodation-bookings.zip && zip -r woocommerce-accommodation-bookings.zip woocommerce-accommodation-bookings && rm -rf woocommerce-accommodation-bookings",
+    "preuglify": "rm -f $npm_package_assets_js_min",
+    "uglify": "for f in $npm_package_assets_js_js; do file=${f%.js}; node_modules/.bin/uglifyjs $f -c -m > $file.min.js; done",
+    "presass": "rm -f $npm_package_assets_styles_css",
+    "sass": "node_modules/.bin/node-sass $npm_package_assets_styles_cssfolder --output $npm_package_assets_styles_cssfolder --output-style compressed",
+    "watchsass": "node_modules/.bin/node-sass $npm_package_assets_styles_sass --output $npm_package_assets_styles_css --output-style compressed --watch",
+    "postsass": "for f in $npm_package_assets_styles_css; do file=${f%.css}; node_modules/.bin/cleancss -o $file.css $f; done",
+    "makepot": "wpi18n makepot --domain-path languages --pot-file woocommerce-accommodation-bookings.pot --type plugin --main-file woocommerce-accommodation-bookings.php --exclude node_modules,tests,docs",
+    "woorelease": "npm run build"
+  },
+  "engines": {
+    "node": ">=8.9.3",
+    "npm": ">=5.5.1"
   }
 }
