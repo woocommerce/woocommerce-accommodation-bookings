@@ -1,0 +1,19 @@
+.wc-bookings-date-picker {
+		.ui-datepicker {
+		td.partial_booked a {
+			&:before {
+				display:none;
+			}
+		}
+		td.fully_booked + td.partial_booked.partial_booked a {
+			&:after {
+				border-bottom: none;
+				border-left: none;
+				border-top: 2.5em solid #C96259;
+				border-right: 2.5em solid transparent;
+				left: 0;
+				top: 0;
+			}
+		}
+	}
+}
