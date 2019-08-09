@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.9 - 2019-xx-xx =
+* Tweak - Update deprecated calls to WC_Bookings_Controller::get_all_existing_bookings since Bookings 1.15.0.
+* Tweak - WC tested up to 3.7.
+
 = 1.1.8 - 2019-06-10 =
 * Fix - Adds accommodation bookings support for WooCommerce Bookings Availability extension
 
