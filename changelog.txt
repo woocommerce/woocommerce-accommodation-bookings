@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.1.11 - 2019-11-04 =
+* Tweak - WC tested up to 3.8.
+
 = 1.1.10 - 2019-10-24 =
 * Fix - Integration with WooCommerce Product Add-ons.
 
