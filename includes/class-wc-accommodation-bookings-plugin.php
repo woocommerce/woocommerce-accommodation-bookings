@@ -77,7 +77,6 @@ class WC_Accommodation_Bookings_Plugin {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 5 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'booking_form_styles' ) );
 
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
@@ -159,13 +158,6 @@ class WC_Accommodation_Bookings_Plugin {
 	}
 
 	/**
-	 * Frontend booking form scripts
-	 */
-	public function booking_form_styles() {
-		wp_enqueue_style( 'wc-accommodation-bookings-styles', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/css/frontend.css', null, WC_ACCOMMODATION_BOOKINGS_VERSION );
-	}
-
-	/**
 	 * Show row meta on the plugin screen.
 	 *
 	 * @access	public
@@ -207,7 +199,7 @@ class WC_Accommodation_Bookings_Plugin {
 				$product = wc_get_product( $accommodation_booking->post_id );
 
 				if ( ! is_a( $product, 'WC_Product' ) ) {
-					continue;				
+					continue;
 				}
 
 				if ( 'accommodation-booking' != $product->get_type() ) {
