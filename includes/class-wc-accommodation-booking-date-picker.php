@@ -12,10 +12,10 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * Hooks into WooCommerce Bookings...
 	 */
 	public function __construct() {
-		add_filter( 'woocommerce_bookings_date_picker_start_label', array( $this, 'start_label' ) );
-		add_filter( 'woocommerce_bookings_date_picker_end_label', array( $this, 'end_label' ) );
-		add_filter( 'woocommerce_booking_form_get_posted_data', array( $this, 'add_accommodation_posted_data' ), 10 , 3 );
-		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'add_partially_booked_dates' ), 10 , 3 );
+		add_filter( 'woocommerce_bookings_date_picker_start_label', array( $this, 'start_label' ), 10, 2 );
+		add_filter( 'woocommerce_bookings_date_picker_end_label', array( $this, 'end_label' ), 10, 2 );
+		add_filter( 'woocommerce_booking_form_get_posted_data', array( $this, 'add_accommodation_posted_data' ), 10, 3 );
+		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'add_partially_booked_dates' ), 10, 2 );
 	}
 
 	/**
@@ -52,17 +52,29 @@ class WC_Accommodation_Booking_Date_Picker {
 
 	/**
 	 * Changes the start label to "Check-in"
-	 * @param  string $label
+	 *
+	 * @param string     $label Label from bookings plugin.
+	 * @param WC_Product $product Current product.
 	 * @return string
 	 */
-	public function start_label( $label ) {
+	public function start_label( $label, $product = null ) {
+		if ( $product && 'night' !== $product->get_duration_unit() ) {
+			return $label;
+		}
 		return __( 'Check-in', 'woocommerce-accommodation-bookings' );
 	}
 
 	/**
 	 * Changes the end label to "Check-out"
+	 *
+	 * @param string     $label Label from bookings plugin.
+	 * @param WC_Product $product Current product.
+	 * @return string
 	 */
-	public function end_label( $label ) {
+	public function end_label( $label, $product = null ) {
+		if ( $product && 'night' !== $product->get_duration_unit() ) {
+			return $label;
+		}
 		return __( 'Check-out', 'woocommerce-accommodation-bookings' );
 	}
 
@@ -88,7 +100,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @param WC_Product_Accommodation_Booking $product
 	 */
 	public function add_partially_booked_dates( $booked_data_array, $product ) {
-		// This function makes sesne only for duration type: night.
+		// This function makes sense only for duration type: night.
 		if ( 'night' !== $product->get_duration_unit() ) {
 			return $booked_data_array;
 		}
@@ -102,20 +114,24 @@ class WC_Accommodation_Booking_Date_Picker {
 				foreach ( $times as $time ) {
 					$day = date( 'Y-n-j', $time );
 					if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource_id ] ) ) {
-						// The day is already partially booked so lets skipp to the next day.
+						// The day is already partially booked so lets skip to the next day.
 						continue;
 					}
 
 					$check_in_time = $product->get_check_times( 'in' );
-					if( 'in' === $which ){
-						$check_time = strtotime( '-1 day ' . $check_in_time , $time );
+					if ( 'in' === $which ) {
+						$check_time = strtotime( '-1 day ' . $check_in_time, $time );
 					} else {
 						$check_time = strtotime( $check_in_time, $time );
 					}
-					$check = date("F j, Y, g:i a", $check_time );
-					// Check freele available blocks for resource. If some are available that means that the day is not fully booked.
+					// Check free available blocks for resource. If some are available that means that the day is not fully booked.
 					$not_fully_booked = $this->get_product_resource_available_blocks_on_time( $product, $resource_id, $check_time );
-					if( $not_fully_booked && 'out' === $which ) {
+					if ( $not_fully_booked && isset( $booked_data_array['fully_booked_days'][ $day ][ $resource_id ] ) ) {
+						if ( 'in' === $which ) {
+							$booked_data_array['fully_booked_for_start_day'][ $day ][ $resource_id ] = $booked_data_array['fully_booked_days'][ $day ][ $resource_id ];
+						} else {
+							$booked_data_array['fully_booked_for_end_day'][ $day ][ $resource_id ] = $booked_data_array['fully_booked_days'][ $day ][ $resource_id ];
+						}
 						$booked_data_array = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
 					}
 				}
