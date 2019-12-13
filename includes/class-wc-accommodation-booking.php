@@ -23,7 +23,28 @@ class WC_Accommodation_Booking {
 
 		add_action( 'woocommerce_new_booking', array( $this, 'update_start_end_time' ) );
 		add_filter( 'woocommerce_data_stores', array( $this, 'register_data_stores' ), 10 );
-		add_filter( 'woocommerce_bookings_apply_multiple_rules_per_block', '__return_false' );
+		add_filter( 'woocommerce_bookings_apply_multiple_rules_per_block', array( $this, 'disable_overlapping_rates' ), 10, 2 );
+	}
+
+	/**
+	 * Apply only one rate modifier to any given accomodation block.
+	 *
+	 * Rate rules for accomodation bookings define the absolute accomodation
+	 * rate for a block, so it does not make sense to apply multiple concurrent
+	 * rates. This hook will cause the rate calculation loop to exit after the
+	 * first applicable rate rule modifies the block cost.
+	 *
+	 * @since 1.1.12
+	 *
+	 * @param  bool               $enable_overlapping_rates
+	 * @param  WC_Product_Booking $product
+	 * @return array
+	 */
+	public function disable_overlapping_rates( $enable_overlapping_rates, $product ) {
+		if ( ! is_a( $product, 'WC_Product_Accommodation_Booking' ) ) {
+			return $enable_overlapping_rates;
+		}
+		return false;
 	}
 
 	/**
