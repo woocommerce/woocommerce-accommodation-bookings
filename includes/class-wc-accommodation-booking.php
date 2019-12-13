@@ -23,6 +23,7 @@ class WC_Accommodation_Booking {
 
 		add_action( 'woocommerce_new_booking', array( $this, 'update_start_end_time' ) );
 		add_filter( 'woocommerce_data_stores', array( $this, 'register_data_stores' ), 10 );
+		add_filter( 'woocommerce_bookings_apply_multiple_rules_per_block', '__return_false' );
 	}
 
 	/**
