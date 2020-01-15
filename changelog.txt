@@ -1,6 +1,6 @@
 *** Changelog ***
 
-= 1.1.12 - 2019-xx-xx =
+= 1.1.12 - 2010-01-15 =
 * Fix - Overlapping rate calculation is incorrect.
 
 = 1.1.11 - 2019-11-04 =
