@@ -36,30 +36,7 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.1.12 - 2010-01-15 =
-* Fix - Overlapping rate calculation is incorrect.
-
-= 1.1.11 - 2019-11-04 =
-* Tweak - WC tested up to 3.8.
-
-= 1.1.10 - 2019-10-24 =
-* Fix - Integration with WooCommerce Product Add-ons.
-
-= 1.1.9 - 2019-08-09 =
-* Tweak - Update deprecated calls to WC_Bookings_Controller::get_all_existing_bookings since Bookings 1.15.0.
-* Tweak - WC tested up to 3.7.
-
-= 1.1.8 - 2019-06-10 =
-* Fix - Adds accommodation bookings support for WooCommerce Bookings Availability extension
-
-= 1.1.7 - 2019-06-03 =
-* Fix - Mismatch function declaration causing PHP warnings.
-
-= 1.1.6 - 2019-04-17 =
-* Remove - partially booked days styling.
-* Tweak - WC tested up to 3.6
-
-= 1.1.5 - 2018-11-12 =
-* Fix - Overwrite get_duration function, to fix duration calculations.
+= 1.1.13 - 2020-xx-xx =
+* Fix - Proper escaping of some attributes.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-accommodation-bookings/master/changelog.txt).

@@ -93,11 +93,11 @@
 				<thead>
 					<tr>
 						<th class="sort" width="1%">&nbsp;</th>
-						<th><?php _e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'From', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'To', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'Bookable', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'If not bookable, users won\'t be able to choose this room.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
-						<th><?php _e( 'Priority', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php esc_html_e( 'The lower the priority number, the earlier this rule gets applied. By default, global rules take priority over product rules which take priority over resource rules. By using priority numbers you can execute rules in different orders.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
+						<th><?php esc_html_e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php esc_html_e( 'From', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php esc_html_e( 'To', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php esc_html_e( 'Bookable', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'If not bookable, users won\'t be able to choose this room.', 'woocommerce-accommodation-bookings' ) ); ?>">[?]</a></th>
+						<th><?php esc_html_e( 'Priority', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'The lower the priority number, the earlier this rule gets applied. By default, global rules take priority over product rules which take priority over resource rules. By using priority numbers you can execute rules in different orders.', 'woocommerce-accommodation-bookings' ) ); ?>">[?]</a></th>
 						<th class="remove" width="1%">&nbsp;</th>
 					</tr>
 				</thead>
@@ -109,8 +109,8 @@
 								include( 'html-accommodation-booking-availability-fields.php' );
 								$html = ob_get_clean();
 								echo esc_attr( $html );
-							?>"><?php _e( 'Add Range', 'woocommerce-accommodation-bookings' ); ?></a>
-							<span class="description"><?php _e( 'Rules with lower numbers will execute first. Rules further down this table with the same priority will also execute first.', 'woocommerce-accommodation-bookings' ); ?></span>
+							?>"><?php esc_html_e( 'Add Range', 'woocommerce-accommodation-bookings' ); ?></a>
+							<span class="description"><?php esc_html_e( 'Rules with lower numbers will execute first. Rules further down this table with the same priority will also execute first.', 'woocommerce-accommodation-bookings' ); ?></span>
 						</th>
 					</tr>
 				</tfoot>

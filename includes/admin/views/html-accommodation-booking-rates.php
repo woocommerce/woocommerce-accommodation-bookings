@@ -19,10 +19,10 @@
 				<thead>
 					<tr>
 						<th class="sort" width="1%">&nbsp;</th>
-						<th><?php _e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'Starting', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php _e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ); ?>">[?]</a></th>
-						<th><?php _e( 'Cost', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php _e( 'Cost for this time period.', 'woocommerce-accommodation-bookings' ); ?>" colspan='2'>[?]</a></th>
+						<th><?php esc_html_e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php esc_html_e( 'Starting', 'woocommerce-accommodation-bookings' ); ?></th>
+						<th><?php esc_html_e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ) ); ?>">[?]</a></th>
+						<th><?php esc_html_e( 'Cost', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Cost for this time period.', 'woocommerce-accommodation-bookings' ) ); ?>" colspan='2'>[?]</a></th>
 						<th class="remove" width="1%">&nbsp;</th>
 					</tr>
 				</thead>
@@ -34,7 +34,7 @@
 								include( 'html-accommodation-booking-rates-fields.php' );
 								$html = ob_get_clean();
 								echo esc_attr( $html );
-							?>"><?php _e( 'Add Range', 'woocommerce-accommodation-bookings' ); ?></a>
+							?>"><?php esc_html_e( 'Add Range', 'woocommerce-accommodation-bookings' ); ?></a>
 						</th>
 					</tr>
 				</tfoot>
