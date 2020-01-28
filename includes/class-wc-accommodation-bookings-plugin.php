@@ -54,7 +54,6 @@ class WC_Accommodation_Bookings_Plugin {
 	 * @return void
 	 */
 	private function _define_constants() {
-		define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', $this->version );
 		define( 'WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH', untrailingslashit( plugin_dir_path( $this->plugin_file ) ) . '/includes/' );
 		define( 'WC_ACCOMMODATION_BOOKINGS_TEMPLATE_PATH', untrailingslashit( plugin_dir_path( $this->plugin_file ) ) . '/templates/' );
 		define( 'WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( $this->plugin_file ) ), basename( $this->plugin_file ) ) ) );

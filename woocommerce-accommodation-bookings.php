@@ -20,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '1.1.12' ); // WRCS: DEFINED_VERSION.
+
 require_once( 'includes/class-wc-accommodation-bookings-plugin.php' );
-$plugin = new WC_Accommodation_Bookings_Plugin( __FILE__, '1.1.12' );
+$plugin = new WC_Accommodation_Bookings_Plugin( __FILE__, WC_ACCOMMODATION_BOOKINGS_VERSION );
 $plugin->run();
