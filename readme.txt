@@ -38,5 +38,6 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 = 1.1.13 - 2020-xx-xx =
 * Fix - Proper escaping of some attributes.
+* Fix - Ensure unavailable dates are shown to be unavailable in calendar.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-accommodation-bookings/master/changelog.txt).

@@ -97,7 +97,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		$check_in_out_times = $this->get_check_in_and_out_times( $product );
 
 		// Go through each checkin and checkout days and mark them as partially booked.
-		foreach ( array( 'in', 'out' ) as $which ) {
+		foreach ( array( 'out' ) as $which ) {
 			foreach ( $check_in_out_times[ $which ] as $resource_id => $times ) {
 				foreach ( $times as $time ) {
 					$day = date( 'Y-n-j', $time );
@@ -107,7 +107,7 @@ class WC_Accommodation_Booking_Date_Picker {
 					}
 
 					$check_in_time = $product->get_check_times( 'in' );
-					if( 'in' === $which ){
+					if ( 'in' === $which ) {
 						$check_time = strtotime( '-1 day ' . $check_in_time , $time );
 					} else {
 						$check_time = strtotime( $check_in_time, $time );
