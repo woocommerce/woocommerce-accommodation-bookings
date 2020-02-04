@@ -1,6 +1,6 @@
 *** Changelog ***
 
-= 1.1.13 - 2020-xx-xx =
+= 1.1.13 2020-02-04 =
 * Fix - Proper escaping of some attributes.
 
 = 1.1.12 - 2020-01-15 =
