@@ -2,6 +2,7 @@
 
 = 1.1.13 2020-02-04 =
 * Fix - Proper escaping of some attributes.
+* Fix - Ensure unavailable dates are shown to be unavailable in calendar.
 
 = 1.1.12 - 2020-01-15 =
 * Fix - Overlapping rate calculation is incorrect.
