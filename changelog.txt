@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.1.14 2020-xx-xx =
+* Fix - Person types are not copied over when duplicating an existing accommodations product.
+
 = 1.1.13 2020-02-04 =
 * Fix - Proper escaping of some attributes.
 * Fix - Ensure unavailable dates are shown to be unavailable in calendar.

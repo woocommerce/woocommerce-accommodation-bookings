@@ -12,8 +12,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles_and_scripts' ) );
-
-		add_filter( 'product_type_selector' , array( $this, 'product_type_selector' ) );
+		add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
 		add_filter( 'product_type_options', array( $this, 'product_type_options' ), 15 );
 
 		if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
