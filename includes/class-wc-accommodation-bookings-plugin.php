@@ -49,6 +49,26 @@ class WC_Accommodation_Bookings_Plugin {
 	}
 
 	/**
+	 * Handles additional tasks when product is duplicated.
+	 *
+	 * @since 1.1.14
+	 * @param  WC_Product $new_product Duplicated product.
+	 * @param  WC_Product $product     Original product.
+	 * @return void
+	 */
+	public function woocommerce_duplicate_product( $new_product, $product ) {
+		if ( $product->is_type( 'accommodation-booking' ) ) {
+			// Clone and re-save person types.
+			foreach ( $product->get_person_types() as $person_type ) {
+				$dupe_person_type = clone $person_type;
+				$dupe_person_type->set_id( 0 );
+				$dupe_person_type->set_parent_id( $new_product->get_id() );
+				$dupe_person_type->save();
+			}
+		}
+	}
+
+	/**
 	 * Define plugin's constants.
 	 *
 	 * @return void
@@ -80,6 +100,7 @@ class WC_Accommodation_Bookings_Plugin {
 
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
+			add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
 		}
 
 		add_action( 'shutdown', array( $this, 'install' ) );
