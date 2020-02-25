@@ -24,7 +24,7 @@ class WC_Accommodation_Booking {
 		add_action( 'woocommerce_new_booking', array( $this, 'update_start_end_time' ) );
 		add_filter( 'woocommerce_data_stores', array( $this, 'register_data_stores' ), 10 );
 		add_filter( 'woocommerce_bookings_apply_multiple_rules_per_block', array( $this, 'disable_overlapping_rates' ), 10, 2 );
-		add_filter( 'woocommerce_bookings_resource_duration_display_string', array( $this, 'accommodation_resource_duration_display_string' ), 10, 2 );
+		add_filter( 'woocommerce_bookings_resource_duration_display_string', array( $this, 'filter_resource_duration_display_string' ), 10, 2 );
 	}
 
 	/**
@@ -175,13 +175,12 @@ class WC_Accommodation_Booking {
 	 *
 	 * @return string $duration_display Duration to display.
 	 */
-	public function accommodation_resource_duration_display_string( $duration_display, $product ) {
-		if ( ! $product || ( 'night' !== $product->get_duration_unit() ) ) {
+	public function filter_resource_duration_display_string( $duration_display, $product ) {
+		if ( ! is_a( $product, 'WC_Product_Accommodation_Booking' ) || ( 'night' !== $product->get_duration_unit() ) ) {
 			return $duration_display;
 		}
 
 		return __( 'night', 'woocommerce-accommodation-bookings' );
-
 	}
 
 	/**
