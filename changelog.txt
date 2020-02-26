@@ -2,6 +2,7 @@
 
 = 1.1.14 2020-xx-xx =
 * Fix - Person types are not copied over when duplicating an existing accommodations product.
+* Tweak - WC tested up to 4.0.
 
 = 1.1.13 2020-02-04 =
 * Fix - Proper escaping of some attributes.
