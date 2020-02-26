@@ -1,6 +1,6 @@
 *** Changelog ***
 
-= 1.1.14 2020-xx-xx =
+= 1.1.14 - 2020-02-26 =
 * Fix - Person types are not copied over when duplicating an existing accommodations product.
 * Tweak - WC tested up to 4.0.
 
