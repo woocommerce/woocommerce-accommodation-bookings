@@ -168,7 +168,7 @@ class WC_Accommodation_Booking {
 	/**
 	 * Updates resource duration display string when duration unit is 'night'.
 	 *
-	 * @since 1.1.14
+	 * @since 1.1.15
 	 *
 	 * @param string $duration_display Duration to display.
 	 * @param object $product          The product we are working with.
