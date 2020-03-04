@@ -10,7 +10,6 @@ require_once $plugin_dir . '/vendor/autoload.php';
 // Now call the bootstrap method of WP Mock.
 WP_Mock::bootstrap();
 
-define( 'ABSPATH', dirname( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) ) . '/' );
 define( 'WC_VERSION', 3.9 );
 
 require __DIR__ . '/../../includes/class-wc-accommodation-booking.php';

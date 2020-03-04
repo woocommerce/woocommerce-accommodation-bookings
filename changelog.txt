@@ -2,6 +2,7 @@
 
 = 1.1.15 - 2020-**-** =
 * Fix - Fix missing translation for resource duration display.
+* Add - Add basic unit tests suite.
 
 = 1.1.14 - 2020-02-26 =
 * Fix - Person types are not copied over when duplicating an existing accommodations product.
