@@ -34,4 +34,50 @@ class TestWCAccommodationBooking extends TestCase {
 		$accommodation_booking = new WC_Accommodation_Booking();
 		$this->assertInstanceOf( 'WC_Accommodation_Booking', $accommodation_booking );
 	}
+		/**
+	 * @test Test function changes duration display for accommodation bookings and duration 'night'.
+	 * Also tests there are no changes on duration display for other product types
+	 * 
+	 * @dataProvider FilterResourceDurationDisplayStringProvider
+	 * @param array $args        Test input data.
+	 * @param array $expected    Test expected result.
+	 *
+	 * @since 1.1.15
+	 */
+	public function testFilterResourceDurationDisplayString( $product, $expected ) {
+		\WP_Mock::userFunction(
+			'__',
+			array(
+				'args'   => array( 'night', 'woocommerce-accommodation-bookings' ),
+				'return' => 'nightTranslationString',
+			)
+		);
+		$accommodation_booking = new \WC_Accommodation_Booking();
+		$duration_display      = $accommodation_booking->filter_resource_duration_display_string( $product->get_duration_unit(), $product );
+		$this->assertEquals( $expected, $duration_display );
+	}
+
+	/**
+	 * @return array
+	 */
+	public function FilterResourceDurationDisplayStringProvider(){
+		$mock_product_accommodation_booking = \Mockery::mock( 'overload:WC_Product_Accommodation_Booking' );
+		$mock_product_accommodation_booking
+			->shouldReceive( 'get_duration_unit' )
+			->andReturn( 'night' );
+		$mock_product_booking = \Mockery::mock( 'overload:WC_Product_Booking' );
+		$mock_product_booking
+			->shouldReceive( 'get_duration_unit' )
+			->andReturn( 'durationString' );
+		return [
+			[
+				$mock_product_accommodation_booking,
+				'nightTranslationString',
+			],
+			[
+				$mock_product_booking,
+				'durationString',
+			],			
+		];
+	}
 }
