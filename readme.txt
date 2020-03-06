@@ -1,9 +1,9 @@
 === Plugin Name ===
-Contributors:  woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith001
+Contributors:  woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith001, royho
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
-Tested up to: 5.0
-Stable tag: 1.1.14
+Tested up to: 5.4
+Stable tag: 1.1.15
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -36,12 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.1.14 2020-02-26 =
-* Fix - Person types are not copied over when duplicating an existing accommodations product.
-* Tweak - WC tested up to 4.0.
-
-= 1.1.13 - 2020-xx-xx =
-* Fix - Proper escaping of some attributes.
-* Fix - Ensure unavailable dates are shown to be unavailable in calendar.
+= 1.1.15 - 2020-03-06 =
+* Add - Add basic unit tests suite.
+* Fix - Fix missing translation for resource duration display.
+* Tweak - WP tested up to 5.4.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-accommodation-bookings/master/changelog.txt).
