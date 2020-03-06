@@ -34,12 +34,12 @@ class TestWCAccommodationBooking extends TestCase {
 		$accommodation_booking = new WC_Accommodation_Booking();
 		$this->assertInstanceOf( 'WC_Accommodation_Booking', $accommodation_booking );
 	}
-		/**
+	/**
 	 * @test Test function changes duration display for accommodation bookings and duration 'night'.
 	 * Also tests there are no changes on duration display for other product types
-	 * 
+	 *
 	 * @dataProvider FilterResourceDurationDisplayStringProvider
-	 * @param array $args        Test input data.
+	 * @param array $product        Test input data.
 	 * @param array $expected    Test expected result.
 	 *
 	 * @since 1.1.15
@@ -60,7 +60,7 @@ class TestWCAccommodationBooking extends TestCase {
 	/**
 	 * @return array
 	 */
-	public function FilterResourceDurationDisplayStringProvider(){
+	public function FilterResourceDurationDisplayStringProvider() {
 		$mock_product_accommodation_booking = \Mockery::mock( 'overload:WC_Product_Accommodation_Booking' );
 		$mock_product_accommodation_booking
 			->shouldReceive( 'get_duration_unit' )
@@ -77,7 +77,7 @@ class TestWCAccommodationBooking extends TestCase {
 			[
 				$mock_product_booking,
 				'durationString',
-			],			
+			],
 		];
 	}
 }
