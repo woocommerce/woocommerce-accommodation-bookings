@@ -13,6 +13,8 @@ sftp-config.json
 /wc-apidocs/
 /languages/
 screenshots/
+/assets/**/*.min.js
+/assets/**/*.css
 
 # Ignore all log files except for .htaccess
 /logs/*
