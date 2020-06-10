@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.16 - 2020-xx-xx =
+* Tweak - WC tested up to 4.2.
+
 = 1.1.15 - 2020-03-06 =
 * Add - Add basic unit tests suite.
 * Fix - Fix missing translation for resource duration display.
