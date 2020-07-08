@@ -1,6 +1,6 @@
 *** Changelog ***
 
-= 1.1.18 - 2020-xx-xx =
+= 1.1.18 - 2020-07-08 =
 * Fix - Existing booking checkout date showed as fully booked and not selectable.
 
 = 1.1.17 - 2020-06-10 =
