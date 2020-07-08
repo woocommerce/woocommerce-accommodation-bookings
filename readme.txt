@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.18 - 2020-xx-xx =
+* Fix - Existing booking checkout date showed as fully booked and not selectable.
+
 = 1.1.17 - 2020-06-10 =
 * Tweak - WC tested up to 4.2.
 
