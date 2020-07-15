@@ -27,18 +27,18 @@
     }
   },
   "scripts": {
-    "build": "npm run uglify && npm run makepot && npm run sass",
-    "postbuild": "npm run -s && npm run archive",
-    "archive": "composer archive --file=woocommerce-accommodation-bookings --format=zip",
-    "postarchive": "rm -rf woocommerce-accommodation-bookings && unzip woocommerce-accommodation-bookings.zip -d woocommerce-accommodation-bookings && rm woocommerce-accommodation-bookings.zip && zip -r woocommerce-accommodation-bookings.zip woocommerce-accommodation-bookings && rm -rf woocommerce-accommodation-bookings",
+    "prebuild": "rm -rf ./vendor",
+    "build": "npm run uglify && npm run makepot && npm run sass && npm run archive",
+    "build:dev": "composer install && npm run uglify && npm run makepot && npm run sass",
+    "archive": "composer archive --file=$npm_package_name --format=zip",
+    "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
     "preuglify": "rm -f $npm_package_assets_js_min",
     "uglify": "for f in $npm_package_assets_js_js; do file=${f%.js}; node_modules/.bin/uglifyjs $f -c -m > $file.min.js; done",
     "presass": "rm -f $npm_package_assets_styles_css",
     "sass": "node_modules/.bin/node-sass $npm_package_assets_styles_cssfolder --output $npm_package_assets_styles_cssfolder --output-style compressed",
     "watchsass": "node_modules/.bin/node-sass $npm_package_assets_styles_sass --output $npm_package_assets_styles_css --output-style compressed --watch",
     "postsass": "for f in $npm_package_assets_styles_css; do file=${f%.css}; node_modules/.bin/cleancss -o $file.css $f; done",
-    "makepot": "wpi18n makepot --domain-path languages --pot-file woocommerce-accommodation-bookings.pot --type plugin --main-file woocommerce-accommodation-bookings.php --exclude node_modules,tests,docs",
-    "woorelease": "npm run build"
+    "makepot": "wpi18n makepot --domain-path languages --pot-file woocommerce-accommodation-bookings.pot --type plugin --main-file woocommerce-accommodation-bookings.php --exclude node_modules,tests,docs"
   },
   "engines": {
     "node": ">=8.9.3",
