@@ -3,7 +3,7 @@ Contributors:  woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith00
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
 Tested up to: 5.5
-Stable tag: 1.1.18
+Stable tag: 1.1.19
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -36,7 +36,7 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.1.19 - 2020-**-** =
+= 1.1.19 - 2020-08-19 =
 * Tweak - WordPress 5.5 compatibility.
 
 = 1.1.18 - 2020-07-08 =
