@@ -2,7 +2,7 @@
 Contributors:  woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith001, royho
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
-Tested up to: 5.4
+Tested up to: 5.5
 Stable tag: 1.1.18
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
