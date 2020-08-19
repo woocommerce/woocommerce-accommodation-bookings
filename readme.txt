@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.19 - 2020-**-** =
+* Tweak - WordPress 5.5 compatibility.
+
 = 1.1.18 - 2020-07-08 =
 * Fix - Existing booking checkout date showed as fully booked and not selectable.
 
