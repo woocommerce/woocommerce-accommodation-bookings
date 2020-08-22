@@ -286,7 +286,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			$pricing[ $i ]['type']          = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_type' ][ $i ] );
 			$new_cost = abs( wc_clean( $_POST[ 'wc_accommodation_booking_pricing_block_cost' ][ $i ] ) );
 			$pricing[ $i ]['base_modifier'] = $pricing[$i]['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus';
-			$pricing[ $i ]['cost'] = $new_cost - $original_base_cost;
+			$pricing[ $i ]['cost'] = abs( $new_cost - $original_base_cost );
 
 			switch ( $pricing[ $i ]['type'] ) {
 				case 'custom' :
