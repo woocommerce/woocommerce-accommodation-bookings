@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.20 - 2020-xx-xx =
+* Fix - Do not round cost values in range types in Rates section.
+
 = 1.1.19 - 2020-08-19 =
 * Tweak - WordPress 5.5 compatibility.
 
