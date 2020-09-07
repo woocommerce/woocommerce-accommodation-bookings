@@ -8,7 +8,7 @@
  * Author URI: https://woocommerce.com
  * Text Domain: woocommerce-accommodation-bookings
  * Domain Path: /languages
- * WC tested up to: 4.2
+ * WC tested up to: 4.4
  * WC requires at least: 2.6
  *
  * Copyright: © 2020 WooCommerce
