@@ -72,7 +72,7 @@
 					for ( $i=0;  $i < 7;  $i++) { 
 						?>
 							<td>
-								<label class="checkbox" for="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]"><?php echo $weekdays[ $i ]; ?>&nbsp;</label>
+								<label class="checkbox" for="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]" style="width: auto;"><?php echo $weekdays[ $i ]; ?>&nbsp;</label>
 								<input type="checkbox" class="checkbox" name="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]" id="_wc_accommodation_booking_restricted_days[<?php echo $i; ?>]" value="<?php echo $i; ?>" <?php checked( $restricted_days[ $i ], $i ); ?>>
 							</td>
 						<?php
