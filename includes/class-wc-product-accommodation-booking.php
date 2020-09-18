@@ -300,7 +300,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 			}
 
 
-			set_transient( $transient_name, $available_slots );
+			set_transient( $transient_name, $available_slots, YEAR_IN_SECONDS );
 		}
 
 		return $available_slots;
