@@ -23,7 +23,6 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'general_product_data' ) );
 
-		add_filter( 'woocommerce_product_data_tabs', array( $this, 'hide_shipping_tab' ) );
 		add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'add_tabs' ), 5 );
 
 		add_action( 'woocommerce_process_product_meta', array( $this,'save_product_data' ), 25 );
@@ -106,14 +105,6 @@ class WC_Accommodation_Booking_Admin_Panels {
 		$options['wc_booking_has_resources']['wrapper_class'] .= ' show_if_accommodation-booking';
 		$options['wc_booking_has_persons']['wrapper_class'] .= ' show_if_accommodation-booking';
 		return $options;
-	}
-
-	/**
-	 * Hides the shipping tab for accommodoation products
-	 */
-	public function hide_shipping_tab( $tabs ) {
-		$tabs['shipping']['class'][] = 'hide_if_accommodation-booking';
-		return $tabs;
 	}
 
 	/**

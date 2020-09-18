@@ -149,7 +149,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * @return boolean
 	 */
 	public function is_virtual() {
-		return true;
+		return $this->get_prop( 'virtual' );
 	}
 
 	/**
