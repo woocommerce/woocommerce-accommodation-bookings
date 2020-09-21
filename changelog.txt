@@ -2,9 +2,11 @@
 
 = 1.1.21 - 2020-xx-xx =
 * Fix - Skip formatting dates in ICS output for Accommodation Bookable products.
+* Fix - Allow products to be specified as virtual.
+* Fix - Use time for transient to skip autoload.
 
 = 1.1.20 - 2020-08-25 =
-* Fix - Do not rount cost values in range typas in Rates section.
+* Fix - Do not round cost values in range typas in Rates section.
 
 = 1.1.19 - 2020-08-19 =
 * Tweak - WordPress 5.5 compatibility.
