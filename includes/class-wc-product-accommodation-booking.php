@@ -337,11 +337,12 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 * @return string Time, either from options or default
 	 */
 	public static function get_check_times( $type ) {
+		$option = get_option( 'woocommerce_accommodation_bookings_times_settings' );
 		switch ( $type ) {
 			case 'in':
-				return get_option( 'woocommerce_accommodation_bookings_check_in' ) ?: '14:00';
+				return isset( $option['check_in'] ) ? $option['check_in'] : '14:00';
 			case 'out':
-				return get_option( 'woocommerce_accommodation_bookings_check_out' ) ?: '12:00';
+				return isset( $option['check_out'] ) ? $option['check_out'] : '14:00';
 		}
 
 		return '';
