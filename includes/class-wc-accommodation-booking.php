@@ -25,7 +25,7 @@ class WC_Accommodation_Booking {
 		add_filter( 'woocommerce_data_stores', array( $this, 'register_data_stores' ), 10 );
 		add_filter( 'woocommerce_bookings_apply_multiple_rules_per_block', array( $this, 'disable_overlapping_rates' ), 10, 2 );
 		add_filter( 'woocommerce_bookings_resource_duration_display_string', array( $this, 'filter_resource_duration_display_string' ), 10, 2 );
-		add_filter( 'woocommerce_bookings_ics_format_date', array( $this, 'disable_ics_formatting_for_accommodation' ), 10, 2 );
+		add_filter( 'woocommerce_bookings_ics_format_date', array( $this, 'disable_ics_formatting_for_accommodation' ), 10, 3 );
 	}
 
 	/**
@@ -45,8 +45,8 @@ class WC_Accommodation_Booking {
 		$product = $booking->get_product();
 
 		if ( ! is_a( $product, 'WC_Product_Accommodation_Booking' ) ) {
-			// Return original, unformatted value
-			return $timestamp;
+			// Return original, unmodified value
+			return date( 'Ymd\THis', $timestamp );
 		}
 
 		return $value;
