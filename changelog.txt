@@ -1,11 +1,12 @@
 *** Changelog ***
 
 = 1.1.21 - 2020-xx-xx =
-* Fix - Allow products to be specified as virtual.
-* Fix - Use time for transient to skip autoload.
+* Fix   - Allow products to be specified as virtual.
+* Fix   - Use time for transient to skip autoload.
+* Tweak - Migrate Settings from Product to Bookings screen.
 
 = 1.1.20 - 2020-08-25 =
-* Fix - Do not round cost values in range typas in Rates section.
+* Fix - Do not round cost values in range types in Rates section.
 
 = 1.1.19 - 2020-08-19 =
 * Tweak - WordPress 5.5 compatibility.
