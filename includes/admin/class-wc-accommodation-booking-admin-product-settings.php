@@ -36,9 +36,10 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	 * @since 1.13.0
 	 */
 	public function __construct() {
-		$this->maybe_migrate();
 		$this->plugin_id = "woocommerce_accommodation_bookings_";
 		$this->id = "times";
+
+		$this->maybe_migrate();
 
 		// Initialize settings and form data.
 		$this->init_times_settings();
