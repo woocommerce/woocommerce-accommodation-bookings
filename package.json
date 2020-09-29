@@ -1,7 +1,7 @@
 {
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "config": {
     "translate": false
   },
