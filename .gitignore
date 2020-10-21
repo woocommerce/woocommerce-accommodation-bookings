@@ -28,3 +28,5 @@ tests/e2e/config/local-*
 dist
 
 woocommerce-accommodation-bookings.zip
+
+.phpunit.result.cache

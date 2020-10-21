@@ -22,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '1.1.21' ); // WRCS: DEFINED_VERSION.
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 require_once( 'includes/class-wc-accommodation-bookings-plugin.php' );
 $plugin = new WC_Accommodation_Bookings_Plugin( __FILE__, WC_ACCOMMODATION_BOOKINGS_VERSION );
 $plugin->run();
