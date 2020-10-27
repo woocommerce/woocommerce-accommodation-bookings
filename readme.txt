@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.22 - 2020-10-27 =
+* Tweak - WC 4.6 compatibility.
+
 = 1.1.21 - 2020-09-29 =
 * Fix   - Skip formatting dates in ICS output for Accommodation Bookable products.
 * Fix   - Allow products to be specified as virtual.
