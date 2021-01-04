@@ -10,7 +10,6 @@
 >
 	<testsuites>
 		<testsuite name="WC Accommodation Bookings">
-			<directory suffix=".php">./tests/phpunit/src</directory>
 			<directory prefix="test-" suffix=".php">./tests/phpunit</directory>
 		</testsuite>
 	</testsuites>
