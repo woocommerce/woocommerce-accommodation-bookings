@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.23 - 2021-02-24 =
+* Fix - Dev - Fix: Add casts to float before applying the 'abs' function to potentially empty strings for compatibility with PHP8.
+* Tweak - WC 5.0 compatibility.
+
 = 1.1.22 - 2020-10-27 =
 * Tweak - WC 4.6 compatibility.
 
