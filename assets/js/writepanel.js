@@ -19,10 +19,10 @@ jQuery( function( $ ) {
     });
 
     function wc_accommodation_bookings_trigger_change_events() {
-        $('#_wc_accommodation_booking_has_restricted_days').change();
+        $('#_wc_accommodation_booking_has_restricted_days').trigger( 'change' );
     }
 
-    $('#_wc_accommodation_booking_has_restricted_days').change(function() {
+    $('#_wc_accommodation_booking_has_restricted_days').on( 'change', function() {
         if ( $(this).is( ':checked' ) ) {
             $( '.booking-day-restriction' ).show();
         } else {
