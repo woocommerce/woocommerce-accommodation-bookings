@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.24 - 2021-05-11 =
+* Fix - Added tested up to comment for WordPress compatibility to make it easier to use common tooling.
+* Fix - Replace deprecated jQuery 3 methods.
+
 = 1.1.23 - 2021-02-25 =
 * Fix - Dev - Fix: Add casts to float before applying the 'abs' function to potentially empty strings for compatibility with PHP8.
 * Tweak - WC 5.0 compatibility.
