@@ -46,8 +46,8 @@
 					array(
 						'id'          => '_wc_accommodation_booking_has_restricted_days',
 						'value'       => $bookable_product->has_restricted_days( 'edit' ) ? 'yes' : 'no',
-						'label'       => __( 'Restrict start days?', 'woocommerce-bookings' ),
-						'description' => __( 'Restrict bookings so that they can only start on certain days of the week. Does not affect availability.', 'woocommerce-bookings' ),
+						'label'       => __( 'Restrict selectable days?', 'woocommerce-accommodation-bookings' ),
+						'description' => __( 'Restrict the days of the week that are able to be selected on the calendar; this will not affect your availability.', 'woocommerce-accommodation-bookings' ),
 					)
 				);
 		?>
