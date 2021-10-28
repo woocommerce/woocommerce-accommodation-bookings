@@ -36,6 +36,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.25 - 2021-10-28 =
+* Tweak - Change start days settings label to selectable days to be more accurate with functionality.
+* Tweak - WC 5.8 compatibility.
+* Tweak - WP 5.8 compatibility.
+
 = 1.1.24 - 2021-05-11 =
 * Fix - Added tested up to comment for WordPress compatibility to make it easier to use common tooling.
 * Fix - Replace deprecated jQuery 3 methods.
