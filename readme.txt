@@ -36,6 +36,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.26 - 2021-11-30 =
+* Fix - Bump y18n from 3.2.1 to 3.2.2.
+* Tweak - WC 5.9 compatibility.
+* Tweak - WP 5.8 compatibility.
+
 = 1.1.25 - 2021-10-28 =
 * Tweak - Change start days settings label to selectable days to be more accurate with functionality.
 * Tweak - WC 5.8 compatibility.
