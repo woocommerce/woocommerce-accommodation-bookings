@@ -14,7 +14,7 @@
   "license": "GPL-3.0+",
   "devDependencies": {
     "clean-css-cli": "^4.3.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "node-wp-i18n": "~1.2.3",
     "uglify-js": "^3.6.0"
   },
