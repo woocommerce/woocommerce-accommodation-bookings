@@ -3,7 +3,8 @@
   "title": "WooCommerce Accommodation Bookings",
   "version": "1.1.26",
   "config": {
-    "translate": false
+    "translate": false,
+    "wp_org_slug": "woocommerce-accommodation-bookings"
   },
   "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
   "repository": {
@@ -14,7 +15,7 @@
   "license": "GPL-3.0+",
   "devDependencies": {
     "clean-css-cli": "^4.3.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "node-wp-i18n": "~1.2.3",
     "uglify-js": "^3.6.0"
   },
@@ -44,10 +45,7 @@
     "makepot": "wpi18n makepot --domain-path languages --pot-file woocommerce-accommodation-bookings.pot --type plugin --main-file woocommerce-accommodation-bookings.php --exclude node_modules,tests,docs"
   },
   "engines": {
-    "node": ">=8.9.3",
+    "node": ">=10.24.1",
     "npm": ">=5.5.1"
-  },
-  "config": {
-    "wp_org_slug": "woocommerce-accommodation-bookings"
   }
 }
