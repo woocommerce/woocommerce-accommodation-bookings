@@ -211,7 +211,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 		$field_key    = $this->get_field_key( $key );
 		$type         = $value['type'];
 		$option_value = get_option( $this->plugin_id . $this->id . '_settings' );
-		$option_value = $option_value[ $key ];
+		$option_value = isset( $option_value[ $key ] ) ? $option_value[ $key ] : '';
 		ob_start();
 
 		?><tr valign="top">
