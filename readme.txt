@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.30 - 2022-06-02 =
+* Fix - PHP Warnings on the setting page.
+* Tweak - Bump tested up to WordPress version 6.0.
+
 = 1.1.29 - 2022-06-02 =
 * Fix - PHP Warnings on the setting page.
 * Tweak - Bump tested up to WordPress version 6.0.
