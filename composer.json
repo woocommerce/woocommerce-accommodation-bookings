@@ -11,6 +11,20 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
+        "woocommerce/woocommerce-sniffs": "^0.1.3",
         "10up/wp_mock": "0.4.2"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "platform": {
+            "php": "7.2"
+        },
+        "allow-plugins": {
+            "composer/installers": true,
+            "automattic/jetpack-autoloader": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
