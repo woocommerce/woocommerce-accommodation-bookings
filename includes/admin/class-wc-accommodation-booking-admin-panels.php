@@ -258,7 +258,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 				$resource_base_costs[ $resource_id ]  = wc_clean( $resource_base_cost[ $i ] );
 				$resource_block_costs[ $resource_id ] = wc_clean( $resource_block_cost[ $i ] );
 
-				if ( ( $resource_base_cost[ $i ] + $resource_block_cost[ $i ] ) > 0 ) {
+				if ( ( (float) $resource_base_cost[ $i ] + (float) $resource_block_cost[ $i ] ) > 0 ) {
 					$has_additional_costs = true;
 				}
 			}
