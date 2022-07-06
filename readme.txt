@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.31 - 2022-07-06 =
+* Fix - Fatal error with PHP 8.0 when Base Cost/Block Cost is empty.
+
 = 1.1.30 - 2022-06-02 =
 * Fix - PHP Warnings on the setting page.
 * Tweak - Bump tested up to WordPress version 6.0.
