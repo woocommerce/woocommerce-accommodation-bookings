@@ -114,6 +114,12 @@ class WC_Accommodation_Booking_Date_Picker {
 					}
 					$check = date("F j, Y, g:i a", $check_time );
 					// Check available blocks for resource. If some are available that means that the day is not fully booked.
+
+					// Skip if the $check_time is false.
+					if ( ! $check_time ) {
+						continue;
+					}
+
 					$not_fully_booked = $this->get_product_resource_available_blocks_on_time( $product, $resource_id, $check_time );
 					if( $not_fully_booked ) {
 						$booked_data_array = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
