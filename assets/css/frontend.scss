@@ -17,3 +17,13 @@
 		}
 	}
 }
+
+.wc-bookings-date-picker .picker:before {
+	content: 'Select Check-in Day';
+	margin: 10px 0 20px;
+	display: inline-block;
+}
+
+.wc-bookings-date-picker .picker[selected_date_type="start"]:before {
+	content: 'Select Check-out Day';
+}
