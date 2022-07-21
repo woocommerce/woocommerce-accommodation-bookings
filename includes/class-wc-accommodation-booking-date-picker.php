@@ -116,7 +116,7 @@ class WC_Accommodation_Booking_Date_Picker {
 					// Check available blocks for resource. If some are available that means that the day is not fully booked.
 					$not_fully_booked = $this->get_product_resource_available_blocks_on_time( $product, $resource_id, $check_time );
 					if( $not_fully_booked ) {
-						$booked_data_array = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
+						$booked_data_array = $this->prepare_fully_booked_start_and_end_days( $booked_data_array, $resource_id, $day, $which );
 					}
 				}
 			}
@@ -189,6 +189,37 @@ class WC_Accommodation_Booking_Date_Picker {
 		}
 
 		$booked_data_array['partially_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+
+		unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
+
+		if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
+			unset( $booked_data_array['fully_booked_days'][ $day ] );
+		}
+
+		return $booked_data_array;
+	}
+
+	/**
+	 * Moves day from fully_booked_days array to the fully_booked_start_days or fully_booked_end_days
+	 * This is required because we want to showcase days availability as per the selection.
+	 * So by default, fully_booked_start_days will be colored red; not available for check-ins.
+	 * When start date is selected, fully_booked_end_days will be colored red; not available for check-outs.
+	 *
+	 * @param array  $booked_data_array Array of booked days.
+	 * @param int    $resource          Resource ID.
+	 * @param string $day               A Day.
+	 * @param string $which             In or Out?
+	 */
+	private function prepare_fully_booked_start_and_end_days( $booked_data_array, $resource, $day, $which = 'in' ) {
+		if ( ! isset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
+			return $booked_data_array;
+		}
+
+		if ( 'in' === $which ) {
+			$booked_data_array['fully_booked_start_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+		} else {
+			$booked_data_array['fully_booked_end_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_days'][ $day ][ $resource ];
+		}
 
 		unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
 
