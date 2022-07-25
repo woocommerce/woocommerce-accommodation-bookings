@@ -226,6 +226,14 @@ class WC_Accommodation_Booking_Date_Picker {
 	 */
 	private function prepare_fully_booked_start_and_end_days( $booked_data_array, $resource, $day, $which = 'in' ) {
 		if ( ! isset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] ) ) {
+			// If the day already exists fully_booked_start_days at this point,
+			// it means it is also a fully booked end day, so reverting it
+			// back to be in fully_booked_days.
+			if ( isset( $booked_data_array['fully_booked_start_days'][ $day ][ $resource ] ) ) {
+				$booked_data_array['fully_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_start_days'][ $day ][ $resource ];
+				unset( $booked_data_array['fully_booked_start_days'][ $day ][ $resource ] );
+			}
+
 			return $booked_data_array;
 		}
 
@@ -243,7 +251,6 @@ class WC_Accommodation_Booking_Date_Picker {
 
 		return $booked_data_array;
 	}
-
 }
 
 new WC_Accommodation_Booking_Date_Picker;
