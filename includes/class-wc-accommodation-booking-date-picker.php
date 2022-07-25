@@ -15,7 +15,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		add_filter( 'woocommerce_bookings_date_picker_start_label', array( $this, 'start_label' ) );
 		add_filter( 'woocommerce_bookings_date_picker_end_label', array( $this, 'end_label' ) );
 		add_filter( 'woocommerce_booking_form_get_posted_data', array( $this, 'add_accommodation_posted_data' ), 10 , 3 );
-		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'add_partially_booked_dates' ), 10 , 3 );
+		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'update_fully_booked_dates' ), 10 , 3 );
 	}
 
 	/**
@@ -95,6 +95,50 @@ class WC_Accommodation_Booking_Date_Picker {
 
 		// Start and the end dates of all bookings.
 		$check_in_out_times = $this->get_check_in_and_out_times( $product );
+
+		// Go through each checkin and checkout days and mark them as partially booked.
+		foreach ( array( 'in', 'out' ) as $which ) {
+			foreach ( $check_in_out_times[ $which ] as $resource_id => $times ) {
+				foreach ( $times as $time ) {
+					$day = date( 'Y-n-j', $time );
+					if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource_id ] ) ) {
+						// The day is already partially booked so lets skip to the next day.
+						continue;
+					}
+
+					$check_in_time = $product->get_check_times( 'in' );
+					if ( 'in' === $which ) {
+						$check_time = strtotime( '-1 day ' . $check_in_time , $time );
+					} else {
+						$check_time = strtotime( $check_in_time, $time );
+					}
+					$check = date("F j, Y, g:i a", $check_time );
+					// Check available blocks for resource. If some are available that means that the day is not fully booked.
+					$not_fully_booked = $this->get_product_resource_available_blocks_on_time( $product, $resource_id, $check_time );
+					if( $not_fully_booked ) {
+						$booked_data_array = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
+					}
+				}
+			}
+		}
+
+		return $booked_data_array;
+	}
+
+	/**
+	 * Update the fully booked, fully booked start day, and fully booked end day accomodation bookings,
+	 *
+	 * @param array                            $booked_data_array
+	 * @param WC_Product_Accommodation_Booking $product
+	 */
+	public function update_fully_booked_dates( $booked_data_array, $product ) {
+		// This function makes sense only for duration type: night.
+		if ( 'night' !== $product->get_duration_unit() ) {
+			return $booked_data_array;
+		}
+
+		// Start and the end dates of all bookings.
+		$check_in_out_times = $this->get_check_in_and_out_times( $product );
 		$res_auto_assign = $product->is_resource_assignment_type( 'automatic' );
 
 		$total_resources  = count( $product->get_resource_ids() );
@@ -105,8 +149,14 @@ class WC_Accommodation_Booking_Date_Picker {
 			foreach ( $check_in_out_times[ $which ] as $resource_id => $times ) {
 				foreach ( $times as $time ) {
 					$day = date( 'Y-n-j', $time );
-					if ( ! empty( $booked_data_array['partially_booked_days'][ $day ][ $resource_id ] ) ) {
-						// The day is already partially booked so lets skip to the next day.
+
+					// The day is already fully booked for check-ins so lets skip to the next day.
+					if ( 'in' === $which && ! empty( $booked_data_array['fully_booked_start_days'][ $day ][ $resource_id ] ) ) {
+						continue;
+					}
+
+					// The day is already fully booked for check-outs so lets skip to the next day.
+					if ( 'out' === $which && ! empty( $booked_data_array['fully_booked_end_days'][ $day ][ $resource_id ] ) ) {
 						continue;
 					}
 
@@ -232,6 +282,10 @@ class WC_Accommodation_Booking_Date_Picker {
 			if ( isset( $booked_data_array['fully_booked_start_days'][ $day ][ $resource ] ) ) {
 				$booked_data_array['fully_booked_days'][ $day ][ $resource ] = $booked_data_array['fully_booked_start_days'][ $day ][ $resource ];
 				unset( $booked_data_array['fully_booked_start_days'][ $day ][ $resource ] );
+
+				if ( empty( $booked_data_array['fully_booked_start_days'][ $day ] ) ) {
+					unset( $booked_data_array['fully_booked_start_days'][ $day ] );
+				}
 			}
 
 			return $booked_data_array;
