@@ -139,7 +139,7 @@ class WC_Accommodation_Booking_Date_Picker {
 
 		// Start and the end dates of all bookings.
 		$check_in_out_times = $this->get_check_in_and_out_times( $product );
-		$res_auto_assign = $product->is_resource_assignment_type( 'automatic' );
+		$res_auto_assign    = $product->is_resource_assignment_type( 'automatic' );
 
 		$total_resources  = count( $product->get_resource_ids() );
 		$day_booked_count = array();
@@ -169,9 +169,9 @@ class WC_Accommodation_Booking_Date_Picker {
 					$check = date("F j, Y, g:i a", $check_time );
 					// Check available blocks for resource. If some are available that means that the day is not fully booked.
 					$available_on_time = $this->get_product_resource_available_blocks_on_time( $product, $resource_id, $check_time );
-					if( $available_on_time ) {
+					if ( $available_on_time ) {
 
-						if( isset ( $day_booked_count[ $which ] [ $time ] ) ) {
+						if ( isset ( $day_booked_count[ $which ] [ $time ] ) ) {
 							$day_booked_count[ $which ] [ $time ] += 1;
 						} else {
 							$day_booked_count[ $which ] [ $time ] = 1;
