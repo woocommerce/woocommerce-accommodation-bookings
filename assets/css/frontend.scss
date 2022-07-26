@@ -1,29 +1,33 @@
-.wc-bookings-date-picker {
-		.ui-datepicker {
-		td.partial_booked a {
-			&:before {
-				display:none;
-			}
+.product-type-accommodation-booking {
+	.wc-bookings-date-picker {
+		position: relative;
+		padding-top: 55px;
+
+		&::after {
+			content: attr(data-content);
+			position: absolute;
+			background: #fff;
+			margin: 10px 20px;
+			font-size: 12px;
+			left: 0;
+			right: 0;
+			text-align: center;
+			text-transform: uppercase;
+			height: 35px;
+			line-height: 35px;
 		}
-		td.fully_booked + td.partial_booked.partial_booked a {
-			&:after {
-				border-bottom: none;
-				border-left: none;
-				border-top: 2.5em solid #C96259;
-				border-right: 2.5em solid transparent;
-				left: 0;
-				top: 0;
+
+		.picker.hasDatepicker {
+			margin: 0;
+			position: static !important;
+
+			.ui-datepicker {
+				.ui-datepicker-title {
+					font-size: 18px;
+					text-align: left;
+					margin-left: 60px;
+				}
 			}
 		}
 	}
-}
-
-.product-type-accommodation-booking .wc-bookings-date-picker .picker:before {
-	content: 'Select Check-in Day';
-	margin: 10px 0 20px;
-	display: inline-block;
-}
-
-.product-type-accommodation-booking .wc-bookings-date-picker .picker[selected_date_type="start"]:before {
-	content: 'Select Check-out Day';
 }
