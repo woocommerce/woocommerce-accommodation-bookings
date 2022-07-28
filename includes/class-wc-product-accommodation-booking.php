@@ -322,7 +322,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	 *
 	 * @return array
 	 */
-	public function get_blocks_in_range( $start_date, $end_date, $intervals = array(), $resource_id = 0, $booked = array(), $get_past_times = false ) {
+	public function get_blocks_in_range( $start_date, $end_date, $intervals = array(), $resource_id = 0, $booked = array(), $get_past_times = false, $include_unavailable = false ) {
 
 		$blocks_in_range = $this->get_blocks_in_range_for_day( $start_date, $end_date, $resource_id, $booked );
 
