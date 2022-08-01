@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.32 - 2022-08-01 =
+* Tweak - WC 6.7.0 compatibility.
+* Update all npm dependencies.
+
 = 1.1.31 - 2022-07-06 =
 * Fix - Fatal error with PHP 8.0 when Base Cost/Block Cost is empty.
 
