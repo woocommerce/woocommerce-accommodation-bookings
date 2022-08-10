@@ -52,6 +52,14 @@ class WC_Accommodation_Booking_Cart_Manager {
 					'display' => '',
 				);
 			}
+
+			// This data was added by Woo Booking plugin, so we need to override.
+			foreach ( $other_data as $key => $data ) {
+				if ( 'Booking Date' === $data['name'] ) {
+					$other_data[ $key ]['value'] = date_i18n( wc_bookings_date_format(), get_post_datetime( $cart_item['booking']['_booking_id'] ) );
+					break;
+				}
+			}
 		}
 
 		return $other_data;
