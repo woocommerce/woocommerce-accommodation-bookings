@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.33 - 2022-08-10 =
+* Fix - Build artifact includes node_modules.
+
 = 1.1.32 - 2022-08-01 =
 * Tweak - WC 6.7.0 compatibility.
 * Update all npm dependencies.
