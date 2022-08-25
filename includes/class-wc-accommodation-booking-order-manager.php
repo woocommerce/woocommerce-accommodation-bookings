@@ -104,10 +104,10 @@ class WC_Accommodation_Booking_Order_Manager {
 			}
 
 			foreach ( $order->get_items() as $item ) {
-                if ( $item->is_type( 'line_item' ) ) {
-                    $product               = $item->get_product();
-                    $virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
-                }
+				if ( $item->is_type( 'line_item' ) ) {
+					$product               = $item->get_product();
+					$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
+				}
 				if ( ! $virtual_booking_order ) {
 					break;
 				}
