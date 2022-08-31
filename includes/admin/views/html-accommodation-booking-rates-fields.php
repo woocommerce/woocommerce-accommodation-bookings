@@ -109,7 +109,7 @@
 		if ( ! empty( $rate['override_block'] ) ) {
 			echo $rate['override_block'];
 		} else if ( ! empty( $rate['modifier'] ) && isset( $rate['cost'] ) ) {
-			$base_cost = abs( get_post_meta( $post_id, '_wc_booking_base_cost', true ) );
+			$base_cost = abs( floatval( get_post_meta( $post_id, '_wc_booking_base_cost', true ) ) );
 
 			if ( 'plus' == $rate['modifier'] ) {
 				echo $base_cost + $rate['cost'];
