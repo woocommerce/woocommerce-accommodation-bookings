@@ -38,6 +38,20 @@ class WC_Accommodation_Bookings_Plugin {
 	public function __construct( $plugin_file, $version ) {
 		$this->plugin_file = $plugin_file;
 		$this->version     = $version;
+
+		// Declare compatibility with High-Performance Order Storage.
+		add_action( 'before_woocommerce_init', array( $this, 'declare_hpos_compatibility' ) );
+	}
+
+	/**
+	 * Declare compatibility with High-Performance Order Storage.
+	 *
+	 * @since x.x.x
+	 */
+	public function declare_hpos_compatibility() {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $this->plugin_file, true );
+		}
 	}
 
 	/**
