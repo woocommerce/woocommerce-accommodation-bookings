@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.34 - 2022-11-01 =
+* Fixed - PHP 8.0/8.1 Compatibility issue fixed: Critical error when cost in range is empty if Standard room rate is empty as well.
+
 = 1.1.33 - 2022-08-10 =
 * Fix - Build artifact includes node_modules.
 
