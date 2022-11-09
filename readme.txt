@@ -36,6 +36,12 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.35 - 2022-11-09 =
+* Add - Declare support for High-performance Order Storage ("HPOS").
+* Bump minimist from 1.2.5 to 1.2.6.
+* Fix - Showing check-in date on the cart page instead of booking date.
+* Tweak - Minimum Version Bumps: WP 5.6, Woo 6.0, & PHP 7.0.
+
 = 1.1.34 - 2022-11-01 =
 * Fixed - PHP 8.0/8.1 Compatibility issue fixed: Critical error when cost in range is empty if Standard room rate is empty as well.
 
