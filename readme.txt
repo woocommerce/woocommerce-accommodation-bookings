@@ -36,6 +36,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.36 - 2022-11-24 =
+* Update - Bump NPM to v8.
+* Update - Bump composer to v2.
+* Update - Bump node to v16.
+
 = 1.1.35 - 2022-11-09 =
 * Add - Declare support for High-performance Order Storage ("HPOS").
 * Bump minimist from 1.2.5 to 1.2.6.
