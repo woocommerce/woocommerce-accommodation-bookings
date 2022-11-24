@@ -104,16 +104,9 @@ class WC_Accommodation_Booking_Order_Manager {
 			}
 
 			foreach ( $order->get_items() as $item ) {
-				if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-					if ( 'line_item' === $item['type'] ) {
-						$product               = $order->get_product_from_item( $item );
-						$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
-					}
-				} else {
-					if ( $item->is_type( 'line_item' ) ) {
-						$product               = $item->get_product();
-						$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
-					}
+				if ( $item->is_type( 'line_item' ) ) {
+					$product               = $item->get_product();
+					$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'accommodation-booking' );
 				}
 				if ( ! $virtual_booking_order ) {
 					break;

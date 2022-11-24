@@ -3,7 +3,7 @@ Contributors:  woocommerce, automattic, woothemes, jshreve, akeda, bor0, jessepe
 Tags: woocommerce, bookings, accommodations
 Requires at least: 4.1
 Tested up to: 5.8
-Stable tag: 1.1.33
+Stable tag: 1.1.36
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,6 +35,20 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.1.36 - 2022-11-24 =
+* Update - Bump NPM to v8.
+* Update - Bump composer to v2.
+* Update - Bump node to v16.
+
+= 1.1.35 - 2022-11-09 =
+* Add - Declare support for High-performance Order Storage ("HPOS").
+* Bump minimist from 1.2.5 to 1.2.6.
+* Fix - Showing check-in date on the cart page instead of booking date.
+* Tweak - Minimum Version Bumps: WP 5.6, Woo 6.0, & PHP 7.0.
+
+= 1.1.34 - 2022-11-01 =
+* Fixed - PHP 8.0/8.1 Compatibility issue fixed: Critical error when cost in range is empty if Standard room rate is empty as well.
 
 = 1.1.33 - 2022-08-10 =
 * Fix - Build artifact includes node_modules.
