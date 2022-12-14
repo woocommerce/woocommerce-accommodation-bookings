@@ -46,7 +46,7 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * Declare compatibility with High-Performance Order Storage.
 	 *
-	 * @since x.x.x
+	 * @since 1.1.34
 	 */
 	public function declare_hpos_compatibility() {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
