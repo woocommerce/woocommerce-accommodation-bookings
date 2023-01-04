@@ -141,9 +141,6 @@ class WC_Accommodation_Booking_Date_Picker {
 		$check_in_out_times = $this->get_check_in_and_out_times( $product );
 		$res_auto_assign    = $product->is_resource_assignment_type( 'automatic' );
 
-		$total_resources  = count( $product->get_resource_ids() );
-		$day_booked_count = array();
-
 		// Go through each checkin and checkout days and mark them as fully booked.
 		$made_partialy = array();
 		foreach ( array( 'in', 'out' ) as $which ) {
