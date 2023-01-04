@@ -148,16 +148,6 @@ class WC_Accommodation_Booking_Date_Picker {
 				foreach ( $times as $time ) {
 					$day = date( 'Y-n-j', $time );
 
-					// The day is already fully booked for check-ins so lets skip to the next day.
-					if ( 'in' === $which && ! empty( $booked_data_array['fully_booked_start_days'][ $day ][ $resource_id ] ) ) {
-						continue;
-					}
-
-					// The day is already fully booked for check-outs so lets skip to the next day.
-					if ( 'out' === $which && ! empty( $booked_data_array['fully_booked_end_days'][ $day ][ $resource_id ] ) ) {
-						continue;
-					}
-
 					$check_in_time = $product->get_check_times( 'in' );
 					if ( 'in' === $which ) {
 						$check_time = strtotime( $check_in_time, $time );
