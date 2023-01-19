@@ -103,7 +103,6 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	public function add_accommodation_settings( $tabs_metadata ) {
 		$tabs_metadata['accommodation'] = array(
 			'name'          => __( 'Accommodation', 'woocommerce-bookings' ),
-			'href'          => admin_url( 'edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation' ),
 			'capability'    => 'manage_options',
 			'generate_html' => 'WC_Accommodation_Booking_Admin_Product_Settings::generate_form_html',
 		);
