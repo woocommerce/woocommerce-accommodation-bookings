@@ -60,7 +60,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	 */
 	public function update_bookings_sections( $sections ) {
 		// If not array, return as it is.
-		if( ! is_array( $sections ) ) {
+		if ( ! is_array( $sections ) ) {
 			return $sections;
 		}
 
