@@ -46,6 +46,27 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 
 		add_action( 'admin_init', array( $this, 'maybe_save_settings' ) );
 		add_filter( 'woocommerce_bookings_settings_page', array( $this, 'add_accommodation_settings' ) );
+		add_filter( 'woocommerce_get_sections_bookings', array( $this, 'update_bookings_sections' ) );
+	}
+
+	/**
+	 * Update the settings sections.
+	 *
+	 * @since x.x.x
+	 * 
+	 * @param array Existing sections.
+	 *
+	 * @return array Updated sections.
+	 */
+	public function update_bookings_sections( $sections ) {
+		// If not array, return as it is.
+		if( ! is_array( $sections ) ) {
+			return $sections;
+		}
+
+		$sections['accommodation'] = __( 'Accommodation', 'woocommerce-accommodation-bookings' );
+
+		return $sections;
 	}
 
 	/**
