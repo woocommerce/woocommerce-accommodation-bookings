@@ -16,6 +16,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		add_filter( 'woocommerce_bookings_date_picker_end_label', array( $this, 'end_label' ) );
 		add_filter( 'woocommerce_booking_form_get_posted_data', array( $this, 'add_accommodation_posted_data' ), 10 , 3 );
 		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'update_fully_booked_dates' ), 10 , 3 );
+		add_filter( 'woocommerce_bookings_find_booked_day_blocks', array( $this, 'find_booked_day_blocks' ), 10, 2 );
 	}
 
 	/**
@@ -175,15 +176,30 @@ class WC_Accommodation_Booking_Date_Picker {
 			if ( ! isset( $booked_data_array['fully_booked_days'][ $partial_day ][ $resource ] ) ) {
 				continue;
 			}
-	
+
 			unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
-	
+
 			if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
 				unset( $booked_data_array['fully_booked_days'][ $day ] );
 			}
 		}
 
 		return $booked_data_array;
+	}
+
+	/**
+	 * Should return find booked day blocks with additional data.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param $result
+	 * @param $booked_blocks
+	 */
+	public function find_booked_day_blocks( $result, $booked_blocks ): array {
+		$result['fully_booked_start_days'] = $booked['fully_booked_start_days'] ?? [];
+		$result['fully_booked_end_days']   = $booked['fully_booked_end_days'] ?? [];
+
+		return $result;
 	}
 
 	/**
