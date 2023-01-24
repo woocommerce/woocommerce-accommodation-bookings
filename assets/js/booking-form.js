@@ -5,8 +5,8 @@
 	HookApi.addFilter(
 		'wc_bookings_date_picker_get_day_attributes',
 		'wc_accommodation_booking/booking_form',
-		( params ) => {
-			console.log( params );
+		( attributes, booking_data, $date_picker ) => {
+			return attributes;
 		}
 	);
 
