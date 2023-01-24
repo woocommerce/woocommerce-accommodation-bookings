@@ -1,8 +1,6 @@
 (function($){
 	const HookApi = window.wc_bookings.hooks;
 
-	console.log(HookApi);
-
 	// Filter the date element attributes.
 	HookApi.addFilter(
 		'wc_bookings_date_picker_get_day_attributes',
