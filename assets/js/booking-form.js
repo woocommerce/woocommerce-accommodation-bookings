@@ -68,17 +68,18 @@
 
 				switch ( date_type ) {
 					case 'end':
-						$form.find( '.fully_booked_start_days' ).addClass(
-							'ui-datepicker-unselectable ui-state-disabled' );
-						$form.find( '.fully_booked_end_days' ).removeClass(
-							'ui-datepicker-unselectable ui-state-disabled' );
+						$form.find( '.fully_booked_start_days' )
+							.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						$form.find( '.fully_booked_end_days' )
+							.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
 						break;
 
 					case 'start':
 					default:
-						$form.find( '.fully_booked_start_days' ).removeClass(
-							'ui-datepicker-unselectable ui-state-disabled' );
-						$form.find( '.fully_booked_end_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						$form.find( '.fully_booked_start_days' )
+							.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						$form.find( '.fully_booked_end_days' )
+							.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
 				}
 			}
 		);
