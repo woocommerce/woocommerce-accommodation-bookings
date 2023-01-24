@@ -23,3 +23,33 @@
 		}
 	}
 }
+
+.wc-bookings-date-picker {
+	fieldset{
+		position: relative;
+	}
+
+	&:not([selected_date_type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
+	&[selected_date_type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
+		opacity: 0.35;
+	}
+
+	&:not([selected_date_type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
+	&[selected_date_type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date),
+	.ui-datepicker td.fully_booked {
+		span, a {
+			background-color: #c0392b !important;
+			background-image: none !important;
+			border-color: rgba(0,0,0,0.1) !important;
+			color: #fff !important;
+			text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+			pointer-events: none;
+		}
+	}
+
+	.ui-datepicker{
+		td.bookable-range.ui-state-disabled {
+			opacity: 1;
+		}
+	}
+}
