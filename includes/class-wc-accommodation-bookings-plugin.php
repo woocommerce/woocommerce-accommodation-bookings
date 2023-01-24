@@ -110,7 +110,7 @@ class WC_Accommodation_Bookings_Plugin {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 5 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'booking_form_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_assets' ) );
 
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
@@ -195,8 +195,36 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * Frontend booking form scripts
 	 */
-	public function booking_form_styles() {
+	public function frontend_assets() {
 		wp_enqueue_style( 'wc-accommodation-bookings-styles', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/css/frontend.css', null, WC_ACCOMMODATION_BOOKINGS_VERSION );
+		wp_enqueue_script( 'wc-accommodation-bookings-form', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/booking.js', ['wc-bookings-booking-form'], WC_ACCOMMODATION_BOOKINGS_VERSION, tru );
+
+		wp_localize_script(
+			'wc-accommodation-bookings-form',
+			'wc_accommodation_bookings_form',
+			[
+				'i18n_date_avail_for_check_in' => __(
+					'Available for check-in only.',
+					'woocommerce-accommodation-bookings'
+				),
+				'i18n_date_avail_for_check_out' => __(
+					'Available for check-out only.',
+					'woocommerce-accommodation-bookings'
+				),
+				'i18n_check_in' => __(
+					'Select check-in',
+					'woocommerce-accommodation-bookings'
+				),
+				'i18n_check_out' => __(
+					'Select check-out',
+					'woocommerce-accommodation-bookings'
+				),
+				'i18n_check_in_again' => __(
+					'Selected! Re-select to change your check-in date.',
+					'woocommerce-accommodation-bookings'
+				),
+			]
+		);
 	}
 
 	/**
@@ -241,7 +269,7 @@ class WC_Accommodation_Bookings_Plugin {
 				$product = wc_get_product( $accommodation_booking->post_id );
 
 				if ( ! is_a( $product, 'WC_Product' ) ) {
-					continue;				
+					continue;
 				}
 
 				if ( 'accommodation-booking' != $product->get_type() ) {
