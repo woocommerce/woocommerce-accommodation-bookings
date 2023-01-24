@@ -1,3 +1,6 @@
+// Internal dependencies.
+import {is_product_type_accommodation_booking} from './utils'
+
 (
 	function ( $ ) {
 		const HookApi = window.wc_bookings.hooks;
@@ -85,3 +88,5 @@
 		);
 	}
 )( jQuery )
+
+// @todo: apply login to accommodation booking product.
