@@ -1,5 +1,8 @@
 // Internal dependencies.
-import {is_product_type_accommodation_booking} from './utils'
+import {
+	is_product_type_accommodation_booking,
+	get_booking_form
+} from './utils'
 
 (
 	function ( $ ) {
@@ -11,6 +14,12 @@ import {is_product_type_accommodation_booking} from './utils'
 			'wc_accommodation_booking/booking_form',
 			( $field ) => {
 				const field_name = $( this ).attr( 'name' );
+				const $form = get_booking_form($field);
+
+				// Exit if product is not accommodation booking.
+				if( ! is_product_type_accommodation_booking( $form ) ) {
+					return;
+				}
 
 				if ( 'wc_bookings_field_resource' === field_name ) {
 					$( '.wc-bookings-booking-form fieldset' ).removeAttr( 'selected_date_type' );
@@ -23,6 +32,13 @@ import {is_product_type_accommodation_booking} from './utils'
 			'wc_bookings_date_picker_get_day_attributes',
 			'wc_accommodation_booking/booking_form',
 			( attributes, booking_data, $date_picker ) => {
+				const $form = get_booking_form($date_picker);
+
+				// Exit if product is not accommodation booking.
+				if( ! is_product_type_accommodation_booking( $form ) ) {
+					return attributes;
+				}
+
 				if (
 					this.bookingsData.fully_booked_start_days &&
 					this.bookingsData.fully_booked_start_days[ymdIndex] &&
@@ -62,7 +78,12 @@ import {is_product_type_accommodation_booking} from './utils'
 			'wc_bookings_date_picker_refreshed',
 			'wc_accommodation_booking/booking_form',
 			( $date_picker ) => {
-				const $form = $date_picker.closest( 'form.wc-bookings-booking-form' );
+				const $form = get_booking_form($date_picker);
+
+				// Exit if product is not accommodation booking.
+				if( ! is_product_type_accommodation_booking( $form ) ) {
+					return;
+				}
 
 				$form.find( 'fieldset' ).attr( 'data-content', wc_accommodation_bookings_form.i18n_check_in );
 				$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
@@ -74,9 +95,15 @@ import {is_product_type_accommodation_booking} from './utils'
 		HookApi.addAction(
 			'wc_bookings_date_selected',
 			'wc_accommodation_booking/booking_form',
-			( $fieldset, $picker ) => {
+			( $fieldset ) => {
 				const date_type = $fieldset.attr( 'start_or_end_date' );
+				const $form = get_booking_form($fieldset);
 				let data_content = '';
+
+				// Exit if product is not accommodation booking.
+				if( is_product_type_accommodation_booking( $form ) ) {
+					return;
+				}
 
 				switch ( date_type ) {
 					case 'end':
@@ -96,8 +123,13 @@ import {is_product_type_accommodation_booking} from './utils'
 		HookApi.addAction(
 			'wc_bookings_before_calculte_booking_cost',
 			'wc_accommodation_booking/booking_form',
-			( $field, $fieldset, $picker, $form ) => {
+			( $field, $fieldset, $date_picker, $form ) => {
 				const date_type = $fieldset.attr( 'start_or_end_date' );
+
+				// Exit if product is not accommodation booking.
+				if( is_product_type_accommodation_booking( $form ) ) {
+					return;
+				}
 
 				switch ( date_type ) {
 					case 'end':
@@ -118,5 +150,3 @@ import {is_product_type_accommodation_booking} from './utils'
 		);
 	}
 )( jQuery )
-
-// @todo: apply login to accommodation booking product.
