@@ -14,12 +14,13 @@
 	HookApi.addAction(
 		'wc_bookings_date_picker_refreshed',
 		'wc_accommodation_booking/booking_form',
-		( params ) => {
+		( $date_picker ) => {
+			const $form = $date_picker.closest( 'form.wc-bookings-booking-form' );
 			console.log( params );
 
-			// $( '.wc-bookings-booking-form fieldset' ).attr( 'data-content', booking_form_params.i18n_check_in );
-			// $( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-			// $( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+			$form.find( 'fieldset' ).attr( 'data-content', wc_accommodation_bookings_form.i18n_check_in );
+			$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+			$form.find( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
 		}
 	);
 
