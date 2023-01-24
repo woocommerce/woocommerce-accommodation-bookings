@@ -197,7 +197,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 */
 	public function frontend_assets() {
 		wp_enqueue_style( 'wc-accommodation-bookings-styles', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/css/frontend.css', null, WC_ACCOMMODATION_BOOKINGS_VERSION );
-		wp_enqueue_script( 'wc-accommodation-bookings-form', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/booking.js', ['wc-bookings-booking-form'], WC_ACCOMMODATION_BOOKINGS_VERSION, tru );
+		wp_enqueue_script( 'wc-accommodation-bookings-form', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/booking-form.js', ['wc-bookings-booking-form'], WC_ACCOMMODATION_BOOKINGS_VERSION, tru );
 
 		wp_localize_script(
 			'wc-accommodation-bookings-form',
