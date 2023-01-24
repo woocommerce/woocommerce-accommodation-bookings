@@ -28,10 +28,8 @@
 		'wc_bookings_date_selected',
 		'wc_accommodation_booking/booking_form',
 		( $fieldset, $picker ) => {
-			const date_type = $picker.data( 'start_or_end_date' );
+			const date_type = $fieldset.attr( 'start_or_end_date' );
 			let data_content = '';
-
-			$fieldset.attr( 'data-content', wc_accommodation_bookings_form.i18n_check_in_again );
 
 			switch ( date_type ) {
 				case 'end':
@@ -40,7 +38,7 @@
 
 				case 'start':
 				default:
-					data_content = wc_accommodation_bookings_form.i18n_check_out;
+					data_content = wc_accommodation_bookings_form.i18n_check_in_again;
 			}
 
 			$fieldset.attr( 'data-content', data_content );
@@ -51,17 +49,20 @@
 	HookApi.addAction(
 		'wc_bookings_before_calculte_booking_cost',
 		'wc_accommodation_booking/booking_form',
-		( params ) => {
-			console.log( params );
+		( $field, $fieldset, $picker, $form ) => {
+			const date_type = $fieldset.attr( 'start_or_end_date' );
 
-			// Make the days disable and unselectable according to the selection.
-			// if ( 'end' === $( '.wc-bookings-booking-form fieldset' ).attr( 'selected_date_type' ) ) {
-			// 	$( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-			// 	$( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
-			// } else {
-			// 	$( '.fully_booked_start_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
-			// 	$( '.fully_booked_end_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-			// }
+			switch ( date_type ) {
+				case 'end':
+					$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+					$form.find( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+					break;
+
+				case 'start':
+				default:
+					$form.find( '.fully_booked_start_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+					$form.find( '.fully_booked_end_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+			}
 		}
 	);
 })(jQuery)
