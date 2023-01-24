@@ -16,7 +16,6 @@
 		'wc_accommodation_booking/booking_form',
 		( $date_picker ) => {
 			const $form = $date_picker.closest( 'form.wc-bookings-booking-form' );
-			console.log( params );
 
 			$form.find( 'fieldset' ).attr( 'data-content', wc_accommodation_bookings_form.i18n_check_in );
 			$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
@@ -28,17 +27,23 @@
 	HookApi.addAction(
 		'wc_bookings_date_selected',
 		'wc_accommodation_booking/booking_form',
-		( params ) => {
-			console.log( params );
+		( $fieldset, $picker ) => {
+			const date_type = $picker.data( 'start_or_end_date' );
+			let data_content = '';
 
-			// start date
-			//fieldset.attr( 'data-content', booking_form_params.i18n_check_in_again );
+			$fieldset.attr( 'data-content', wc_accommodation_bookings_form.i18n_check_in_again );
 
-			// end date
-			//fieldset.attr( 'data-content', booking_form_params.i18n_check_out );
+			switch ( date_type ) {
+				case 'end':
+					data_content = wc_accommodation_bookings_form.i18n_check_out;
+					break;
 
-			//selected date
-			//fieldset.attr( 'data-content', booking_form_params.i18n_check_out );
+				case 'start':
+				default:
+					data_content = wc_accommodation_bookings_form.i18n_check_out;
+			}
+
+			$fieldset.attr( 'data-content', data_content );
 		}
 	);
 
