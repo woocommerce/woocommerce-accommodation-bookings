@@ -25,7 +25,7 @@
 }
 
 .wc-bookings-date-picker {
-	fieldset{
+	fieldset {
 		position: relative;
 	}
 
@@ -40,14 +40,14 @@
 		span, a {
 			background-color: #c0392b !important;
 			background-image: none !important;
-			border-color: rgba(0,0,0,0.1) !important;
+			border-color: rgba(0, 0, 0, 0.1) !important;
 			color: #fff !important;
-			text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 			pointer-events: none;
 		}
 	}
 
-	.ui-datepicker{
+	.ui-datepicker {
 		td.bookable-range.ui-state-disabled {
 			opacity: 1;
 		}
