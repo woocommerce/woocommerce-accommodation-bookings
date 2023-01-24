@@ -23,6 +23,36 @@ import {is_product_type_accommodation_booking} from './utils'
 			'wc_bookings_date_picker_get_day_attributes',
 			'wc_accommodation_booking/booking_form',
 			( attributes, booking_data, $date_picker ) => {
+				if (
+					this.bookingsData.fully_booked_start_days &&
+					this.bookingsData.fully_booked_start_days[ymdIndex] &&
+					(
+						'automatic' === this.customData.resources_assignment ||
+						this.bookingsData.fully_booked_start_days[ymdIndex][0] ||
+						this.bookingsData.fully_booked_start_days[ymdIndex][resource_id]
+					)
+				) {
+					attributes.class.push( 'fully_booked_start_days' );
+				}
+
+				if (
+					this.bookingsData.fully_booked_end_days &&
+					this.bookingsData.fully_booked_end_days[ymdIndex] &&
+					(
+						'automatic' === this.customData.resources_assignment ||
+						this.bookingsData.fully_booked_end_days[ymdIndex][0] ||
+						this.bookingsData.fully_booked_end_days[ymdIndex][resource_id]
+					)
+				) {
+					attributes.class.push( 'fully_booked_end_days' );
+				}
+
+				if ( attributes.class.indexOf( 'fully_booked_start_days' ) > - 1 ) {
+					attributes.title = wc_accommodation_bookings_form.i18n_date_avail_for_check_out;
+				} else if ( attributes.class.indexOf( 'fully_booked_end_days' ) > - 1 ) {
+					attributes.title = wc_accommodation_bookings_form.i18n_date_avail_for_check_in;
+				}
+
 				return attributes;
 			}
 		);
