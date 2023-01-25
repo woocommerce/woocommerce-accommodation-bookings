@@ -15,6 +15,8 @@ module.exports = {
 	},
 	plugins: [
 		...defaultConfig.plugins,
-		new RemoveEmptyScriptsPlugin()
+		new RemoveEmptyScriptsPlugin({
+			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS
+		})
 	]
 };
