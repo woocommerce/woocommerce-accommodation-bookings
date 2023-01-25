@@ -42,7 +42,7 @@
 		"build:dev": "composer install && npm run build:webpack && npm run makepo",
 		"archive": "composer archive --file=$npm_package_name --format=zip",
 		"postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-		"makepot": "wpi18n makepot --domain-path languages --pot-file woocommerce-accommodation-bookings.pot --type plugin --main-file woocommerce-accommodation-bookings.php --exclude node_modules,tests,docs",
+		"makepot": "wpi18n makepot --domain-path languages --pot-file woocommerce-accommodation-bookings.pot --type plugin --main-file woocommerce-accommodation-bookings.php --exclude node_modules,tests,docs,assets,vendor",
 		"phpcompat": "./vendor/bin/phpcs *.php includes -p --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.0-",
 		"lint:js": "wp-scripts lint-js --ext=js",
 		"lint:js-fix": "wp-scripts lint-js --ext=js --fix",
