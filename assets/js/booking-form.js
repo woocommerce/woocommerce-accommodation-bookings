@@ -1,182 +1,196 @@
+/* globals jQuery */
 // External dependencies.
-import {__} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
 // Internal dependencies.
 import {
 	get_booking_form,
 	get_jquery_element,
-	is_product_type_accommodation_booking
-} from './utils'
+	is_product_type_accommodation_booking,
+} from './utils';
 
-(
-	function ( $ ) {
-		const HookApi = window.wc_bookings.hooks;
+(function ($) {
+	const HookApi = window.wc_bookings.hooks;
 
-		// Remove selected day type attribute to match the design colors in newly switched resource.
-		HookApi.addAction(
-			'wc_bookings_form_field_change',
-			'wc_accommodation_booking/booking_form',
-			( { field } ) => {
-				const field_name = $( this ).attr( 'name' );
-				const $field = get_jquery_element( field );
-				const $form = get_booking_form( field );
+	// Remove selected day type attribute to match the design colors in newly switched resource.
+	HookApi.addAction(
+		'wc_bookings_form_field_change',
+		'wc_accommodation_booking/booking_form',
+		({ field }) => {
+			const field_name = $(this).attr('name');
+			const $field = get_jquery_element(field);
+			const $form = get_booking_form(field);
 
-				// Exit if product is not accommodation booking.
-				if ( !is_product_type_accommodation_booking( $form ) ) {
-					return;
-				}
-
-				if ( 'wc_bookings_field_resource' === field_name ) {
-					$field.removeAttr( 'selected_date_type' );
-				}
+			// Exit if product is not accommodation booking.
+			if (!is_product_type_accommodation_booking($form)) {
+				return;
 			}
-		);
 
-		// Filter the date element attributes.
-		HookApi.addFilter(
-			'wc_bookings_date_picker_get_day_attributes',
-			'wc_accommodation_booking/booking_form',
-			( attributes, { booking_data, custom_data, date_picker: $date_picker, date} ) => {
+			if (field_name === 'wc_bookings_field_resource') {
+				$field.removeAttr('selected_date_type');
+			}
+		}
+	);
 
-				const $form = get_booking_form( $date_picker );
-				const year = date.getFullYear();
-				const month = date.getMonth() + 1;
-				const day = date.getDate();
-				const ymdIndex = `${year}-${month}-${day}`;
+	// Filter the date element attributes.
+	HookApi.addFilter(
+		'wc_bookings_date_picker_get_day_attributes',
+		'wc_accommodation_booking/booking_form',
+		(
+			attributes,
+			{ booking_data, custom_data, date_picker, resource_id, date }
+		) => {
+			const $form = get_booking_form(date_picker);
+			const year = date.getFullYear();
+			const month = date.getMonth() + 1;
+			const day = date.getDate();
+			const ymdIndex = `${year}-${month}-${day}`;
 
-				// Exit if product is not accommodation booking.
-				if ( !is_product_type_accommodation_booking( $form ) ) {
-					return attributes;
-				}
-
-				if (
-					booking_data.fully_booked_start_days &&
-					booking_data.fully_booked_start_days[ymdIndex] &&
-					(
-						'automatic' === custom_data.resources_assignment ||
-						booking_data.fully_booked_start_days[ymdIndex][0] ||
-						booking_data.fully_booked_start_days[ymdIndex][resource_id]
-					)
-				) {
-					attributes.class.push( 'fully_booked_start_days' );
-				}
-
-				if (
-					booking_data.fully_booked_end_days &&
-					booking_data.fully_booked_end_days[ymdIndex] &&
-					(
-						'automatic' === custom_data.resources_assignment ||
-						booking_data.fully_booked_end_days[ymdIndex][0] ||
-						booking_data.fully_booked_end_days[ymdIndex][resource_id]
-					)
-				) {
-					attributes.class.push( 'fully_booked_end_days' );
-				}
-
-				if ( attributes.class.indexOf( 'fully_booked_start_days' ) > - 1 ) {
-					attributes.title = __(
-						'Available for check-out only.',
-						'woocommerce-accommodation-bookings'
-					);
-				} else if ( attributes.class.indexOf( 'fully_booked_end_days' ) > - 1 ) {
-					attributes.title = __(
-						'Available for check-in only.',
-						'woocommerce-accommodation-bookings'
-					);
-				}
-
+			// Exit if product is not accommodation booking.
+			if (!is_product_type_accommodation_booking($form)) {
 				return attributes;
 			}
-		);
 
-		// Make the days disable and unselectable according to the selection.
-		HookApi.addAction(
-			'wc_bookings_date_picker_refreshed',
-			'wc_accommodation_booking/booking_form',
-			( {date_picker} ) => {
-				const $date_picker = get_jquery_element( date_picker );
-				const $form = get_booking_form( date_picker );
-
-				// Exit if product is not accommodation booking.
-				if ( !is_product_type_accommodation_booking( $form ) ) {
-					return;
-				}
-
-				$form.find( 'fieldset' )
-				     .attr( 'data-content', __( 'Select check-in', 'woocommerce-accommodation-bookings' ) );
-				$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-				$form.find( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+			if (
+				booking_data.fully_booked_start_days &&
+				booking_data.fully_booked_start_days[ymdIndex] &&
+				(custom_data.resources_assignment === 'automatic' ||
+					booking_data.fully_booked_start_days[ymdIndex][0] ||
+					booking_data.fully_booked_start_days[ymdIndex][resource_id])
+			) {
+				attributes.class.push('fully_booked_start_days');
 			}
-		);
 
-		// Add attribute to field set when date selected start date.
-		HookApi.addAction(
-			'wc_bookings_date_selected',
-			'wc_accommodation_booking/booking_form',
-			( {fieldset} ) => {
-				const $fieldset = get_jquery_element( fieldset );
-				const date_type = $fieldset.attr( 'selected_date_type' );
-				const $form = get_booking_form( fieldset );
-				let data_content = '';
+			if (
+				booking_data.fully_booked_end_days &&
+				booking_data.fully_booked_end_days[ymdIndex] &&
+				(custom_data.resources_assignment === 'automatic' ||
+					booking_data.fully_booked_end_days[ymdIndex][0] ||
+					booking_data.fully_booked_end_days[ymdIndex][resource_id])
+			) {
+				attributes.class.push('fully_booked_end_days');
+			}
 
-				// Exit if product is not accommodation booking.
-				if ( !is_product_type_accommodation_booking( $form ) ) {
-					return;
-				}
+			if (attributes.class.indexOf('fully_booked_start_days') > -1) {
+				attributes.title = __(
+					'Available for check-out only.',
+					'woocommerce-accommodation-bookings'
+				);
+			} else if (attributes.class.indexOf('fully_booked_end_days') > -1) {
+				attributes.title = __(
+					'Available for check-in only.',
+					'woocommerce-accommodation-bookings'
+				);
+			}
 
-				switch ( date_type ) {
-					case 'end':
-						data_content = __(
-							'Selected! Re-select to change your check-in date.',
-							'woocommerce-accommodation-bookings'
+			return attributes;
+		}
+	);
+
+	// Make the days disable and unselectable according to the selection.
+	HookApi.addAction(
+		'wc_bookings_date_picker_refreshed',
+		'wc_accommodation_booking/booking_form',
+		({ date_picker }) => {
+			const $form = get_booking_form(date_picker);
+
+			// Exit if product is not accommodation booking.
+			if (!is_product_type_accommodation_booking($form)) {
+				return;
+			}
+
+			$form
+				.find('fieldset')
+				.attr(
+					'data-content',
+					__('Select check-in', 'woocommerce-accommodation-bookings')
+				);
+			$form
+				.find('.fully_booked_start_days')
+				.addClass('ui-datepicker-unselectable ui-state-disabled');
+			$form
+				.find('.fully_booked_end_days')
+				.removeClass('ui-datepicker-unselectable ui-state-disabled');
+		}
+	);
+
+	// Add attribute to field set when date selected start date.
+	HookApi.addAction(
+		'wc_bookings_date_selected',
+		'wc_accommodation_booking/booking_form',
+		({ fieldset }) => {
+			const $fieldset = get_jquery_element(fieldset);
+			const date_type = $fieldset.attr('selected_date_type');
+			const $form = get_booking_form(fieldset);
+			let data_content = '';
+
+			// Exit if product is not accommodation booking.
+			if (!is_product_type_accommodation_booking($form)) {
+				return;
+			}
+
+			switch (date_type) {
+				case 'end':
+					data_content = __(
+						'Selected! Re-select to change your check-in date.',
+						'woocommerce-accommodation-bookings'
+					);
+					break;
+
+				case 'start':
+				default:
+					data_content = __(
+						'Select check-out',
+						'woocommerce-accommodation-bookings'
+					);
+			}
+
+			$fieldset.attr('data-content', data_content);
+		}
+	);
+
+	// Toogle accomadated date as per selected date.
+	HookApi.addAction(
+		'wc_bookings_pre_calculte_booking_cost',
+		'wc_accommodation_booking/booking_form',
+		({ fieldset, form }) => {
+			const $fieldset = get_jquery_element(fieldset);
+			const $form = get_jquery_element(form);
+
+			const date_type = $fieldset.attr('start_or_end_date');
+
+			// Exit if product is not accommodation booking.
+			if (!is_product_type_accommodation_booking($form)) {
+				return;
+			}
+
+			switch (date_type) {
+				case 'end':
+					$form
+						.find('.fully_booked_start_days')
+						.addClass(
+							'ui-datepicker-unselectable ui-state-disabled'
 						);
-						break;
-
-					case 'start':
-					default:
-						data_content = __(
-							'Select check-out',
-							'woocommerce-accommodation-bookings'
+					$form
+						.find('.fully_booked_end_days')
+						.removeClass(
+							'ui-datepicker-unselectable ui-state-disabled'
 						);
-				}
+					break;
 
-				$fieldset.attr( 'data-content', data_content );
+				case 'start':
+				default:
+					$form
+						.find('.fully_booked_start_days')
+						.removeClass(
+							'ui-datepicker-unselectable ui-state-disabled'
+						);
+					$form
+						.find('.fully_booked_end_days')
+						.addClass(
+							'ui-datepicker-unselectable ui-state-disabled'
+						);
 			}
-		);
-
-		// Toogle accomadated date as per selected date.
-		HookApi.addAction(
-			'wc_bookings_pre_calculte_booking_cost',
-			'wc_accommodation_booking/booking_form',
-			( { field, fieldset, date_picker, form } ) => {
-				const $field = get_jquery_element( field );
-				const $fieldset = get_jquery_element( fieldset );
-				const $date_picker = get_jquery_element( date_picker );
-				const $form = get_jquery_element( form );
-
-				const date_type = $fieldset.attr( 'start_or_end_date' );
-
-				// Exit if product is not accommodation booking.
-				if ( !is_product_type_accommodation_booking( $form ) ) {
-					return;
-				}
-
-				switch ( date_type ) {
-					case 'end':
-						$form.find( '.fully_booked_start_days' )
-						     .addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-						$form.find( '.fully_booked_end_days' )
-						     .removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
-						break;
-
-					case 'start':
-					default:
-						$form.find( '.fully_booked_start_days' )
-						     .removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
-						$form.find( '.fully_booked_end_days' )
-						     .addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-				}
-			}
-		);
-	}
-)( jQuery )
+		}
+	);
+})(jQuery);

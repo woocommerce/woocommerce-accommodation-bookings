@@ -4,8 +4,12 @@ module.exports = {
 		wp: false,
 	},
 	rules: {
-		'@woocommerce/dependency-group': 'off',
-		'react/react-in-jsx-scope': 'off',
+		'@wordpress/no-unused-vars-before-return': 0,
+		'@woocommerce/dependency-group': 0,
+		camelcase: 0,
+		'import/no-extraneous-dependencies': 0,
+		'import/no-unresolved': 0,
+		'import/named': 0,
 	},
 	settings: {
 		jsdoc: { mode: 'typescript' },

@@ -1,14 +1,17 @@
+/* globals jQuery */
 /**
  * Should return whether the product is a accommodation booking or not.
  *
  * @since x.x.x
  *
- * @param (object) $booking_form
+ * @param {Object} $booking_form
  *
- * @return {boolean}
+ * @return {boolean} Returns true if the product is a accommodation booking product type.
  */
-export function is_product_type_accommodation_booking( $booking_form ) {
-	return $booking_form.closest( '.product' ).hasClass( 'product-type-accommodation-booking' );
+export function is_product_type_accommodation_booking($booking_form) {
+	return $booking_form
+		.closest('.product')
+		.hasClass('product-type-accommodation-booking');
 }
 
 /**
@@ -16,15 +19,15 @@ export function is_product_type_accommodation_booking( $booking_form ) {
  *
  * @since x.x.x
  *
- * @param (object) $field
+ * @param {Object} $field
  *
- * @return {object}
+ * @return {Object} Return booking form jQuery element.
  */
-export function get_booking_form( $field ) {
+export function get_booking_form($field) {
 	// Convert to jQuery selector.
-	$field = get_jquery_element( $field );
+	$field = get_jquery_element($field);
 
-	return $field.closest( 'form' );
+	return $field.closest('form');
 }
 
 /**
@@ -32,10 +35,10 @@ export function get_booking_form( $field ) {
  *
  * @since x.x.x
  *
- * @param {object} $field
+ * @param {Object} $field
  *
- * @return {jQuery}
+ * @return {jQuery} Return jQuery element.
  */
-export function get_jquery_element( $field ) {
-	return jQuery( $field )
+export function get_jquery_element($field) {
+	return jQuery($field);
 }

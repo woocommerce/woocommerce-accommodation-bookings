@@ -1,6 +1,6 @@
-const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const path = require( 'path' );
+const path = require('path');
 
 module.exports = {
 	...defaultConfig,
@@ -10,13 +10,13 @@ module.exports = {
 		'css/frontend': '/assets/css/frontend.scss', // prettier-ignore
 	},
 	output: {
-		path: path.resolve( __dirname, 'dist' ),
+		path: path.resolve(__dirname, 'dist'),
 		filename: '[name].js',
 	},
 	plugins: [
 		...defaultConfig.plugins,
 		new RemoveEmptyScriptsPlugin({
-			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS
-		})
-	]
+			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
+		}),
+	],
 };
