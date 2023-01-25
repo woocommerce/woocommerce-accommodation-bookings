@@ -40,24 +40,24 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 				}
 
 				if (
-					this.bookingsData.fully_booked_start_days &&
-					this.bookingsData.fully_booked_start_days[ymdIndex] &&
+					booking_data.fully_booked_start_days &&
+					booking_data.fully_booked_start_days[ymdIndex] &&
 					(
 						'automatic' === this.customData.resources_assignment ||
-						this.bookingsData.fully_booked_start_days[ymdIndex][0] ||
-						this.bookingsData.fully_booked_start_days[ymdIndex][resource_id]
+						booking_data.fully_booked_start_days[ymdIndex][0] ||
+						booking_data.fully_booked_start_days[ymdIndex][resource_id]
 					)
 				) {
 					attributes.class.push( 'fully_booked_start_days' );
 				}
 
 				if (
-					this.bookingsData.fully_booked_end_days &&
-					this.bookingsData.fully_booked_end_days[ymdIndex] &&
+					booking_data.fully_booked_end_days &&
+					booking_data.fully_booked_end_days[ymdIndex] &&
 					(
 						'automatic' === this.customData.resources_assignment ||
-						this.bookingsData.fully_booked_end_days[ymdIndex][0] ||
-						this.bookingsData.fully_booked_end_days[ymdIndex][resource_id]
+						booking_data.fully_booked_end_days[ymdIndex][0] ||
+						booking_data.fully_booked_end_days[ymdIndex][resource_id]
 					)
 				) {
 					attributes.class.push( 'fully_booked_end_days' );
@@ -91,10 +91,8 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 					return;
 				}
 
-				$form.find( 'fieldset' ).attr( 'data-content', __(
-					'Select check-in',
-					'woocommerce-accommodation-bookings'
-				) );
+				$form.find( 'fieldset' )
+					.attr( 'data-content', __( 'Select check-in', 'woocommerce-accommodation-bookings' ) );
 				$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
 				$form.find( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
 			}

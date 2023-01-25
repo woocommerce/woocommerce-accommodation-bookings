@@ -8,7 +8,7 @@
  * @return {boolean}
  */
 export function is_product_type_accommodation_booking( $booking_form ) {
-	return $booking_form.find( '.product' ).hasClass( 'product-type-accommodation-booking' );
+	return $booking_form.closest( '.product' ).hasClass( 'product-type-accommodation-booking' );
 }
 
 /**
@@ -21,5 +21,5 @@ export function is_product_type_accommodation_booking( $booking_form ) {
  * @return {object}
  */
 export function get_booking_form( $field ) {
-	return $field.closest( 'form.wc-bookings-booking-form' );
+	return $field.closest( 'form' );
 }
