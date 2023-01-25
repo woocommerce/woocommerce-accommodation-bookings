@@ -21,5 +21,5 @@ export function is_product_type_accommodation_booking( $booking_form ) {
  * @return {object}
  */
 export function get_booking_form( $field ) {
-	return $form.closest( 'form.wc-bookings-booking-form' );
+	return $field.closest( 'form.wc-bookings-booking-form' );
 }
