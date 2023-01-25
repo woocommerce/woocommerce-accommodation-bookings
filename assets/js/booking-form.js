@@ -92,7 +92,7 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 				}
 
 				$form.find( 'fieldset' )
-					.attr( 'data-content', __( 'Select check-in', 'woocommerce-accommodation-bookings' ) );
+				     .attr( 'data-content', __( 'Select check-in', 'woocommerce-accommodation-bookings' ) );
 				$form.find( '.fully_booked_start_days' ).addClass( 'ui-datepicker-unselectable ui-state-disabled' );
 				$form.find( '.fully_booked_end_days' ).removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
 			}
@@ -103,19 +103,19 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 			'wc_bookings_date_selected',
 			'wc_accommodation_booking/booking_form',
 			( $fieldset ) => {
-				const date_type = $fieldset.attr( 'start_or_end_date' );
+				const date_type = $fieldset.attr( 'selected_date_type' );
 				const $form = get_booking_form( $fieldset );
 				let data_content = '';
 
 				// Exit if product is not accommodation booking.
-				if ( is_product_type_accommodation_booking( $form ) ) {
+				if ( !is_product_type_accommodation_booking( $form ) ) {
 					return;
 				}
 
 				switch ( date_type ) {
 					case 'end':
 						data_content = __(
-							'Select check-out',
+							'Selected! Re-select to change your check-in date.',
 							'woocommerce-accommodation-bookings'
 						);
 						break;
@@ -123,7 +123,7 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 					case 'start':
 					default:
 						data_content = __(
-							'Selected! Re-select to change your check-in date.',
+							'Select check-out',
 							'woocommerce-accommodation-bookings'
 						);
 				}
@@ -140,7 +140,7 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 				const date_type = $fieldset.attr( 'start_or_end_date' );
 
 				// Exit if product is not accommodation booking.
-				if ( is_product_type_accommodation_booking( $form ) ) {
+				if ( !is_product_type_accommodation_booking( $form ) ) {
 					return;
 				}
 
