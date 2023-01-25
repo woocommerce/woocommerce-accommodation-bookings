@@ -196,10 +196,11 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
-		$booking_style_asset_data = $this->get_asset_data('frontend.css', 'css ');
-		$booking_script_asset_data = $this->get_asset_data('booking-form.js', 'js/frontend');
+		$booking_style_asset_data = $this->get_asset_data( 'frontend', 'css' );
+		$booking_script_asset_data = $this->get_asset_data( 'booking-form', 'js/frontend' );
 
-		$booking_script_dependencies = array_merge( $booking_script_asset_data['dependencies'], ['wc-bookings-booking-form'] );
+		$booking_script_dependencies = array_merge( $booking_script_asset_data['dependencies'],
+			[ 'wc-bookings-booking-form' ] );
 
 		wp_enqueue_style(
 			'wc-accommodation-bookings-styles',
@@ -297,8 +298,8 @@ class WC_Accommodation_Bookings_Plugin {
 	 *
 	 * @since x.x.x
 	 */
-	private function get_asset_data( $script_file_name, $location ):array {
-		$asset_path = WC_ACCOMMODATION_BOOKINGS_MAIN_FILE . "/dist/$location/$script_file_name.asset.php";
+	private function get_asset_data( $script_file_name, $location ): array {
+		$asset_path = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . "/dist/$location/$script_file_name.asset.php";
 
 		return require $asset_path;
 	}
