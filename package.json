@@ -29,7 +29,6 @@
 		"@wordpress/i18n": "^4.25.0",
 		"@wordpress/prettier-config": "^2.8.0",
 		"@wordpress/scripts": "^25.2.0",
-		"node-wp-i18n": "~1.2.3",
 		"prettier": "^2.8.3",
 		"prettier-eslint": "^15.0.1",
 		"webpack-remove-empty-scripts": "^1.0.1"
