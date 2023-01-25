@@ -196,8 +196,31 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
-		wp_enqueue_style( 'wc-accommodation-bookings-styles', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/dist/css/frontend.css', null, WC_ACCOMMODATION_BOOKINGS_VERSION );
-		wp_enqueue_script( 'wc-accommodation-bookings-form', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/dist/js/booking-form.js', ['wc-bookings-booking-form'], WC_ACCOMMODATION_BOOKINGS_VERSION, tru );
+		$booking_style_asset_data = $this->get_asset_data('frontend.css', 'css ');
+		$booking_script_asset_data = $this->get_asset_data('booking-form.js', 'js/frontend');
+
+		$booking_script_dependencies = array_merge( $booking_script_asset_data['dependencies'], ['wc-bookings-booking-form'] );
+
+		wp_enqueue_style(
+			'wc-accommodation-bookings-styles',
+			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/dist/css/frontend.css',
+			null,
+			$booking_style_asset_data['version']
+		);
+
+		wp_enqueue_script(
+			'wc-accommodation-bookings-form',
+			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/dist/js/frontend/booking-form.js',
+			$booking_script_dependencies,
+			$booking_script_asset_data['version'],
+			true
+		);
+
+		wp_set_script_translations(
+			'wc-accommodation-bookings-form',
+			'woocommerce-accommodation-bookings',
+			WC_ACCOMMODATION_BOOKINGS_MAIN_FILE . '/languages'
+		);
 	}
 
 	/**
@@ -267,5 +290,16 @@ class WC_Accommodation_Bookings_Plugin {
 
 		// Update version
 		update_option( 'wc_accommodation_bookings_version', $this->version );
+	}
+
+	/**
+	 * should return data from the asset file.
+	 *
+	 * @since x.x.x
+	 */
+	private function get_asset_data( $script_file_name, $location ):array {
+		$asset_path = WC_ACCOMMODATION_BOOKINGS_MAIN_FILE . "/dist/$location/$script_file_name.asset.php";
+
+		return require $asset_path;
 	}
 }
