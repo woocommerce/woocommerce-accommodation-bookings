@@ -2,7 +2,11 @@
 import {__} from '@wordpress/i18n';
 
 // Internal dependencies.
-import {get_booking_form, is_product_type_accommodation_booking} from './utils'
+import {
+	get_booking_form,
+	get_jquery_element,
+	is_product_type_accommodation_booking
+} from './utils'
 
 (
 	function ( $ ) {
@@ -12,9 +16,10 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 		HookApi.addAction(
 			'wc_bookings_form_field_change',
 			'wc_accommodation_booking/booking_form',
-			( $field ) => {
+			( { field } ) => {
 				const field_name = $( this ).attr( 'name' );
-				const $form = get_booking_form( $field );
+				const $field = get_jquery_element( field );
+				const $form = get_booking_form( field );
 
 				// Exit if product is not accommodation booking.
 				if ( !is_product_type_accommodation_booking( $form ) ) {
@@ -22,7 +27,7 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 				}
 
 				if ( 'wc_bookings_field_resource' === field_name ) {
-					$( '.wc-bookings-booking-form fieldset' ).removeAttr( 'selected_date_type' );
+					$field.removeAttr( 'selected_date_type' );
 				}
 			}
 		);
@@ -88,8 +93,9 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 		HookApi.addAction(
 			'wc_bookings_date_picker_refreshed',
 			'wc_accommodation_booking/booking_form',
-			( $date_picker ) => {
-				const $form = get_booking_form( $date_picker );
+			( {date_picker} ) => {
+				const $date_picker = get_jquery_element( date_picker );
+				const $form = get_booking_form( date_picker );
 
 				// Exit if product is not accommodation booking.
 				if ( !is_product_type_accommodation_booking( $form ) ) {
@@ -107,9 +113,10 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 		HookApi.addAction(
 			'wc_bookings_date_selected',
 			'wc_accommodation_booking/booking_form',
-			( $fieldset ) => {
+			( {fieldset} ) => {
+				const $fieldset = get_jquery_element( fieldset );
 				const date_type = $fieldset.attr( 'selected_date_type' );
-				const $form = get_booking_form( $fieldset );
+				const $form = get_booking_form( fieldset );
 				let data_content = '';
 
 				// Exit if product is not accommodation booking.
@@ -139,9 +146,14 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 
 		// Toogle accomadated date as per selected date.
 		HookApi.addAction(
-			'wc_bookings_before_calculte_booking_cost',
+			'wc_bookings_pre_calculte_booking_cost',
 			'wc_accommodation_booking/booking_form',
-			( $field, $fieldset, $date_picker, $form ) => {
+			( { field, fieldset, date_picker, form } ) => {
+				const $field = get_jquery_element( field );
+				const $fieldset = get_jquery_element( fieldset );
+				const $date_picker = get_jquery_element( date_picker );
+				const $form = get_jquery_element( form );
+
 				const date_type = $fieldset.attr( 'start_or_end_date' );
 
 				// Exit if product is not accommodation booking.
