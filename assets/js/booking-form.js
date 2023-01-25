@@ -31,8 +31,13 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 		HookApi.addFilter(
 			'wc_bookings_date_picker_get_day_attributes',
 			'wc_accommodation_booking/booking_form',
-			( attributes, booking_data, $date_picker ) => {
+			( attributes, { booking_data, custom_data, date_picker: $date_picker, date} ) => {
+
 				const $form = get_booking_form( $date_picker );
+				const year = date.getFullYear();
+				const month = date.getMonth() + 1;
+				const day = date.getDate();
+				const ymdIndex = `${year}-${month}-${day}`;
 
 				// Exit if product is not accommodation booking.
 				if ( !is_product_type_accommodation_booking( $form ) ) {
@@ -43,7 +48,7 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 					booking_data.fully_booked_start_days &&
 					booking_data.fully_booked_start_days[ymdIndex] &&
 					(
-						'automatic' === this.customData.resources_assignment ||
+						'automatic' === custom_data.resources_assignment ||
 						booking_data.fully_booked_start_days[ymdIndex][0] ||
 						booking_data.fully_booked_start_days[ymdIndex][resource_id]
 					)
@@ -55,7 +60,7 @@ import {get_booking_form, is_product_type_accommodation_booking} from './utils'
 					booking_data.fully_booked_end_days &&
 					booking_data.fully_booked_end_days[ymdIndex] &&
 					(
-						'automatic' === this.customData.resources_assignment ||
+						'automatic' === custom_data.resources_assignment ||
 						booking_data.fully_booked_end_days[ymdIndex][0] ||
 						booking_data.fully_booked_end_days[ymdIndex][resource_id]
 					)
