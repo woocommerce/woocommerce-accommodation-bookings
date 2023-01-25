@@ -196,8 +196,8 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @param $booked_blocks
 	 */
 	public function find_booked_day_blocks( $result, $booked_blocks ): array {
-		$result['fully_booked_start_days'] = $booked['fully_booked_start_days'] ?? [];
-		$result['fully_booked_end_days']   = $booked['fully_booked_end_days'] ?? [];
+		$result['fully_booked_start_days'] = $booked_blocks['fully_booked_start_days'] ?? [];
+		$result['fully_booked_end_days']   = $booked_blocks['fully_booked_end_days'] ?? [];
 
 		return $result;
 	}
