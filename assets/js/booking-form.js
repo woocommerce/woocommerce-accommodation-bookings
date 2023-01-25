@@ -12,26 +12,6 @@ import {
 (function ($) {
 	const HookApi = window.wc_bookings.hooks;
 
-	// Remove selected day type attribute to match the design colors in newly switched resource.
-	HookApi.addAction(
-		'wc_bookings_form_field_change',
-		'wc_accommodation_booking/booking_form',
-		({ field }) => {
-			const field_name = $(this).attr('name');
-			const $field = get_jquery_element(field);
-			const $form = get_booking_form(field);
-
-			// Exit if product is not accommodation booking.
-			if (!is_product_type_accommodation_booking($form)) {
-				return;
-			}
-
-			if (field_name === 'wc_bookings_field_resource') {
-				$field.removeAttr('selected_date_type');
-			}
-		}
-	);
-
 	// Filter the date element attributes.
 	HookApi.addFilter(
 		'wc_bookings_date_picker_get_day_attributes',
@@ -93,6 +73,7 @@ import {
 		'wc_accommodation_booking/booking_form',
 		({ date_picker }) => {
 			const $form = get_booking_form(date_picker);
+			const $date_picker = get_jquery_element(date_picker);
 
 			// Exit if product is not accommodation booking.
 			if (!is_product_type_accommodation_booking($form)) {
@@ -111,6 +92,10 @@ import {
 			$form
 				.find('.fully_booked_end_days')
 				.removeClass('ui-datepicker-unselectable ui-state-disabled');
+
+			$date_picker
+				.closest('fieldset')
+				.removeAttr('selected_date_type');
 		}
 	);
 
