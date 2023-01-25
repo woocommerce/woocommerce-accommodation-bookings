@@ -1,0 +1,8 @@
+!.eslintrc.js
+!assets/js
+assets/images
+includes
+languages
+vendor
+tests
+dist

@@ -198,33 +198,6 @@ class WC_Accommodation_Bookings_Plugin {
 	public function frontend_assets() {
 		wp_enqueue_style( 'wc-accommodation-bookings-styles', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/css/frontend.css', null, WC_ACCOMMODATION_BOOKINGS_VERSION );
 		wp_enqueue_script( 'wc-accommodation-bookings-form', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/booking-form.js', ['wc-bookings-booking-form'], WC_ACCOMMODATION_BOOKINGS_VERSION, tru );
-
-		wp_localize_script(
-			'wc-accommodation-bookings-form',
-			'wc_accommodation_bookings_form',
-			[
-				'i18n_date_avail_for_check_in' => __(
-					'Available for check-in only.',
-					'woocommerce-accommodation-bookings'
-				),
-				'i18n_date_avail_for_check_out' => __(
-					'Available for check-out only.',
-					'woocommerce-accommodation-bookings'
-				),
-				'i18n_check_in' => __(
-					'Select check-in',
-					'woocommerce-accommodation-bookings'
-				),
-				'i18n_check_out' => __(
-					'Select check-out',
-					'woocommerce-accommodation-bookings'
-				),
-				'i18n_check_in_again' => __(
-					'Selected! Re-select to change your check-in date.',
-					'woocommerce-accommodation-bookings'
-				),
-			]
-		);
 	}
 
 	/**
