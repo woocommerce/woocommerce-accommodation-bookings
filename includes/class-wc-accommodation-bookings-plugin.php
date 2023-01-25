@@ -1,4 +1,11 @@
 <?php
+/**
+ * This class is responsible for the plugin's initialization.
+ *
+ * @since x.x.x
+ * @package WooCommerce\AccommodationBookings
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -32,8 +39,8 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $plugin_file Path to main plugin's file
-	 * @param string $version     Plugin's version
+	 * @param string $plugin_file Path to main plugin's file.
+	 * @param string $version     Plugin's version.
 	 */
 	public function __construct( $plugin_file, $version ) {
 		$this->plugin_file = $plugin_file;
@@ -87,6 +94,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 *
 	 * @return void
 	 */
+	// phpcs:ignore
 	private function _define_constants() {
 		define( 'WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH', untrailingslashit( plugin_dir_path( $this->plugin_file ) ) . '/includes/' );
 		define( 'WC_ACCOMMODATION_BOOKINGS_TEMPLATE_PATH', untrailingslashit( plugin_dir_path( $this->plugin_file ) ) . '/templates/' );
@@ -99,6 +107,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 *
 	 * @return void
 	 */
+	// phpcs:ignore
 	private function _register_hooks() {
 		register_activation_hook( $this->plugin_file, array( $this, 'check_dependencies' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_dependencies' ) );
@@ -130,7 +139,7 @@ class WC_Accommodation_Bookings_Plugin {
 			return $this->dependencies_check_result;
 		}
 
-		require_once( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-dependencies.php' );
+		require_once WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-dependencies.php';
 		try {
 			WC_Accommodation_Dependencies::check_dependencies();
 			$this->dependencies_check_result = true;
@@ -163,6 +172,14 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Localisation
 	 */
 	public function load_plugin_textdomain() {
+		/**
+		 * Filter locale before loading the plugin's text domain.
+		 *
+		 * @since 1.0.2
+		 *
+		 * @param string $locale The plugin's current locale.
+		 * @param string $domain Text domain. Unique identifier for retrieving translated strings.
+		 */
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-accommodation-bookings' );
 		$dir    = trailingslashit( WP_LANG_DIR );
 
@@ -174,33 +191,35 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Load Classes
 	 */
 	public function includes() {
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking-resource.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-cart-manager.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-date-picker.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-product-tabs.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-order-manager.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'integrations/class-wc-accommodation-booking-addons.php' );
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking-resource.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-cart-manager.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-date-picker.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-product-tabs.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-accommodation-booking-order-manager.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'integrations/class-wc-accommodation-booking-addons.php';
 	}
 
 	/**
 	 * Include admin
 	 */
 	public function admin_includes() {
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-panels.php' );
-		include( WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-product-settings.php' );
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-panels.php';
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-product-settings.php';
 	}
 
 	/**
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
-		$booking_style_asset_data = $this->get_asset_data( 'frontend', 'css' );
+		$booking_style_asset_data  = $this->get_asset_data( 'frontend', 'css' );
 		$booking_script_asset_data = $this->get_asset_data( 'booking-form', 'js/frontend' );
 
-		$booking_script_dependencies = array_merge( $booking_script_asset_data['dependencies'],
-			[ 'wc-bookings-booking-form' ] );
+		$booking_script_dependencies = array_merge(
+			$booking_script_asset_data['dependencies'],
+			array( 'wc-bookings-booking-form' )
+		);
 
 		wp_enqueue_style(
 			'wc-accommodation-bookings-styles',
@@ -227,16 +246,17 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * Show row meta on the plugin screen.
 	 *
-	 * @access	public
-	 * @param	mixed $links Plugin Row Meta
-	 * @param	mixed $file  Plugin Base file
-	 * @return	array
+	 * @param array  $links Plugin Row Meta.
+	 * @param string $file  Plugin Base file.
+	 *
+	 * @return  array
 	 */
 	public function plugin_row_meta( $links, $file ) {
-		if ( $file == plugin_basename( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) ) {
+		// phpcs:ignore
+		if ( $file === plugin_basename( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) ) {
 			$row_meta = array(
-				'docs'		=>	'<a href="' . esc_url( apply_filters( 'woocommerce_accommodation_bookings_docs_url', 'https://docs.woocommerce.com/document/woocommerce-accommodation-bookings/' ) ) . '" title="' . esc_attr( __( 'View Documentation', 'woocommerce-accommodation-bookings' ) ) . '">' . __( 'Docs', 'woocommerce-accommodation-bookings' ) . '</a>',
-				'support'	=>	'<a href="' . esc_url( apply_filters( 'woocommerce_accommodation_bookings_support_url', 'https://docs.woocommerce.com/' ) ) . '" title="' . esc_attr( __( 'Visit Premium Customer Support Forum', 'woocommerce-accommodation-bookings' ) ) . '">' . __( 'Premium Support', 'woocommerce-accommodation-bookings' ) . '</a>',
+				'docs'    => '<a href="' . esc_url( apply_filters( 'woocommerce_accommodation_bookings_docs_url', 'https://docs.woocommerce.com/document/woocommerce-accommodation-bookings/' ) ) . '" title="' . esc_attr( __( 'View Documentation', 'woocommerce-accommodation-bookings' ) ) . '">' . __( 'Docs', 'woocommerce-accommodation-bookings' ) . '</a>', //phpcs:ignore
+				'support' => '<a href="' . esc_url( apply_filters( 'woocommerce_accommodation_bookings_support_url', 'https://docs.woocommerce.com/' ) ) . '" title="' . esc_attr( __( 'Visit Premium Customer Support Forum', 'woocommerce-accommodation-bookings' ) ) . '">' . __( 'Premium Support', 'woocommerce-accommodation-bookings' ) . '</a>', //phpcs:ignore
 			);
 
 			return array_merge( $links, $row_meta );
@@ -251,15 +271,15 @@ class WC_Accommodation_Bookings_Plugin {
 	public function install() {
 		global $wpdb;
 
-		$force_update = false;
+		$force_update                   = false;
 		$accommodation_bookings_version = get_option( 'wc_accommodation_bookings_version' );
 
 		if ( ! $accommodation_bookings_version ) {
-			$force_update = true;
+			$force_update                   = true;
 			$accommodation_bookings_version = $this->version;
 		}
 
-		// Data updates
+		// Data updates.
 		if ( $force_update || version_compare( $accommodation_bookings_version, '1.1.3', '<' ) ) {
 			$accommodation_bookings = $wpdb->get_results( "SELECT DISTINCT post_id FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_pricing' AND meta_value LIKE '%override_block%';" );
 			foreach ( $accommodation_bookings as $accommodation_booking ) {
@@ -269,34 +289,37 @@ class WC_Accommodation_Bookings_Plugin {
 					continue;
 				}
 
-				if ( 'accommodation-booking' != $product->get_type() ) {
+				if ( 'accommodation-booking' !== $product->get_type() ) {
 					continue;
 				}
 
-				$pricing = get_post_meta( $product->get_id(), '_wc_booking_pricing', true );
+				$pricing            = get_post_meta( $product->get_id(), '_wc_booking_pricing', true );
 				$original_base_cost = absint( get_post_meta( $product->get_id(), '_wc_booking_base_cost', true ) );
 
-				// Convert from the old to the new structure
+				// Convert from the old to the new structure.
 				foreach ( $pricing as &$pricing_row ) {
-					$pricing_row['base_cost'] = $pricing_row['cost'] = 0;
-					$new_cost = $pricing_row['override_block'];
+					$pricing_row['base_cost'] = $pricing_row['cost'] = 0; //phpcs:ignore
+					$new_cost                 = $pricing_row['override_block'];
 					unset( $pricing_row['override_block'] );
-					$pricing_row['base_modifier'] = $pricing_row['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus';
-					$pricing_row['cost'] = absint( $new_cost - $original_base_cost );
+					$pricing_row['base_modifier'] = $pricing_row['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus'; //phpcs:ignore
+					$pricing_row['cost']          = absint( $new_cost - $original_base_cost );
 				}
 
 				update_post_meta( $product->get_id(), '_wc_booking_pricing', $pricing );
 			}
 		}
 
-		// Update version
+		// Update version.
 		update_option( 'wc_accommodation_bookings_version', $this->version );
 	}
 
 	/**
-	 * should return data from the asset file.
+	 * Should return data from the asset file.
 	 *
-	 * @since x.x.x
+	 * @param string $script_file_name Script file name.
+	 * @param string $location Script file location.
+	 *
+	 * @return array
 	 */
 	private function get_asset_data( $script_file_name, $location ): array {
 		$asset_path = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . "/dist/$location/$script_file_name.asset.php";
