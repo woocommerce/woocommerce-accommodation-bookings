@@ -1,4 +1,5 @@
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const path = require( 'path' );
 
 module.exports = {
@@ -12,15 +13,8 @@ module.exports = {
 		path: path.resolve( __dirname, 'dist' ),
 		filename: '[name].js',
 	},
-	module: {
-		...defaultConfig.module,
-		rules: [
-			...defaultConfig.module.rules,
-			{
-				test: /\.s[ac]ss$/i,
-				exclude: /node_modules/,
-				use: ["sass-loader",],
-			},
-		]
-	}
+	plugins: [
+		...defaultConfig.plugins,
+		new RemoveEmptyScriptsPlugin()
+	]
 };

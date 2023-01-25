@@ -32,8 +32,7 @@
 		"node-wp-i18n": "~1.2.3",
 		"prettier": "^2.8.3",
 		"prettier-eslint": "^15.0.1",
-		"sass": "^1.57.1",
-		"sass-loader": "^13.2.0"
+		"webpack-remove-empty-scripts": "^1.0.1"
 	},
 	"scripts": {
 		"prebuild": "rm -rf ./vendor",
