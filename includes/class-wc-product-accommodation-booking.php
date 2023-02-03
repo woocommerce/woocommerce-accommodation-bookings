@@ -328,20 +328,34 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	/**
 	 * Get checkin and checkout times.
 	 *
-	 * @param string $type
+	 * @param string $type       The type, check_in or check_out.
+	 * @param int    $product_id The product ID.
 	 *
-	 * @return string Time, either from options or default
+	 * @return string The time, either from options or default or from the filtered value.
 	 */
-	public static function get_check_times( $type ) {
-		$option = get_option( 'woocommerce_accommodation_bookings_times_settings' );
+	public static function get_check_times( $type, $product_id = 0 ) {
+		$option     = get_option( 'woocommerce_accommodation_bookings_times_settings' );
+		$check_time = '';
+
 		switch ( $type ) {
 			case 'in':
-				return isset( $option['check_in'] ) ? $option['check_in'] : '14:00';
+				$check_time = isset( $option['check_in'] ) ? $option['check_in'] : '14:00';
 			case 'out':
-				return isset( $option['check_out'] ) ? $option['check_out'] : '14:00';
+				$check_time = isset( $option['check_out'] ) ? $option['check_out'] : '14:00';
 		}
 
-		return '';
+		/**
+		 * Filter the check-in/out times for a specific product.
+		 *
+		 * @hook woocommerce_accommodation_booking_get_check_times
+		 *
+		 * @param {string} $check_time The check-in/out time stored in the database.
+		 * @param {string} $type       The type, check_in or check_out.
+		 * @param {int}    $product_id The product ID.
+		 *
+		 * @return {string} The filtered/original time.
+		 */
+		return apply_filters( 'woocommerce_accommodation_booking_get_check_times', $check_time, $type, $product_id );
 	}
 
 	/**
