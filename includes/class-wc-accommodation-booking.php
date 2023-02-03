@@ -109,7 +109,7 @@ class WC_Accommodation_Booking {
 			return $date;
 		}
 
-		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
 
 		$date_format = apply_filters( 'woocommerce_bookings_date_format', wc_date_format() );
 		$time_format = apply_filters( 'woocommerce_bookings_time_format', ', ' . wc_time_format() );
@@ -123,7 +123,7 @@ class WC_Accommodation_Booking {
 			return $date;
 		}
 
-		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $product->get_id() );
 		$date_format = apply_filters( 'woocommerce_bookings_date_format', wc_date_format() );
 		$time_format = apply_filters( 'woocommerce_bookings_time_format', ', ' . wc_time_format() );
 
@@ -181,8 +181,8 @@ class WC_Accommodation_Booking {
 			return;
 		}
 
-		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
-		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $product_id );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $product_id );
 
 		$start = get_post_meta( $booking_id, '_booking_start', true );
 		$end   = get_post_meta( $booking_id, '_booking_end', true );
