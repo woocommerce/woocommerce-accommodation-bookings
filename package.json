@@ -1,55 +1,55 @@
 {
-	"name": "woocommerce-accommodation-bookings",
-	"title": "WooCommerce Accommodation Bookings",
-	"version": "1.1.36",
-	"config": {
-		"translate": false,
-		"wp_org_slug": "woocommerce-accommodation-bookings",
-		"assets": {
-			"js": {
-				"min": "assets/js/*.min.js",
-				"js": "assets/js/*.js"
-			},
-			"styles": {
-				"css": "assets/css/*.css",
-				"sass": "assets/css/*.scss",
-				"cssfolder": "assets/css/"
-			}
-		}
-	},
-	"homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/woocommerce/woocommerce-accommodation-bookings.git"
-	},
-	"description": "An accommodations add-on for the WooCommerce Bookings extension.",
-	"license": "GPL-3.0+",
-	"devDependencies": {
-		"@woocommerce/eslint-plugin": "^2.2.0",
-		"@wordpress/i18n": "^4.25.0",
-		"@wordpress/prettier-config": "^2.8.0",
-		"@wordpress/scripts": "^25.2.0",
-		"prettier": "^2.8.3",
-		"prettier-eslint": "^15.0.1",
-		"webpack-remove-empty-scripts": "^1.0.1"
-	},
-	"scripts": {
-		"prebuild": "rm -rf ./vendor",
-		"build": "npm run build:webpack && npm run makepot",
-		"build:webpack": "wp-scripts build",
-		"start:webpack": "wp-scripts start",
-		"build:dev": "composer install && npm run build:webpack && npm run makepo",
-		"archive": "composer archive --file=$npm_package_name --format=zip",
-		"postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-		"makepot": "wp i18n make-pot . --exclude=tests,assets",
-		"phpcompat": "./vendor/bin/phpcs *.php includes -p --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.0-",
-		"lint:js": "wp-scripts lint-js --ext=js",
-		"lint:js-fix": "wp-scripts lint-js --ext=js --fix",
-		"lint:style": "wp-scripts lint-style",
-		"lint:style-fix": "wp-scripts lint-style --fix"
-	},
-	"engines": {
-		"node": ">=10.24.1",
-		"npm": ">=5.5.1"
-	}
+  "name": "woocommerce-accommodation-bookings",
+  "title": "WooCommerce Accommodation Bookings",
+  "version": "1.1.36",
+  "config": {
+    "translate": false,
+    "wp_org_slug": "woocommerce-accommodation-bookings",
+    "assets": {
+      "js": {
+        "min": "assets/js/*.min.js",
+        "js": "assets/js/*.js"
+      },
+      "styles": {
+        "css": "assets/css/*.css",
+        "sass": "assets/css/*.scss",
+        "cssfolder": "assets/css/"
+      }
+    }
+  },
+  "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woocommerce/woocommerce-accommodation-bookings.git"
+  },
+  "description": "An accommodations add-on for the WooCommerce Bookings extension.",
+  "license": "GPL-3.0+",
+  "devDependencies": {
+    "@woocommerce/eslint-plugin": "^2.2.0",
+    "@wordpress/i18n": "^4.25.0",
+    "@wordpress/prettier-config": "^2.8.0",
+    "@wordpress/scripts": "^25.2.0",
+    "prettier": "^2.8.3",
+    "prettier-eslint": "^15.0.1",
+    "webpack-remove-empty-scripts": "^1.0.1"
+  },
+  "scripts": {
+    "prebuild": "rm -rf ./vendor",
+    "build": "npm run build:webpack && npm run makepot",
+    "build:webpack": "wp-scripts build",
+    "start:webpack": "wp-scripts start",
+    "build:dev": "composer install && npm run build:webpack && npm run makepo",
+    "archive": "composer archive --file=$npm_package_name --format=zip",
+    "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
+    "makepot": "wp i18n make-pot . --exclude=tests,assets",
+    "phpcompat": "./vendor/bin/phpcs *.php includes -p --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.0-",
+    "lint:js": "wp-scripts lint-js --ext=js",
+    "lint:js-fix": "wp-scripts lint-js --ext=js --fix",
+    "lint:style": "wp-scripts lint-style",
+    "lint:style-fix": "wp-scripts lint-style --fix"
+  },
+  "engines": {
+    "node": ">=10.24.1",
+    "npm": ">=5.5.1"
+  }
 }
