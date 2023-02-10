@@ -9,6 +9,7 @@ import {
 	is_product_type_accommodation_booking,
 } from './utils';
 
+// eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
 (function ($) {
 	const HookApi = window.wc_bookings.hooks;
 
@@ -93,9 +94,7 @@ import {
 				.find('.fully_booked_end_days')
 				.removeClass('ui-datepicker-unselectable ui-state-disabled');
 
-			$date_picker
-				.closest('fieldset')
-				.removeAttr('selected_date_type');
+			$date_picker.closest('fieldset').removeAttr('selected_date_type');
 		}
 	);
 
