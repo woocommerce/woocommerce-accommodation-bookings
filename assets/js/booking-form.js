@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 import {
 	get_booking_form,
 	get_jquery_element,
+	get_selected_date_type,
 	is_product_type_accommodation_booking,
 } from './utils';
 
@@ -93,8 +94,6 @@ import {
 			$form
 				.find('.fully_booked_end_days')
 				.removeClass('ui-datepicker-unselectable ui-state-disabled');
-
-			$date_picker.closest('fieldset').removeAttr('selected_date_type');
 		}
 	);
 
@@ -102,9 +101,10 @@ import {
 	HookApi.addAction(
 		'wc_bookings_date_selected',
 		'wc_accommodation_booking/booking_form',
-		({ fieldset }) => {
+		({ fieldset, date_picker }) => {
 			const $fieldset = get_jquery_element(fieldset);
-			const date_type = $fieldset.attr('selected_date_type');
+			const $date_picker = get_jquery_element(date_picker);
+			const date_type = get_selected_date_type($date_picker);
 			const $form = get_booking_form(fieldset);
 			let data_content = '';
 
@@ -137,11 +137,10 @@ import {
 	HookApi.addAction(
 		'wc_bookings_pre_calculte_booking_cost',
 		'wc_accommodation_booking/booking_form',
-		({ fieldset, form }) => {
-			const $fieldset = get_jquery_element(fieldset);
+		({ form, date_picker }) => {
+			const $date_picker = get_jquery_element(date_picker);
 			const $form = get_jquery_element(form);
-
-			const date_type = $fieldset.attr('start_or_end_date');
+			const date_type = get_selected_date_type($date_picker);
 
 			// Exit if product is not accommodation booking.
 			if (!is_product_type_accommodation_booking($form)) {
@@ -152,28 +151,20 @@ import {
 				case 'end':
 					$form
 						.find('.fully_booked_start_days')
-						.addClass(
-							'ui-datepicker-unselectable ui-state-disabled'
-						);
+						.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
 					$form
 						.find('.fully_booked_end_days')
-						.removeClass(
-							'ui-datepicker-unselectable ui-state-disabled'
-						);
+						.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
 					break;
 
 				case 'start':
 				default:
 					$form
 						.find('.fully_booked_start_days')
-						.removeClass(
-							'ui-datepicker-unselectable ui-state-disabled'
-						);
+						.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
 					$form
 						.find('.fully_booked_end_days')
-						.addClass(
-							'ui-datepicker-unselectable ui-state-disabled'
-						);
+						.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
 			}
 		}
 	);
