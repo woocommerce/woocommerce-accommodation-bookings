@@ -75,7 +75,6 @@ import {
 		'wc_accommodation_booking/booking_form',
 		({ date_picker }) => {
 			const $form = get_booking_form(date_picker);
-			const $date_picker = get_jquery_element(date_picker);
 
 			// Exit if product is not accommodation booking.
 			if (!is_product_type_accommodation_booking($form)) {
@@ -151,20 +150,28 @@ import {
 				case 'end':
 					$form
 						.find('.fully_booked_start_days')
-						.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						.addClass(
+							'ui-datepicker-unselectable ui-state-disabled'
+						);
 					$form
 						.find('.fully_booked_end_days')
-						.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						.removeClass(
+							'ui-datepicker-unselectable ui-state-disabled'
+						);
 					break;
 
 				case 'start':
 				default:
 					$form
 						.find('.fully_booked_start_days')
-						.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						.removeClass(
+							'ui-datepicker-unselectable ui-state-disabled'
+						);
 					$form
 						.find('.fully_booked_end_days')
-						.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
+						.addClass(
+							'ui-datepicker-unselectable ui-state-disabled'
+						);
 			}
 		}
 	);
