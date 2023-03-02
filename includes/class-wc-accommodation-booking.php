@@ -109,12 +109,10 @@ class WC_Accommodation_Booking {
 			return $date;
 		}
 
-		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
-
 		$date_format = apply_filters( 'woocommerce_bookings_date_format', wc_date_format() );
 		$time_format = apply_filters( 'woocommerce_bookings_time_format', ', ' . wc_time_format() );
 
-		return date_i18n( $date_format, $booking->start ) . date_i18n( $time_format, strtotime( "Today " . $check_in ) );
+		return date_i18n( $date_format, $booking->start ) . date_i18n( $time_format, $booking->start );
 	}
 
 	public function add_checkout_time_to_booking_end_time( $date, $booking ) {
@@ -123,11 +121,10 @@ class WC_Accommodation_Booking {
 			return $date;
 		}
 
-		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $product->get_id() );
 		$date_format = apply_filters( 'woocommerce_bookings_date_format', wc_date_format() );
 		$time_format = apply_filters( 'woocommerce_bookings_time_format', ', ' . wc_time_format() );
 
-		return date_i18n( $date_format, $booking->end ) . date_i18n( $time_format, strtotime( "Today " . $check_out ) );
+		return date_i18n( $date_format, $booking->end ) . date_i18n( $time_format, $booking->end );
 	}
 
 	/**
