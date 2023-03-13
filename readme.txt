@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.38 - 2023-03-13 =
+* Dev - Bump `http-cache-semantics` from 4.1.0 to 4.1.1.
+
 = 1.1.37 - 2023-01-27 =
 * Dev - Bump `scss-tokenizer` from 0.3.0 to 0.4.3 and `node-sass` from 7.0.1 to 7.0.3.
 * Fix - Fatal error when Rate is empty and Range Cost is added.
