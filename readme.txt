@@ -36,6 +36,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.39 - 2023-03-14 =
+* Dev - Bump `http-cache-semantics` from 4.1.0 to 4.1.1.
+
 = 1.1.38 - 2023-03-13 =
 * Dev - Bump `http-cache-semantics` from 4.1.0 to 4.1.1.
 
