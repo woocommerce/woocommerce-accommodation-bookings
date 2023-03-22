@@ -3,7 +3,7 @@ Contributors:  woocommerce, automattic, woothemes, jshreve, akeda, bor0, jessepe
 Tags: woocommerce, bookings, accommodations
 Requires at least: 5.6
 Tested up to: 6.1
-Stable tag: 1.1.37
+Stable tag: 1.1.39
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,6 +35,12 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.1.39 - 2023-03-14 =
+* Dev - Bump `http-cache-semantics` from 4.1.0 to 4.1.1.
+
+= 1.1.38 - 2023-03-13 =
+* Dev - Bump `http-cache-semantics` from 4.1.0 to 4.1.1.
 
 = 1.1.37 - 2023-01-27 =
 * Dev - Bump `scss-tokenizer` from 0.3.0 to 0.4.3 and `node-sass` from 7.0.1 to 7.0.3.
