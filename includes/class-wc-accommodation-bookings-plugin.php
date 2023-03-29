@@ -239,7 +239,7 @@ class WC_Accommodation_Bookings_Plugin {
 		wp_set_script_translations(
 			'wc-accommodation-bookings-form',
 			'woocommerce-accommodation-bookings',
-			WC_ACCOMMODATION_BOOKINGS_MAIN_FILE . '/languages'
+			plugin_dir_path( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/languages'
 		);
 	}
 
