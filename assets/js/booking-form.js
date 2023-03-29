@@ -112,6 +112,8 @@ import {
 				return;
 			}
 
+			$fieldset.attr( 'data-selected-date-type', date_type );
+
 			switch (date_type) {
 				case 'end':
 					data_content = __(
