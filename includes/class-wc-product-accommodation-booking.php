@@ -358,7 +358,7 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		 *
 		 * @return {string} The filtered/original time.
 		 */
-		return apply_filters( 'woocommerce_accommodation_booking_get_check_times', $check_time, $type, $product_id );
+		return apply_filters( 'woocommerce_accommodation_booking_get_check_times', $check_time, $type, (int) $product_id );
 	}
 
 	/**
