@@ -340,10 +340,10 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		switch ( $type ) {
 			case 'in':
-				$check_time = isset( $option['check_in'] ) ? $option['check_in'] : '14:00';
+				$check_time = $option['check_in'] ?? '14:00';
 				break;
 			case 'out':
-				$check_time = isset( $option['check_out'] ) ? $option['check_out'] : '14:00';
+				$check_time = $option['check_out'] ?? '14:00';
 				break;
 		}
 
