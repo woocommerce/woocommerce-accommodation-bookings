@@ -352,9 +352,9 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 		 *
 		 * @hook woocommerce_accommodation_booking_get_check_times
 		 *
-		 * @param {string} $check_time The check-in/out time stored in the database.
-		 * @param {string} $type       The type, check_in or check_out.
-		 * @param {int}    $product_id The product ID.
+		 * @param string $check_time The check-in/out time stored in the database.
+		 * @param string $type       The type, check_in or check_out.
+		 * @param int    $product_id The product ID.
 		 *
 		 * @return {string} The filtered/original time.
 		 */
