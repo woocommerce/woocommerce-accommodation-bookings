@@ -14,7 +14,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles_and_scripts' ) );
 		add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
 		add_filter( 'product_type_options', array( $this, 'product_type_options' ), 15 );
-		add_filter( 'wc_bookings_get_product_duration', array( $this, 'get_product_duration' ), 10, 3 );
+		add_filter( 'wc_bookings_product_duration_fallback', array( $this, 'get_product_duration' ), 10, 3 );
 
 		add_action( 'woocommerce_product_data_panels', array( $this, 'panels' ) );
 
