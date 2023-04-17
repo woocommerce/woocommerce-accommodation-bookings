@@ -62,15 +62,15 @@
 		$cancel_limit_unit = get_post_meta( $post_id, '_wc_booking_cancel_limit_unit', true );
 	?>
 	<p class="form-field accommodation-booking-cancel-limit">
-		<label for="_wc_accommodation_booking_cancel_limit"><?php _e( 'Cancellation up till', 'woocommerce-accommodation-bookings' ); ?></label>
+		<label for="_wc_accommodation_booking_cancel_limit"><?php esc_html_e( 'Cancellation up till', 'woocommerce-accommodation-bookings' ); ?></label>
 		<input type="number" name="_wc_accommodation_booking_cancel_limit" id="_wc_accommodation_booking_cancel_limit" value="<?php echo esc_attr( $cancel_limit ); ?>" step="1" min="1" style="margin-right: 7px; width: 4em;">
 		<select name="_wc_accommodation_booking_cancel_limit_unit" id="_wc_accommodation_booking_cancel_limit_unit" class="short" style="width: auto; margin-right: 7px;">
-			<option value="month" <?php selected( $cancel_limit_unit, 'month' ); ?>><?php _e( 'Month(s)', 'woocommerce-accommodation-bookings' ); ?></option>
-			<option value="day" <?php selected( $cancel_limit_unit, 'day' ); ?>><?php _e( 'Day(s)', 'woocommerce-accommodation-bookings' ); ?></option>
-			<option value="hour" <?php selected( $cancel_limit_unit, 'hour' ); ?>><?php _e( 'Hour(s)', 'woocommerce-accommodation-bookings' ); ?></option>
-			<option value="minute" <?php selected( $cancel_limit_unit, 'minute' ); ?>><?php _e( 'Minute(s)', 'woocommerce-accommodation-bookings' ); ?></option>
+			<option value="month" <?php selected( $cancel_limit_unit, 'month' ); ?>><?php esc_html_e( 'Month(s)', 'woocommerce-accommodation-bookings' ); ?></option>
+			<option value="day" <?php selected( $cancel_limit_unit, 'day' ); ?>><?php esc_html_e( 'Day(s)', 'woocommerce-accommodation-bookings' ); ?></option>
+			<option value="hour" <?php selected( $cancel_limit_unit, 'hour' ); ?>><?php esc_html_e( 'Hour(s)', 'woocommerce-accommodation-bookings' ); ?></option>
+			<option value="minute" <?php selected( $cancel_limit_unit, 'minute' ); ?>><?php esc_html_e( 'Minute(s)', 'woocommerce-accommodation-bookings' ); ?></option>
 		</select>
-		<span class="description"><?php _e( 'before check-in.', 'woocommerce-accommodation-bookings' ); ?></span>
+		<span class="description"><?php esc_html_e( 'before check-in.', 'woocommerce-accommodation-bookings' ); ?></span>
 	</p>
 
 	<script type="text/javascript">
