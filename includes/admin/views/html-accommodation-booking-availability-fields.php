@@ -43,10 +43,10 @@
 	<td>
 		<div class="select wc_booking_availability_type">
 			<select name="wc_accommodation_booking_availability_type[]">
-				<option value="custom" <?php selected( $availability['type'], 'custom' ); ?>><?php _e( 'Custom date range', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="months" <?php selected( $availability['type'], 'months' ); ?>><?php _e( 'Range of months', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="weeks" <?php selected( $availability['type'], 'weeks' ); ?>><?php _e( 'Range of weeks', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="days" <?php selected( $availability['type'], 'days' ); ?>><?php _e( 'Range of days', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="custom" <?php selected( $availability['type'], 'custom' ); ?>><?php esc_html_e( 'Custom date range', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="months" <?php selected( $availability['type'], 'months' ); ?>><?php esc_html_e( 'Range of months', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="weeks" <?php selected( $availability['type'], 'weeks' ); ?>><?php esc_html_e( 'Range of weeks', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="days" <?php selected( $availability['type'], 'days' ); ?>><?php esc_html_e( 'Range of days', 'woocommerce-accommodation-bookings' ); ?></option>
 			</select>
 		</div>
 	</td>
@@ -105,8 +105,8 @@
 	<td>
 		<div class="select">
 			<select name="wc_accommodation_booking_availability_bookable[]">
-				<option value="no" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'no', true ) ?>><?php _e( 'No', 'woocommerce-accommodation-bookings' ) ;?></option>
-				<option value="yes" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'yes', true ) ?>><?php _e( 'Yes', 'woocommerce-accommodation-bookings' ) ;?></option>
+				<option value="no" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'no', true ) ?>><?php esc_html_e( 'No', 'woocommerce-accommodation-bookings' ) ;?></option>
+				<option value="yes" <?php selected( isset( $availability['bookable'] ) && $availability['bookable'] == 'yes', true ) ?>><?php esc_html_e( 'Yes', 'woocommerce-accommodation-bookings' ) ;?></option>
 			</select>
 		</div>
 	</td>
