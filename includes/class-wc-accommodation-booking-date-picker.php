@@ -3,7 +3,7 @@
  * This plugin handles the date picker related logic for Accommodation Bookings.
  *
  * @package WooCommerce Accommodation Bookings
- * @since   x.x.x
+ * @since   1.1.40
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -201,7 +201,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	/**
 	 * Should return find booked day blocks with additional data.
 	 *
-	 * @since x.x.x
+	 * @since 1.1.40
 	 *
 	 * @param array $result        Array of booked days.
 	 * @param array $booked_blocks Array of booked blocks.

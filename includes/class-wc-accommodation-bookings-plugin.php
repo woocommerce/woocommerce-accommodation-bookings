@@ -2,7 +2,7 @@
 /**
  * This class is responsible for the plugin's initialization.
  *
- * @since x.x.x
+ * @since 1.0.2
  * @package WooCommerce\AccommodationBookings
  */
 

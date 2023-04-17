@@ -2,7 +2,7 @@
 /**
  * Should return whether the product is a accommodation booking or not.
  *
- * @since x.x.x
+ * @since 1.1.40
  *
  * @param {Object} $booking_form
  *
@@ -17,7 +17,7 @@ export function is_product_type_accommodation_booking($booking_form) {
 /**
  * Should return booking form jQuery selector.
  *
- * @since x.x.x
+ * @since 1.1.40
  *
  * @param {Object} $field
  *
@@ -33,7 +33,7 @@ export function get_booking_form($field) {
 /**
  * Should return jQuery selector element.
  *
- * @since x.x.x
+ * @since 1.1.40
  *
  * @param {Object} $field jQuery selector.
  *
@@ -46,7 +46,7 @@ export function get_jquery_element($field) {
 /**
  * Should return date type.
  *
- * @since x.x.x
+ * @since 1.1.40
  * @param {jQuery} $date_picker Date picker jQuery element.
  * @return {string} date_type Selected date type. Value can be 'start' or 'end'.
  */
