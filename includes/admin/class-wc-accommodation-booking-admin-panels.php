@@ -153,7 +153,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		);
 
 		foreach ( $meta_to_save as $meta_key => $sanitize ) {
-			$value = ! empty( $_POST[ $meta_key ] ) ? $_POST[ $meta_key ] : '';
+			$value = filter_input( INPUT_POST, $meta_key );
 			switch ( $sanitize ) {
 				case 'int' :
 					$value = $value ? absint( $value ) : '';
@@ -243,11 +243,11 @@ class WC_Accommodation_Booking_Admin_Panels {
 				$wpdb->update(
 					"{$wpdb->prefix}wc_booking_relationships",
 					array(
-						'sort_order'  => $resource_menu_order[ $i ]
+						'sort_order'  => absint( $resource_menu_order[ $i ] ),
 					),
 					array(
 						'product_id'  => $post_id,
-						'resource_id' => $resource_id
+						'resource_id' => $resource_id,
 					)
 				);
 
@@ -262,7 +262,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			update_post_meta( $post_id, '_resource_base_costs', $resource_base_costs );
 			update_post_meta( $post_id, '_resource_block_costs', $resource_block_costs );
 		}
-		
+
 		// Rates
 		$pricing = array();
 		$original_base_cost = abs( (float) get_post_meta( $post_id, '_wc_booking_base_cost', true ) );
@@ -294,9 +294,10 @@ class WC_Accommodation_Booking_Admin_Panels {
 				break;
 			}
 		}
-		
+
 		// Person Types
 		if ( isset( $_POST['person_id'] ) && isset( $_POST['_wc_booking_has_persons'] ) ) {
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
 			$person_ids         = $_POST['person_id'];
 			$person_menu_order  = $_POST['person_menu_order'];
 			$person_name        = $_POST['person_name'];
@@ -305,6 +306,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 			$person_description = $_POST['person_description'];
 			$person_min         = $_POST['person_min'];
 			$person_max         = $_POST['person_max'];
+			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			$max_loop = max( array_keys( $_POST['person_id'] ) );
 
@@ -319,21 +321,13 @@ class WC_Accommodation_Booking_Admin_Panels {
 					$person_name[ $i ] = sprintf( __( 'Person Type #%d', 'woocommerce-bookings' ), ( $i + 1 ) );
 				}
 
-				$wpdb->update(
-					$wpdb->posts,
+				wp_update_post(
 					array(
+						'ID'           => $person_id,
 						'post_title'   => stripslashes( $person_name[ $i ] ),
 						'post_excerpt' => stripslashes( $person_description[ $i ] ),
-						'menu_order'   => $person_menu_order[ $i ] ),
-					array(
-						'ID' => $person_id
-					),
-					array(
-						'%s',
-						'%s',
-						'%d'
-					),
-					array( '%d' )
+						'menu_order'   => $person_menu_order[ $i ],
+					)
 				);
 
 				update_post_meta( $person_id, 'cost', wc_clean( $person_cost[ $i ] ) );
