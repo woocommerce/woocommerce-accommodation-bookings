@@ -225,11 +225,13 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 		// Resources
 		if ( isset( $_POST['resource_id'] ) && isset( $_POST['_wc_booking_has_resources'] ) ) {
+			// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
 			$resource_ids         = $_POST['resource_id'];
 			$resource_menu_order  = $_POST['resource_menu_order'];
 			$resource_base_cost   = $_POST['resource_cost'];
 			$resource_block_cost  = $_POST['resource_block_cost'];
 			$max_loop             = max( array_keys( $_POST['resource_id'] ) );
+			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$resource_base_costs  = array();
 			$resource_block_costs = array();
 
@@ -306,9 +308,9 @@ class WC_Accommodation_Booking_Admin_Panels {
 			$person_description = $_POST['person_description'];
 			$person_min         = $_POST['person_min'];
 			$person_max         = $_POST['person_max'];
-			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			$max_loop = max( array_keys( $_POST['person_id'] ) );
+			// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			for ( $i = 0; $i <= $max_loop; $i ++ ) {
 				if ( ! isset( $person_ids[ $i ] ) ) {
