@@ -195,15 +195,16 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	public function get_time_slots( $blocks, $resource_id = 0, $from = 0, $to = 0, $include_sold_out = false ) {
 		$bookable_product = $this;
 
-		$transient_name               = 'book_ts_' . md5( http_build_query( array( $bookable_product->get_id(), $resource_id, $from, $to ) ) );
+		$product_id                   = $bookable_product->get_id();
+		$transient_name               = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to ) ) );
 		$available_slots              = get_transient( $transient_name );
 		$booking_slots_transient_keys = array_filter( (array) get_transient( 'booking_slots_transient_keys' ) );
 
-		if ( ! isset( $booking_slots_transient_keys[ $bookable_product->get_id() ] ) ) {
-			$booking_slots_transient_keys[ $bookable_product->get_id() ] = array();
+		if ( ! isset( $booking_slots_transient_keys[ $product_id ] ) ) {
+			$booking_slots_transient_keys[ $product_id ] = array();
 		}
 
-		$booking_slots_transient_keys[ $bookable_product->get_id() ][] = $transient_name;
+		$booking_slots_transient_keys[ $product_id ][] = $transient_name;
 
 		// Give array of keys a long ttl because if it expires we won't be able to flush the keys when needed.
 		// We can't use 0 to never expire because then WordPress will autoload the option on every page.
@@ -229,8 +230,8 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 			$has_resources    = $bookable_product->has_resources();
 
 			foreach ( $blocks as $block ) {
-				$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
-				$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+				$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $product_id );
+				$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $product_id );
 				// Blocks for accommodation products are initially calculated as days but the actuall time blocks are shifted by check in and checkout times.
 				$block_start_time = strtotime( "{$check_in}", $block );
 				$block_end_time =  strtotime( "{$check_out}", strtotime( "+1 days", $block ) );
@@ -328,20 +329,34 @@ class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 	/**
 	 * Get checkin and checkout times.
 	 *
-	 * @param string $type
+	 * @param string $type       The type, check_in or check_out.
+	 * @param int    $product_id The product ID.
 	 *
-	 * @return string Time, either from options or default
+	 * @return string The time, either from options or default or from the filtered value.
 	 */
-	public static function get_check_times( $type ) {
-		$option = get_option( 'woocommerce_accommodation_bookings_times_settings' );
+	public static function get_check_times( $type, $product_id = 0 ) {
+		$option     = get_option( 'woocommerce_accommodation_bookings_times_settings' );
+		$check_time = '';
+
 		switch ( $type ) {
 			case 'in':
-				return isset( $option['check_in'] ) ? $option['check_in'] : '14:00';
+				$check_time = $option['check_in'] ?? '14:00';
+				break;
 			case 'out':
-				return isset( $option['check_out'] ) ? $option['check_out'] : '14:00';
+				$check_time = $option['check_out'] ?? '14:00';
+				break;
 		}
 
-		return '';
+		/**
+		 * Filter the check-in/out times for a specific product.
+		 *
+		 * @param string $check_time The check-in/out time stored in the database.
+		 * @param string $type       The type, check_in or check_out.
+		 * @param int    $product_id The product ID.
+		 *
+		 * @return string The filtered/original time.
+		 */
+		return apply_filters( 'woocommerce_accommodation_booking_get_check_times', $check_time, $type, (int) $product_id );
 	}
 
 	/**
