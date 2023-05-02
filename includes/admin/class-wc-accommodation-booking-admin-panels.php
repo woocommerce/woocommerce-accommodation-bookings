@@ -153,7 +153,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		);
 
 		foreach ( $meta_to_save as $meta_key => $sanitize ) {
-			$value = sanitize_text_field( $_POST[ $meta_key ] ?? '' );
+			$value = sanitize_text_field( wp_unslash( $_POST[ $meta_key ] ?? '' ) );
 			switch ( $sanitize ) {
 				case 'int' :
 					$value = $value ? absint( $value ) : '';
