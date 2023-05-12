@@ -1,0 +1,9 @@
+!.eslintrc.js
+!assets/js
+!.prettierrc.js
+assets/images
+includes
+languages
+vendor
+tests
+dist
