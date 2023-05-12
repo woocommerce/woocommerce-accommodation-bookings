@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.40 - 2023-05-12 =
+* Dev - Added a new filter, `woocommerce_accommodation_booking_get_check_times`, to change the check-in/out timings per product.
+* Fix - Fully booked days show as partially booked - Day after booking shows partially booked.
+
 = 1.1.39 - 2023-03-14 =
 * Dev - Bump `http-cache-semantics` from 4.1.0 to 4.1.1.
 
