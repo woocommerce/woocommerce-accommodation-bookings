@@ -33,8 +33,8 @@ class WC_Accommodation_Booking_Cart_Manager {
 	 */
 	public function get_item_data( $other_data, $cart_item ) {
 		if ( 'accommodation-booking' === $cart_item['data']->get_type() && ! empty( $other_data ) ) {
-			$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
-			$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+			$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $cart_item['product_id'] );
+			$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $cart_item['product_id'] );
 			$end_date  = date_i18n( get_option( 'date_format'), $cart_item['booking']['_end_date'] );
 
 			if ( ! empty( $check_in ) ) {

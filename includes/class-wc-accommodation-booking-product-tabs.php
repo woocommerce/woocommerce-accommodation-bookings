@@ -11,6 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Accommodation_Booking_Product_Tabs {
 
 	/**
+	 * Product ID.
+	 */
+	public $product_id = 0;
+
+	/**
 	 * Hook into WooCommerce..
 	 */
 	public function __construct() {
@@ -22,8 +27,8 @@ class WC_Accommodation_Booking_Product_Tabs {
 	 * @return boolean
 	 */
 	public function are_time_fields_filled_out() {
-		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
-		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $this->product_id );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $this->product_id );
 
 		if ( empty( $check_in ) ) {
 			return false;
@@ -56,6 +61,9 @@ class WC_Accommodation_Booking_Product_Tabs {
 			return $tabs;
 		}
 
+		// Set the product ID.
+		$this->product_id = $post->ID;
+
 		if ( ! $this->are_time_fields_filled_out() ) {
 			return $tabs;
 		}
@@ -77,8 +85,8 @@ class WC_Accommodation_Booking_Product_Tabs {
 		if ( ! $this->are_time_fields_filled_out() ) {
 			return;
 		}
-		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
-		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $this->product_id );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $this->product_id );
 		?>
 		<h2><?php echo esc_html( apply_filters( 'woocommerce_accommodation_booking_time_tab_heading', __( 'Arriving/leaving', 'woocommerce-accommodation-bookings' ) ) ); ?></h2>
 		<ul>

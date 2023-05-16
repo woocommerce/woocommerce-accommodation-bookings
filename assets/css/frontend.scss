@@ -1,19 +1,55 @@
-.wc-bookings-date-picker {
-		.ui-datepicker {
-		td.partial_booked a {
-			&:before {
-				display:none;
-			}
+.product-type-accommodation-booking {
+	.wc-bookings-date-picker {
+		position: relative;
+		padding-top: 55px;
+
+		&::after {
+			content: attr(data-content);
+			position: absolute;
+			background: #fff;
+			margin: 10px 20px;
+			font-size: 13px;
+			left: 0;
+			right: 0;
+			top: 0;
+			text-align: center;
+			height: 35px;
+			line-height: 35px;
 		}
-		td.fully_booked + td.partial_booked.partial_booked a {
-			&:after {
-				border-bottom: none;
-				border-left: none;
-				border-top: 2.5em solid #C96259;
-				border-right: 2.5em solid transparent;
-				left: 0;
-				top: 0;
-			}
+
+		.picker.hasDatepicker {
+			margin: 0;
+			position: static !important;
+		}
+	}
+}
+
+.wc-bookings-date-picker {
+	fieldset {
+		position: relative;
+	}
+
+	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
+	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
+		opacity: 0.35;
+	}
+
+	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
+	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date),
+	.ui-datepicker td.fully_booked {
+		span, a {
+			background-color: #c0392b !important;
+			background-image: none !important;
+			border-color: rgba(0, 0, 0, 0.1) !important;
+			color: #fff !important;
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+			pointer-events: none;
+		}
+	}
+
+	.ui-datepicker {
+		td.bookable-range.ui-state-disabled {
+			opacity: 1;
 		}
 	}
 }
