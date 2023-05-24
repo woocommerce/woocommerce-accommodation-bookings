@@ -40,10 +40,10 @@
 	<td>
 		<div class="select wc_booking_availability_type">
 			<select name="wc_accommodation_booking_pricing_type[]">
-				<option value="custom" <?php selected( $rate['type'], 'custom' ); ?>><?php _e( 'Range of certain nights', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="months" <?php selected( $rate['type'], 'months' ); ?>><?php _e( 'Range of months', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="weeks" <?php selected( $rate['type'], 'weeks' ); ?>><?php _e( 'Range of weeks', 'woocommerce-accommodation-bookings' ); ?></option>
-				<option value="days" <?php selected( $rate['type'], 'days' ); ?>><?php _e( 'Range of nights during the week', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="custom" <?php selected( $rate['type'], 'custom' ); ?>><?php esc_html_e( 'Range of certain nights', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="months" <?php selected( $rate['type'], 'months' ); ?>><?php esc_html_e( 'Range of months', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="weeks" <?php selected( $rate['type'], 'weeks' ); ?>><?php esc_html_e( 'Range of weeks', 'woocommerce-accommodation-bookings' ); ?></option>
+				<option value="days" <?php selected( $rate['type'], 'days' ); ?>><?php esc_html_e( 'Range of nights during the week', 'woocommerce-accommodation-bookings' ); ?></option>
 			</select>
 		</div>
 	</td>
@@ -107,14 +107,14 @@
 		<input type="number" step="0.01" name="wc_accommodation_booking_pricing_block_cost[]" value="<?php
 		// Handle legacy
 		if ( ! empty( $rate['override_block'] ) ) {
-			echo $rate['override_block'];
+			echo esc_attr( $rate['override_block'] );
 		} else if ( ! empty( $rate['modifier'] ) && isset( $rate['cost'] ) ) {
 			$base_cost = abs( floatval( get_post_meta( $post_id, '_wc_booking_base_cost', true ) ) );
 
 			if ( 'plus' == $rate['modifier'] ) {
-				echo $base_cost + $rate['cost'];
+				echo esc_attr( $base_cost + $rate['cost'] );
 			} else {
-				echo $base_cost - $rate['cost'];
+				echo esc_attr( $base_cost - $rate['cost'] );
 			}
 		}
 		?>" placeholder="0" />

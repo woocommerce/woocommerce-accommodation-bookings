@@ -218,7 +218,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 			<th scope="row" class="titledesc">
 				<label for="<?php echo esc_attr( $field_key ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 			</th>
-			<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+			<td class="forminp forminp-<?php echo esc_attr( sanitize_title( $value['type'] ) ) ?>">
 				<input
 					name="<?php echo esc_attr( $field_key ); ?>"
 					id="<?php echo esc_attr( $field_key ); ?>"
