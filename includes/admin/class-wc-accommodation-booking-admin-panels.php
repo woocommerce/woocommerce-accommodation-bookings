@@ -14,6 +14,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles_and_scripts' ) );
 		add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
 		add_filter( 'product_type_options', array( $this, 'product_type_options' ), 15 );
+		add_filter( 'wc_bookings_product_duration_fallback', array( $this, 'get_product_duration' ), 10, 3 );
 
 		add_action( 'woocommerce_product_data_panels', array( $this, 'panels' ) );
 
@@ -22,6 +23,22 @@ class WC_Accommodation_Booking_Admin_Panels {
 		add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'add_tabs' ), 5 );
 
 		add_action( 'woocommerce_process_product_meta', array( $this,'save_product_data' ), 25 );
+	}
+
+	/**
+	 * Filters product unit to display.
+	 *
+	 * @param string $duration_unit_default Default fallback duration
+	 * @param string $duration_unit         Current duration unit
+	 * @param int    $duration              Duration of booking
+	 *
+	 * @return string
+	 */
+	public function get_product_duration( $duration_unit_default, $duration_unit, $duration ) {
+		if ( 'night' === $duration_unit ) {
+			return _n( 'night', 'nights', $duration, 'woocommerce-accommodation-bookings' );
+		}
+		return $duration_unit_default;
 	}
 
 	/**
@@ -199,19 +216,19 @@ class WC_Accommodation_Booking_Admin_Panels {
 				case 'custom' :
 					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_date' ][ $i ] );
 					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_date' ][ $i ] );
-				break;
+					break;
 				case 'months' :
 					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_month' ][ $i ] );
 					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_month' ][ $i ] );
-				break;
+					break;
 				case 'weeks' :
 					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_week' ][ $i ] );
 					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_week' ][ $i ] );
-				break;
+					break;
 				case 'days' :
 					$availability[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_availability_from_day_of_week' ][ $i ] );
 					$availability[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_availability_to_day_of_week' ][ $i ] );
-				break;
+					break;
 			}
 		}
 		update_post_meta( $post_id, '_wc_booking_availability', $availability );
@@ -300,19 +317,19 @@ class WC_Accommodation_Booking_Admin_Panels {
 				case 'custom' :
 					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_date' ][ $i ] );
 					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_date' ][ $i ] );
-				break;
+					break;
 				case 'months' :
 					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_month' ][ $i ] );
 					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_month' ][ $i ] );
-				break;
+					break;
 				case 'weeks' :
 					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_week' ][ $i ] );
 					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_week' ][ $i ] );
-				break;
+					break;
 				case 'days' :
 					$pricing[ $i ]['from'] = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_from_day_of_week' ][ $i ] );
 					$pricing[ $i ]['to']   = wc_clean( $_POST[ 'wc_accommodation_booking_pricing_to_day_of_week' ][ $i ] );
-				break;
+					break;
 			}
 		}
 
