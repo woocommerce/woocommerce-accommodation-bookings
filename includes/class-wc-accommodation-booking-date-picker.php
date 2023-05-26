@@ -38,8 +38,8 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * @return mixed
 	 */
 	public function add_accommodation_posted_data( $data, $product, $total_duration ) {
-		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in' );
-		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out' );
+		$check_in  = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
+		$check_out = WC_Product_Accommodation_Booking::get_check_times( 'out', $product->get_id() );
 
 		if ( 'night' === $product->get_duration_unit() ) {
 			$data['_start_date'] = strtotime( "{$data['_year']}-{$data['_month']}-{$data['_day']} $check_in" );
@@ -118,7 +118,7 @@ class WC_Accommodation_Booking_Date_Picker {
 						continue;
 					}
 
-					$check_in_time = $product->get_check_times( 'in' );
+					$check_in_time = $product->get_check_times( 'in', $product->get_id() );
 					if ( 'in' === $which ) {
 						$check_time = strtotime( '-1 day ' . $check_in_time, $time );
 					} else {
