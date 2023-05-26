@@ -36,6 +36,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.41 - 2023-05-26 =
+* Dev - Add product unit filter, `wc_bookings_product_duration_fallback`, to add night unit support.
+* Dev - Fix linting errors found by the Quality Insights Toolkit.
+
 = 1.1.40 - 2023-05-12 =
 * Dev - Added a new filter, `woocommerce_accommodation_booking_get_check_times`, to change the check-in/out timings per product.
 * Fix - Fully booked days show as partially booked - Day after booking shows partially booked.
