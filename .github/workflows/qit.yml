@@ -27,7 +27,7 @@ permissions:
 jobs:
   build:
     if: "${{ ( inputs.test != '' && inputs.test != 'none' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit activation test') || contains(github.event.pull_request.labels.*.name, 'needs: qit api test') || contains(github.event.pull_request.labels.*.name, 'needs: qit e2e test') || contains(github.event.pull_request.labels.*.name, 'needs: qit phpstan test') || contains(github.event.pull_request.labels.*.name, 'needs: qit security test') }}"
-    uses: woocommerce/woocommerce-accommodation-bookings/.github/workflows/generate-zip.yml@feature/qit # TODO: update branch to trunk before merge.
+    uses: woocommerce/woocommerce-accommodation-bookings/.github/workflows/generate-zip.yml@feature/qit-workflow # TODO: update branch to trunk before merge.
 
   test:
     if: "${{ ( inputs.test != '' && inputs.test != 'none' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit activation test') || contains(github.event.pull_request.labels.*.name, 'needs: qit api test') || contains(github.event.pull_request.labels.*.name, 'needs: qit e2e test') || contains(github.event.pull_request.labels.*.name, 'needs: qit phpstan test') || contains(github.event.pull_request.labels.*.name, 'needs: qit security test') }}"
