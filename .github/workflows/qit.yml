@@ -59,7 +59,7 @@ jobs:
           coverage: none
 
       - name: Install QIT via composer
-        run: composer require woocommerce/qit-cli
+        run: composer config --unset platform.php && composer require woocommerce/qit-cli
 
       - name: Add partner
         run: ./vendor/bin/qit partner:add --user='${{ secrets.PARTNER_USER }}' --application_password='${{ secrets.PARTNER_SECRET }}'
