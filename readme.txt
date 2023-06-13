@@ -36,6 +36,13 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.1.42 - 2023-06-14 =
+* Dev - Bump WooCommerce "tested up to" version to 7.6.
+* Dev - Bump WooCommerce minimum supported version from 6.0 to 6.8.
+* Dev - Bump WordPress "tested up to" version to 6.2.
+* Dev - Bump WordPress minimum supported version from 5.6 to 5.8.
+* Dev - Added new GitHub Workflow to run Quality Insights Toolkit tests.
+
 = 1.1.41 - 2023-05-26 =
 * Dev - Add product unit filter, `wc_bookings_product_duration_fallback`, to add night unit support.
 * Dev - Fix linting errors found by the Quality Insights Toolkit.
