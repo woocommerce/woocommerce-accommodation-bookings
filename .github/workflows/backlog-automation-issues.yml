@@ -1,0 +1,17 @@
+name: Add all new and transferred issues to the 10up Triage board.
+
+on:
+  issues:
+    types:
+      - opened
+      - transferred
+
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@v0.4.0
+        with:
+          project-url: https://github.com/orgs/woocommerce/projects/73
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}

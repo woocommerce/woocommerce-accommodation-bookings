@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors:  woocommerce, automattic, woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith001, royho
 Tags: woocommerce, bookings, accommodations
-Requires at least: 5.6
-Tested up to: 6.1
-Stable tag: 1.1.41
+Requires at least: 6.1
+Tested up to: 6.2
+Stable tag: 1.1.42
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,6 +35,13 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.1.42 - 2023-06-14 =
+* Dev - Bump WooCommerce "tested up to" version to 7.6.
+* Dev - Bump WooCommerce minimum supported version from 6.0 to 6.8.
+* Dev - Bump WordPress "tested up to" version to 6.2.
+* Dev - Bump WordPress minimum supported version from 5.6 to 5.8.
+* Dev - Added new GitHub Workflow to run Quality Insights Toolkit tests.
 
 = 1.1.41 - 2023-05-26 =
 * Dev - Add product unit filter, `wc_bookings_product_duration_fallback`, to add night unit support.
