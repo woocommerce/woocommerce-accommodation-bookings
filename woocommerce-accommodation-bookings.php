@@ -9,9 +9,9 @@
  * Text Domain: woocommerce-accommodation-bookings
  * Domain Path: /languages
  * Tested up to: 6.2
- * Requires at least: 5.8
- * WC tested up to: 7.6
- * WC requires at least: 6.8
+ * Requires at least: 6.1
+ * WC tested up to: 7.8
+ * WC requires at least: 7.2
  * Requires PHP: 7.0
  *
  * Copyright: © 2023 WooCommerce
