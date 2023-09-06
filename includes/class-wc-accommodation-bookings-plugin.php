@@ -215,7 +215,6 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Include admin
 	 */
 	public function admin_includes() {
-
 		// Return if WooCommerce class not found.
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			add_action( 'admin_notices', array( $this, 'missing_wc_notice' ) );
