@@ -192,7 +192,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 *
 	 * @since x.x.x
 	 */
-	public function woocommerce_accommodation_bookings_missing_wc_notice() {
+	public function missing_wc_notice() {
 		/* translators: %s WC download URL link. */
 		echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Accommodation Bookings requires WooCommerce to be installed and active. You can download %s here.', 'woocommerce-accommodation-bookings' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
 	}
@@ -218,7 +218,7 @@ class WC_Accommodation_Bookings_Plugin {
 
 		// Return if WooCommerce class not found.
 		if ( ! class_exists( 'WooCommerce' ) ) {
-			add_action( 'admin_notices', array( $this, 'woocommerce_accommodation_bookings_missing_wc_notice' ) );
+			add_action( 'admin_notices', array( $this, 'missing_wc_notice' ) );
 			return;
 		}
 
