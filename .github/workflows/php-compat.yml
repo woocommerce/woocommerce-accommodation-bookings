@@ -1,0 +1,49 @@
+name: PHP Compatibility
+
+on:
+  pull_request:
+    branches:
+      - trunk
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  php-compatibility:
+    name: Test PHP 7.4+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+
+      - name: Set PHP version
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer
+          coverage: none
+
+      - name: Tool versions
+        run: |
+          php --version
+          composer --version
+      - name: Set composer cache directory
+        run: |
+          composer config -g cache-dir "${{ github.workspace }}/.composer-cache"
+      - name: Get cached composer directory
+        uses: actions/cache@v3
+        id: cache-deps
+        with:
+          path: |
+            ${{ github.workspace }}/.composer-cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install dependencies
+        run: composer install --no-scripts
+
+      - name: Run PHP Compatibility
+        run: ./tests/bin/phpcs.sh "${{ github.event.pull_request.base.sha }}" "${{ github.event.after }}"
