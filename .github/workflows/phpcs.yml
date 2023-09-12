@@ -1,30 +1,42 @@
-name: PHPCS
+name: PHP Coding Standards
 
-on:
-  pull_request:
-    branches:
-      - trunk
+on: pull_request
 
 jobs:
-  changed:
+  phpcs:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - id: changed-files
-        uses: tj-actions/changed-files@v19
+      - uses: actions/checkout@v3
         with:
-          files: |
-            **/*.php
-      - name: Set PHP version
+          fetch-depth: 0
+
+      - name: Setup proper PHP version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.3
-          tools: composer:v2
-          coverage: none
+          php-version: 7.4
+          tools: composer
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install dependencies
-        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
         run: composer install
-      - name: Test
-        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+
+      - name: Run PHP_CodeSniffer
         run: ./vendor/bin/phpcs ${{ steps.changed-files.outputs.all_changed_files }}
