@@ -48,5 +48,9 @@ const customer = {
 module.exports = {
 	admin,
 	customer,
-	baseUrl: 'http://localhost:8889'
+	baseUrl: 'http://localhost:8889',
+	pluginConfig: {
+		checkInTime: '14:00',
+		checkoutTime: '11:00',
+	},
 };
