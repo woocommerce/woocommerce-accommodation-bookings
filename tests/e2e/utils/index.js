@@ -89,6 +89,38 @@ export async function createProduct(page, productDetails) {
 }
 
 /**
+ * Create a product in WooCommerce with given details and return product ID.
+ *
+ * @param {Page}   page           Playwright page object.
+ * @param {never}  productId      Product ID.
+ * @param {Object} productDetails Product details.
+ */
+export async function updateProduct(page, productId, productDetails) {
+	await page.goto(`/wp-admin/post.php?post=${productId}&action=edit`);
+
+	await switchTab(page, 'General');
+	await page
+		.locator('#_wc_accommodation_booking_calendar_display_mode')
+		.selectOption(productDetails.calendarDisplayMode || '');
+
+	if (productDetails.requireConfirmation !== undefined) {
+		if (productDetails.requireConfirmation) {
+			await page
+				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.check();
+		} else {
+			await page
+				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.uncheck();
+		}
+	}
+
+	// Publish product
+	await page.locator('#publish').click();
+	await expect(page.locator('.updated.notice')).toBeVisible();
+}
+
+/**
  * Save admin settings.
  *
  * @param {Page} page Playwright page object
@@ -114,9 +146,9 @@ export async function visitProductPage(page, productId) {
 /**
  * Fill billing details on checkout page
  *
- * @param {Page}   page                   Playwright page object
- * @param {Object} customerBillingDetails Customer billing details
- * @param {boolean} isBlock               Whether to use block checkout
+ * @param {Page}    page                   Playwright page object
+ * @param {Object}  customerBillingDetails Customer billing details
+ * @param {boolean} isBlock                Whether to use block checkout
  */
 export async function fillBillingDetails(
 	page,

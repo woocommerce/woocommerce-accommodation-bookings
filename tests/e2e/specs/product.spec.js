@@ -11,7 +11,12 @@ const {
 	fillBookingEndDate,
 	clearCart,
 	addToCart,
+	updateProduct,
+	unBlockUI,
+	fillBillingDetails,
+	placeOrder,
 } = require('../utils');
+const { customer } = require('../config');
 
 test.describe('Product Tests', () => {
 	// Set customer as logged-in user.
@@ -185,5 +190,60 @@ test.describe('Product Tests', () => {
 		await expect(
 			page.locator('.wc-bookings-booking-cost .booking-error')
 		).toContainText('There are a maximum of 0 places remaining on');
+	});
+
+	test('Verify Calendar Display Mode - @foundational', async ({ page }) => {
+		await updateProduct(adminPage, productId, {
+			calendarDisplayMode: 'always_visible',
+		});
+		await visitProductPage(page, productId);
+		await unBlockUI(page);
+		await expect(page.locator('.ui-datepicker-calendar')).toBeVisible();
+
+		await updateProduct(adminPage, productId, {
+			calendarDisplayMode: '',
+		});
+		await visitProductPage(page, productId);
+		await unBlockUI(page);
+		await expect(page.locator('.ui-datepicker-calendar')).not.toBeVisible();
+
+		await page
+			.locator('input[name="wc_bookings_field_start_date_month"]')
+			.click();
+		await unBlockUI(page);
+		await expect(page.locator('.ui-datepicker-calendar')).toBeVisible();
+	});
+
+	test('Verify Accommodation Booking with Confirmation Setting - @foundational', async ({
+		page,
+	}) => {
+		await updateProduct(adminPage, productId, {
+			requireConfirmation: true,
+		});
+		await visitProductPage(page, productId);
+		await unBlockUI(page);
+		await expect(page.locator('.single_add_to_cart_button')).toContainText(
+			'Check Availability'
+		);
+
+		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingEndDate(
+			page,
+			getFutureDate(+productDetails.minimumNight + 1)
+		);
+		await addToCart(page);
+
+		// Verify Accommodation Booking Process for Slot Requiring Confirmation
+		await page.goto('/checkout');
+		await expect(
+			page.locator('label[for="payment_method_wc-bookings-gateway"]')
+		).toContainText('Subject to confirmation');
+		await fillBillingDetails(page, customer.billing);
+		await placeOrder(page);
+		await expect(
+			page
+				.locator('.wc-booking-summary .status-pending-confirmation')
+				.first()
+		).toContainText('Pending Confirmation');
 	});
 });
