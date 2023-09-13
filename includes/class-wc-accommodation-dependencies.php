@@ -52,7 +52,7 @@ class WC_Accommodation_Dependencies {
 	/**
 	 * Returns true if bookings is greater than a specific version and false if not
 	 *
-	 * @param  string $verson The version to check against
+	 * @param string $verson The version to check against
 	 * @return boolean
 	 */
 	private static function is_bookings_above_or_equal_to_version( $version ) {
