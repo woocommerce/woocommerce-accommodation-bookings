@@ -35,7 +35,7 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:
           files: |
-            **/*.php
+            **/*.js
 
       - name: Install dependencies
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
