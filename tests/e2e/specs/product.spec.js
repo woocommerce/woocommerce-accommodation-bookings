@@ -3,6 +3,10 @@
  * External dependencies
  */
 const { test, expect } = require('@playwright/test');
+
+/**
+ * Internal dependencies
+ */
 const {
 	createProduct,
 	visitProductPage,
@@ -96,7 +100,7 @@ test.describe('Product Tests', () => {
 		await fillBookingStartDate(page, getFutureDate(1));
 		await fillBookingEndDate(
 			page,
-			getFutureDate(productDetails.minimumNight)
+			getFutureDate(parseInt(productDetails.minimumNight, 10))
 		);
 
 		const addToCardButton = await page.locator(
@@ -111,9 +115,10 @@ test.describe('Product Tests', () => {
 
 		await expect(addToCardButton).toHaveClass(/disabled/);
 
+		await fillBookingStartDate(page, getFutureDate(1));
 		await fillBookingEndDate(
 			page,
-			getFutureDate(+productDetails.minimumNight + 1)
+			getFutureDate(parseInt(productDetails.minimumNight, 10) + 1)
 		);
 		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
 			`Booking cost: $${parseFloat(
@@ -133,7 +138,7 @@ test.describe('Product Tests', () => {
 		await fillBookingStartDate(page, getFutureDate(1));
 		await fillBookingEndDate(
 			page,
-			getFutureDate(+productDetails.maximumNight + 2)
+			getFutureDate(parseInt(productDetails.maximumNight, 10) + 2)
 		);
 
 		const addToCardButton = await page.locator(
@@ -148,13 +153,15 @@ test.describe('Product Tests', () => {
 
 		await expect(addToCardButton).toHaveClass(/disabled/);
 
+		await fillBookingStartDate(page, getFutureDate(1));
 		await fillBookingEndDate(
 			page,
-			getFutureDate(productDetails.maximumNight)
+			getFutureDate(parseInt(productDetails.maximumNight, 10))
 		);
 		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
 			`Booking cost: $${parseFloat(
-				(productDetails.maximumNight - 1) * productDetails.baseCost
+				(parseInt(productDetails.maximumNight, 10) - 1) *
+					productDetails.baseCost
 			)}`
 		);
 		await expect(addToCardButton).not.toHaveClass(/disabled/);
@@ -245,5 +252,236 @@ test.describe('Product Tests', () => {
 				.locator('.wc-booking-summary .status-pending-confirmation')
 				.first()
 		).toContainText('Pending Confirmation');
+	});
+
+	test('Verify "Can be cancelled" Setting - @foundational', async ({
+		page,
+	}) => {
+		const productData = {
+			title: 'Accomodation product #3',
+			baseCost: '10.00',
+			canBeCancelled: true,
+		};
+		const product = await createProduct(adminPage, productData);
+
+		await visitProductPage(page, product);
+		await unBlockUI(page);
+
+		await fillBookingStartDate(page, getFutureDate(5, 1));
+		await fillBookingEndDate(page, getFutureDate(7, 1));
+		await addToCart(page);
+
+		// Place order
+		await page.goto('/checkout');
+		await fillBillingDetails(page, customer.billing);
+		const orderId = await placeOrder(page);
+
+		page.goto('/my-account/bookings/');
+		page.on('dialog', (dialog) => dialog.accept());
+		await page
+			.locator('.my_account_bookings tr', {
+				has: page.locator('td.order-number', { hasText: orderId }),
+			})
+			.locator('td.booking-cancel a.cancel')
+			.click();
+
+		await expect(
+			page.locator('.woocommerce .woocommerce-info').first()
+		).toContainText('Your booking was cancelled');
+	});
+
+	test('Availability > Bookings Can Be Made Starting - Month/Week/Day - into the future Setting - @foundational', async ({
+		page,
+	}) => {
+		const productData = {
+			title: 'Accomodation product #4',
+			baseCost: '10.00',
+			availabilityStart: '4',
+			availabilityStartUnit: 'day',
+		};
+		const product = await createProduct(adminPage, productData);
+
+		await visitProductPage(page, product);
+		await unBlockUI(page);
+
+		const addToCardButton = await page.locator(
+			'.single_add_to_cart_button'
+		);
+
+		await expect(
+			page.locator('.ui-datepicker-calendar .ui-datepicker-today')
+		).toHaveClass(/ui-state-disabled/);
+
+		// TODO: UNCOMMENT THIS. (commented due to bug)
+		// Verify Booking can't be made before 4 days into the future
+		// await fillBookingStartDate(page, getFutureDate(1));
+		// await fillBookingEndDate(page, getFutureDate(4));
+		// await expect(
+		// 	page.locator('.wc-bookings-booking-cost .booking-error')
+		// ).not.toContainText('Booking cost:');
+		// await expect(addToCardButton).toHaveClass(/disabled/);
+
+		await visitProductPage(page, product);
+		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingEndDate(page, getFutureDate(3));
+		await expect(
+			page.locator('.wc-bookings-booking-cost .booking-error')
+		).not.toContainText('Booking cost:');
+		await expect(addToCardButton).toHaveClass(/disabled/);
+
+		await fillBookingStartDate(page, getFutureDate(4));
+		await fillBookingEndDate(page, getFutureDate(6));
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			'Booking cost:'
+		);
+		await expect(addToCardButton).not.toHaveClass(/disabled/);
+	});
+
+	// eslint-disable-next-line jest/no-disabled-tests
+	test('Availability > Booking Can Be Booked Till Setting - @foundational', async ({
+		page,
+	}) => {
+		const productData = {
+			title: 'Accomodation product #5',
+			baseCost: '10.00',
+			availabilityEnd: '1',
+			availabilityEndUnit: 'month',
+		};
+		const product = await createProduct(adminPage, productData);
+
+		await visitProductPage(page, product);
+		await unBlockUI(page);
+
+		const addToCardButton = await page.locator(
+			'.single_add_to_cart_button'
+		);
+
+		// TODO: UNCOMMENT THIS. (commented due to bug)
+		// Verify Booking can't be made after 1 month into the future
+		// await fillBookingStartDate(page, getFutureDate(-1, 1));
+		// await fillBookingEndDate(page, getFutureDate(1, 1));
+		// await expect(
+		// 	page.locator('.wc-bookings-booking-cost .booking-error')
+		// ).not.toContainText('Booking cost:');
+		// await expect(addToCardButton).toHaveClass(/disabled/);
+
+		await visitProductPage(page, product);
+		await fillBookingStartDate(page, getFutureDate(0, 1));
+		await fillBookingEndDate(page, getFutureDate(2, 1));
+		await expect(
+			page.locator('.wc-bookings-booking-cost .booking-error')
+		).not.toContainText('Booking cost:');
+		await expect(addToCardButton).toHaveClass(/disabled/);
+
+		// Booking can be made till 1 month into the future
+		await visitProductPage(page, product);
+		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingEndDate(page, getFutureDate(2));
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			'Booking cost:'
+		);
+		await expect(addToCardButton).not.toHaveClass(/disabled/);
+	});
+
+	test('Verify Rate Setting should work as expected - @foundational', async ({
+		page,
+	}) => {
+		const productData = {
+			title: 'Accomodation product #5',
+			baseCost: '10.00',
+			displayCost: '20.00',
+		};
+		const product = await createProduct(adminPage, productData);
+
+		await visitProductPage(page, product);
+		await unBlockUI(page);
+
+		await expect(
+			page.locator('p.price', { hasText: 'per night' })
+		).toContainText(`From $${productData.displayCost} per night`);
+
+		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingEndDate(page, getFutureDate(2));
+
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			`Booking cost: $${parseFloat(productDetails.baseCost)}`
+		);
+	});
+
+	test('Verify "Rates" Setting for Accommodation Booking with Range Types with Range Type "Range of certain night" - @foundational', async ({
+		page,
+	}) => {
+		const startDate = getFutureDate(1);
+		const endDate = getFutureDate(7);
+		const productData = {
+			title: 'Accomodation product #5',
+			baseCost: '10.00',
+			displayCost: '20.00',
+			range: {
+				type: 'custom',
+				from: `${startDate.year}-${startDate.month}-${startDate.date}`,
+				to: `${endDate.year}-${endDate.month}-${endDate.date}`,
+				cost: '50.00',
+			},
+		};
+		const product = await createProduct(adminPage, productData);
+
+		await visitProductPage(page, product);
+		await unBlockUI(page);
+
+		await expect(
+			page.locator('p.price', { hasText: 'per night' })
+		).toContainText(`From $${productData.displayCost} per night`);
+
+		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingEndDate(page, getFutureDate(2));
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			`Booking cost: $${parseFloat(productData.range.cost)}` // 50.00
+		);
+
+		await visitProductPage(page, product);
+		await fillBookingStartDate(page, getFutureDate(8));
+		await fillBookingEndDate(page, getFutureDate(9));
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			`Booking cost: $${parseFloat(productDetails.baseCost)}` // 10.00
+		);
+	});
+
+	test('Verify "Rates" Setting for Accommodation Booking with Range Types with Range Type "Range of months" - @foundational', async ({
+		page,
+	}) => {
+		const month = new Date().getMonth() + 1;
+		const productData = {
+			title: 'Accomodation product #6',
+			baseCost: '10.00',
+			displayCost: '20.00',
+			range: {
+				type: 'months',
+				from: `${month}`,
+				to: `${month}`,
+				cost: '50.00',
+			},
+		};
+		const product = await createProduct(adminPage, productData);
+
+		await visitProductPage(page, product);
+		await unBlockUI(page);
+
+		await expect(
+			page.locator('p.price', { hasText: 'per night' })
+		).toContainText(`From $${productData.displayCost} per night`);
+
+		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingEndDate(page, getFutureDate(2));
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			`Booking cost: $${parseFloat(productData.range.cost)}` // 50.00
+		);
+
+		await visitProductPage(page, product);
+		await fillBookingStartDate(page, getFutureDate(1, 1));
+		await fillBookingEndDate(page, getFutureDate(2, 1));
+		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
+			`Booking cost: $${parseFloat(productDetails.baseCost)}` // 10.00
+		);
 	});
 });

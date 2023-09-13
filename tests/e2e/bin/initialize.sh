@@ -15,6 +15,7 @@ wp-env run tests-cli wp wc tool run install_pages --user=1
 
 wp-env run tests-cli wp option update woocommerce_currency "USD"
 wp-env run tests-cli wp option update woocommerce_default_country "US:CA"
+wp-env run tests-cli wp wc payment_gateway update cod --enabled=true --user=1
 
 wp-env run tests-cli wp user create customer customer@bookingstestsuite.com --user_pass=password --role=customer
 

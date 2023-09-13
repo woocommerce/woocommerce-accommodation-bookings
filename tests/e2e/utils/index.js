@@ -57,20 +57,51 @@ export async function createProduct(page, productDetails) {
 
 	await page.locator('#product-type').selectOption('accommodation-booking');
 
-	if (productDetails.minimumNight || productDetails.maximumNight) {
-		await switchTab(page, 'General');
-		if (productDetails.minimumNight) {
+	await switchTab(page, 'General');
+	if (productDetails.minimumNight) {
+		await page
+			.locator('#_wc_accommodation_booking_min_duration')
+			.fill(productDetails.minimumNight);
+	}
+	if (productDetails.maximumNight) {
+		await page
+			.locator('#_wc_accommodation_booking_max_duration')
+			.fill(productDetails.maximumNight);
+	}
+
+	if (productDetails.calendarDisplayMode !== undefined) {
+		await page
+			.locator('#_wc_accommodation_booking_calendar_display_mode')
+			.selectOption(productDetails.calendarDisplayMode);
+	}
+
+	// Requires confirmation?
+	if (productDetails.requireConfirmation !== undefined) {
+		if (productDetails.requireConfirmation) {
 			await page
-				.locator('#_wc_accommodation_booking_min_duration')
-				.fill(productDetails.minimumNight);
-		}
-		if (productDetails.maximumNight) {
+				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.check();
+		} else {
 			await page
-				.locator('#_wc_accommodation_booking_max_duration')
-				.fill(productDetails.maximumNight);
+				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.uncheck();
 		}
 	}
 
+	// Can be cancelled?
+	if (productDetails.canBeCancelled !== undefined) {
+		if (productDetails.canBeCancelled) {
+			await page
+				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.check();
+		} else {
+			await page
+				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.uncheck();
+		}
+	}
+
+	// Number of rooms available
 	if (productDetails.rooms) {
 		await switchTab(page, 'Availability');
 		await page
@@ -78,10 +109,80 @@ export async function createProduct(page, productDetails) {
 			.fill(productDetails.rooms);
 	}
 
+	// Bookings can be made starting from
+	if (productDetails.availabilityStart) {
+		await switchTab(page, 'Availability');
+		await page
+			.locator('#_wc_accommodation_booking_min_date')
+			.fill(productDetails.availabilityStart);
+		if (productDetails.availabilityStartUnit) {
+			await page
+				.locator('#_wc_accommodation_booking_min_date_unit')
+				.selectOption(productDetails.availabilityStartUnit);
+		}
+	}
+
+	// Bookings can only be made up to
+	if (productDetails.availabilityEnd) {
+		await switchTab(page, 'Availability');
+		await page
+			.locator('#_wc_accommodation_booking_max_date')
+			.fill(productDetails.availabilityEnd);
+		if (productDetails.availabilityEndUnit) {
+			await page
+				.locator('#_wc_accommodation_booking_max_date_unit')
+				.selectOption(productDetails.availabilityEndUnit);
+		}
+	}
+
 	await switchTab(page, 'Rates');
 	await page
 		.locator('#_wc_accommodation_booking_base_cost')
 		.fill(productDetails.baseCost || '10');
+	if (productDetails.displayCost) {
+		await page
+			.locator('#_wc_accommodation_booking_display_cost')
+			.fill(productDetails.displayCost);
+	}
+
+	if (productDetails.range) {
+		await page.locator('#accommodation_bookings_rates a.add_row').click();
+		await page
+			.locator('select[name="wc_accommodation_booking_pricing_type[]"]')
+			.waitFor();
+		await page
+			.locator('select[name="wc_accommodation_booking_pricing_type[]"]')
+			.selectOption(productDetails.range.type);
+		if (productDetails.range.type === 'custom') {
+			await page
+				.locator(
+					'input[name="wc_accommodation_booking_pricing_from_date[]"]'
+				)
+				.fill(productDetails.range.from);
+			await page
+				.locator(
+					'input[name="wc_accommodation_booking_pricing_to_date[]"]'
+				)
+				.fill(productDetails.range.to);
+		} else {
+			await page
+				.locator(
+					`select[name="wc_accommodation_booking_pricing_from_month[]"]`
+				)
+				.selectOption(productDetails.range.from);
+			await page
+				.locator(
+					`select[name="wc_accommodation_booking_pricing_to_month[]"]`
+				)
+				.selectOption(productDetails.range.to);
+		}
+		await page
+			.locator(
+				'input[name="wc_accommodation_booking_pricing_block_cost[]"]'
+			)
+			.fill(productDetails.range.cost);
+	}
+
 	await publishProduct(page);
 
 	const postId = await page.locator('#post_ID').inputValue();
@@ -99,9 +200,11 @@ export async function updateProduct(page, productId, productDetails) {
 	await page.goto(`/wp-admin/post.php?post=${productId}&action=edit`);
 
 	await switchTab(page, 'General');
-	await page
-		.locator('#_wc_accommodation_booking_calendar_display_mode')
-		.selectOption(productDetails.calendarDisplayMode || '');
+	if (productDetails.calendarDisplayMode !== undefined) {
+		await page
+			.locator('#_wc_accommodation_booking_calendar_display_mode')
+			.selectOption(productDetails.calendarDisplayMode);
+	}
 
 	if (productDetails.requireConfirmation !== undefined) {
 		if (productDetails.requireConfirmation) {
@@ -111,6 +214,19 @@ export async function updateProduct(page, productId, productDetails) {
 		} else {
 			await page
 				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.uncheck();
+		}
+	}
+
+	// Can be cancelled?
+	if (productDetails.canBeCancelled !== undefined) {
+		if (productDetails.canBeCancelled) {
+			await page
+				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.check();
+		} else {
+			await page
+				.locator('#_wc_accommodation_booking_user_can_cancel')
 				.uncheck();
 		}
 	}
@@ -285,15 +401,21 @@ export async function goToCheckout(page, isBlock = false) {
 /**
  * Get Future date in Date, Month and Year object
  *
- * @param {number} days Number of days to add to current date
+ * @param {number} days   Number of days to add to current date
+ * @param {number} months Number of months to add to current date
+ * @param {number} years  Number of years to add to current date
  */
-export function getFutureDate(days) {
+export function getFutureDate(days, months = 0, years = 0) {
 	const today = new Date();
-	const futureDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
+	const futureDate = new Date(
+		today.getFullYear() + years,
+		today.getMonth() + months,
+		today.getDate() + days
+	);
 
 	const futureDateObject = {
-		date: futureDate.getDate(),
-		month: futureDate.getMonth() + 1, // Months are 0-indexed
+		date: String(futureDate.getDate()).padStart(2, '0'), // Pads with 0 if necessary
+		month: String(futureDate.getMonth() + 1).padStart(2, '0'), // Months are 0-indexed
 		year: futureDate.getFullYear(),
 	};
 
@@ -323,6 +445,7 @@ export async function fillBookingStartDate(page, startDate) {
 		'input[name="wc_bookings_field_start_date_day"]',
 		startDate.date
 	);
+	await page.locator('td.selection-start-date a').first().click();
 }
 
 /**
@@ -348,9 +471,7 @@ export async function fillBookingEndDate(page, endDate) {
 		'input[name="wc_bookings_field_start_date_to_day"]',
 		endDate.date
 	);
-	await page
-		.locator('input[name="wc_bookings_field_start_date_to_day"]')
-		.click();
+	await page.locator('td.selection-end-date a').first().click();
 	await unBlockUI(page);
 }
 
