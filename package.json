@@ -56,6 +56,7 @@
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy",
     "postenv:start": "bash ./tests/e2e/bin/initialize.sh",
+    "env:install-plugins": "bash ./tests/e2e/bin/install-plugins.sh",
     "test:e2e": "npx playwright test --config tests/e2e/playwright.config.js",
     "test:e2e-local": "export $(cat ./tests/e2e/config/.env | xargs) && npm run test:e2e",
     "test:e2e-debug": "npx playwright test --config tests/e2e/playwright.config.js --debug",

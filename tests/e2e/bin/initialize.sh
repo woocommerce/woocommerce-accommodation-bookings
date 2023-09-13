@@ -17,3 +17,6 @@ wp-env run tests-cli wp option update woocommerce_currency "USD"
 wp-env run tests-cli wp option update woocommerce_default_country "US:CA"
 
 wp-env run tests-cli wp user create customer customer@bookingstestsuite.com --user_pass=password --role=customer
+
+# Install and activate WooCommerce Bookings
+wp-env run tests-cli wp plugin install --activate ./wp-content/plugins/woocommerce-accommodation-bookings/woocommerce-bookings.zip
