@@ -31,13 +31,13 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install dependencies
-        # if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
-        run: composer install
-
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v35
+
+      - name: Install dependencies
+        # if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
+        run: composer install
 
       - name: Run PHP_CodeSniffer
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}

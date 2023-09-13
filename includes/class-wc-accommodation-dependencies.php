@@ -37,9 +37,9 @@ class WC_Accommodation_Dependencies {
 		$booking_file     = 'woocommerce-bookings/woocommerce-bookings.php';
 
 		return (
-			in_array( $booking_file, self::$active_plugins )
+			in_array( $booking_file, self::$active_plugins, true )
 			||
-			array_key_exists( $booking_file, self::$active_plugins )
+			array_key_exists( $booking_file, self::$active_plugins, true )
 			||
 			class_exists( 'WC_Bookings' )
 			||
