@@ -42,6 +42,6 @@ jobs:
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
         run: composer install
 
-      - name: Run PHP_CodeSniffer - any_changed
+      - name: Run PHP_CodeSniffer
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
         run: ./vendor/bin/phpcs ${{ steps.changed-files.outputs.all_changed_files }}
