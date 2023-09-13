@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="PHPCompatibilityWP">
+    <rule ref="PHPCompatibility"/>
+
+    <!-- Files to check -->
+	<arg name="extensions" value="php"/>
+	<file>.</file>
+
+    <exclude-pattern>vendor/</exclude-pattern>
+
+    <config name="testVersion" value="7.4-"/>
+</ruleset>
