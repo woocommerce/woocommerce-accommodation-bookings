@@ -1,6 +1,8 @@
 <?php
 /**
  * A WC_Accommodation_Dependencies class file.
+ * 
+ * @package woocommerce-accommodation-bookings
  */
 
 /**
