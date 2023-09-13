@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * A WC_Accommodation_Dependencies class file.
+ */
 
 /**
  * WC Accommodation Bookings Dependency Checker
