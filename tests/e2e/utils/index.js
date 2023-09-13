@@ -18,7 +18,10 @@ export const api = require('./api');
  * @param {string} panelSelector Options Panel selector
  */
 export async function switchTab(page, tabName, panelSelector = false) {
-	await page.locator('.wc-tabs > li > a', { hasText: tabName }).click();
+	await page
+		.locator('.wc-tabs > li > a', { hasText: tabName })
+		.last()
+		.click();
 	if (panelSelector) {
 		await expect(page.locator(panelSelector)).toBeVisible();
 	}
@@ -53,6 +56,27 @@ export async function createProduct(page, productDetails) {
 	await page.locator('#sample-permalink').waitFor();
 
 	await page.locator('#product-type').selectOption('accommodation-booking');
+
+	if (productDetails.minimumNight || productDetails.maximumNight) {
+		await switchTab(page, 'General');
+		if (productDetails.minimumNight) {
+			await page
+				.locator('#_wc_accommodation_booking_min_duration')
+				.fill(productDetails.minimumNight);
+		}
+		if (productDetails.maximumNight) {
+			await page
+				.locator('#_wc_accommodation_booking_max_duration')
+				.fill(productDetails.maximumNight);
+		}
+	}
+
+	if (productDetails.rooms) {
+		await switchTab(page, 'Availability');
+		await page
+			.locator('#_wc_accommodation_booking_qty')
+			.fill(productDetails.rooms);
+	}
 
 	await switchTab(page, 'Rates');
 	await page
@@ -134,11 +158,9 @@ export async function fillBillingDetails(
 /**
  * Add product to cart
  *
- * @param {Page}   page Playwright page object
- * @param {string} slug Product slug
+ * @param {Page} page Playwright page object
  */
-export async function addToCart(page, slug) {
-	await page.goto(`/product/${slug}/`);
+export async function addToCart(page) {
 	await page.locator('.single_add_to_cart_button').click();
 	await expect(
 		page.getByRole('link', { name: 'View cart' }).first()
@@ -206,7 +228,7 @@ export async function placeOrder(page, isBlock = false) {
  * @param {string} command
  */
 export async function runWpCliCommand(command) {
-	const { stdout, stderr } = await execAsync(
+	const { stderr } = await execAsync(
 		`npm --silent run env run tests-cli -- ${command}`
 	);
 
@@ -226,4 +248,119 @@ export async function runWpCliCommand(command) {
 export async function goToCheckout(page, isBlock = false) {
 	const slug = isBlock ? 'block-checkout' : 'checkout';
 	await page.goto(slug);
+}
+
+/**
+ * Get Future date in Date, Month and Year object
+ *
+ * @param {number} days Number of days to add to current date
+ */
+export function getFutureDate(days) {
+	const today = new Date();
+	const futureDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
+
+	const futureDateObject = {
+		date: futureDate.getDate(),
+		month: futureDate.getMonth() + 1, // Months are 0-indexed
+		year: futureDate.getFullYear(),
+	};
+
+	return futureDateObject;
+}
+
+/**
+ * Fill Booking start date details on product page
+ *
+ * @param {Page}   page      Playwright page object
+ * @param {Object} startDate Booking start date details
+ */
+export async function fillBookingStartDate(page, startDate) {
+	await unBlockUI(page);
+	await fillBookingDate(
+		page,
+		'input[name="wc_bookings_field_start_date_year"]',
+		startDate.year
+	);
+	await fillBookingDate(
+		page,
+		'input[name="wc_bookings_field_start_date_month"]',
+		startDate.month
+	);
+	await fillBookingDate(
+		page,
+		'input[name="wc_bookings_field_start_date_day"]',
+		startDate.date
+	);
+}
+
+/**
+ * Fill Booking end date details on product page
+ *
+ * @param {Page}   page    Playwright page object
+ * @param {Object} endDate Booking end date details
+ */
+export async function fillBookingEndDate(page, endDate) {
+	await unBlockUI(page);
+	await fillBookingDate(
+		page,
+		'input[name="wc_bookings_field_start_date_to_year"]',
+		endDate.year
+	);
+	await fillBookingDate(
+		page,
+		'input[name="wc_bookings_field_start_date_to_month"]',
+		endDate.month
+	);
+	await fillBookingDate(
+		page,
+		'input[name="wc_bookings_field_start_date_to_day"]',
+		endDate.date
+	);
+	await page
+		.locator('input[name="wc_bookings_field_start_date_to_day"]')
+		.click();
+	await unBlockUI(page);
+}
+
+/**
+ * Fill Booking date details on product page.
+ *
+ * @param {Page}   page     Playwright page object
+ * @param {string} selector Input selector
+ * @param {string} value    Value to fill
+ */
+async function fillBookingDate(page, selector, value) {
+	await page.locator(selector).click();
+	await page.locator(selector).fill('');
+	await page.locator(selector).type(`${value}`);
+	await page.locator(selector).blur();
+	await unBlockUI(page);
+}
+
+/**
+ * Wait for block UI to be hidden.
+ *
+ * @param {Page} page Playwright page object
+ */
+export async function unBlockUI(page) {
+	await page
+		.locator('.blockUI.blockOverlay')
+		.last()
+		.waitFor({ state: 'hidden' });
+}
+
+/**
+ * Clear cart.
+ *
+ * @param {Page} page Playwright page object
+ */
+export async function clearCart(page) {
+	await page.goto('/cart/');
+	const rows = await page.locator('.cart td a.remove');
+	const count = await rows.count();
+
+	for (let i = 0; i < count; i++) {
+		await rows.nth(i).click();
+		await page.locator('.woocommerce-message').waitFor();
+	}
 }
