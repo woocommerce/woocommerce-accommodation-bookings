@@ -3,7 +3,7 @@
     "description": "An accommodations add-on for the WooCommerce Bookings extension.",
     "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
     "type": "wordpress-plugin",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "archive": {
         "exclude": [
             "node_modules",
