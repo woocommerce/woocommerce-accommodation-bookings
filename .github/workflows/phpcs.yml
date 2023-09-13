@@ -44,4 +44,4 @@ jobs:
 
       - name: Run PHP_CodeSniffer
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
-        run: ./vendor/bin/phpcs ${{ steps.changed-files.outputs.all_changed_files }}
+        run: ./vendor/bin/phpcs --standard=phpcs.xml.dist ${{ steps.changed-files.outputs.all_changed_files }}
