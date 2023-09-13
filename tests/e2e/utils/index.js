@@ -11,6 +11,60 @@ const execAsync = promisify(require('child_process').exec);
 export const api = require('./api');
 
 /**
+ * Switch tab in add/edit product page.
+ *
+ * @param {Page}   page          Playwright page object
+ * @param {string} tabName       Tab name
+ * @param {string} panelSelector Options Panel selector
+ */
+export async function switchTab(page, tabName, panelSelector = false) {
+	await page.locator('.wc-tabs > li > a', { hasText: tabName }).click();
+	if (panelSelector) {
+		await expect(page.locator(panelSelector)).toBeVisible();
+	}
+}
+
+/**
+ * Publish product.
+ *
+ * @param {Page} page Playwright page object
+ */
+export async function publishProduct(page) {
+	// Publish product
+	await page.locator('#publish').click();
+	await expect(page.locator('.updated.notice')).toBeVisible();
+	await expect(page.locator('.updated.notice')).toContainText(
+		'Product published.'
+	);
+}
+
+/**
+ * Create a product in WooCommerce with given details and return product ID.
+ *
+ * @param {Page}   page           Playwright page object.
+ * @param {Object} productDetails Product details.
+ */
+export async function createProduct(page, productDetails) {
+	await page.goto('/wp-admin/post-new.php?post_type=product');
+	await page
+		.locator('#title')
+		.fill(productDetails.title || 'Accommodation Product');
+	await page.locator('#title').blur();
+	await page.locator('#sample-permalink').waitFor();
+
+	await page.locator('#product-type').selectOption('accommodation-booking');
+
+	await switchTab(page, 'Rates');
+	await page
+		.locator('#_wc_accommodation_booking_base_cost')
+		.fill(productDetails.baseCost || '10');
+	await publishProduct(page);
+
+	const postId = await page.locator('#post_ID').inputValue();
+	return postId;
+}
+
+/**
  * Save admin settings.
  *
  * @param {Page} page Playwright page object
