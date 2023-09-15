@@ -4,6 +4,7 @@
  */
 const { test, expect } = require('@playwright/test');
 const { pluginConfig } = require('../config');
+const { updateSettings } = require('../utils');
 
 test.describe('Admin Tests', () => {
 	// Set admin as logged-in user.
@@ -64,15 +65,6 @@ test.describe('Admin Tests', () => {
 				.last()
 		).toBeVisible();
 
-		await page
-			.locator('#woocommerce_accommodation_bookings_times_check_in')
-			.fill(pluginConfig.checkInTime);
-		await page
-			.locator('#woocommerce_accommodation_bookings_times_check_out')
-			.fill(pluginConfig.checkoutTime);
-		await page.getByRole('button', { name: 'Save changes' }).click();
-		await expect(
-			page.locator('.updated', { hasText: 'Settings saved' })
-		).toBeVisible();
+		await updateSettings(page, pluginConfig);
 	});
 });

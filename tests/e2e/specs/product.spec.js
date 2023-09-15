@@ -19,8 +19,9 @@ const {
 	unBlockUI,
 	fillBillingDetails,
 	placeOrder,
+	updateSettings,
 } = require('../utils');
-const { customer } = require('../config');
+const { customer, pluginConfig } = require('../config');
 
 test.describe('Product Tests', () => {
 	// Set customer as logged-in user.
@@ -39,6 +40,7 @@ test.describe('Product Tests', () => {
 			storageState: process.env.ADMINSTATE,
 		});
 
+		await updateSettings(adminPage, pluginConfig);
 		// Create ticket product
 		productId = await createProduct(adminPage, productDetails);
 	});

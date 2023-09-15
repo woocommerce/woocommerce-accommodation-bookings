@@ -2,6 +2,8 @@
  * External dependencies
  */
 import { expect, Page } from '@playwright/test';
+import moment from 'moment';
+import { pluginConfig } from '../config';
 
 /**
  * Internal dependencies
@@ -383,7 +385,7 @@ export async function runWpCliCommand(command) {
 	if (!stderr) {
 		return true;
 	}
-	console.error(stderr);
+	console.error(stderr); // eslint-disable-line no-console
 	return false;
 }
 
@@ -401,25 +403,55 @@ export async function goToCheckout(page, isBlock = false) {
 /**
  * Get Future date in Date, Month and Year object
  *
- * @param {number} days   Number of days to add to current date
- * @param {number} months Number of months to add to current date
- * @param {number} years  Number of years to add to current date
+ * @param {number}  days         Number of days to add to current date
+ * @param {number}  months       Number of months to add to current date
+ * @param {number}  years        Number of years to add to current date
+ * @param {boolean} returnMoment Whether to return moment object
  */
-export function getFutureDate(days, months = 0, years = 0) {
-	const today = new Date();
-	const futureDate = new Date(
-		today.getFullYear() + years,
-		today.getMonth() + months,
-		today.getDate() + days
-	);
+export function getFutureDate(
+	days,
+	months = 0,
+	years = 0,
+	returnMoment = false
+) {
+	const date = moment()
+		.add(days, 'days')
+		.add(months, 'months')
+		.add(years, 'years');
+
+	if (returnMoment) {
+		return date;
+	}
 
 	const futureDateObject = {
-		date: String(futureDate.getDate()).padStart(2, '0'), // Pads with 0 if necessary
-		month: String(futureDate.getMonth() + 1).padStart(2, '0'), // Months are 0-indexed
-		year: futureDate.getFullYear(),
+		date: date.format('DD'),
+		month: date.format('MM'),
+		year: date.format('YYYY'),
 	};
 
 	return futureDateObject;
+}
+
+/**
+ * Get check-in time given format.
+ *
+ * @param {Object} date   Moment date object
+ * @param {string} format Date format
+ */
+export function getCheckInTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
+	const checkInTime = pluginConfig.checkInTime.split(':');
+	return date.hour(checkInTime[0]).minute(checkInTime[1]).format(format);
+}
+
+/**
+ * Get check-out time given format.
+ *
+ * @param {Object} date   Moment date object
+ * @param {string} format Date format
+ */
+export function getCheckOutTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
+	const checkOutTime = pluginConfig.checkoutTime.split(':');
+	return date.hour(checkOutTime[0]).minute(checkOutTime[1]).format(format);
 }
 
 /**
@@ -516,4 +548,27 @@ export async function clearCart(page) {
 		await rows.nth(i).click();
 		await page.locator('.woocommerce-message').waitFor();
 	}
+}
+
+/**
+ * Update Check-in and Check-out time settings.
+ *
+ * @param {Page}   page         Playwright page object
+ * @param {Object} timeSettings Check-in and Check-out time settings
+ */
+export async function updateSettings(page, timeSettings) {
+	await page.goto(
+		'/wp-admin/edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation'
+	);
+
+	await page
+		.locator('#woocommerce_accommodation_bookings_times_check_in')
+		.fill(timeSettings.checkInTime);
+	await page
+		.locator('#woocommerce_accommodation_bookings_times_check_out')
+		.fill(timeSettings.checkoutTime);
+	await page.getByRole('button', { name: 'Save changes' }).click();
+	await expect(
+		page.locator('.updated', { hasText: 'Settings saved' })
+	).toBeVisible();
 }
