@@ -190,7 +190,7 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * WooCommerce fallback notice.
 	 *
-	 * @since x.x.x
+	 * @since 1.2.1
 	 */
 	public function missing_wc_notice() {
 		/* translators: %s WC download URL link. */
