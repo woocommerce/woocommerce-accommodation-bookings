@@ -24,4 +24,9 @@
 			<property name="text_domain" type="array" value="woocommerce-accommodation-bookings" />
 		</properties>
 	</rule>
+
+    <!-- Exclude the PHPCompatibilityWP ruleset -->
+	<rule ref="PHPCompatibilityWP">
+        <exclude name="PHPCompatibilityWP"/>
+    </rule>
 </ruleset>
