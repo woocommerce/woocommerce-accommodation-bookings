@@ -25,7 +25,7 @@
 		</properties>
 	</rule>
 
-	<!-- Exclude the entire PHPCompatibilityWP ruleset -->
+	<!-- Exclude the PHPCompatibilityWP ruleset -->
 	<rule ref="PHPCompatibilityWP">
 		<exclude name="PHPCompatibilityWP"/>
 	</rule>
