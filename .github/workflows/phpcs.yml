@@ -44,4 +44,7 @@ jobs:
 
       - name: Run PHP_CodeSniffer
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
-        run: ./vendor/bin/phpcs --standard=phpcs.xml.dist ${{ steps.changed-files.outputs.all_changed_files }}
+        un: |
+          HEAD_REF=$(git rev-parse HEAD)
+          git checkout $HEAD_REF
+          phpcs-changed -s --git --git-base ${{ github.base_ref }} ${{ steps.changed-files.outputs.all_changed_files }}
