@@ -88,7 +88,6 @@ test.describe('Product Tests', () => {
 		const startDate = getFutureDate(1);
 		await fillBookingStartDate(page, startDate);
 
-		await page.locator('td.selection-start-date a.ui-state-active').click();
 		await expect(
 			page.locator('.wc-bookings-date-picker-accommodation-booking')
 		).toHaveAttribute('data-content', 'Select check-out');
@@ -175,7 +174,7 @@ test.describe('Product Tests', () => {
 		page,
 	}) => {
 		await clearCart(page);
-		for (let i = 0; i <= productDetails.rooms; i++) {
+		for (let i = 0; i < productDetails.rooms; i++) {
 			await visitProductPage(page, productId);
 			await fillBookingStartDate(page, getFutureDate(1));
 			await fillBookingEndDate(
@@ -186,10 +185,11 @@ test.describe('Product Tests', () => {
 		}
 
 		await visitProductPage(page, productId);
-		await fillBookingStartDate(page, getFutureDate(1));
+		await fillBookingStartDate(page, getFutureDate(1), false);
 		await fillBookingEndDate(
 			page,
-			getFutureDate(+productDetails.minimumNight + 1)
+			getFutureDate(+productDetails.minimumNight + 1),
+			false
 		);
 		await expect(
 			page
@@ -324,15 +324,16 @@ test.describe('Product Tests', () => {
 		// await expect(addToCardButton).toHaveClass(/disabled/);
 
 		await visitProductPage(page, product);
-		await fillBookingStartDate(page, getFutureDate(1));
-		await fillBookingEndDate(page, getFutureDate(3));
+		await fillBookingStartDate(page, getFutureDate(1), false);
+		await fillBookingEndDate(page, getFutureDate(3), false);
 		await expect(
 			page.locator('.wc-bookings-booking-cost .booking-error')
 		).not.toContainText('Booking cost:');
 		await expect(addToCardButton).toHaveClass(/disabled/);
 
-		await fillBookingStartDate(page, getFutureDate(4));
-		await fillBookingEndDate(page, getFutureDate(6));
+		await visitProductPage(page, product);
+		await fillBookingStartDate(page, getFutureDate(4), false);
+		await fillBookingEndDate(page, getFutureDate(6), false);
 		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
 			'Booking cost:'
 		);
@@ -368,8 +369,8 @@ test.describe('Product Tests', () => {
 		// await expect(addToCardButton).toHaveClass(/disabled/);
 
 		await visitProductPage(page, product);
-		await fillBookingStartDate(page, getFutureDate(0, 1));
-		await fillBookingEndDate(page, getFutureDate(2, 1));
+		await fillBookingStartDate(page, getFutureDate(0, 1), false);
+		await fillBookingEndDate(page, getFutureDate(2, 1), false);
 		await expect(
 			page.locator('.wc-bookings-booking-cost .booking-error')
 		).not.toContainText('Booking cost:');
@@ -377,8 +378,8 @@ test.describe('Product Tests', () => {
 
 		// Booking can be made till 1 month into the future
 		await visitProductPage(page, product);
-		await fillBookingStartDate(page, getFutureDate(1));
-		await fillBookingEndDate(page, getFutureDate(2));
+		await fillBookingStartDate(page, getFutureDate(1), false);
+		await fillBookingEndDate(page, getFutureDate(2), false);
 		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
 			'Booking cost:'
 		);
@@ -452,7 +453,7 @@ test.describe('Product Tests', () => {
 	test('Verify "Rates" Setting for Accommodation Booking with Range Types with Range Type "Range of months" - @foundational', async ({
 		page,
 	}) => {
-		const month = new Date().getMonth() + 1;
+		const month = new Date().getMonth() + 2;
 		const productData = {
 			title: 'Accomodation product #6',
 			baseCost: '10.00',
@@ -473,15 +474,21 @@ test.describe('Product Tests', () => {
 			page.locator('p.price', { hasText: 'per night' })
 		).toContainText(`From $${productData.displayCost} per night`);
 
-		await fillBookingStartDate(page, getFutureDate(1));
-		await fillBookingEndDate(page, getFutureDate(2));
+		await fillBookingStartDate(page, {
+			...getFutureDate(0, 1),
+			date: '01',
+		});
+		await fillBookingEndDate(page, { ...getFutureDate(0, 1), date: '02' });
 		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
 			`Booking cost: $${parseFloat(productData.range.cost)}` // 50.00
 		);
 
 		await visitProductPage(page, product);
-		await fillBookingStartDate(page, getFutureDate(1, 1));
-		await fillBookingEndDate(page, getFutureDate(2, 1));
+		await fillBookingStartDate(page, {
+			...getFutureDate(0, 2),
+			date: '01',
+		});
+		await fillBookingEndDate(page, { ...getFutureDate(0, 2), date: '02' });
 		await expect(page.locator('.wc-bookings-booking-cost')).toContainText(
 			`Booking cost: $${parseFloat(productDetails.baseCost)}` // 10.00
 		);
