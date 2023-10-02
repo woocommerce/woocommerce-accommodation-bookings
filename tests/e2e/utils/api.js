@@ -15,6 +15,9 @@ if (process.env.CONSUMER_KEY && process.env.CONSUMER_SECRET) {
 
 /**
  * Allow explicit construction of api client.
+ *
+ * @param {string} consumerKey    API consumer key
+ * @param {string} consumerSecret API consumer secret
  */
 const constructWith = (consumerKey, consumerSecret) => {
 	api = new wcApi({
@@ -56,7 +59,7 @@ const update = {
 		await api.put(`orders/${orderId}`, order).catch((error) => {
 			throwCustomError(
 				error,
-				'Something went wrong when trying update order∂.'
+				'Something went wrong when trying update order.'
 			);
 		});
 	},

@@ -457,10 +457,11 @@ export function getCheckOutTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
 /**
  * Fill Booking start date details on product page
  *
- * @param {Page}   page      Playwright page object
- * @param {Object} startDate Booking start date details
+ * @param {Page}    page      Playwright page object
+ * @param {Object}  startDate Booking start date details
+ * @param {boolean} click     Whether to click on date
  */
-export async function fillBookingStartDate(page, startDate) {
+export async function fillBookingStartDate(page, startDate, click = true) {
 	await unBlockUI(page);
 	await fillBookingDate(
 		page,
@@ -477,16 +478,22 @@ export async function fillBookingStartDate(page, startDate) {
 		'input[name="wc_bookings_field_start_date_day"]',
 		startDate.date
 	);
-	await page.locator('td.selection-start-date a').first().click();
+	if (click) {
+		await page
+			.locator('td.selection-start-date a')
+			.first()
+			.click({ force: true });
+	}
 }
 
 /**
  * Fill Booking end date details on product page
  *
- * @param {Page}   page    Playwright page object
- * @param {Object} endDate Booking end date details
+ * @param {Page}    page    Playwright page object
+ * @param {Object}  endDate Booking end date details
+ * @param {boolean} click   Whether to click on date
  */
-export async function fillBookingEndDate(page, endDate) {
+export async function fillBookingEndDate(page, endDate, click = true) {
 	await unBlockUI(page);
 	await fillBookingDate(
 		page,
@@ -503,7 +510,12 @@ export async function fillBookingEndDate(page, endDate) {
 		'input[name="wc_bookings_field_start_date_to_day"]',
 		endDate.date
 	);
-	await page.locator('td.selection-end-date a').first().click();
+	if (click) {
+		await page
+			.locator('td.selection-end-date a')
+			.first()
+			.click({ force: true });
+	}
 	await unBlockUI(page);
 }
 
@@ -545,7 +557,7 @@ export async function clearCart(page) {
 	const count = await rows.count();
 
 	for (let i = 0; i < count; i++) {
-		await rows.nth(i).click();
+		await rows.nth(0).click();
 		await page.locator('.woocommerce-message').waitFor();
 	}
 }
@@ -571,4 +583,33 @@ export async function updateSettings(page, timeSettings) {
 	await expect(
 		page.locator('.updated', { hasText: 'Settings saved' })
 	).toBeVisible();
+}
+
+/**
+ * Confirm the booking.
+ *
+ * @param {Page}   page      Playwright page object.
+ * @param {number} bookingId Booking ID.
+ */
+export async function confirmBooking(page, bookingId) {
+	await page.goto(`/wp-admin/post.php?post=${bookingId}&action=edit`);
+	await page.locator('#_booking_status').selectOption('confirmed');
+	await page.getByRole('button', { name: 'Save Booking' }).click();
+}
+
+/**
+ * Clear email Logs.
+ *
+ * @param {Page} page Playwright page object
+ */
+export async function clearEmailLogs(page) {
+	await page.goto('/wp-admin/admin.php?page=email-log');
+	const bulkAction = await page.locator('#bulk-action-selector-top');
+	if (await bulkAction.isVisible()) {
+		await bulkAction.selectOption('el-log-list-delete-all');
+		await page.locator('#doaction').click();
+		await expect(
+			page.locator('#setting-error-deleted-email-logs p').first()
+		).toContainText('email logs deleted');
+	}
 }
