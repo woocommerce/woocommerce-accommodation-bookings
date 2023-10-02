@@ -40,12 +40,10 @@ jobs:
           key: node-${{ hashFiles('package-lock.json') }}
 
       - name: Node install
-        run: |
-          npm install
+        run: npm install
 
       - name: Build
-        run: |
-          npm run build:dev
+        run: npm run prebuild && npm run build:webpack && npm run archive
 
       - name: Install Playwright Browsers
         run: npx playwright install chromium
