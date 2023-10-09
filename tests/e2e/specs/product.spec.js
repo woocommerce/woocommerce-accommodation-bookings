@@ -244,9 +244,9 @@ test.describe('Product Tests', () => {
 
 		// Verify Accommodation Booking Process for Slot Requiring Confirmation
 		await page.goto('/checkout');
-		await expect(
-			page.locator('label[for="payment_method_wc-bookings-gateway"]')
-		).toContainText('Subject to confirmation');
+		await expect(page.locator('#place_order')).toContainText(
+			'Request Confirmation'
+		);
 		await fillBillingDetails(page, customer.billing);
 		await placeOrder(page);
 		await expect(
