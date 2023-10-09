@@ -38,6 +38,12 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.2.1 - 2023-10-10 =
+* Dev - Hard code the paths to the asset data files.
+* Dev - Update PHPCS and PHPCompatibility GitHub Actions.
+* Fix - Fatal Error when WooCommerce is disabled.
+* Tweak - Indicate compatibility with WooPayments extension.
+
 = 1.2.0 - 2023-09-05 =
 * Dev - Bump PHP minimum supported version from 7.0 to 7.3.
 * Dev - Bump WooCommerce "tested up to" version from 7.8 to 8.0.
