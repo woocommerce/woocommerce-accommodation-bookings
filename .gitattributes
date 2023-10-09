@@ -14,7 +14,8 @@ phpunit.xml.dist export-ignore
 .tx export-ignore
 webpack.config.js export-ignore
 postcss.config.js export-ignore
-phpcs.xml export-ignore
+phpcs.xml.dist export-ignore
+phpcs-compat.xml.dist export-ignore
 package-lock.json export-ignore
 composer.json export-ignore
 composer.lock export-ignore

@@ -46,7 +46,7 @@
     "archive": "composer archive --file=$npm_package_name --format=zip",
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
     "makepot": "wp i18n make-pot . --exclude=tests,assets",
-    "phpcompat": "./vendor/bin/phpcs *.php includes -p --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.3-",
+    "phpcompat": "./vendor/bin/phpcs --standard=phpcs-compat.xml.dist -p .",
     "lint:js": "wp-scripts lint-js --ext=js",
     "lint:js-fix": "wp-scripts lint-js --ext=js --fix",
     "lint:style": "wp-scripts lint-style",

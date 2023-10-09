@@ -188,6 +188,16 @@ class WC_Accommodation_Bookings_Plugin {
 	}
 
 	/**
+	 * WooCommerce fallback notice.
+	 *
+	 * @since 1.2.1
+	 */
+	public function missing_wc_notice() {
+		/* translators: %s WC download URL link. */
+		echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Accommodation Bookings requires WooCommerce to be installed and active. You can download %s here.', 'woocommerce-accommodation-bookings' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
+	}
+
+	/**
 	 * Load Classes
 	 */
 	public function includes() {
@@ -205,6 +215,12 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Include admin
 	 */
 	public function admin_includes() {
+		// Return if WooCommerce class not found.
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			add_action( 'admin_notices', array( $this, 'missing_wc_notice' ) );
+			return;
+		}
+
 		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-panels.php';
 		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-product-settings.php';
 	}
@@ -213,11 +229,12 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
-		$booking_style_asset_data  = $this->get_asset_data( 'frontend', 'css' );
-		$booking_script_asset_data = $this->get_asset_data( 'booking-form', 'js/frontend' );
+		$dist_path   = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/dist';
+		$style_data  = include $dist_path . '/css/frontend.asset.php';
+		$script_data = include $dist_path . '/js/frontend/booking-form.asset.php';
 
-		$booking_script_dependencies = array_merge(
-			$booking_script_asset_data['dependencies'],
+		$script_dependencies = array_merge(
+			$script_data['dependencies'],
 			array( 'wc-bookings-booking-form' )
 		);
 
@@ -225,14 +242,14 @@ class WC_Accommodation_Bookings_Plugin {
 			'wc-accommodation-bookings-styles',
 			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/dist/css/frontend.css',
 			null,
-			$booking_style_asset_data['version']
+			$style_data['version']
 		);
 
 		wp_enqueue_script(
 			'wc-accommodation-bookings-form',
 			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/dist/js/frontend/booking-form.js',
-			$booking_script_dependencies,
-			$booking_script_asset_data['version'],
+			$script_dependencies,
+			$script_data['version'],
 			true
 		);
 
@@ -311,19 +328,5 @@ class WC_Accommodation_Bookings_Plugin {
 
 		// Update version.
 		update_option( 'wc_accommodation_bookings_version', $this->version );
-	}
-
-	/**
-	 * Should return data from the asset file.
-	 *
-	 * @param string $script_file_name Script file name.
-	 * @param string $location Script file location.
-	 *
-	 * @return array
-	 */
-	private function get_asset_data( $script_file_name, $location ): array {
-		$asset_path = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . "/dist/$location/$script_file_name.asset.php";
-
-		return require $asset_path;
 	}
 }

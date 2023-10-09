@@ -19,6 +19,8 @@ This extension extends Bookings and makes it possible to:
 * Reservations that span nights instead of days.
 * List check-in/check-out information on the product page, cart, and order pages.
 
+Accommodation Bookings is fully [compatible with WooPayments](https://woocommerce.com/products/woopayments/).
+
 == Installation ==
 
 1. Make sure WooCommerce & WooCommerce Bookings are installed.

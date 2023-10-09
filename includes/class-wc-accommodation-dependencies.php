@@ -1,5 +1,11 @@
 <?php
 /**
+ * A WC_Accommodation_Dependencies class file.
+ *
+ * @package woocommerce-accommodation-bookings
+ */
+
+/**
  * WC Accommodation Bookings Dependency Checker
  *
  * Checks if WooCommerce Bookings is enabled and if it is the correct
@@ -7,7 +13,11 @@
  */
 class WC_Accommodation_Dependencies {
 
-	/**@var an array of active plugins*/
+	/**
+	 * Array of active plugins
+	 *
+	 * @var array of active plugins
+	 */
 	private static $active_plugins;
 
 	/**
@@ -31,13 +41,13 @@ class WC_Accommodation_Dependencies {
 		$booking_file     = 'woocommerce-bookings/woocommerce-bookings.php';
 
 		return (
-			in_array( $booking_file, self::$active_plugins )
+			in_array( $booking_file, self::$active_plugins, true )
 			||
 			array_key_exists( $booking_file, self::$active_plugins )
 			||
 			class_exists( 'WC_Bookings' )
 			||
-			in_array( $old_booking_file, self::$active_plugins )
+			in_array( $old_booking_file, self::$active_plugins, true )
 			||
 			array_key_exists( $old_booking_file, self::$active_plugins )
 		);
@@ -45,7 +55,8 @@ class WC_Accommodation_Dependencies {
 
 	/**
 	 * Returns true if bookings is greater than a specific version and false if not
-	 * @param  string  $verson The version to check against
+	 *
+	 * @param string $version The version to check against.
 	 * @return boolean
 	 */
 	private static function is_bookings_above_or_equal_to_version( $version ) {
@@ -58,7 +69,7 @@ class WC_Accommodation_Dependencies {
 	/**
 	 * Check dependencies.
 	 *
-	 * @throws Exception
+	 * @throws Exception Show exception on dependencies failure.
 	 */
 	public static function check_dependencies() {
 		if ( ! self::$active_plugins ) {
