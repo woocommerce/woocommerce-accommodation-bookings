@@ -1,7 +1,7 @@
 {
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "config": {
     "translate": false,
     "wp_org_slug": "woocommerce-accommodation-bookings",
