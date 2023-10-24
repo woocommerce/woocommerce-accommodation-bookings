@@ -25,10 +25,14 @@
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "license": "GPL-3.0+",
   "devDependencies": {
+    "@playwright/test": "^1.37.1",
     "@woocommerce/eslint-plugin": "^2.2.0",
+    "@woocommerce/woocommerce-rest-api": "^1.0.1",
+    "@wordpress/env": "^8.7.0",
     "@wordpress/i18n": "^4.25.0",
     "@wordpress/prettier-config": "^2.8.0",
     "@wordpress/scripts": "^25.2.0",
+    "moment": "^2.29.4",
     "prettier": "^2.8.3",
     "prettier-eslint": "^15.0.1",
     "webpack-remove-empty-scripts": "^1.0.1"
@@ -46,10 +50,23 @@
     "lint:js": "wp-scripts lint-js --ext=js",
     "lint:js-fix": "wp-scripts lint-js --ext=js --fix",
     "lint:style": "wp-scripts lint-style",
-    "lint:style-fix": "wp-scripts lint-style --fix"
+    "lint:style-fix": "wp-scripts lint-style --fix",
+    "env": "wp-env",
+    "env:start": "wp-env start",
+    "env:clean": "wp-env clean",
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy",
+    "postenv:start": "bash ./tests/e2e/bin/initialize.sh",
+    "env:install-plugins": "bash ./tests/e2e/bin/install-plugins.sh",
+    "test:e2e": "npx playwright test --config tests/e2e/playwright.config.js",
+    "test:e2e-local": "export $(cat ./tests/e2e/config/.env | xargs) && npm run test:e2e",
+    "test:e2e-debug": "npx playwright test --config tests/e2e/playwright.config.js --debug",
+    "test:e2e-codegen": "npx playwright codegen",
+    "test:e2e-report": "npx playwright show-report tests/e2e/test-results/playwright-report",
+    "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational"
   },
   "engines": {
-    "node": ">=10.24.1",
-    "npm": ">=5.5.1"
+    "node": "~16",
+    "npm": "~8"
   }
 }

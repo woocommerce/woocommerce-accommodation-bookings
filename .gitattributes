@@ -26,3 +26,4 @@ phpunit.xml export-ignore
 jest-puppeteer.config.js export-ignore
 .nvmrc export-ignore
 assets export-ignore
+.wp-env.json
