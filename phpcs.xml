@@ -14,7 +14,7 @@
 	<exclude-pattern>*/dist/*</exclude-pattern>
 	<exclude-pattern>*/languages/*</exclude-pattern>
 
-	<config name="minimum_supported_wp_version" value="6.1"/>
+	<config name="minimum_supported_wp_version" value="6.2"/>
 
 	<!-- ensure we are using language features according to supported PHP versions -->
 	<config name="testVersion" value="7.3-"/>
