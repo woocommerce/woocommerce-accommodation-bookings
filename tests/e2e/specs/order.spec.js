@@ -74,24 +74,40 @@ test.describe('Order Tests', () => {
 		// Verify Check-In and Check-Out Date and Time Display on Cart Page.
 		await page.goto('/cart');
 		await expect(
-			page.locator('dl.variation dd.variation-Check-in p').first()
+			page
+				.locator(
+					'.wc-block-components-product-details__check-in .wc-block-components-product-details__value'
+				)
+				.first()
 		).toContainText(checkInTime);
 		await expect(
-			page.locator('dl.variation dd.variation-Check-out p').first()
+			page
+				.locator(
+					'.wc-block-components-product-details__check-out .wc-block-components-product-details__value'
+				)
+				.first()
 		).toContainText(checkOutTime);
 
 		// Verify Check-In and Check-Out Date and Time Display on Checkout Page.
 		await page.goto('/checkout');
 		await expect(
-			page.locator('dl.variation dd.variation-Check-in p').first()
+			page
+				.locator(
+					'.wc-block-components-product-details__check-in .wc-block-components-product-details__value'
+				)
+				.first()
 		).toContainText(checkInTime);
 		await expect(
-			page.locator('dl.variation dd.variation-Check-out p').first()
+			page
+				.locator(
+					'.wc-block-components-product-details__check-out .wc-block-components-product-details__value'
+				)
+				.first()
 		).toContainText(checkOutTime);
 
 		// Verify Check-In and Check-Out Date and Time Display on Order Received Page.
-		await fillBillingDetails(page, customer.billing);
-		await placeOrder(page);
+		await fillBillingDetails(page, customer.billing, true);
+		await placeOrder(page, true);
 		await expect(
 			page
 				.locator('ul.wc-booking-summary-list .booking-start-date')
@@ -130,8 +146,8 @@ test.describe('Order Tests', () => {
 
 		// Place order and verify booking details in confirmation email.
 		await page.goto('/checkout');
-		await fillBillingDetails(page, customer.billing);
-		const orderId = await placeOrder(page);
+		await fillBillingDetails(page, customer.billing, true);
+		const orderId = await placeOrder(page, true);
 		await api.update.order({
 			id: orderId,
 			status: 'completed',
