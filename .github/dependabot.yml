@@ -1,0 +1,39 @@
+# Basic set up for three package managers
+#  - Disables version-updates
+
+version: 2
+updates:
+    - package-ecosystem: 'github-actions'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      # Disable version updates for GitHub Actions dependencies
+      open-pull-requests-limit: 0
+      labels:
+        - "changelog: none"
+        - "type: dependency"
+        - "github_actions"
+
+      # Maintain dependencies for npm
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      # Disable version updates for npm dependencies
+      open-pull-requests-limit: 0
+      labels:
+        - "schangelog: none"
+        - "type: dependency"
+        - "javascript"
+
+      # Maintain dependencies for Composer
+    - package-ecosystem: 'composer'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      # Disable version updates for Composer dependencies
+      open-pull-requests-limit: 0
+      labels:
+        - "changelog: none"
+        - "type: dependencies"
+        - "php"
