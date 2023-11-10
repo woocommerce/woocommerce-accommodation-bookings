@@ -22,7 +22,7 @@ updates:
       # Disable version updates for npm dependencies
       open-pull-requests-limit: 0
       labels:
-        - "schangelog: none"
+        - "changelog: none"
         - "type: dependency"
         - "javascript"
 
