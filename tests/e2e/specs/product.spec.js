@@ -244,11 +244,15 @@ test.describe('Product Tests', () => {
 
 		// Verify Accommodation Booking Process for Slot Requiring Confirmation
 		await page.goto('/checkout');
-		await expect(page.locator('#place_order')).toContainText(
-			'Request Confirmation'
-		);
-		await fillBillingDetails(page, customer.billing);
-		await placeOrder(page);
+		await expect(
+			page.locator(
+				'button.wc-block-components-checkout-place-order-button'
+			)
+		).toContainText('Request Confirmation');
+		await fillBillingDetails(page, customer.billing, true);
+		await page
+			.locator('button.wc-block-components-checkout-place-order-button')
+			.click();
 		await expect(
 			page
 				.locator('.wc-booking-summary .status-pending-confirmation')
@@ -275,8 +279,8 @@ test.describe('Product Tests', () => {
 
 		// Place order
 		await page.goto('/checkout');
-		await fillBillingDetails(page, customer.billing);
-		const orderId = await placeOrder(page);
+		await fillBillingDetails(page, customer.billing, true);
+		const orderId = await placeOrder(page, true);
 
 		page.goto('/my-account/bookings/');
 		page.on('dialog', (dialog) => dialog.accept());
@@ -288,7 +292,7 @@ test.describe('Product Tests', () => {
 			.click();
 
 		await expect(
-			page.locator('.woocommerce .woocommerce-info').first()
+			page.locator('.wc-block-components-notice-banner.is-info').first()
 		).toContainText('Your booking was cancelled');
 	});
 
