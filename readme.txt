@@ -38,6 +38,14 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.2.2 - 2023-12-04 =
+* Dev - Add end-to-end tests using Playwright.
+* Dev - Update default behavior to use a block-based cart and checkout in E2E tests.
+* Dev - Bump WooCommerce "tested up to" version 8.3.
+* Dev - Bump WooCommerce minimum supported version to 8.1.
+* Dev - Bump WordPress "tested up to" version 6.4.
+* Dev - Bump WordPress minimum supported version to 6.2.
+
 = 1.2.1 - 2023-10-10 =
 * Dev - Hard code the paths to the asset data files.
 * Dev - Update PHPCS and PHPCompatibility GitHub Actions.
