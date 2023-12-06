@@ -348,6 +348,8 @@ export async function blockFillBillingDetails(page, customerDetails) {
 		await page.locator('#billing-state ul li').first().click();
 	}
 	await page.locator('#billing-postcode').fill(customerDetails.postcode);
+	await page.locator('#billing-postcode').blur();
+	await page.waitForLoadState('networkidle');
 }
 
 /**

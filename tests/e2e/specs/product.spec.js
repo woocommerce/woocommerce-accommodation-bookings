@@ -373,7 +373,7 @@ test.describe('Product Tests', () => {
 		// await expect(addToCardButton).toHaveClass(/disabled/);
 
 		await visitProductPage(page, product);
-		await fillBookingStartDate(page, getFutureDate(0, 1), false);
+		await fillBookingStartDate(page, getFutureDate(1, 1), false);
 		await fillBookingEndDate(page, getFutureDate(2, 1), false);
 		await expect(
 			page.locator('.wc-bookings-booking-cost .booking-error')
@@ -457,7 +457,10 @@ test.describe('Product Tests', () => {
 	test('Verify "Rates" Setting for Accommodation Booking with Range Types with Range Type "Range of months" - @foundational', async ({
 		page,
 	}) => {
-		const month = new Date().getMonth() + 2;
+		let month = new Date().getMonth() + 2;
+		if (month > 12) {
+			month = month - 12;
+		}
 		const productData = {
 			title: 'Accomodation product #6',
 			baseCost: '10.00',
