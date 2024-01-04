@@ -12,6 +12,34 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 	/**
+	 * The type of product we're creating
+	 *
+	 * @var string
+	 */
+	public $product_type = 'accommodation-booking';
+
+	/**
+	 * The type of duration we're using
+	 *
+	 * @var string
+	 */
+	public $wc_booking_duration_type = 'customer';
+
+	/**
+	 * The unit of duration we're using
+	 *
+	 * @var string
+	 */
+	public $wc_booking_duration_unit = 'night';
+
+	/**
+	 * The duration of the booking
+	 *
+	 * @var integer
+	 */
+	public $wc_booking_duration = 1;
+
+	/**
 	 * Set up our new type and fill out some basic info
 	 *
 	 * WC_Product_Accommodation_Booking constructor.
