@@ -1,7 +1,10 @@
 *** Changelog ***
 
-= 1.2.3 - TBD =
+= 1.2.3 - 2024-01-08 =
 * Dev - Declare compatibility with WooCommerce Blocks.
+* Dev - Bump PHP minimum supported version to 7.4.
+* Dev - Bump WooCommerce "tested up to" version 8.4.
+* Dev - Bump WooCommerce minimum supported version to 8.2.
 
 = 1.2.2 - 2023-12-11 =
 * Dev - Add end-to-end tests using Playwright.
