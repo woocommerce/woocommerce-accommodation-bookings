@@ -84,8 +84,8 @@ class WC_Accommodation_Dependencies {
 			throw new Exception( __( 'Accommodation Bookings requires Bookings version 1.9+.', 'woocommerce-accommodation-bookings' ) );
 		}
 
-		if ( ! version_compare( PHP_VERSION, '7.3', '>=' ) ) {
-			throw new Exception( __( 'Accommodation Bookings requires PHP version 7.3 or above.', 'woocommerce-accommodation-bookings' ) );
+		if ( ! version_compare( PHP_VERSION, '7.4', '>=' ) ) {
+			throw new Exception( __( 'Accommodation Bookings requires PHP version 7.4 or above.', 'woocommerce-accommodation-bookings' ) );
 		}
 	}
 }
