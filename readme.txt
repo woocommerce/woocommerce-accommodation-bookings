@@ -3,7 +3,7 @@ Contributors:  woocommerce, automattic, woothemes, jshreve, akeda, bor0, jessepe
 Tags: woocommerce, bookings, accommodations
 Requires at least: 6.2
 Tested up to: 6.4
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -38,8 +38,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.2.3 - TBD =
+= 1.2.3 - 2024-01-08 =
 * Dev - Declare compatibility with WooCommerce Blocks.
+* Dev - Bump PHP minimum supported version to 7.4.
+* Dev - Bump WooCommerce "tested up to" version 8.4.
+* Dev - Bump WooCommerce minimum supported version to 8.2.
 
 = 1.2.2 - 2023-12-11 =
 * Dev - Add end-to-end tests using Playwright.

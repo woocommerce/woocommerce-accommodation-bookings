@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Accommodation Bookings
  * Plugin URI: https://woocommerce.com/products/woocommerce-accommodation-bookings/
  * Description: An accommodations add-on for the WooCommerce Bookings extension.
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: WooCommerce
  * Author URI: https://woocommerce.com
  * Text Domain: woocommerce-accommodation-bookings
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '1.2.2' ); // WRCS: DEFINED_VERSION.
+define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '1.2.3' ); // WRCS: DEFINED_VERSION.
 
 require_once 'includes/class-wc-accommodation-bookings-plugin.php';
 $wc_accom_plugin = new WC_Accommodation_Bookings_Plugin( __FILE__, WC_ACCOMMODATION_BOOKINGS_VERSION );
