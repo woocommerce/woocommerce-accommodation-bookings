@@ -17,7 +17,7 @@
 	<config name="minimum_supported_wp_version" value="6.2"/>
 
 	<!-- ensure we are using language features according to supported PHP versions -->
-	<config name="testVersion" value="7.3-"/>
+	<config name="testVersion" value="7.4-"/>
 	<rule ref="PHPCompatibilityWP" />
 	<rule ref="WordPress.WP.I18n">
 		<properties>
