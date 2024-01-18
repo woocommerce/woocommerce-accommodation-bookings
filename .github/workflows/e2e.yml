@@ -1,0 +1,115 @@
+name: E2E test
+
+on:
+  push:
+    branches:
+      - smoke-testing
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches:
+      - trunk
+
+jobs:
+  e2e:
+    if: "${{ ( github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'needs: e2e testing') ) ||  github.event_name == 'push' }}"
+    name: E2E Test
+    runs-on: ubuntu-latest
+    env:
+      BOT_GITHUB_TOKEN: ${{secrets.BOT_GITHUB_TOKEN}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Composer cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Node cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: node-${{ hashFiles('package-lock.json') }}
+
+      - name: Node install
+        run: npm install
+
+      - name: Build
+        run: npm run prebuild && npm run build:webpack && npm run archive
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium
+
+      - name: Setup WP environment
+        run: |
+          npm run env:install-plugins
+          npm run env:start
+
+
+      - name: Run E2E Foundational Test
+        id: e2e_tests
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run test:e2e-foundational
+
+      - name: Update Success Label
+        if: |
+          always() &&
+          steps.e2e_tests.conclusion == 'success'
+        uses: actions/github-script@v6
+        continue-on-error: true
+        with:
+          script: |
+            github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: ['needs: e2e testing']
+            })
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['status: e2e tests passing']
+            })
+
+      - name: Update Failure Label
+        if: |
+          always() &&
+          steps.e2e_tests.conclusion == 'failure'
+        uses: actions/github-script@v6
+        continue-on-error: true
+        with:
+          script: |
+            github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: ['needs: e2e testing']
+            })
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['status: e2e tests failing']
+            })
+
+      - name: Run E2E Smoke Test
+        if: ${{ github.event_name == 'push' }}
+        run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/e2e/test-results/report
+          retention-days: 2
