@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors:  woocommerce, automattic, woothemes, jshreve, akeda, bor0, jessepearson, laurendavissmith001, royho
 Tags: woocommerce, bookings, accommodations
-Requires at least: 6.2
+Requires at least: 6.3
 Tested up to: 6.4
 Stable tag: 1.2.3
 License: GNU General Public License v3.0
