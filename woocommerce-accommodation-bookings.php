@@ -12,6 +12,7 @@
  * Requires at least: 6.3
  * WC tested up to: 8.5
  * WC requires at least: 8.3
+ * PHP tested up to: 8.3
  * Requires PHP: 7.4
  *
  * Copyright: © 2023 WooCommerce
