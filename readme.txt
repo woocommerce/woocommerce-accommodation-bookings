@@ -38,6 +38,12 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.2.4 - 2024-02-05 =
+* Dev - Bump PHP "tested up to" version 8.3.
+* Dev - Bump WooCommerce "tested up to" version 8.5.
+* Dev - Bump WooCommerce minimum supported version to 8.3.
+* Dev - Bump WordPress minimum supported version to 6.3.
+
 = 1.2.3 - 2024-01-08 =
 * Dev - Declare compatibility with WooCommerce Blocks.
 * Dev - Bump PHP minimum supported version to 7.4.
