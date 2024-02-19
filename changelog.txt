@@ -1,5 +1,10 @@
 *** Changelog ***
 
+= 1.2.5 - 2024-02-19 =
+* Dev - Apply same code style (call static method) within file.
+* Fix - Booking Calendar displays incorrect availability for Accommodation Products.
+* Fix - Missing product ID when getting check-in time.
+
 = 1.2.4 - 2024-02-05 =
 * Dev - Bump PHP "tested up to" version 8.3.
 * Dev - Bump WooCommerce "tested up to" version 8.5.
