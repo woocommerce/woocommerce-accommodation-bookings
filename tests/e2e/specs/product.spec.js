@@ -292,8 +292,8 @@ test.describe('Product Tests', () => {
 			.click();
 
 		await expect(
-			page.locator('.wc-block-components-notice-banner.is-info').first()
-		).toContainText('Your booking was cancelled');
+			page.getByText('Your booking was cancelled').first()
+		).toBeVisible();
 	});
 
 	test('Availability > Bookings Can Be Made Starting - Month/Week/Day - into the future Setting - @foundational', async ({
