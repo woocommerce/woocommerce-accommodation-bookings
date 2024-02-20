@@ -118,7 +118,7 @@ class WC_Accommodation_Booking_Date_Picker {
 						continue;
 					}
 
-					$check_in_time = $product->get_check_times( 'in', $product->get_id() );
+					$check_in_time = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
 					if ( 'in' === $which ) {
 						$check_time = strtotime( '-1 day ' . $check_in_time, $time );
 					} else {
@@ -160,7 +160,7 @@ class WC_Accommodation_Booking_Date_Picker {
 				foreach ( $times as $time ) {
 					$day = date( 'Y-n-j', $time );
 
-					$check_in_time = $product->get_check_times( 'in' );
+					$check_in_time = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
 					if ( 'in' === $which ) {
 						$check_time = strtotime( $check_in_time, $time );
 					} else {
