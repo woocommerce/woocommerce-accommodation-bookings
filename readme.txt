@@ -38,8 +38,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.2.5 - 2024-02-19 =
+= 1.2.5 - 2024-02-26 =
 * Dev - Apply same code style (call static method) within file.
+* Dev - Bump WooCommerce "tested up to" version 8.6.
+* Dev - Bump WooCommerce minimum supported version to 8.4.
 * Fix - Booking Calendar displays incorrect availability for Accommodation Products.
 * Fix - Missing product ID when getting check-in time.
 
