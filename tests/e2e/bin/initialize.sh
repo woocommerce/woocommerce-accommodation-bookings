@@ -21,3 +21,4 @@ wp-env run tests-cli wp user create customer customer@bookingstestsuite.com --us
 
 # Install and activate WooCommerce Bookings
 wp-env run tests-cli wp plugin install --activate ./wp-content/plugins/woocommerce-accommodation-bookings/woocommerce-bookings.zip
+wp-env run tests-cli wp plugin activate woocommerce-accommodation-bookings
