@@ -27,3 +27,4 @@ jest-puppeteer.config.js export-ignore
 .nvmrc export-ignore
 assets export-ignore
 .wp-env.json export-ignore
+.wp-env.override.json export-ignore
