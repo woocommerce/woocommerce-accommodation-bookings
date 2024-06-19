@@ -309,7 +309,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 					$qty_booked_in_block = 0;
 
 					foreach ( $existing_bookings as $existing_booking ) {
-						if ( $existing_booking->is_within_block( $block_start_time, $block_end_time ) ) {
+						if ( $existing_booking->is_intersecting_block( $block_start_time, $block_end_time ) ) {
 							$qty_to_add = $bookable_product->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
 							if ( $has_resources ) {
 								if ( $existing_booking->get_resource_id() === absint( $resource_id ) ) {

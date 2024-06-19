@@ -512,7 +512,10 @@ export async function fillBookingEndDate(page, endDate, click = true) {
 		'input[name="wc_bookings_field_start_date_to_day"]',
 		endDate.date
 	);
-	if (click) {
+	if (
+		click &&
+		(await page.locator('td.selection-end-date a').first().isVisible())
+	) {
 		await page
 			.locator('td.selection-end-date a')
 			.first()

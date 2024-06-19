@@ -1,5 +1,24 @@
 *** Changelog ***
 
+= 1.2.6 - 2024-05-20 =
+* Dev - Bump WooCommerce "tested up to" version 8.9.
+* Dev - Bump WooCommerce minimum supported version to 8.7.
+* Dev - Bump WordPress "tested up to" version 6.5.
+* Dev - Bump WordPress minimum supported version to 6.3.
+
+= 1.2.5 - 2024-02-26 =
+* Dev - Apply same code style (call static method) within file.
+* Dev - Bump WooCommerce "tested up to" version 8.6.
+* Dev - Bump WooCommerce minimum supported version to 8.4.
+* Fix - Booking Calendar displays incorrect availability for Accommodation Products.
+* Fix - Missing product ID when getting check-in time.
+
+= 1.2.4 - 2024-02-05 =
+* Dev - Bump PHP "tested up to" version 8.3.
+* Dev - Bump WooCommerce "tested up to" version 8.5.
+* Dev - Bump WooCommerce minimum supported version to 8.3.
+* Dev - Bump WordPress minimum supported version to 6.3.
+
 = 1.2.3 - 2024-01-08 =
 * Dev - Declare compatibility with WooCommerce Blocks.
 * Dev - Bump PHP minimum supported version to 7.4.

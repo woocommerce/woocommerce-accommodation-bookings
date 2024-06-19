@@ -50,11 +50,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium
 
+      - name: Set the core version
+        if: "${{ contains(github.event.pull_request.labels.*.name, 'needs: WP RC test') }}"
+        id: run-rc-test
+        run: ./tests/e2e/bin/set-core-version.js WordPress/WordPress#master
+
       - name: Setup WP environment
         run: |
           npm run env:install-plugins
           npm run env:start
-
 
       - name: Run E2E Foundational Test
         id: e2e_tests

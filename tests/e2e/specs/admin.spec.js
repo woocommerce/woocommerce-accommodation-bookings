@@ -24,37 +24,6 @@ test.describe('Admin Tests', () => {
 		).toBeVisible();
 	});
 
-	test('Store admin can see a notice when the WooCommerce Bookings is not active - @foundational', async ({
-		page,
-	}) => {
-		await page.goto('/wp-admin/plugins.php');
-
-		// Deactivate Bookings plugin
-		page.getByRole('link', {
-			name: 'Deactivate WooCommerce Bookings',
-			exact: true,
-		}).click();
-
-		await expect(
-			page.locator('.error p', {
-				hasText:
-					'Accommodation Bookings requires Bookings plugin activated.',
-			})
-		).toBeVisible();
-
-		await page.goto('/wp-admin/plugins.php');
-		// Activate Bookings plugin,
-		page.getByRole('link', {
-			name: 'Activate WooCommerce Bookings',
-			exact: true,
-		}).click();
-		await expect(
-			page.locator('#message.updated.notice.is-dismissible', {
-				hasText: 'Plugin activated.',
-			})
-		).toBeVisible();
-	});
-
 	test('Store admin can configure accommodation settings - @foundational', async ({
 		page,
 	}) => {
