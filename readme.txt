@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== WooCommerce Accommodation Bookings ===
 Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
 Requires at least: 6.3
