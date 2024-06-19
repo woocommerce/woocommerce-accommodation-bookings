@@ -1,20 +1,25 @@
 const defaultConfig = require('@wordpress/scripts/config/webpack.config');
+const WooDependencyExtractionWebpackPlugin = require('@woocommerce/dependency-extraction-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const path = require('path');
 
 module.exports = {
 	...defaultConfig,
 	entry: {
-		'js/frontend/booking-form': '/assets/js/booking-form.js', // prettier-ignore
-		'js/admin/writepanel': '/assets/js/writepanel.js', // prettier-ignore
-		'css/frontend': '/assets/css/frontend.scss', // prettier-ignore
-	},
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: '[name].js',
+		...defaultConfig.entry,
+		'js/frontend/booking-form': './src/js/booking-form.js', // prettier-ignore
+		'js/admin/writepanel': './src/js/writepanel.js', // prettier-ignore
+		'css/frontend': './src/css/frontend.scss', // prettier-ignore
 	},
 	plugins: [
-		...defaultConfig.plugins,
+		...defaultConfig.plugins.filter(
+			(plugin) =>
+				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+		),
+		new WooDependencyExtractionWebpackPlugin(),
+		new MiniCssExtractPlugin({
+			filename: `[name].css`,
+		}),
 		new RemoveEmptyScriptsPlugin({
 			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
 		}),

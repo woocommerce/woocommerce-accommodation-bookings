@@ -2,21 +2,6 @@
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
   "version": "1.2.6",
-  "config": {
-    "translate": false,
-    "wp_org_slug": "woocommerce-accommodation-bookings",
-    "assets": {
-      "js": {
-        "min": "assets/js/*.min.js",
-        "js": "assets/js/*.js"
-      },
-      "styles": {
-        "css": "assets/css/*.css",
-        "sass": "assets/css/*.scss",
-        "cssfolder": "assets/css/"
-      }
-    }
-  },
   "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
   "repository": {
     "type": "git",
@@ -25,17 +10,18 @@
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "license": "GPL-3.0+",
   "devDependencies": {
-    "@playwright/test": "^1.37.1",
+    "@playwright/test": "^1.44.0",
+    "@woocommerce/dependency-extraction-webpack-plugin": "^3.0.1",
     "@woocommerce/eslint-plugin": "^2.2.0",
     "@woocommerce/woocommerce-rest-api": "^1.0.1",
-    "@wordpress/env": "^8.7.0",
-    "@wordpress/i18n": "^4.25.0",
+    "@wordpress/env": "^9.10.0",
     "@wordpress/prettier-config": "^2.8.0",
-    "@wordpress/scripts": "^25.2.0",
-    "moment": "^2.29.4",
+    "@wordpress/scripts": "^27.9.0",
+    "mini-css-extract-plugin": "^2.9.0",
+    "moment": "^2.30.1",
     "prettier": "^2.8.3",
     "prettier-eslint": "^15.0.1",
-    "webpack-remove-empty-scripts": "^1.0.1"
+    "webpack-remove-empty-scripts": "^1.0.4"
   },
   "scripts": {
     "prebuild": "rm -rf ./vendor",
@@ -45,10 +31,10 @@
     "build:dev": "composer install && npm run build:webpack && npm run makepot",
     "archive": "composer archive --file=$npm_package_name --format=zip",
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-    "makepot": "wp i18n make-pot . --exclude=tests,assets",
+    "makepot": "wp i18n make-pot . --exclude=tests,src",
     "phpcompat": "./vendor/bin/phpcs --standard=phpcs-compat.xml.dist -p .",
-    "lint:js": "wp-scripts lint-js --ext=js",
-    "lint:js-fix": "wp-scripts lint-js --ext=js --fix",
+    "lint:js": "wp-scripts lint-js src/ --ext=js",
+    "lint:js-fix": "wp-scripts lint-js src/ --ext=js --fix",
     "lint:style": "wp-scripts lint-style",
     "lint:style-fix": "wp-scripts lint-style --fix",
     "env": "wp-env",

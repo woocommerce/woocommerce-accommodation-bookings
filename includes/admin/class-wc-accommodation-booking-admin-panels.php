@@ -68,8 +68,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 		// only load it on products
 		if ( 'product' === $screen->id ) {
-			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-			wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
+			wp_enqueue_script( 'wc_accommodation_bookings_writepanel_js', WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/build/js/admin/writepanel.js', array( 'jquery' ), WC_ACCOMMODATION_BOOKINGS_VERSION, true );
 		}
 	}
 
