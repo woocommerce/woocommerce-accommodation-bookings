@@ -121,6 +121,12 @@ class WC_Accommodation_Bookings_Plugin {
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_assets' ) );
 
+		$rest_request = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( wp_unslash( $_SERVER['REQUEST_URI'] ), 'wp-json/wc-bookings' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+		if ( is_admin() || $rest_request ) {
+			add_action( 'init', array( $this, 'rest_admin_includes' ) );
+		}
+
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
 			add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
@@ -223,6 +229,19 @@ class WC_Accommodation_Bookings_Plugin {
 
 		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-panels.php';
 		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-admin-product-settings.php';
+	}
+
+	/**
+	 * Include REST API and Admin functions' class.
+	 */
+	public function rest_admin_includes() {
+		// Return if WooCommerce class not found.
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			add_action( 'admin_notices', array( $this, 'missing_wc_notice' ) );
+			return;
+		}
+
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-rest-and-admin.php';
 	}
 
 	/**
