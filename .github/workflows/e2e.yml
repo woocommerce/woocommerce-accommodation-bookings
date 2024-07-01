@@ -1,6 +1,7 @@
 name: E2E test
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - smoke-testing
