@@ -28,6 +28,7 @@ tests/e2e/config/local-*
 /vendor/
 
 dist
+build
 
 woocommerce-accommodation-bookings.zip
 

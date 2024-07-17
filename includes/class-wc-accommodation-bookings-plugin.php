@@ -121,6 +121,12 @@ class WC_Accommodation_Bookings_Plugin {
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_assets' ) );
 
+		$rest_request = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( wp_unslash( $_SERVER['REQUEST_URI'] ), 'wp-json/wc-bookings' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+		if ( is_admin() || $rest_request ) {
+			add_action( 'init', array( $this, 'rest_admin_includes' ) );
+		}
+
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
 			add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
@@ -226,12 +232,25 @@ class WC_Accommodation_Bookings_Plugin {
 	}
 
 	/**
+	 * Include REST API and Admin functions' class.
+	 */
+	public function rest_admin_includes() {
+		// Return if WooCommerce class not found.
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			add_action( 'admin_notices', array( $this, 'missing_wc_notice' ) );
+			return;
+		}
+
+		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'admin/class-wc-accommodation-booking-rest-and-admin.php';
+	}
+
+	/**
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
-		$dist_path   = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/dist';
-		$style_data  = include $dist_path . '/css/frontend.asset.php';
-		$script_data = include $dist_path . '/js/frontend/booking-form.asset.php';
+		$build_path  = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/build';
+		$style_data  = include $build_path . '/css/frontend.asset.php';
+		$script_data = include $build_path . '/js/frontend/booking-form.asset.php';
 
 		$script_dependencies = array_merge(
 			$script_data['dependencies'],
@@ -240,14 +259,14 @@ class WC_Accommodation_Bookings_Plugin {
 
 		wp_enqueue_style(
 			'wc-accommodation-bookings-styles',
-			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/dist/css/frontend.css',
+			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/build/css/frontend.css',
 			null,
 			$style_data['version']
 		);
 
 		wp_enqueue_script(
 			'wc-accommodation-bookings-form',
-			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/dist/js/frontend/booking-form.js',
+			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/build/js/frontend/booking-form.js',
 			$script_dependencies,
 			$script_data['version'],
 			true

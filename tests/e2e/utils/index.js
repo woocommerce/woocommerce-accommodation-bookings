@@ -337,6 +337,15 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	await page
 		.locator('#billing-address_1')
 		.fill(customerDetails.addressfirstline);
+	if (
+		await page
+			.locator('.wc-block-components-address-form__address_2-toggle')
+			.isVisible()
+	) {
+		await page
+			.locator('.wc-block-components-address-form__address_2-toggle')
+			.click();
+	}
 	await page
 		.locator('#billing-address_2')
 		.fill(customerDetails.addresssecondline);

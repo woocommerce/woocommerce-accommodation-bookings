@@ -1,9 +1,9 @@
-=== Plugin Name ===
+=== WooCommerce Accommodation Bookings ===
 Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
-Requires at least: 6.3
-Tested up to: 6.5
-Stable tag: 1.2.6
+Requires at least: 6.4
+Tested up to: 6.6
+Stable tag: 1.2.7
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,17 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.2.7 - 2024-07-15 =
+* Dev - Bump WooCommerce "tested up to" version 9.0.
+* Dev - Bump WooCommerce minimum supported version to 8.8.
+* Dev - Bump WordPress "tested up to" version 6.6.
+* Dev - Bump WordPress minimum supported version to 6.4.
+* Dev - Update NPM packages and node version to v20 to modernize developer experience.
+* Dev - Add proper plugin name to the `readme.txt`. Remove Bookings from our required plugins list as it's not hosted on WordPress.org.
+* Dev - Exclude the Woo Comment Hook `@since` sniff.
+* Fix - Unavailable accommodation days appear available even when booked.
+* Fix - Error in Updating Accommodation Product Data via REST API: `Unrecognized Product Type Response`.
 
 = 1.2.6 - 2024-05-20 =
 * Dev - Bump WooCommerce "tested up to" version 8.9.

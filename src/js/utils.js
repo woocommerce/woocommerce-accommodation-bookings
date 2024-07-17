@@ -9,9 +9,10 @@
  * @return {boolean} Returns true if the product is a accommodation booking product type.
  */
 export function is_product_type_accommodation_booking($booking_form) {
-	return $booking_form
-		.closest('.product')
-		.hasClass('product-type-accommodation-booking');
+	return (
+		$booking_form.closest('.product.product-type-accommodation-booking')
+			.length > 0
+	);
 }
 
 /**
