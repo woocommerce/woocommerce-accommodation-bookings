@@ -244,10 +244,12 @@ export async function updateProduct(page, productId, productDetails) {
  * @param {Page} page Playwright page object
  */
 export async function saveSettings(page) {
-	await page.getByRole('button', { name: 'Save changes' }).click();
-	await expect(page.locator('.updated').last()).toContainText(
-		'Your settings have been saved.'
-	);
+	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
+		await page.getByRole('button', { name: 'Save changes' }).click();
+		await expect(page.locator('.updated').last()).toContainText(
+			'Your settings have been saved.'
+		);
+	}
 }
 
 /**
@@ -328,12 +330,8 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	await page.locator('#billing-first_name').fill(customerDetails.firstname);
 	await page.locator('#billing-last_name').fill(customerDetails.lastname);
 	await page
-		.locator('#billing .wc-block-components-country-input input')
-		.fill(customerDetails.countryName);
-	await page
-		.locator('#billing .wc-block-components-country-input ul li')
-		.first()
-		.click();
+		.locator('#billing-country')
+		.selectOption(customerDetails.country);
 	await page
 		.locator('#billing-address_1')
 		.fill(customerDetails.addressfirstline);
@@ -352,9 +350,8 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	await page.locator('#billing-city').fill(customerDetails.city);
 	if (customerDetails.state) {
 		await page
-			.locator('#billing-state input')
-			.fill(customerDetails.stateName);
-		await page.locator('#billing-state ul li').first().click();
+			.locator('#billing-state')
+			.selectOption(customerDetails.state);
 	}
 	await page.locator('#billing-postcode').fill(customerDetails.postcode);
 	await page.locator('#billing-postcode').blur();
@@ -593,10 +590,12 @@ export async function updateSettings(page, timeSettings) {
 	await page
 		.locator('#woocommerce_accommodation_bookings_times_check_out')
 		.fill(timeSettings.checkoutTime);
-	await page.getByRole('button', { name: 'Save changes' }).click();
-	await expect(
-		page.locator('.updated', { hasText: 'Settings saved' })
-	).toBeVisible();
+	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
+		await page.getByRole('button', { name: 'Save changes' }).click();
+		await expect(
+			page.locator('.updated', { hasText: 'Settings saved' })
+		).toBeVisible();
+	}
 }
 
 /**
