@@ -154,6 +154,7 @@ test.describe('Product Tests', () => {
 
 		await expect(addToCardButton).toHaveClass(/disabled/);
 
+		await visitProductPage(page, productId);
 		await fillBookingStartDate(page, getFutureDate(1));
 		await fillBookingEndDate(
 			page,

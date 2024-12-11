@@ -21,7 +21,7 @@ export const api = require('./api');
  */
 export async function switchTab(page, tabName, panelSelector = false) {
 	await page
-		.locator('.wc-tabs > li > a', { hasText: tabName })
+		.locator('.wc-tabs > li:visible > a', { hasText: tabName })
 		.last()
 		.click();
 	if (panelSelector) {
@@ -244,10 +244,12 @@ export async function updateProduct(page, productId, productDetails) {
  * @param {Page} page Playwright page object
  */
 export async function saveSettings(page) {
-	await page.getByRole('button', { name: 'Save changes' }).click();
-	await expect(page.locator('.updated').last()).toContainText(
-		'Your settings have been saved.'
-	);
+	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
+		await page.getByRole('button', { name: 'Save changes' }).click();
+		await expect(page.locator('.updated').last()).toContainText(
+			'Your settings have been saved.'
+		);
+	}
 }
 
 /**
@@ -324,16 +326,17 @@ export async function addToCart(page) {
  * @param {Object} customerDetails Customer billing details
  */
 export async function blockFillBillingDetails(page, customerDetails) {
+	await page.waitForTimeout(3000);
+	const card = await page.locator('.wc-block-components-address-card');
+	if (await card.isVisible()) {
+		await card.locator('.wc-block-components-address-card__edit').click();
+	}
 	await page.locator('#email').fill(customerDetails.email);
 	await page.locator('#billing-first_name').fill(customerDetails.firstname);
 	await page.locator('#billing-last_name').fill(customerDetails.lastname);
 	await page
-		.locator('#billing .wc-block-components-country-input input')
-		.fill(customerDetails.countryName);
-	await page
-		.locator('#billing .wc-block-components-country-input ul li')
-		.first()
-		.click();
+		.locator('#billing-country')
+		.selectOption(customerDetails.country);
 	await page
 		.locator('#billing-address_1')
 		.fill(customerDetails.addressfirstline);
@@ -352,9 +355,8 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	await page.locator('#billing-city').fill(customerDetails.city);
 	if (customerDetails.state) {
 		await page
-			.locator('#billing-state input')
-			.fill(customerDetails.stateName);
-		await page.locator('#billing-state ul li').first().click();
+			.locator('#billing-state')
+			.selectOption(customerDetails.state);
 	}
 	await page.locator('#billing-postcode').fill(customerDetails.postcode);
 	await page.locator('#billing-postcode').blur();
@@ -593,10 +595,12 @@ export async function updateSettings(page, timeSettings) {
 	await page
 		.locator('#woocommerce_accommodation_bookings_times_check_out')
 		.fill(timeSettings.checkoutTime);
-	await page.getByRole('button', { name: 'Save changes' }).click();
-	await expect(
-		page.locator('.updated', { hasText: 'Settings saved' })
-	).toBeVisible();
+	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
+		await page.getByRole('button', { name: 'Save changes' }).click();
+		await expect(
+			page.locator('.updated', { hasText: 'Settings saved' })
+		).toBeVisible();
+	}
 }
 
 /**
@@ -620,6 +624,7 @@ export async function clearEmailLogs(page) {
 	await page.goto('/wp-admin/admin.php?page=email-log');
 	const bulkAction = await page.locator('#bulk-action-selector-top');
 	if (await bulkAction.isVisible()) {
+		await page.locator('#cb-select-all-1').click();
 		await bulkAction.selectOption('el-log-list-delete-all');
 		await page.locator('#doaction').click();
 		await expect(
