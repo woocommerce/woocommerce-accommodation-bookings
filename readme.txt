@@ -38,6 +38,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.3.1 - 2025-01-20 =
+* Dev - Bump WooCommerce "tested up to" version 9.6.
+* Dev - Bump WooCommerce minimum supported version to 9.4.
+* Dev - Use the `@woocommerce/e2e-utils-playwright` NPM package for E2E tests.
+
 = 1.3.0 - 2024-12-02 =
 * Fix - Ensure sorting by price works as expected.
 * Dev - Bump WooCommerce "tested up to" version 9.5.
