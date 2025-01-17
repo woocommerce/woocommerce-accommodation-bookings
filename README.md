@@ -8,6 +8,15 @@ An accommodations add-on for the WooCommerce Bookings extension.
 - Minimum node version: 20.x
 - Minimum NPM version: 10.x
 
+## Setup
+- `nvm use`
+- `npm install`
+- `composer install`
+
+### Dev
+- `npm run env:start` - Start wp-env local environment
+- `npm run start:webpack` - FE build tools
+
 ## WooCommerce Payments Compatibility
 
 Ensure a seamless experience with WooCommerce Payments extension Version 6.3.1, offering enhanced payment options for your accommodation bookings.
