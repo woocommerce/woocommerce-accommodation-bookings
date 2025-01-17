@@ -17,6 +17,10 @@ An accommodations add-on for the WooCommerce Bookings extension.
 - `npm run env:start` - Start wp-env local environment
 - `npm run start:webpack` - FE build tools
 
+After you build and launch the project locally you'll then have to manually install the WooCommerce Bookings plugin. You can download an install ready zip file from the [WooCommerce Bookings GitHub](https://github.com/woocommerce/woocommerce-bookings/releases).
+
+**The WooCommerce Accommodations Bookings extension can not be activated with the WooCommerce Bookings extension.**
+
 ## NPM Scripts
 
 WooCommerce Accommodation Bookings utilizes npm scripts for task management utilities.
