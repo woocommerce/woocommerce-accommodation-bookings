@@ -1,0 +1,41 @@
+name: 'WordPress Plugin Checks'
+on:
+  push:
+    branches:
+    - trunk
+    - develop
+
+  pull_request:
+    branches:
+      - trunk
+      - develop
+      - add/plugin-check # We'll want to remove this prior to the PR being merged
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Run plugin check
+      uses: wordpress/plugin-check-action@v1
+      with:
+        exclude-checks: |
+          plugin_readme
+          plugin_updater
+          file_type
+          trademarks
+          direct_db_queries
+          performant_wp_query_params
+          enqueued_scripts_in_footer
+          plugin_header_text_domain
+        
+        exclude-directories: |
+          .github
+          node_modules
+          vendor
+          tests
+          bin
+          build
+          assets
