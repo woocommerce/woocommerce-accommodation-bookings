@@ -81,7 +81,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	 */
 	public function add_accommodation_settings( $tabs_metadata ) {
 		$tabs_metadata['accommodation'] = array(
-			'name'          => __( 'Accommodation', 'woocommerce-bookings' ),
+			'name'          => __( 'Accommodation', 'woocommerce-accommodation-bookings' ),
 			'href'          => admin_url( 'edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation' ),
 			'capability'    => 'manage_options',
 			'generate_html' => 'WC_Accommodation_Booking_Admin_Product_Settings::generate_form_html',
@@ -116,7 +116,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 			&& wp_verify_nonce( wc_clean( wp_unslash( $_POST[ self::NONCE_NAME ] ) ), self::NONCE_ACTION ) ) {
 				$this->process_admin_options();
 
-			echo '<div class="updated"><p>' . esc_html__( 'Settings saved', 'woocommerce-bookings' ) . '</p></div>';
+			echo '<div class="updated"><p>' . esc_html__( 'Settings saved', 'woocommerce-accommodation-bookings' ) . '</p></div>';
 
 			do_action( 'wc_bookings_times_settings_on_save', $this );
 		}
@@ -169,7 +169,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 			<form method="post" action="" id="bookings_settings">
 				<?php self::instance()->admin_options(); ?>
 				<p class="submit">
-					<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'woocommerce-bookings' ); ?>" />
+					<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'woocommerce-accommodation-bookings' ); ?>" />
 					<?php wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME ); ?>
 				</p>
 			</form>
