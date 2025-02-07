@@ -147,6 +147,10 @@ test.describe('Order Tests', () => {
 		// Place order and verify booking details in confirmation email.
 		await page.goto('/checkout');
 		await fillBillingDetails(page, customer.billing, true);
+		await page
+			.locator('label.wc-block-components-radio-control__option')
+			.first()
+			.waitFor();
 		const orderId = await placeOrder(page, true);
 		await api.update.order({
 			id: orderId,
