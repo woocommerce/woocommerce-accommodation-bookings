@@ -9,7 +9,6 @@ on:
     branches:
       - trunk
       - develop
-      - add/plugin-check # We'll want to remove this prior to the PR being merged
 
 jobs:
   test:
