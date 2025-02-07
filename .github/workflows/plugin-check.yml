@@ -39,3 +39,5 @@ jobs:
           bin
           build
           assets
+
+          WordPress.DateTime.RestrictedFunctions.date_date
