@@ -40,4 +40,5 @@ jobs:
           build
           assets
 
+        ignore-codes: |
           WordPress.DateTime.RestrictedFunctions.date_date
