@@ -325,8 +325,22 @@ class WC_Accommodation_Booking_REST_And_Admin {
 		update_post_meta( $post_id, '_manage_stock', 'no' );
 
 		// Set price so filters work - using get_base_cost().
-		$product = wc_get_product( $post_id );
-		update_post_meta( $post_id, '_price', $product->get_base_cost() );
+		$product   = wc_get_product( $post_id );
+		$base_cost = $product->get_base_cost();
+		update_post_meta( $post_id, '_price', $base_cost );
+
+		// Price has been set to cost * min_duration in meta_lookup table, needs to be updated to maintain consistency.
+		$wpdb->update(
+			$wpdb->prefix . 'wc_product_meta_lookup',
+			array(
+				'min_price' => $base_cost,
+				'max_price' => $base_cost,
+			),
+			array(
+				'product_id' => $post_id,
+			),
+			'%d'
+		);
 	}
 }
 

@@ -4,6 +4,10 @@
 import { expect, Page } from '@playwright/test';
 import moment from 'moment';
 import { pluginConfig } from '../config';
+import {
+	fillBillingCheckoutBlocks,
+	getOrderIdFromUrl,
+} from '@woocommerce/e2e-utils-playwright';
 
 /**
  * Internal dependencies
@@ -21,7 +25,7 @@ export const api = require('./api');
  */
 export async function switchTab(page, tabName, panelSelector = false) {
 	await page
-		.locator('.wc-tabs > li > a', { hasText: tabName })
+		.locator('.wc-tabs > li:visible > a', { hasText: tabName })
 		.last()
 		.click();
 	if (panelSelector) {
@@ -326,35 +330,31 @@ export async function addToCart(page) {
  * @param {Object} customerDetails Customer billing details
  */
 export async function blockFillBillingDetails(page, customerDetails) {
+	const card = await page.locator('.wc-block-components-address-card');
+	if (await card.isVisible()) {
+		await card.locator('.wc-block-components-address-card__edit').click();
+	}
 	await page.locator('#email').fill(customerDetails.email);
-	await page.locator('#billing-first_name').fill(customerDetails.firstname);
-	await page.locator('#billing-last_name').fill(customerDetails.lastname);
-	await page
-		.locator('#billing-country')
-		.selectOption(customerDetails.country);
-	await page
-		.locator('#billing-address_1')
-		.fill(customerDetails.addressfirstline);
-	if (
-		await page
-			.locator('.wc-block-components-address-form__address_2-toggle')
-			.isVisible()
-	) {
-		await page
-			.locator('.wc-block-components-address-form__address_2-toggle')
-			.click();
-	}
-	await page
-		.locator('#billing-address_2')
-		.fill(customerDetails.addresssecondline);
-	await page.locator('#billing-city').fill(customerDetails.city);
-	if (customerDetails.state) {
-		await page
-			.locator('#billing-state')
-			.selectOption(customerDetails.state);
-	}
-	await page.locator('#billing-postcode').fill(customerDetails.postcode);
-	await page.locator('#billing-postcode').blur();
+
+	await fillBillingCheckoutBlocks(
+		page,
+		{
+			country: customerDetails.country,
+			firstName: customerDetails.firstname,
+			lastName: customerDetails.lastname,
+			address: customerDetails.addressfirstline,
+			zip: customerDetails.postcode,
+			city: customerDetails.city,
+			state: customerDetails.state ?? null
+		  }
+	);
+	await page.getByLabel( 'Add a note to your order' ).check();
+    await page
+		.getByPlaceholder(
+			'Notes about your order',
+			{ exact: false }
+		)
+		.fill( 'This is to avoid flakiness' );
 	await page.waitForLoadState('networkidle');
 }
 
@@ -374,10 +374,8 @@ export async function placeOrder(page, isBlock = false) {
 	await expect(
 		page.getByRole('heading', { name: 'Order received' })
 	).toBeVisible();
-	const orderId = await page
-		.locator('li.woocommerce-order-overview__order strong')
-		.textContent();
-	return orderId;
+
+	return await getOrderIdFromUrl( page );
 }
 
 /**
@@ -619,6 +617,7 @@ export async function clearEmailLogs(page) {
 	await page.goto('/wp-admin/admin.php?page=email-log');
 	const bulkAction = await page.locator('#bulk-action-selector-top');
 	if (await bulkAction.isVisible()) {
+		await page.locator('#cb-select-all-1').click();
 		await bulkAction.selectOption('el-log-list-delete-all');
 		await page.locator('#doaction').click();
 		await expect(

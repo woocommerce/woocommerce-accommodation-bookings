@@ -69,7 +69,7 @@ module.exports = async (config) => {
 			await adminPage.goto(`/wp-admin`);
 			await adminPage.fill('input[name="log"]', admin.username);
 			await adminPage.fill('input[name="pwd"]', admin.password);
-			await adminPage.click('text=Log In');
+			await adminPage.locator("#wp-submit").click();
 			await adminPage.waitForLoadState('networkidle');
 			await adminPage.goto(`/wp-admin`);
 			await adminPage.waitForLoadState('domcontentloaded');
@@ -146,8 +146,8 @@ module.exports = async (config) => {
 			await customerPage.goto(`/wp-admin`);
 			await customerPage.fill('input[name="log"]', customer.username);
 			await customerPage.fill('input[name="pwd"]', customer.password);
-			await customerPage.click('text=Log In');
-			await adminPage.waitForLoadState('networkidle');
+			await customerPage.locator("#wp-submit").click();
+			await customerPage.waitForLoadState('networkidle');
 
 			await customerPage.goto(`/my-account`);
 			await expect(
