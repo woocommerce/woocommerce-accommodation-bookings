@@ -210,6 +210,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 			if ( $display_price ) {
 				if ( $this->has_additional_costs() || $this->get_display_cost() ) {
+					/* translators: %s: price */
 					$price_html = sprintf( __( 'From %s per night', 'woocommerce-accommodation-bookings' ), wc_price( $display_price ) ) . $this->get_price_suffix();
 				} else {
 					$price_html = wc_price( $display_price ) . $this->get_price_suffix();

@@ -21,8 +21,8 @@
 						<th class="sort" width="1%">&nbsp;</th>
 						<th><?php esc_html_e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
 						<th><?php esc_html_e( 'Starting', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php esc_html_e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ) ); ?>">[?]</a></th>
-						<th><?php esc_html_e( 'Cost', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Cost for this time period.', 'woocommerce-accommodation-bookings' ) ); ?>" colspan='2'>[?]</a></th>
+						<th><?php esc_html_e( 'Ending', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Includes this date/night.', 'woocommerce-accommodation-bookings' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">[?]</a></th>
+						<th><?php esc_html_e( 'Cost', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'Cost for this time period.', 'woocommerce-accommodation-bookings' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>" colspan='2'>[?]</a></th>
 						<th class="remove" width="1%">&nbsp;</th>
 					</tr>
 				</thead>

@@ -27,6 +27,7 @@
 	);
 
 	for ( $i = 1; $i <= 53; $i ++ ) {
+		/* translators: %s: week number */
 		$intervals['weeks'][ $i ] = sprintf( __( 'Week %s', 'woocommerce-accommodation-bookings' ), $i );
 	}
 

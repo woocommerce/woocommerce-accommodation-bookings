@@ -60,13 +60,13 @@
 
 				<?php
 					$weekdays = array(
-						__( 'Sunday', 'woocommerce-bookings' ),
-						__( 'Monday', 'woocommerce-bookings' ),
-						__( 'Tuesday', 'woocommerce-bookings' ),
-						__( 'Wednesday', 'woocommerce-bookings' ),
-						__( 'Thursday', 'woocommerce-bookings' ),
-						__( 'Friday', 'woocommerce-bookings' ),
-						__( 'Saturday', 'woocommerce-bookings' ),
+						__( 'Sunday', 'woocommerce-accommodation-bookings' ),
+						__( 'Monday', 'woocommerce-accommodation-bookings' ),
+						__( 'Tuesday', 'woocommerce-accommodation-bookings' ),
+						__( 'Wednesday', 'woocommerce-accommodation-bookings' ),
+						__( 'Thursday', 'woocommerce-accommodation-bookings' ),
+						__( 'Friday', 'woocommerce-accommodation-bookings' ),
+						__( 'Saturday', 'woocommerce-accommodation-bookings' ),
 						);
 
 					for ( $i=0;  $i < 7;  $i++) {
@@ -96,8 +96,8 @@
 						<th><?php esc_html_e( 'Range type', 'woocommerce-accommodation-bookings' ); ?></th>
 						<th><?php esc_html_e( 'From', 'woocommerce-accommodation-bookings' ); ?></th>
 						<th><?php esc_html_e( 'To', 'woocommerce-accommodation-bookings' ); ?></th>
-						<th><?php esc_html_e( 'Bookable', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'If not bookable, users won\'t be able to choose this room.', 'woocommerce-accommodation-bookings' ) ); ?>">[?]</a></th>
-						<th><?php esc_html_e( 'Priority', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'The lower the priority number, the earlier this rule gets applied. By default, global rules take priority over product rules which take priority over resource rules. By using priority numbers you can execute rules in different orders.', 'woocommerce-accommodation-bookings' ) ); ?>">[?]</a></th>
+						<th><?php esc_html_e( 'Bookable', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'If not bookable, users won\'t be able to choose this room.', 'woocommerce-accommodation-bookings' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">[?]</a></th>
+						<th><?php esc_html_e( 'Priority', 'woocommerce-accommodation-bookings' ); ?>&nbsp;<a class="tips" data-tip="<?php echo wc_sanitize_tooltip( __( 'The lower the priority number, the earlier this rule gets applied. By default, global rules take priority over product rules which take priority over resource rules. By using priority numbers you can execute rules in different orders.', 'woocommerce-accommodation-bookings' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">[?]</a></th>
 						<th class="remove" width="1%">&nbsp;</th>
 					</tr>
 				</thead>

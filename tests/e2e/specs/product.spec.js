@@ -281,6 +281,10 @@ test.describe('Product Tests', () => {
 		// Place order
 		await page.goto('/checkout');
 		await fillBillingDetails(page, customer.billing, true);
+		await page
+			.locator('label.wc-block-components-radio-control__option')
+			.first()
+			.waitFor();
 		const orderId = await placeOrder(page, true);
 
 		page.goto('/my-account/bookings/');
