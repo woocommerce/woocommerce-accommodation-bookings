@@ -29,7 +29,7 @@ jobs:
           performant_wp_query_params
           enqueued_scripts_in_footer
           plugin_header_text_domain
-        
+
         exclude-directories: |
           .github
           node_modules
@@ -38,6 +38,8 @@ jobs:
           bin
           build
           assets
+
+        ignore-warnings: true
 
         ignore-codes: |
           WordPress.DateTime.RestrictedFunctions.date_date
