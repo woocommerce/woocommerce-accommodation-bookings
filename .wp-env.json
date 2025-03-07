@@ -1,7 +1,8 @@
 {
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.zip",
-    "https://downloads.wordpress.org/plugin/email-log.zip"
+    "https://downloads.wordpress.org/plugin/email-log.zip",
+    "."
   ],
   "themes": [
     "https://downloads.wordpress.org/theme/storefront.zip"
