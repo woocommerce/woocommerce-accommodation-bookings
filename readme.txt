@@ -38,6 +38,13 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.3.2 - 2025-03-10 =
+* Update - Render uniform WP time picker over default time input element.
+* Dev - Bump WooCommerce "tested up to" version 9.7.
+* Dev - Bump WooCommerce minimum supported version to 9.5.
+* Dev - Bump WordPress minimum supported version to 6.6.
+* Dev - Disabled warning checks from WordPress Plugin Check Action.
+
 = 1.3.1 - 2025-01-20 =
 * Dev - Bump WooCommerce "tested up to" version 9.6.
 * Dev - Bump WooCommerce minimum supported version to 9.4.
