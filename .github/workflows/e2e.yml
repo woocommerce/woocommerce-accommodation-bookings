@@ -15,8 +15,6 @@ jobs:
     if: "${{ ( github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'needs: e2e testing') ) ||  github.event_name == 'push' }}"
     name: E2E Test
     runs-on: ubuntu-latest
-    env:
-      BOT_GITHUB_TOKEN: ${{secrets.BOT_GITHUB_TOKEN}}
 
     steps:
       - name: Checkout
@@ -60,6 +58,8 @@ jobs:
         run: |
           npm run env:install-plugins
           npm run env:start
+        env:
+          BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
 
       - name: Run E2E Foundational Test
         id: e2e_tests

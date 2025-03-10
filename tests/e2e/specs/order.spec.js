@@ -146,6 +146,7 @@ test.describe('Order Tests', () => {
 
 		// Place order and verify booking details in confirmation email.
 		await page.goto('/checkout');
+		await page.waitForLoadState('networkidle');
 		await fillBillingDetails(page, customer.billing, true);
 		await page
 			.locator('label.wc-block-components-radio-control__option')
