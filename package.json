@@ -42,6 +42,7 @@
     "lint:style": "wp-scripts lint-style",
     "lint:style-fix": "wp-scripts lint-style --fix",
     "env": "wp-env",
+    "preenv:start": "bash ./tests/e2e/bin/install-plugins.sh",
     "env:start": "wp-env start",
     "env:clean": "wp-env clean",
     "env:stop": "wp-env stop",

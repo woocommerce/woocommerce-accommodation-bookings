@@ -34,3 +34,4 @@ woocommerce-accommodation-bookings.zip
 
 .phpunit.result.cache
 /tests/e2e/test-results
+/test-plugins/

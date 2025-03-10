@@ -58,7 +58,6 @@ jobs:
 
       - name: Setup WP environment
         run: |
-          npm run env:install-plugins
           npm run env:start
 
       - name: Run E2E Foundational Test

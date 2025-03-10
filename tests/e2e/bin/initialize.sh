@@ -19,7 +19,3 @@ wp-env run tests-cli wp wc payment_gateway update cod --enabled=true --user=1
 wp-env run tests-cli wp option update woocommerce_coming_soon "no"
 
 wp-env run tests-cli wp user create customer customer@bookingstestsuite.com --user_pass=password --role=customer
-
-# Install and activate WooCommerce Bookings
-wp-env run tests-cli wp plugin install --activate ./wp-content/plugins/woocommerce-accommodation-bookings/woocommerce-bookings.zip
-wp-env run tests-cli wp plugin activate woocommerce-accommodation-bookings
