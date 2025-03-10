@@ -61,7 +61,7 @@ jobs:
           unzip -o woocommerce-bookings.zip
           cd ..
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
 
       - name: Setup WP environment
         run: |
