@@ -15,8 +15,6 @@ jobs:
     if: "${{ ( github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'needs: e2e testing') ) ||  github.event_name == 'push' }}"
     name: E2E Test
     runs-on: ubuntu-latest
-    env:
-      BOT_GITHUB_TOKEN: ${{secrets.BOT_GITHUB_TOKEN}}
 
     steps:
       - name: Checkout
@@ -62,6 +60,8 @@ jobs:
           cd ./test-plugins
           unzip -o woocommerce-bookings.zip
           cd ..
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Setup WP environment
         run: |
