@@ -59,7 +59,7 @@ jobs:
           npm run env:install-plugins
           npm run env:start
         env:
-          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+          BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
 
       - name: Run E2E Foundational Test
         id: e2e_tests
