@@ -9,10 +9,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
             - name: Setup node version and npm cache
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
               with:
                   node-version: 16
                   cache: 'npm'
@@ -24,7 +24,7 @@ jobs:
               run: npm run prebuild && npm run build:webpack && npm run archive && rm -rf ./woocommerce-accommodation-bookings && unzip woocommerce-accommodation-bookings.zip -d ./woocommerce-accommodation-bookings
 
             - name: Use the Upload Artifact GitHub Action
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
               with:
                   name: woocommerce-accommodation-bookings
                   path: woocommerce-accommodation-bookings/
