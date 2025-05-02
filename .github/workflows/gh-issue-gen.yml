@@ -1,0 +1,67 @@
+name: "Create Issue from Unlinked PR"
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  create-gh-issue:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Delay for manual linking (1 hour)
+        run: |
+          # sleep 3600    # ← comment this out for now
+          echo "Skipping 1hr delay for testing"
+
+      - name: Check for linked Issue or Branch pattern
+        id: check
+        run: |
+          BRANCH=$(jq -r .pull_request.head.ref "$GITHUB_EVENT_PATH")
+          BODY="${{ github.event.pull_request.body }}"
+          TITLE="${{ github.event.pull_request.title }}"
+          echo "Checking branch: $BRANCH"
+
+          if [[ "$BRANCH" =~ ^(add|fix|remove)/[0-9]+ ]]; then
+            echo "linked=true" >> $GITHUB_ENV
+          elif grep -qE "(Fixes|Closes|Resolves) #[0-9]+" <<< "${BODY}${TITLE}"; then
+            echo "linked=true" >> $GITHUB_ENV
+          else
+            echo "linked=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create GitHub Issue, comment and link on PR
+        if: env.linked == 'false'
+        run: |
+          PR_NUMBER=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
+          PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
+          PR_URL=$(jq -r .pull_request.html_url "$GITHUB_EVENT_PATH")
+
+          # Escape backticks and double-quotes to prevent shell command substitution or quote-breaking
+          SAFE_TITLE="${PR_TITLE//\`/\\\`}"
+          SAFE_TITLE="${SAFE_TITLE//\"/\\\"}"
+
+          # Create the Issue; gh prints the new Issue URL to stdout
+          ISSUE_URL=$(gh issue create \
+            --title "Tracking Issue for PR #${PR_NUMBER}: ${SAFE_TITLE}" \
+            --body "PR ${PR_URL} did not have a linked issue, so this issue has been created for tracking purposes." \
+            --label "unlinked-pr")
+
+          echo "Created GitHub issue: $ISSUE_URL"
+
+          # Comment on the PR linking to the new Issue
+          gh pr comment "$PR_NUMBER" \
+            --body "This is linked to GitHub issue ${ISSUE_URL}."
+
+          # Append a "Closes #ISSUE_NUM” line on the PR so it shows up as a Linked issue
+          ISSUE_NUM="${ISSUE_URL##*/}"
+          EXISTING_BODY=$(gh pr view "$PR_NUMBER" --json body --jq .body)
+          CLOSING="Closes #${ISSUE_NUM}"
+          UPDATED_BODY="${EXISTING_BODY}"$'\n\n'"${CLOSING}"
+
+          gh pr edit "$PR_NUMBER" --body "$UPDATED_BODY"
