@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LINEAR_TEAM: WOOACBK
 
     steps:
       - name: Check out code
@@ -27,10 +28,19 @@ jobs:
           TITLE="${{ github.event.pull_request.title }}"
           echo "Checking branch: $BRANCH"
 
-          if [[ "$BRANCH" =~ ^(add|fix|remove)/[0-9]+ ]]; then
+          # 1) Branch names like add/123 or add/123-desc
+          if [[ "$BRANCH" =~ ^(add|fix|remove)/[0-9]+(-[a-zA-Z0-9]+)? ]]; then
             echo "linked=true" >> $GITHUB_ENV
-          elif grep -qE "(Fixes|Closes|Resolves) #[0-9]+" <<< "${BODY}${TITLE}"; then
+
+          # 2) Linear shorthand or full‑URL refs
+          elif grep -qiE "(Fixes|Closes|Resolves|Relates to) (${LINEAR_TEAM}-[0-9]+|https?://[^ ]*${LINEAR_TEAM}-[0-9]+[^ ]*)" <<< "${BODY}${TITLE}"; then
             echo "linked=true" >> $GITHUB_ENV
+
+          # 3) GitHub shorthand or full‑URL refs
+          elif grep -qiE "(Fixes|Closes|Resolves|Relates to) (#[0-9]+|https?://github\.com/[^/]+/[^/]+/issues/[0-9]+)" <<< "${BODY}${TITLE}"; then
+            echo "linked=true" >> $GITHUB_ENV
+
+          # 4) Nothing matched
           else
             echo "linked=false" >> $GITHUB_ENV
           fi
@@ -49,8 +59,7 @@ jobs:
           # Create the Issue; gh prints the new Issue URL to stdout
           ISSUE_URL=$(gh issue create \
             --title "Tracking Issue for PR #${PR_NUMBER}: ${SAFE_TITLE}" \
-            --body "PR ${PR_URL} did not have a linked issue, so this issue has been created for tracking purposes." \
-            --label "unlinked-pr")
+            --body "PR ${PR_URL} did not have a linked issue, so this issue has been created for tracking purposes.")
 
           echo "Created GitHub issue: $ISSUE_URL"
 
