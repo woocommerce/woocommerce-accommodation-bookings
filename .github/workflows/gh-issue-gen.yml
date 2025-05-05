@@ -17,7 +17,7 @@ jobs:
 
       - name: Delay for manual linking (1 hour)
         run: |
-          # sleep 3600    # ← comment this out for now
+          sleep 3600   
           echo "Skipping 1hr delay for testing"
 
       - name: Check for linked Issue or Branch pattern
