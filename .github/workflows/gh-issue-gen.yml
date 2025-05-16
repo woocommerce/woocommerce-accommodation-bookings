@@ -15,11 +15,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-     # - name: Delay for manual linking (1 hour)
-     #  run: |
-     #    sleep 3600   
-         
-
       - name: Check for linked Issue or Branch pattern
         id: check
         run: |
