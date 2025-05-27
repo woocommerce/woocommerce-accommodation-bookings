@@ -1,5 +1,11 @@
 *** Changelog ***
 
+= 1.3.3 - 2025-05-27 =
+* Dev - Bump WooCommerce "tested up to" version 9.9.
+* Dev - Bump WooCommerce minimum supported version to 9.7.
+* Dev - Bump WordPress "tested up to" version 6.8.
+* Dev - Update all third-party actions our workflows rely on to use versions based on specific commit hashes.
+
 = 1.3.2 - 2025-03-10 =
 * Update - Render uniform WP time picker over default time input element.
 * Dev - Bump WooCommerce "tested up to" version 9.7.
