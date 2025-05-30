@@ -19,8 +19,10 @@ jobs:
         id: check
         run: |
           BRANCH=$(jq -r .pull_request.head.ref "$GITHUB_EVENT_PATH")
-          BODY="${{ github.event.pull_request.body }}"
-          TITLE="${{ github.event.pull_request.title }}"
+          echo "${{ github.event.pull_request.body }}" > body.txt
+          BODY=$(cat body.txt)
+          echo "${{ github.event.pull_request.title }}" > title.txt
+          TITLE=$(cat title.txt)
           echo "Checking branch: $BRANCH"
 
           # 1) Branch names like add/123 or add/123-desc
@@ -28,11 +30,11 @@ jobs:
             echo "linked=true" >> $GITHUB_ENV
 
           # 2) Linear shorthand or full‑URL refs
-          elif grep -qiE "(Fixes|Closes|Resolves|Relates to) (${LINEAR_TEAM}-[0-9]+|https?://[^ ]*${LINEAR_TEAM}-[0-9]+[^ ]*)" <<< "${BODY}${TITLE}"; then
+          elif grep -qiE "(Fixes|Closes|Resolves|Relates to) (${LINEAR_TEAM}-[0-9]+|https?:\/\/[^ ]*${LINEAR_TEAM}-[0-9]+[^ ]*)" <<< "${BODY} ${TITLE}"; then
             echo "linked=true" >> $GITHUB_ENV
 
           # 3) GitHub shorthand or full‑URL refs
-          elif grep -qiE "(Fixes|Closes|Resolves|Relates to) (#[0-9]+|https?://github\.com/[^/]+/[^/]+/issues/[0-9]+)" <<< "${BODY}${TITLE}"; then
+          elif grep -qiE "(Fixes|Closes|Resolves|Relates to) (#[0-9]+|https?:\/\/github\.com\/[^/]+\/[^/]+\/issues\/[0-9]+)" <<< "${BODY} ${TITLE}"; then
             echo "linked=true" >> $GITHUB_ENV
 
           # 4) Nothing matched
