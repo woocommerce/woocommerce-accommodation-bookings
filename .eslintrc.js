@@ -18,7 +18,6 @@ module.exports = {
 		//`import/no-unresolved` rules account for them.
 		'import/core-modules': [
 			'@woocommerce/blocks-registry',
-			'@woocommerce/settings',
 			'@wordpress/i18n',
 			'@wordpress/element',
 			'@wordpress/html-entities',
