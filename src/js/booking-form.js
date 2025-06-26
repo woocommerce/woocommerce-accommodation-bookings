@@ -1,6 +1,6 @@
-/* globals jQuery */
 // External dependencies.
 import { __ } from '@wordpress/i18n';
+import jQuery from 'jquery';
 
 // Internal dependencies.
 import {
