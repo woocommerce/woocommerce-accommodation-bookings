@@ -17,7 +17,7 @@
     "@woocommerce/dependency-extraction-webpack-plugin": "^3.0.1",
     "@woocommerce/e2e-utils-playwright": "^0.2.1",
     "@woocommerce/eslint-plugin": "^2.2.0",
-    "@woocommerce/woocommerce-rest-api": "^1.0.1",
+    "@woocommerce/woocommerce-rest-api": "^1.0.2",
     "@wordpress/env": "^9.10.0",
     "@wordpress/prettier-config": "^2.8.0",
     "@wordpress/scripts": "^29.0.0",
