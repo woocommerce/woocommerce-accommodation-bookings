@@ -27,6 +27,10 @@
     "prettier-eslint": "^15.0.1",
     "webpack-remove-empty-scripts": "^1.0.4"
   },
+  "overrides": {
+    "cross-spawn": "^6.0.6",
+    "webpack-dev-server": "^5.2.0"
+  },
   "scripts": {
     "prebuild": "rm -rf ./vendor",
     "build": "npm run build:webpack && npm run makepot && npm run archive",
