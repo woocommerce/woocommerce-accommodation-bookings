@@ -1,4 +1,4 @@
-/* globals jQuery */
+import jQuery from 'jquery';
 /**
  * Should return whether the product is a accommodation booking or not.
  *
