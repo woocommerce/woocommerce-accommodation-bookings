@@ -410,6 +410,17 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		public function get_duration( $context = 'view' ) {
 			return 1;
 		}
+
+		/**
+		 * Get the duration time interval in minutes.
+		 *
+		 * Duration unit is always one night.
+		 *
+		 * @return int duration in minutes.
+		 */
+		public function get_time_interval_in_minutes() {
+			return 1440; // 60 minutes * 24 hours
+		}
 	}
 
 endif;
