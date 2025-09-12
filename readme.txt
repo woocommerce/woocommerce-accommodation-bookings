@@ -38,6 +38,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.3.5 - 2025-09-15 =
+* Dev - Bump WooCommerce "tested up to" version 10.2.
+* Dev - Bump WooCommerce minimum supported version to 10.0.
+
 = 1.3.4 - 2025-08-11 =
 * Dev - Bump WooCommerce "tested up to" version 10.1.
 * Dev - Bump WooCommerce minimum supported version to 9.9.
