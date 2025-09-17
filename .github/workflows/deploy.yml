@@ -56,7 +56,7 @@ jobs:
           repository: woocommerce/woo-product-deploy
           ref: trunk
           path: ./.github/actions/woo-product-deploy
-          token: ${{ secrets.DEPLOY_PAT }}  # Need PAT with access to the action repository
+          token: ${{ secrets.ORG_DEPLOY_SECRET }}  # Need PAT with access to the action repository
 
       # Use the action we checked out
       - name: Deploy Product
