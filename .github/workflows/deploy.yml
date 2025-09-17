@@ -18,7 +18,7 @@ on:
         default: '10'
         type: string
       simulate:
-        description: 'Run in simulation mode (true for testing, false for production)'
+        description: 'Run in simulation mode (leave set to test)'
         required: false
         default: true
         type: boolean
@@ -39,7 +39,7 @@ on:
         default: '10'
         type: string
       simulate:
-        description: 'Run in simulation mode (true for testing, false for production)'
+        description: 'Run in simulation mode (leave set to test)'
         required: false
         default: true
         type: boolean
@@ -56,7 +56,7 @@ jobs:
           repository: woocommerce/woo-product-deploy
           ref: trunk
           path: ./.github/actions/woo-product-deploy
-          token: ${{ secrets.GITHUB_TOKEN }}  # Need PAT with repo access
+          token: ${{ secrets.DEPLOY_PAT }}  # Need PAT with access to the action repository
 
       # Use the action we checked out
       - name: Deploy Product
@@ -76,4 +76,4 @@ jobs:
           wporg_password: ${{ secrets.WPORG_PASSWORD }}
           partner_user: ${{ secrets.PARTNER_USER }}
           partner_secret: ${{ secrets.PARTNER_SECRET }}
-          wccom_product_id: 123456
+          wccom_product_id: 1412069
