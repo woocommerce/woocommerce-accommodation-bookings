@@ -419,7 +419,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 * @return int duration in minutes.
 		 */
 		public function get_time_interval_in_minutes() {
-			return 1440; // 60 minutes * 24 hours
+			return DAY_IN_SECONDS / MINUTE_IN_SECONDS;
 		}
 	}
 
