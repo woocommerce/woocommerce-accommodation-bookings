@@ -7,6 +7,21 @@ on:
         description: 'Version to deploy (e.g., 1.3.7)'
         required: true
         type: string
+      deploy_wordpress:
+        description: 'Deploy to WordPress.org'
+        required: false
+        default: true
+        type: boolean
+      deploy_woo:
+        description: 'Deploy to Woo.com'
+        required: false
+        default: true
+        type: boolean
+      deploy_github:
+        description: 'Deploy to GitHub'
+        required: false
+        default: true
+        type: boolean
       node_version:
         description: 'Node.js version (e.g., 20)'
         required: false
@@ -28,6 +43,21 @@ on:
         description: 'Version to deploy (e.g., 1.3.7)'
         required: true
         type: string
+      deploy_wordpress:
+        description: 'Deploy to WordPress.org'
+        required: false
+        default: true
+        type: boolean
+      deploy_woo:
+        description: 'Deploy to Woo.com'
+        required: false
+        default: true
+        type: boolean
+      deploy_github:
+        description: 'Deploy to GitHub'
+        required: false
+        default: true
+        type: boolean
       node_version:
         description: 'Node.js version (e.g., 20)'
         required: false
@@ -68,12 +98,12 @@ jobs:
           node_version: ${{ github.event.inputs.node_version }}
           npm_version: ${{ github.event.inputs.npm_version }}
           simulate: ${{ github.event.inputs.simulate }}
-          wporg_release: true
-          wccom_release: true
-          github_release: true
-          deploy_pat: ${{ secrets.GITHUB_TOKEN }}
+          wporg_release: ${{ github.event.inputs.deploy_wordpress }}
+          wccom_release: ${{ github.event.inputs.deploy_woo }}
+          github_release: ${{ github.event.inputs.deploy_github }}
+          deploy_pat: ${{ secrets.DEPLOY_PAT }}
           wporg_username: ${{ secrets.WPORG_USERNAME }}
           wporg_password: ${{ secrets.WPORG_PASSWORD }}
           partner_user: ${{ secrets.PARTNER_USER }}
-          partner_secret: ${{ secrets.PARTNER_SECRET }}
+          partner_secret: ${{ secrets.WCCOM_DEPLOY_PARTNER_SECRET }}
           wccom_product_id: 1412069
