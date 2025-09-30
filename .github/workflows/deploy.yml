@@ -12,11 +12,6 @@ on:
         required: false
         default: true
         type: boolean
-      deploy_woo:
-        description: 'Deploy to Woo.com'
-        required: false
-        default: true
-        type: boolean
       deploy_github:
         description: 'Deploy to GitHub'
         required: false
@@ -45,11 +40,6 @@ on:
         type: string
       deploy_wordpress:
         description: 'Deploy to WordPress.org'
-        required: false
-        default: true
-        type: boolean
-      deploy_woo:
-        description: 'Deploy to Woo.com'
         required: false
         default: true
         type: boolean
@@ -99,11 +89,10 @@ jobs:
           npm_version: ${{ github.event.inputs.npm_version }}
           simulate: ${{ github.event.inputs.simulate }}
           wporg_release: ${{ github.event.inputs.deploy_wordpress }}
-          wccom_release: ${{ github.event.inputs.deploy_woo }}
           github_release: ${{ github.event.inputs.deploy_github }}
-          deploy_pat: ${{ secrets.DEPLOY_PAT }}
+          deploy_pat: ${{ secrets.ORG_DEPLOY_SECRET }}
           wporg_username: ${{ secrets.WPORG_USERNAME }}
           wporg_password: ${{ secrets.WPORG_PASSWORD }}
-          partner_user: ${{ secrets.PARTNER_USER }}
-          partner_secret: ${{ secrets.WCCOM_DEPLOY_PARTNER_SECRET }}
+          partner_user: ${{ secrets.ORG_PARTNER_USER }}
+          partner_secret: ${{ secrets.ORG_PARTNER_SECRET }}
           wccom_product_id: 1412069
