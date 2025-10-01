@@ -32,14 +32,15 @@
     "webpack-dev-server": "^5.2.0"
   },
   "scripts": {
-    "prebuild": "rm -rf ./vendor",
+    "prebuild": "rm -rf ./vendor && composer install",
     "build": "npm run build:webpack && npm run makepot && npm run archive",
     "build:webpack": "wp-scripts build",
     "start:webpack": "wp-scripts start",
     "build:dev": "composer install && npm run build:webpack && npm run makepot",
+    "prearchive": "rm -rf ./vendor",
     "archive": "composer archive --file=$npm_package_name --format=zip",
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-    "makepot": "wp i18n make-pot . --exclude=tests,src",
+    "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --exclude=tests,src",
     "phpcompat": "./vendor/bin/phpcs --standard=phpcs-compat.xml.dist -p .",
     "lint:js": "wp-scripts lint-js src/ --ext=js",
     "lint:js-fix": "wp-scripts lint-js src/ --ext=js --fix",
