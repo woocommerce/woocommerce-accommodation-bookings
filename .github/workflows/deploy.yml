@@ -17,18 +17,8 @@ on:
         required: false
         default: true
         type: boolean
-      node_version:
-        description: 'Node.js version (e.g., 20)'
-        required: false
-        default: '20'
-        type: string
-      npm_version:
-        description: 'npm version (e.g., 10)'
-        required: false
-        default: '10'
-        type: string
       simulate:
-        description: 'Run in simulation mode (leave set to test)'
+        description: 'Dry run mode'
         required: false
         default: true
         type: boolean
@@ -48,18 +38,8 @@ on:
         required: false
         default: true
         type: boolean
-      node_version:
-        description: 'Node.js version (e.g., 20)'
-        required: false
-        default: '20'
-        type: string
-      npm_version:
-        description: 'npm version (e.g., 10)'
-        required: false
-        default: '10'
-        type: string
       simulate:
-        description: 'Run in simulation mode (leave set to test)'
+        description: 'Dry run mode'
         required: false
         default: true
         type: boolean
@@ -85,8 +65,8 @@ jobs:
           repo_url: https://github.com/woocommerce/woocommerce-accommodation-bookings
           branch: trunk
           version: ${{ github.event.inputs.version }}
-          node_version: ${{ github.event.inputs.node_version }}
-          npm_version: ${{ github.event.inputs.npm_version }}
+          node_version: '20'
+          npm_version: '10'
           simulate: ${{ github.event.inputs.simulate }}
           wporg_release: ${{ github.event.inputs.deploy_wordpress }}
           github_release: ${{ github.event.inputs.deploy_github }}
