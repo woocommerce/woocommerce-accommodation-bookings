@@ -115,6 +115,30 @@ jobs:
           recreate: true
           path: malware-result.txt
 
+      - name: Run PHPCompat test
+        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'phpcompat' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit phpcompat test') ) && ( success() || failure() ) }}"
+        id: run-phpcompat-test
+        run: ./vendor/bin/qit run:phpcompatibility ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > phpcompat-result.txt
+
+      - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        if: ${{ failure() && steps.run-phpcompat-test.conclusion == 'failure' }}
+        with:
+          header: QIT PHPCompat result
+          recreate: true
+          path: phpcompat-result.txt
+
+      - name: Run Validation test
+        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'validation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit validation test') ) && ( success() || failure() ) }}"
+        id: run-validation-test
+        run: ./vendor/bin/qit run:validation ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > validation-result.txt
+
+      - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
+        if: ${{ failure() && steps.run-validation-test.conclusion == 'failure' }}
+        with:
+          header: QIT Validation result
+          recreate: true
+          path: validation-result.txt
+
       - name: Run E2E test
         if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'e2e' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit e2e test') ) && ( success() || failure() ) }}"
         id: run-e2e-test
@@ -138,27 +162,3 @@ jobs:
           header: QIT PHPStan result
           recreate: true
           path: phpstan-result.txt
-
-      - name: Run PHPCompat test
-        if: "${{ inputs.tests == 'phpcompat' || contains(github.event.pull_request.labels.*.name, 'needs: qit phpcompat test') && ( success() || failure() ) }}"
-        id: run-phpcompat-test
-        run: ./vendor/bin/qit run:phpcompatibility ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > phpcompat-result.txt
-
-      - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
-        if: ${{ failure() && steps.run-phpcompat-test.conclusion == 'failure' }}
-        with:
-          header: QIT PHPCompat result
-          recreate: true
-          path: phpcompat-result.txt
-
-      - name: Run Validation test
-        if: "${{ inputs.tests == 'validation' || contains(github.event.pull_request.labels.*.name, 'needs: qit validation test') && ( success() || failure() ) }}"
-        id: run-validation-test
-        run: ./vendor/bin/qit run:validation ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > validation-result.txt
-
-      - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
-        if: ${{ failure() && steps.run-validation-test.conclusion == 'failure' }}
-        with:
-          header: QIT Validation result
-          recreate: true
-          path: validation-result.txt
