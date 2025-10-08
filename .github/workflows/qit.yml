@@ -70,7 +70,7 @@ jobs:
       - name: Run activation test
         if: "${{ ( inputs.tests == 'default' || inputs.tests == 'activation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit activation test') }}"
         id: run-activation-test
-        run: ./vendor/bin/qit run:activation ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --extension_set=compatibility --wait > activation-result.txt
+        run: ./vendor/bin/qit run:activation ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > activation-result.txt
 
       - uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         if: ${{ failure() && steps.run-activation-test.conclusion == 'failure' }}
