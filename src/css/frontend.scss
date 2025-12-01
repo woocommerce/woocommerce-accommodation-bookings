@@ -24,6 +24,20 @@
 	}
 }
 
+// Screen reader only text - visually hidden but accessible to screen readers
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
 .wc-bookings-date-picker {
 	fieldset {
 		position: relative;
@@ -31,19 +45,108 @@
 
 	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
 	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
-		opacity: 0.35;
+		opacity: 0.65;
 	}
 
-	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
-	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date),
+	// Fully booked dates (unavailable for both check-in and check-out)
 	.ui-datepicker td.fully_booked {
 		span, a {
-			background-color: #c0392b !important;
+			background-color: #000000 !important;
 			background-image: none !important;
 			border-color: rgba(0, 0, 0, 0.1) !important;
 			color: #fff !important;
 			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 			pointer-events: none;
+			position: relative;
+
+			// Add a cross/X indicator for fully unavailable dates
+			&::after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 60%;
+				height: 2px;
+				background-color: rgba(255, 255, 255, 0.9);
+				transform: translate(-50%, -50%) rotate(45deg);
+			}
+
+			&::before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 60%;
+				height: 2px;
+				background-color: rgba(255, 255, 255, 0.9);
+				transform: translate(-50%, -50%) rotate(-45deg);
+				z-index: 1;
+			}
+		}
+	}
+
+	// Partially available dates - check-out only (start days are fully booked)
+	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
+	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
+		span, a {
+			background-color: #000000 !important;
+			background-image: none !important;
+			border-color: rgba(0, 0, 0, 0.1) !important;
+			color: #fff !important;
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+			pointer-events: none;
+		}
+	}
+
+	// Partially available - check-out only (available for leaving, not arriving)
+	.ui-datepicker td.fully_booked_start_days:not(.ui-datepicker-unselectable) {
+		span, a {
+			position: relative;
+
+			// Add a diagonal slash from top-left to bottom-right
+			&::after {
+				content: '';
+				position: absolute;
+				top: 10%;
+				left: 10%;
+				width: 80%;
+				height: 2px;
+				background-color: rgba(255, 255, 255, 0.9);
+				transform: rotate(45deg);
+				transform-origin: top left;
+			}
+		}
+	}
+
+	// Partially available - check-in only (available for arriving, not leaving)
+	.ui-datepicker td.fully_booked_end_days:not(.ui-datepicker-unselectable) {
+		span, a {
+			position: relative;
+
+			// Add a diagonal slash from top-right to bottom-left
+			&::after {
+				content: '';
+				position: absolute;
+				top: 10%;
+				right: 10%;
+				width: 80%;
+				height: 2px;
+				background-color: rgba(255, 255, 255, 0.9);
+				transform: rotate(-45deg);
+				transform-origin: top right;
+			}
+		}
+	}
+
+	// For fully booked dates (unavailable for both check-in and check-out).
+	// Increased specificity to override the styling from the WooCommerce Bookings plugin.
+	.wc-bookings-booking-form .wc-bookings-date-picker {
+		.ui-datepicker td.fully_booked:not(.not_bookable_by_rules) {
+			opacity: 0.65;
+			span,
+			a {
+				background-color: #000000 !important;
+			}
 		}
 	}
 
