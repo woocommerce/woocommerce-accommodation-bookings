@@ -38,7 +38,7 @@
 	word-wrap: normal !important;
 }
 
-.wc-bookings-date-picker {
+fieldset.wc-bookings-date-picker {
 	fieldset {
 		position: relative;
 	}
@@ -47,8 +47,18 @@
 	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
 		opacity: 0.65;
 	}
+	
+	.ui-datepicker {
+		td.fully_booked:not(.not_bookable_by_rules),
+		td.fully_booked {
+			opacity: 0.65;
+			
+			span, a {
+				background-color: #000000 !important;
+			}
+		}
+	}
 
-	// Fully booked dates (unavailable for both check-in and check-out)
 	.ui-datepicker td.fully_booked {
 		span, a {
 			background-color: #000000 !important;
