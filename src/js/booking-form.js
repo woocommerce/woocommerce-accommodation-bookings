@@ -65,6 +65,9 @@ import {
 				);
 			}
 
+			// Add data-day attribute for easier access to day value
+			attributes['data-day'] = day;
+
 			return attributes;
 		}
 	);
@@ -94,12 +97,11 @@ import {
 	 * @return {string} Formatted date string.
 	 */
 	const formatDateForScreenReader = ($cell) => {
-		const $dayElement = $cell.find('span, a').first();
-		const day = $dayElement.contents().first().text().trim();
+		const day = $cell.attr('data-day');
 		const dataMonth = $cell.attr('data-month');
 		const dataYear = $cell.attr('data-year');
 
-		if (!dataMonth || !dataYear) {
+		if (!day || !dataMonth || !dataYear) {
 			return '';
 		}
 
@@ -137,6 +139,37 @@ import {
 		return `${monthNames[date.getMonth()]} ${day}, ${dataYear}, ${dayNames[date.getDay()]},`;
 	};
 
+	/**
+	 * Add accessible text to all booking date types in the form.
+	 *
+	 * @param {jQuery} $form - The booking form element.
+	 */
+	const addAccessibleTextToBookingDates = ($form) => {
+		// Add screen reader text for partially available dates (check-out only)
+		$form.find('.fully_booked_start_days').each(function() {
+			const $cell = $(this);
+			const formattedDate = formatDateForScreenReader($cell);
+			const accessibleText = `${formattedDate} ${__('Available for check-out only.', 'woocommerce-accommodation-bookings')}`;
+			addAccessibleText($cell, accessibleText);
+		});
+
+		// Add screen reader text for partially available dates (check-in only)
+		$form.find('.fully_booked_end_days').each(function() {
+			const $cell = $(this);
+			const formattedDate = formatDateForScreenReader($cell);
+			const accessibleText = `${formattedDate} ${__('Available for check-in only.', 'woocommerce-accommodation-bookings')}`;
+			addAccessibleText($cell, accessibleText);
+		});
+
+		// Add screen reader text for fully booked dates (both start and end unavailable)
+		$form.find('.fully_booked').each(function() {
+			const $cell = $(this);
+			const formattedDate = formatDateForScreenReader($cell);
+			const accessibleText = `${formattedDate} ${__('Fully booked and unavailable.', 'woocommerce-accommodation-bookings')}`;
+			addAccessibleText($cell, accessibleText);
+		});
+	};
+
 	// Make the days disable and unselectable according to the selection.
 	HookApi.addAction(
 		'wc_bookings_date_picker_refreshed',
@@ -162,28 +195,8 @@ import {
 				.find('.fully_booked_end_days')
 				.removeClass('ui-datepicker-unselectable ui-state-disabled');
 
-			// Add screen reader text for partially available dates
-			$form.find('.fully_booked_start_days').each(function() {
-				const $cell = $(this);
-				const formattedDate = formatDateForScreenReader($cell);
-				const accessibleText = `${formattedDate} ${__('Available for check-out only.', 'woocommerce-accommodation-bookings')}`;
-				addAccessibleText($cell, accessibleText);
-			});
-
-			$form.find('.fully_booked_end_days').each(function() {
-				const $cell = $(this);
-				const formattedDate = formatDateForScreenReader($cell);
-				const accessibleText = `${formattedDate} ${__('Available for check-in only.', 'woocommerce-accommodation-bookings')}`;
-				addAccessibleText($cell, accessibleText);
-			});
-
-			// Add screen reader text for fully booked dates (both start and end unavailable)
-			$form.find('.fully_booked').each(function() {
-				const $cell = $(this);
-				const formattedDate = formatDateForScreenReader($cell);
-				const accessibleText = `${formattedDate} ${__('Fully booked and unavailable.', 'woocommerce-accommodation-bookings')}`;
-				addAccessibleText($cell, accessibleText);
-			});
+			// Add screen reader text for all booking date types
+			addAccessibleTextToBookingDates($form);
 		}
 	);
 
@@ -225,26 +238,7 @@ import {
 
 			// Re-add screen reader text after date selection triggers refresh
 			setTimeout(() => {
-				$form.find('.fully_booked_start_days').each(function() {
-					const $cell = $(this);
-					const formattedDate = formatDateForScreenReader($cell);
-					const accessibleText = `${formattedDate} ${__('Available for check-out only.', 'woocommerce-accommodation-bookings')}`;
-					addAccessibleText($cell, accessibleText);
-				});
-
-				$form.find('.fully_booked_end_days').each(function() {
-					const $cell = $(this);
-					const formattedDate = formatDateForScreenReader($cell);
-					const accessibleText = `${formattedDate} ${__('Available for check-in only.', 'woocommerce-accommodation-bookings')}`;
-					addAccessibleText($cell, accessibleText);
-				});
-
-				$form.find('.fully_booked').each(function() {
-					const $cell = $(this);
-					const formattedDate = formatDateForScreenReader($cell);
-					const accessibleText = `${formattedDate} ${__('Fully booked and unavailable.', 'woocommerce-accommodation-bookings')}`;
-					addAccessibleText($cell, accessibleText);
-				});
+				addAccessibleTextToBookingDates($form);
 			}, 100);
 		}
 	);
