@@ -654,6 +654,7 @@ export async function confirmBooking(page, bookingId) {
  */
 export async function clearEmailLogs(page) {
 	await page.goto('/wp-admin/admin.php?page=email-log');
+	await page.goto('/wp-admin/admin.php?page=email-log');
 	const bulkAction = await page.locator('#bulk-action-selector-top');
 	if (await bulkAction.isVisible()) {
 		await page.locator('#cb-select-all-1').click();
