@@ -3,7 +3,7 @@ Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
 Requires at least: 6.7
 Tested up to: 6.9
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
