@@ -41,10 +41,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 = 1.3.6 - 2025-12-08 =
 * Dev - Bump WooCommerce "tested up to" version 10.3.
 * Dev - Bump WooCommerce minimum supported version to 10.1.
+* Dev - Bump WordPress "tested up to" version 6.9.
 * Dev - Update PHP Compat sniffs to a development version covering most of the PHP 8.4 changes.
 * Dev - Run the PHP Compat sniffs against the entire production release of the plugin.
 * Dev - Updates to our QIT GitHub Action workflow.
-* Dev - Bump WordPress "tested up to" version 6.9.
 
 = 1.3.5 - 2025-10-06 =
 * Dev - Bump WooCommerce "tested up to" version 10.2.
