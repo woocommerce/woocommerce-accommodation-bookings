@@ -139,13 +139,42 @@ class WC_Accommodation_Booking {
 	 * Adds 'accommodation-booking' to `get_booking_products` so 'accommodation-booking'
 	 * products appear in the dropdown.
 	 *
-	 * @param array $args Current query args
+	 * @param array $args Current query args.
 	 *
 	 * @return array Query args
 	 */
 	public function add_accommodation_to_booking_products_args( $args ) {
+		// If no tax query, return the args as it is.
+		if ( empty( $args['tax_query'] ) ) {
+			return $args;
+		}
+
+		/*
+		 * Booking V3 has updated tax query for the product_type taxonomy and it now includes all registered product types.
+		 * So we need to check whether the accommodation booking product type is already present before adding it again.
+		 */
+		$has_accommodation_booking_in_tax_query = array_filter(
+			$args['tax_query'],
+			function ( $filter ) {
+				if ( ! is_array( $filter ) || 'product_type' !== $filter['taxonomy'] ) {
+					return false;
+				}
+
+				$terms = $filter['terms'] ?? '';
+
+				return is_array( $terms )
+					? in_array( 'accommodation-booking', $terms, true )
+					: 'accommodation-booking' === $terms;
+			}
+		);
+
+		// Accommodation booking product type is already there in the tax query, return the args as it is.
+		if ( ! empty( $has_accommodation_booking_in_tax_query ) ) {
+			return $args;
+		}
+
 		foreach ( $args['tax_query'] as $index => $filter ) {
-			if ( 'product_type' !== $filter['taxonomy'] ) {
+			if ( ! is_array( $filter ) || 'product_type' !== $filter['taxonomy'] ) {
 				continue;
 			}
 
