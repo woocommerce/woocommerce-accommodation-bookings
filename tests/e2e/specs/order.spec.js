@@ -166,6 +166,7 @@ test.describe('Order Tests', () => {
 		await confirmBooking(adminPage, bookingId);
 
 		await adminPage.goto('/wp-admin/admin.php?page=email-log');
+		await adminPage.goto('/wp-admin/admin.php?page=email-log');
 		const emailRow = await adminPage
 			.locator('#the-list tr', {
 				hasText: ` has been confirmed (Order ${orderId}) -`,
