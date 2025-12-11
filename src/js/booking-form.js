@@ -80,15 +80,42 @@ import {
 	 */
 	const addAccessibleText = ($cell, accessibleText) => {
 		const $dayElement = $cell.find('span, a').first();
+		const $targetElement = $dayElement.length ? $dayElement : $cell;
 
 		// Remove any existing screen reader text to avoid duplication
-		$dayElement.find('.screen-reader-text').remove();
+		$targetElement.find('.screen-reader-text').remove();
 
 		// Add screen reader text
-		$dayElement.append(
+		$targetElement.append(
 			`<span class="screen-reader-text"> ${accessibleText}</span>`
 		);
 	};
+
+	// Shared month and day names for screen reader formatting
+	const MONTH_NAMES = [
+		__('January', 'woocommerce-accommodation-bookings'),
+		__('February', 'woocommerce-accommodation-bookings'),
+		__('March', 'woocommerce-accommodation-bookings'),
+		__('April', 'woocommerce-accommodation-bookings'),
+		__('May', 'woocommerce-accommodation-bookings'),
+		__('June', 'woocommerce-accommodation-bookings'),
+		__('July', 'woocommerce-accommodation-bookings'),
+		__('August', 'woocommerce-accommodation-bookings'),
+		__('September', 'woocommerce-accommodation-bookings'),
+		__('October', 'woocommerce-accommodation-bookings'),
+		__('November', 'woocommerce-accommodation-bookings'),
+		__('December', 'woocommerce-accommodation-bookings'),
+	];
+
+	const DAY_NAMES = [
+		__('Sunday', 'woocommerce-accommodation-bookings'),
+		__('Monday', 'woocommerce-accommodation-bookings'),
+		__('Tuesday', 'woocommerce-accommodation-bookings'),
+		__('Wednesday', 'woocommerce-accommodation-bookings'),
+		__('Thursday', 'woocommerce-accommodation-bookings'),
+		__('Friday', 'woocommerce-accommodation-bookings'),
+		__('Saturday', 'woocommerce-accommodation-bookings'),
+	];
 
 	/**
 	 * Format date for screen reader announcement.
@@ -97,46 +124,36 @@ import {
 	 * @return {string} Formatted date string.
 	 */
 	const formatDateForScreenReader = ($cell) => {
-		const day = $cell.attr('data-day');
-		const dataMonth = $cell.attr('data-month');
-		const dataYear = $cell.attr('data-year');
+		// Get day from data-day attribute or extract from text content
+		let day = $cell.attr('data-day');
+		if (!day) {
+			const $dayElement = $cell.find('span, a').first();
+			const textContent = $dayElement.length ? $dayElement.text() : $cell.text();
+			day = textContent.trim().match(/^\d+/)?.[0];
+		}
 
-		if (!day || !dataMonth || !dataYear) {
+		// Get month and year from cell attributes or datepicker header
+		let dataMonth = $cell.attr('data-month');
+		let dataYear = $cell.attr('data-year');
+
+		if (dataMonth === undefined || dataYear === undefined) {
+			const $datepicker = $cell.closest('.ui-datepicker');
+			const $monthEl = $datepicker.find('.ui-datepicker-month');
+			const $yearEl = $datepicker.find('.ui-datepicker-year');
+
+			dataMonth = $monthEl.is('select')
+				? $monthEl.val()
+				: MONTH_NAMES.findIndex(m => $monthEl.text().toLowerCase().includes(m.toLowerCase()));
+
+			dataYear = $yearEl.is('select') ? $yearEl.val() : $yearEl.text().trim();
+		}
+
+		if (!day || dataMonth === undefined || dataMonth === null || dataMonth === -1 || !dataYear) {
 			return '';
 		}
 
-		const date = new Date(
-			parseInt(dataYear, 10),
-			parseInt(dataMonth, 10),
-			parseInt(day, 10)
-		);
-
-		const monthNames = [
-			__('January', 'woocommerce-accommodation-bookings'),
-			__('February', 'woocommerce-accommodation-bookings'),
-			__('March', 'woocommerce-accommodation-bookings'),
-			__('April', 'woocommerce-accommodation-bookings'),
-			__('May', 'woocommerce-accommodation-bookings'),
-			__('June', 'woocommerce-accommodation-bookings'),
-			__('July', 'woocommerce-accommodation-bookings'),
-			__('August', 'woocommerce-accommodation-bookings'),
-			__('September', 'woocommerce-accommodation-bookings'),
-			__('October', 'woocommerce-accommodation-bookings'),
-			__('November', 'woocommerce-accommodation-bookings'),
-			__('December', 'woocommerce-accommodation-bookings'),
-		];
-
-		const dayNames = [
-			__('Sunday', 'woocommerce-accommodation-bookings'),
-			__('Monday', 'woocommerce-accommodation-bookings'),
-			__('Tuesday', 'woocommerce-accommodation-bookings'),
-			__('Wednesday', 'woocommerce-accommodation-bookings'),
-			__('Thursday', 'woocommerce-accommodation-bookings'),
-			__('Friday', 'woocommerce-accommodation-bookings'),
-			__('Saturday', 'woocommerce-accommodation-bookings'),
-		];
-
-		return `${monthNames[date.getMonth()]} ${day}, ${dataYear}, ${dayNames[date.getDay()]},`;
+		const date = new Date(parseInt(dataYear, 10), parseInt(dataMonth, 10), parseInt(day, 10));
+		return `${MONTH_NAMES[date.getMonth()]} ${day}, ${dataYear}, ${DAY_NAMES[date.getDay()]},`;
 	};
 
 	/**
