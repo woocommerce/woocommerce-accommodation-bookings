@@ -75,7 +75,7 @@ import {
 	/**
 	 * Add accessible text to datepicker cells.
 	 *
-	 * @param {jQuery} $cell - The datepicker cell element.
+	 * @param {jQuery} $cell          - The datepicker cell element.
 	 * @param {string} accessibleText - The text to announce to screen readers.
 	 */
 	const addAccessibleText = ($cell, accessibleText) => {
@@ -128,7 +128,9 @@ import {
 		let day = $cell.attr('data-day');
 		if (!day) {
 			const $dayElement = $cell.find('span, a').first();
-			const textContent = $dayElement.length ? $dayElement.text() : $cell.text();
+			const textContent = $dayElement.length
+				? $dayElement.text()
+				: $cell.text();
 			day = textContent.trim().match(/^\d+/)?.[0];
 		}
 
@@ -143,17 +145,33 @@ import {
 
 			dataMonth = $monthEl.is('select')
 				? $monthEl.val()
-				: MONTH_NAMES.findIndex(m => $monthEl.text().toLowerCase().includes(m.toLowerCase()));
+				: MONTH_NAMES.findIndex((m) =>
+						$monthEl.text().toLowerCase().includes(m.toLowerCase())
+				  );
 
-			dataYear = $yearEl.is('select') ? $yearEl.val() : $yearEl.text().trim();
+			dataYear = $yearEl.is('select')
+				? $yearEl.val()
+				: $yearEl.text().trim();
 		}
 
-		if (!day || dataMonth === undefined || dataMonth === null || dataMonth === -1 || !dataYear) {
+		if (
+			!day ||
+			dataMonth === undefined ||
+			dataMonth === null ||
+			dataMonth === -1 ||
+			!dataYear
+		) {
 			return '';
 		}
 
-		const date = new Date(parseInt(dataYear, 10), parseInt(dataMonth, 10), parseInt(day, 10));
-		return `${MONTH_NAMES[date.getMonth()]} ${day}, ${dataYear}, ${DAY_NAMES[date.getDay()]},`;
+		const date = new Date(
+			parseInt(dataYear, 10),
+			parseInt(dataMonth, 10),
+			parseInt(day, 10)
+		);
+		return `${MONTH_NAMES[date.getMonth()]} ${day}, ${dataYear}, ${
+			DAY_NAMES[date.getDay()]
+		},`;
 	};
 
 	/**
@@ -163,26 +181,35 @@ import {
 	 */
 	const addAccessibleTextToBookingDates = ($form) => {
 		// Add screen reader text for partially available dates (check-out only)
-		$form.find('.fully_booked_start_days').each(function() {
+		$form.find('.fully_booked_start_days').each(function () {
 			const $cell = $(this);
 			const formattedDate = formatDateForScreenReader($cell);
-			const accessibleText = `${formattedDate} ${__('Available for check-out only.', 'woocommerce-accommodation-bookings')}`;
+			const accessibleText = `${formattedDate} ${__(
+				'Available for check-out only.',
+				'woocommerce-accommodation-bookings'
+			)}`;
 			addAccessibleText($cell, accessibleText);
 		});
 
 		// Add screen reader text for partially available dates (check-in only)
-		$form.find('.fully_booked_end_days').each(function() {
+		$form.find('.fully_booked_end_days').each(function () {
 			const $cell = $(this);
 			const formattedDate = formatDateForScreenReader($cell);
-			const accessibleText = `${formattedDate} ${__('Available for check-in only.', 'woocommerce-accommodation-bookings')}`;
+			const accessibleText = `${formattedDate} ${__(
+				'Available for check-in only.',
+				'woocommerce-accommodation-bookings'
+			)}`;
 			addAccessibleText($cell, accessibleText);
 		});
 
 		// Add screen reader text for fully booked dates (both start and end unavailable)
-		$form.find('.fully_booked').each(function() {
+		$form.find('.fully_booked').each(function () {
 			const $cell = $(this);
 			const formattedDate = formatDateForScreenReader($cell);
-			const accessibleText = `${formattedDate} ${__('Fully booked and unavailable.', 'woocommerce-accommodation-bookings')}`;
+			const accessibleText = `${formattedDate} ${__(
+				'Fully booked and unavailable.',
+				'woocommerce-accommodation-bookings'
+			)}`;
 			addAccessibleText($cell, accessibleText);
 		});
 	};
