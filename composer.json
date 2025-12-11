@@ -14,7 +14,8 @@
         "woocommerce/woocommerce-sniffs": "1.0.0",
         "sirbrillig/phpcs-changed": "^2.11.1",
         "phpunit/phpunit": "^9.6",
-        "10up/wp_mock": "^1.0.1"
+        "10up/wp_mock": "^1.0.1",
+        "wp-cli/i18n-command": "^2.6"
     },
     "scripts": {
         "test": "vendor/bin/phpunit"

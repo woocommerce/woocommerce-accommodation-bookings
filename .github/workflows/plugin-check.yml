@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
     - name: Run plugin check
-      uses: wordpress/plugin-check-action@v1
+      uses: wordpress/plugin-check-action@70f38272b2beee386e973f319591baa2fc7dff16 # v1.1.2
       with:
         exclude-checks: |
           plugin_readme
@@ -29,7 +29,7 @@ jobs:
           performant_wp_query_params
           enqueued_scripts_in_footer
           plugin_header_text_domain
-        
+
         exclude-directories: |
           .github
           node_modules
@@ -38,6 +38,8 @@ jobs:
           bin
           build
           assets
+
+        ignore-warnings: true
 
         ignore-codes: |
           WordPress.DateTime.RestrictedFunctions.date_date

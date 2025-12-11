@@ -336,25 +336,19 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	}
 	await page.locator('#email').fill(customerDetails.email);
 
-	await fillBillingCheckoutBlocks(
-		page,
-		{
-			country: customerDetails.country,
-			firstName: customerDetails.firstname,
-			lastName: customerDetails.lastname,
-			address: customerDetails.addressfirstline,
-			zip: customerDetails.postcode,
-			city: customerDetails.city,
-			state: customerDetails.state ?? null
-		  }
-	);
-	await page.getByLabel( 'Add a note to your order' ).check();
-    await page
-		.getByPlaceholder(
-			'Notes about your order',
-			{ exact: false }
-		)
-		.fill( 'This is to avoid flakiness' );
+	await fillBillingCheckoutBlocks(page, {
+		country: customerDetails.country,
+		firstName: customerDetails.firstname,
+		lastName: customerDetails.lastname,
+		address: customerDetails.addressfirstline,
+		zip: customerDetails.postcode,
+		city: customerDetails.city,
+		state: customerDetails.state ?? null,
+	});
+	await page.getByLabel('Add a note to your order').check();
+	await page
+		.getByPlaceholder('Notes about your order', { exact: false })
+		.fill('This is to avoid flakiness');
 	await page.waitForLoadState('networkidle');
 }
 
@@ -375,7 +369,7 @@ export async function placeOrder(page, isBlock = false) {
 		page.getByRole('heading', { name: 'Order received' })
 	).toBeVisible();
 
-	return await getOrderIdFromUrl( page );
+	return await getOrderIdFromUrl(page);
 }
 
 /**
@@ -571,6 +565,19 @@ export async function clearCart(page) {
 	}
 }
 
+function convertTimeToHoursMinutesMeridiem(time) {
+	const [hours, minutes] = time.split(':').map(Number);
+	const isPM = hours >= 12;
+	const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM/PM
+	const meridiem = isPM ? 'PM' : 'AM';
+
+	return {
+		hours: formattedHours.toString().padStart(2, '0'),
+		minutes: minutes.toString().padStart(2, '0'),
+		meridiem,
+	};
+}
+
 /**
  * Update Check-in and Check-out time settings.
  *
@@ -582,12 +589,44 @@ export async function updateSettings(page, timeSettings) {
 		'/wp-admin/edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation'
 	);
 
-	await page
-		.locator('#woocommerce_accommodation_bookings_times_check_in')
-		.fill(timeSettings.checkInTime);
-	await page
-		.locator('#woocommerce_accommodation_bookings_times_check_out')
-		.fill(timeSettings.checkoutTime);
+	const checkInTime = convertTimeToHoursMinutesMeridiem(
+		timeSettings.checkInTime
+	);
+	const checkoutTime = convertTimeToHoursMinutesMeridiem(
+		timeSettings.checkoutTime
+	);
+
+	const checkInTimeLocator = await page
+		.locator('.wc-bookings-render-wp-time-picker')
+		.locator('nth=0');
+	const checkOutTimeLocator = await page
+		.locator('.wc-bookings-render-wp-time-picker')
+		.locator('nth=1');
+
+	await checkInTimeLocator
+		.locator('.components-datetime__time-field-hours-input input')
+		.fill(checkInTime.hours);
+	await checkInTimeLocator
+		.locator('.components-datetime__time-field-minutes-input input')
+		.fill(checkInTime.minutes);
+	await checkInTimeLocator
+		.locator(
+			`button.components-toggle-group-control-option-base[value="${checkInTime.meridiem}"]`
+		)
+		.click();
+
+	await checkOutTimeLocator
+		.locator('.components-datetime__time-field-hours-input input')
+		.fill(checkoutTime.hours);
+	await checkOutTimeLocator
+		.locator('.components-datetime__time-field-minutes-input input')
+		.fill(checkoutTime.minutes);
+	await checkOutTimeLocator
+		.locator(
+			`button.components-toggle-group-control-option-base[value="${checkoutTime.meridiem}"]`
+		)
+		.click();
+
 	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
 		await page.getByRole('button', { name: 'Save changes' }).click();
 		await expect(
@@ -614,6 +653,7 @@ export async function confirmBooking(page, bookingId) {
  * @param {Page} page Playwright page object
  */
 export async function clearEmailLogs(page) {
+	await page.goto('/wp-admin/admin.php?page=email-log');
 	await page.goto('/wp-admin/admin.php?page=email-log');
 	const bulkAction = await page.locator('#bulk-action-selector-top');
 	if (await bulkAction.isVisible()) {

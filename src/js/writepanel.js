@@ -1,4 +1,4 @@
-/* globals jQuery */
+import { jQuery } from 'jquery';
 
 jQuery(function ($) {
 	$('#rates_rows').sortable({

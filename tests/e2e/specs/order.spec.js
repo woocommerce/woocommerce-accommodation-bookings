@@ -146,6 +146,7 @@ test.describe('Order Tests', () => {
 
 		// Place order and verify booking details in confirmation email.
 		await page.goto('/checkout');
+		await page.waitForLoadState('networkidle');
 		await fillBillingDetails(page, customer.billing, true);
 		await page
 			.locator('label.wc-block-components-radio-control__option')
@@ -164,6 +165,7 @@ test.describe('Order Tests', () => {
 		const bookingId = bookingList?.split('#')[1]?.split('\t')[0];
 		await confirmBooking(adminPage, bookingId);
 
+		await adminPage.goto('/wp-admin/admin.php?page=email-log');
 		await adminPage.goto('/wp-admin/admin.php?page=email-log');
 		const emailRow = await adminPage
 			.locator('#the-list tr', {

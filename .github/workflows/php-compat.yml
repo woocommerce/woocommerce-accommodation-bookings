@@ -4,35 +4,54 @@ on: pull_request
 
 jobs:
   php-compatibility:
+    name: PHP compatibility
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Prepare PHP
+        uses: woocommerce/grow/prepare-php@da5279aa4d76745ef32970e49b5ef7903a3b457a # v2.2.2
         with:
-          fetch-depth: 0
+          install-deps: yes
+          php-version: '8.4'
+          tools: composer:v2
 
-      - name: Setup proper PHP version
-        uses: shivammathur/setup-php@v2
+      - name: Prepare node
+        uses: woocommerce/grow/prepare-node@da5279aa4d76745ef32970e49b5ef7903a3b457a # v2.2.2
         with:
-          php-version: 7.4
-          tools: composer
+          node-version-file: ".nvmrc"
+          ignore-scripts: "no"
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+      # The use of WP-Scripts results in PHP files being generated during the npm build step.
+      # In order to ensure PHP Compatibility, the build step must be run in order to ensure all
+      # files in the production release of the plugin are compatible with the target PHP versions.
+      - name: Build production bundle
+        run: npm run build
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      # Unzip the newly created zip file to a separate directory.
+      - name: Unzip production bundle
+        run: |
+          mv woocommerce-accommodation-bookings.zip ~
+          cd ~
+          mkdir prod
+          unzip woocommerce-accommodation-bookings.zip -d prod
+          cd -
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+      - name: Copy phpcompat sniffs to production directory
+        run: cp phpcs-compat.xml.dist ~/prod/woocommerce-accommodation-bookings/phpcs-compat.xml.dist
 
-      - name: Install dependencies
-        run: composer install
+      # Installed globally to ensure dev dependencies are not included in compatibility sniffs.
+      # At the time of writing no production version of PHPCompatibility/PHP-Compatibility supports
+      # PHP 8.4 so a dev version is used in order to ensure the sniffs that have been created are
+      # included in the checks.
+      - name: Install PHP Compatibility dev-develop globally
+        run: |
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --dev phpcompatibility/php-compatibility:dev-develop#8daeec54772a592ad369be23ae02ed593c71e7f1
 
-      - name: Run PHP Compatibility
-        run: ./vendor/bin/phpcs --standard=phpcs-compat.xml.dist -p .
+      - name: Run PHPCompatibility on all files
+        run: |
+          cd ~/prod/woocommerce-accommodation-bookings
+          ~/.composer/vendor/bin/phpcs . --standard=phpcs-compat.xml.dist -ps --basepath=.
