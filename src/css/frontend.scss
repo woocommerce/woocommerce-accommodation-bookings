@@ -45,7 +45,11 @@ fieldset.wc-bookings-date-picker {
 
 	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
 	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
-		opacity: 0.65;
+		opacity: 1;
+		
+		span, a {
+			pointer-events: none;
+		}
 	}
 	
 	.ui-datepicker {
@@ -68,83 +72,55 @@ fieldset.wc-bookings-date-picker {
 			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 			pointer-events: none;
 			position: relative;
-
-			// Add a cross/X indicator for fully unavailable dates
-			&::after {
-				content: '';
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				width: 60%;
-				height: 2px;
-				background-color: rgba(255, 255, 255, 0.9);
-				transform: translate(-50%, -50%) rotate(45deg);
-			}
-
-			&::before {
-				content: '';
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				width: 60%;
-				height: 2px;
-				background-color: rgba(255, 255, 255, 0.9);
-				transform: translate(-50%, -50%) rotate(-45deg);
-				z-index: 1;
-			}
 		}
 	}
 
-	// Partially available dates - check-out only (start days are fully booked)
-	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
-	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
+	// Partially available dates: show a clean diagonal split.
+	// - `fully_booked_start_days` (check-out only): bottom-right triangle is unavailable (dark gray).
+	// - `fully_booked_end_days` (check-in only): top-left triangle is unavailable (dark gray).
+	$partial_available: #22c55e;   // Green for the available half
+	$partial_unavailable: #666666; // Dark gray for the unavailable half
+
+	// High specificity selector to override WooCommerce Bookings' .bookable styles
+	.ui-datepicker td.fully_booked_start_days,
+	.ui-datepicker td.fully_booked_end_days,
+	.ui-datepicker td.bookable.fully_booked_start_days,
+	.ui-datepicker td.bookable.fully_booked_end_days {
 		span, a {
-			background-color: #000000 !important;
-			background-image: none !important;
-			border-color: rgba(0, 0, 0, 0.1) !important;
+			position: relative;
 			color: #fff !important;
-			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-			pointer-events: none;
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+			border: none !important;
 		}
 	}
 
-	// Partially available - check-out only (available for leaving, not arriving)
-	.ui-datepicker td.fully_booked_start_days:not(.ui-datepicker-unselectable) {
+	// Check-out only: top-left is green (available), bottom-right is dark gray (unavailable)
+	.ui-datepicker td.fully_booked_start_days,
+	.ui-datepicker td.bookable.fully_booked_start_days {
 		span, a {
-			position: relative;
-
-			// Add a diagonal slash from top-left to bottom-right
-			&::after {
-				content: '';
-				position: absolute;
-				top: 10%;
-				left: 10%;
-				width: 80%;
-				height: 2px;
-				background-color: rgba(255, 255, 255, 0.9);
-				transform: rotate(45deg);
-				transform-origin: top left;
-			}
+			background-color: transparent !important;
+			background-image: linear-gradient(
+				to bottom right,
+				$partial_available 0%,
+				$partial_available 50%,
+				$partial_unavailable 50%,
+				$partial_unavailable 100%
+			) !important;
 		}
 	}
 
-	// Partially available - check-in only (available for arriving, not leaving)
-	.ui-datepicker td.fully_booked_end_days:not(.ui-datepicker-unselectable) {
+	// Check-in only: top-left is dark gray (unavailable), bottom-right is green (available)
+	.ui-datepicker td.fully_booked_end_days,
+	.ui-datepicker td.bookable.fully_booked_end_days {
 		span, a {
-			position: relative;
-
-			// Add a diagonal slash from top-right to bottom-left
-			&::after {
-				content: '';
-				position: absolute;
-				top: 10%;
-				right: 10%;
-				width: 80%;
-				height: 2px;
-				background-color: rgba(255, 255, 255, 0.9);
-				transform: rotate(-45deg);
-				transform-origin: top right;
-			}
+			background-color: transparent !important;
+			background-image: linear-gradient(
+				to bottom right,
+				$partial_unavailable 0%,
+				$partial_unavailable 50%,
+				$partial_available 50%,
+				$partial_available 100%
+			) !important;
 		}
 	}
 
