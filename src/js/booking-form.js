@@ -169,7 +169,7 @@ import {
 			parseInt(dataMonth, 10),
 			parseInt(day, 10)
 		);
-		return `${MONTH_NAMES[date.getMonth()]} ${day}, ${dataYear}, ${
+		return `${MONTH_NAMES[date.getMonth()]}, ${dataYear}, ${
 			DAY_NAMES[date.getDay()]
 		},`;
 	};
