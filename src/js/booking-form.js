@@ -65,8 +65,11 @@ import {
 				);
 			}
 
-			// Add data-day attribute for easier access to day value
+			// Add data attributes for easier access to date values
+			// This ensures screen reader text works correctly for all months
 			attributes['data-day'] = day;
+			attributes['data-month'] = month - 1; // 0-based for consistency with JS Date
+			attributes['data-year'] = year;
 
 			return attributes;
 		}
