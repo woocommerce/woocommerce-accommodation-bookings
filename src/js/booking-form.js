@@ -333,4 +333,38 @@ import {
 			}
 		}
 	);
+
+	// Listen for datepicker month navigation (prev/next buttons and month/year dropdowns)
+	// This ensures screen reader text is added when navigating to different months
+	$(document).on(
+		'click',
+		'.ui-datepicker-prev, .ui-datepicker-next',
+		function () {
+			// Wait for datepicker to update before adding screen reader text
+			setTimeout(() => {
+				$('.product-type-accommodation-booking form').each(function () {
+					const $form = $(this);
+					if (is_product_type_accommodation_booking($form)) {
+						addAccessibleTextToBookingDates($form);
+					}
+				});
+			}, 150);
+		}
+	);
+
+	// Also handle month/year dropdown changes
+	$(document).on(
+		'change',
+		'.ui-datepicker-month, .ui-datepicker-year',
+		function () {
+			setTimeout(() => {
+				$('.product-type-accommodation-booking form').each(function () {
+					const $form = $(this);
+					if (is_product_type_accommodation_booking($form)) {
+						addAccessibleTextToBookingDates($form);
+					}
+				});
+			}, 150);
+		}
+	);
 })(jQuery);
