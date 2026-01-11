@@ -357,14 +357,12 @@ import {
 		'change',
 		'.ui-datepicker-month, .ui-datepicker-year',
 		function () {
-			setTimeout(() => {
-				$('.product-type-accommodation-booking form').each(function () {
-					const $form = $(this);
-					if (is_product_type_accommodation_booking($form)) {
-						addAccessibleTextToBookingDates($form);
-					}
-				});
-			}, 150);
+			$('.product-type-accommodation-booking form').each(function () {
+				const $form = $(this);
+				if (is_product_type_accommodation_booking($form)) {
+					addAccessibleTextToBookingDates($form);
+				}
+			});
 		}
 	);
 })(jQuery);
