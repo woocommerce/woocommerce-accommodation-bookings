@@ -363,6 +363,13 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 			$blocks_in_range = $this->get_blocks_in_range_for_day( $start_date, $end_date, $resource_id, $booked );
 
+			// WC Bookings 3.0.0+ returns an associative array [timestamp => booked_count].
+			// array_unique() destroys this structure by re-indexing with numeric keys.
+			// Only apply array_unique() for older versions that returned flat arrays.
+			if ( defined( 'WC_BOOKINGS_VERSION' ) && version_compare( WC_BOOKINGS_VERSION, '3.0.0', '>=' ) ) {
+				return $blocks_in_range;
+			}
+
 			return array_unique( $blocks_in_range );
 		}
 
