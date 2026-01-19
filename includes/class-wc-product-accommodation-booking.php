@@ -12,6 +12,14 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		/**
+		 * Minimum timestamp value for detecting v2 format timestamps.
+		 * Timestamps below this (Jan 1, 2001) are considered invalid for booking detection.
+		 *
+		 * @var int
+		 */
+		const MIN_TIMESTAMP = 1000000000;
+
+		/**
 		 * The type of product we're creating
 		 *
 		 * @var string
@@ -56,7 +64,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 			// Hook cache clearing method (only adds once).
 			// This is a temporary fix to handle the issue with the stale transients.
-			// This can be in removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
+			// This can be removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
 			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563.
 			static $hook_added = false;
 			if ( ! $hook_added ) {
@@ -407,12 +415,12 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			// Detect v2 format: keys are sequential array indices starting from 0, values are timestamps (large integers).
 			// v3 format: keys are timestamps (large integers), values are booked counts (small integers).
 			if ( is_numeric( $first_key ) && 0 === $first_key
-				&& is_numeric( $first_value ) && $first_value > 1000000000 ) {
+				&& is_numeric( $first_value ) && $first_value > self::MIN_TIMESTAMP ) {
 				// Convert v2 flat array to v3 associative format.
 				// All dates from v2 are treated as available (booked_count = 0).
 				$normalized = array();
 				foreach ( $blocks as $timestamp ) {
-					if ( is_numeric( $timestamp ) && $timestamp > 1000000000 ) {
+					if ( is_numeric( $timestamp ) && $timestamp > self::MIN_TIMESTAMP ) {
 						$normalized[ (int) $timestamp ] = 0;
 					}
 				}
@@ -471,11 +479,15 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		/**
 		 * Clear stale booking transients automatically when WC Bookings v3+ is detected.
 		 * Runs once on admin_init, then never again.
-		 * Uses batched deletion to avoid performance impact.
 		 *
 		 * @return void
 		 */
 		public static function maybe_clear_stale_transients() {
+			// Only run if user has proper capabilities.
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				return;
+			}
+
 			// Only run if WC Bookings v3+ is active.
 			if ( ! defined( 'WC_BOOKINGS_VERSION' ) || version_compare( WC_BOOKINGS_VERSION, '3.0.0', '<' ) ) {
 				return;
@@ -498,6 +510,10 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			// Step 2: Clear any orphaned transients directly (safety net for transients not in tracking array).
 			// This catches transients that got out of sync.
 			global $wpdb;
+
+			if ( ! $wpdb || ! isset( $wpdb->options ) ) {
+				return; // Database not available.
+			}
 
 			// Delete timeout entries.
 			$wpdb->query(
