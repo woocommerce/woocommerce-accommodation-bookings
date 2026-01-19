@@ -406,7 +406,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 			// Detect v2 format: keys are sequential array indices starting from 0, values are timestamps (large integers).
 			// v3 format: keys are timestamps (large integers), values are booked counts (small integers).
-			if ( is_numeric( $first_key ) && $first_key === 0
+			if ( is_numeric( $first_key ) && 0 === $first_key
 				&& is_numeric( $first_value ) && $first_value > 1000000000 ) {
 				// Convert v2 flat array to v3 associative format.
 				// All dates from v2 are treated as available (booked_count = 0).
