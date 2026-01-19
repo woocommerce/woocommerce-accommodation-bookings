@@ -57,7 +57,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			// Hook cache clearing method (only adds once).
 			// This is a temporary fix to handle the issue with the stale transients.
 			// This can be in removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
-			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563
+			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563.
 			static $hook_added = false;
 			if ( ! $hook_added ) {
 				add_action( 'admin_init', array( __CLASS__, 'maybe_clear_stale_transients' ), 1 );
@@ -377,7 +377,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			// array_unique() destroys this structure by re-indexing with numeric keys and removing duplicate values.
 			// Only apply array_unique() for older versions that returned flat arrays.
 			// This normalize method and the array_unique() can be removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
-			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563
+			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563.
 			if ( defined( 'WC_BOOKINGS_VERSION' ) && version_compare( WC_BOOKINGS_VERSION, '3.0.0', '>=' ) ) {
 				// Normalize format to handle both v2 (flat) and v3 (associative) formats gracefully.
 				return $this->normalize_blocks_array( $blocks_in_range );
@@ -406,7 +406,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 			// Detect v2 format: keys are sequential array indices starting from 0, values are timestamps (large integers).
 			// v3 format: keys are timestamps (large integers), values are booked counts (small integers).
-			if ( is_numeric( $first_key ) && $first_key === 0 
+			if ( is_numeric( $first_key ) && $first_key === 0
 				&& is_numeric( $first_value ) && $first_value > 1000000000 ) {
 				// Convert v2 flat array to v3 associative format.
 				// All dates from v2 are treated as available (booked_count = 0).
@@ -498,18 +498,22 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			// Step 2: Clear any orphaned transients directly (safety net for transients not in tracking array).
 			// This catches transients that got out of sync.
 			global $wpdb;
-			
+
 			// Delete timeout entries.
-			$wpdb->query( $wpdb->prepare( 
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", 
-				$wpdb->esc_like( '_transient_timeout_book_ts_' ) . '%'
-			) );
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+					$wpdb->esc_like( '_transient_timeout_book_ts_' ) . '%'
+				)
+			);
 
 			// Delete transient entries.
-			$wpdb->query( $wpdb->prepare( 
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", 
-				$wpdb->esc_like( '_transient_book_ts_' ) . '%'
-			) );
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+					$wpdb->esc_like( '_transient_book_ts_' ) . '%'
+				)
+			);
 		}
 	}
 
