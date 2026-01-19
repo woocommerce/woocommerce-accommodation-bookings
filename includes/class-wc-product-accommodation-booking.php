@@ -484,7 +484,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 */
 		public static function maybe_clear_stale_transients() {
 			// Only run if user has proper capabilities.
-			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
 				return;
 			}
 
