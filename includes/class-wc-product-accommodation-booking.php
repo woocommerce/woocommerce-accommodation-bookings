@@ -13,7 +13,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 		/**
 		 * Minimum timestamp value for detecting v2 format timestamps.
-		 * Timestamps below this (Jan 1, 2001) are considered invalid for booking detection.
+		 * Timestamps below this (2001) are considered invalid for booking detection.
 		 *
 		 * @var int
 		 */
