@@ -61,16 +61,6 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			$this->wc_booking_duration_type = 'customer';
 			$this->wc_booking_duration_unit = 'night';
 			$this->wc_booking_duration      = 1;
-
-			// Hook cache clearing method (only adds once).
-			// This is a temporary fix to handle the issue with the stale transients.
-			// This can be removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
-			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563.
-			static $hook_added = false;
-			if ( ! $hook_added ) {
-				add_action( 'admin_init', array( __CLASS__, 'maybe_clear_stale_transients' ), 1 );
-				$hook_added = true;
-			}
 		}
 
 

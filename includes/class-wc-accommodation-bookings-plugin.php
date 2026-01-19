@@ -130,6 +130,11 @@ class WC_Accommodation_Bookings_Plugin {
 		if ( is_admin() ) {
 			add_action( 'init', array( $this, 'admin_includes' ), 10 );
 			add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
+			// Hook cache clearing method for WC Bookings v3+ compatibility.
+			// This is a temporary fix to handle the issue with the stale transients.
+			// This can be removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
+			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563.
+			add_action( 'admin_init', array( 'WC_Product_Accommodation_Booking', 'maybe_clear_stale_transients' ), 1 );
 		}
 
 		add_action( 'shutdown', array( $this, 'install' ) );
