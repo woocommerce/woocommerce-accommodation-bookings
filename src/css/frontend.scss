@@ -38,7 +38,7 @@
 	word-wrap: normal !important;
 }
 
-fieldset.wc-bookings-date-picker {
+.wc-bookings-date-picker {
 	fieldset {
 		position: relative;
 	}
@@ -79,7 +79,7 @@ fieldset.wc-bookings-date-picker {
 	// - `fully_booked_start_days` (check-out only): bottom-right triangle is unavailable (dark gray).
 	// - `fully_booked_end_days` (check-in only): top-left triangle is unavailable (dark gray).
 	$partial_available: #22c55e;   // Green for the available half
-	$partial_unavailable: #666666; // Dark gray for the unavailable half
+	$partial_unavailable: #000000; // Black for the unavailable half
 
 	// High specificity selector to override WooCommerce Bookings' .bookable styles
 	.ui-datepicker td.fully_booked_start_days,
