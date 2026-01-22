@@ -467,8 +467,9 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		}
 
 		/**
-		 * Clear stale booking transients automatically when WC Bookings v3+ is detected.
-		 * Runs once on admin_init, then never again.
+		 * Clear stale booking transients that may cause availability or booking issues.
+		 * Called manually via WooCommerce Status Tools.
+		 * Can be run multiple times safely.
 		 *
 		 * @return void
 		 */
@@ -477,20 +478,6 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
 				return;
 			}
-
-			// Only run if WC Bookings v3+ is active.
-			if ( ! defined( 'WC_BOOKINGS_VERSION' ) || version_compare( WC_BOOKINGS_VERSION, '3.0.0', '<' ) ) {
-				return;
-			}
-
-			// Check if we've already cleared transients (once is enough).
-			$option_key = 'woocommerce_accommodation_bookings_v3_transients_cleared';
-			if ( get_option( $option_key ) ) {
-				return; // Already cleared - zero overhead.
-			}
-
-			// Mark as cleared immediately to prevent duplicate runs.
-			update_option( $option_key, true );
 
 			// Step 1: Use parent plugin's method first (clears tracked transients and updates tracking array).
 			if ( class_exists( 'WC_Bookings_Cache' ) && method_exists( 'WC_Bookings_Cache', 'delete_booking_slots_transient' ) ) {

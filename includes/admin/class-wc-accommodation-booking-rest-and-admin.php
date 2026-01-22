@@ -357,7 +357,7 @@ class WC_Accommodation_Booking_REST_And_Admin {
 			'clear_stale_booking_transients' => array(
 				'name'     => __( 'Clear stale booking transients', 'woocommerce-accommodation-bookings' ),
 				'button'   => __( 'Clear transients', 'woocommerce-accommodation-bookings' ),
-				'desc'     => __( 'This tool will clear stale booking transients that may cause issues after upgrading to WooCommerce Bookings 3.0+.', 'woocommerce-accommodation-bookings' ),
+				'desc'     => __( 'This tool will clear stale booking transients that may cause availability or booking issues.', 'woocommerce-accommodation-bookings' ),
 				'callback' => array( $this, 'clear_stale_booking_transients_tool' ),
 			),
 		);
