@@ -465,7 +465,6 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		public function get_duration( $context = 'view' ) {
 			return 1;
 		}
-
 	}
 
 endif;
