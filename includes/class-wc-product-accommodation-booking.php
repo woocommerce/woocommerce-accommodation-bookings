@@ -466,48 +466,6 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			return 1;
 		}
 
-		/**
-		 * Clear stale booking transients that may cause availability or booking issues.
-		 * Called manually via WooCommerce Status Tools.
-		 * Can be run multiple times safely.
-		 *
-		 * @return void
-		 */
-		public static function maybe_clear_stale_transients() {
-			// Only run if user has proper capabilities.
-			if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
-				return;
-			}
-
-			// Step 1: Use parent plugin's method first (clears tracked transients and updates tracking array).
-			if ( class_exists( 'WC_Bookings_Cache' ) && method_exists( 'WC_Bookings_Cache', 'delete_booking_slots_transient' ) ) {
-				WC_Bookings_Cache::delete_booking_slots_transient(); // No product ID = clears all tracked transients.
-			}
-
-			// Step 2: Clear any orphaned transients directly (safety net for transients not in tracking array).
-			// This catches transients that got out of sync.
-			global $wpdb;
-
-			if ( ! $wpdb || ! isset( $wpdb->options ) ) {
-				return; // Database not available.
-			}
-
-			// Delete timeout entries.
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-					$wpdb->esc_like( '_transient_timeout_book_ts_' ) . '%'
-				)
-			);
-
-			// Delete transient entries.
-			$wpdb->query(
-				$wpdb->prepare(
-					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-					$wpdb->esc_like( '_transient_book_ts_' ) . '%'
-				)
-			);
-		}
 	}
 
 endif;
