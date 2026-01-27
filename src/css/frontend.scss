@@ -58,14 +58,14 @@
 			opacity: 0.65;
 			
 			span, a {
-				background-color: #000000 !important;
+				background-color: #666666 !important;
 			}
 		}
 	}
 
 	.ui-datepicker td.fully_booked {
 		span, a {
-			background-color: #000000 !important;
+			background-color: #666666 !important;
 			background-image: none !important;
 			border-color: rgba(0, 0, 0, 0.1) !important;
 			color: #fff !important;
@@ -79,7 +79,7 @@
 	// - `fully_booked_start_days` (check-out only): bottom-right triangle is unavailable (dark gray).
 	// - `fully_booked_end_days` (check-in only): top-left triangle is unavailable (dark gray).
 	$partial_available: #22c55e;   // Green for the available half
-	$partial_unavailable: #000000; // Black for the unavailable half
+	$partial_unavailable: #666666; // Dark gray for the unavailable half
 
 	// High specificity selector to override WooCommerce Bookings' .bookable styles
 	.ui-datepicker td.fully_booked_start_days,
@@ -131,7 +131,7 @@
 			opacity: 0.65;
 			span,
 			a {
-				background-color: #000000 !important;
+				background-color: #666666 !important;
 			}
 		}
 	}
