@@ -38,6 +38,11 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.3.7 - 2026-01-27 =
+* Fix - Updated the Booked Blocks structure to display correct availability, ensuring compatibility with Bookings V3.
+* Dev - Bump WooCommerce "tested up to" version 10.5.
+* Dev - Bump WooCommerce minimum supported version to 10.3.
+
 = 1.3.6 - 2025-12-15 =
 * Fix - Ensure there is no fatal error on the bookings list page due to recent changes in Bookings V3.
 * Fix - JavasScript error reference to jQuery on New Product page.
@@ -240,31 +245,5 @@ If the prices shown on the product do not match the prices defined in the dashbo
 = 1.1.23 - 2021-02-25 =
 * Fix - Dev - Fix: Add casts to float before applying the 'abs' function to potentially empty strings for compatibility with PHP8.
 * Tweak - WC 5.0 compatibility.
-
-= 1.1.22 - 2020-10-27 =
-* Tweak - WC 4.6 compatibility.
-
-= 1.1.21 - 2020-09-29 =
-* Fix   - Skip formatting dates in ICS output for Accommodation Bookable products.
-* Fix   - Allow products to be specified as virtual.
-* Fix   - Use time for transient to skip autoload.
-* Tweak - Migrate Settings from Product to Bookings screen.
-
-= 1.1.20 - 2020-08-25 =
-* Fix - Do not round cost values in range types in Rates section.
-
-= 1.1.19 - 2020-08-19 =
-* Tweak - WordPress 5.5 compatibility.
-
-= 1.1.18 - 2020-07-08 =
-* Fix - Existing booking checkout date showed as fully booked and not selectable.
-
-= 1.1.17 - 2020-06-10 =
-* Tweak - WC tested up to 4.2.
-
-= 1.1.15 - 2020-03-06 =
-* Add - Add basic unit tests suite.
-* Fix - Fix missing translation for resource duration display.
-* Tweak - WP tested up to 5.4.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-accommodation-bookings/master/changelog.txt).
