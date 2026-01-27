@@ -12,6 +12,14 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
 		/**
+		 * Minimum timestamp value for detecting v2 format timestamps.
+		 * Timestamps below this (2001) are considered invalid for booking detection.
+		 *
+		 * @var int
+		 */
+		const MIN_TIMESTAMP = 1000000000;
+
+		/**
 		 * The type of product we're creating
 		 *
 		 * @var string
@@ -363,7 +371,54 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 			$blocks_in_range = $this->get_blocks_in_range_for_day( $start_date, $end_date, $resource_id, $booked );
 
+			// WC Bookings 3.0.0+ returns an associative array [timestamp => booked_count].
+			// array_unique() destroys this structure by re-indexing with numeric keys and removing duplicate values.
+			// Only apply array_unique() for older versions that returned flat arrays.
+			// This normalize method and the array_unique() can be removed in future once the minimum version of WC Bookings is 3.0.0 or higher.
+			// See https://github.com/woocommerce/woocommerce-accommodation-bookings/issues/563.
+			if ( defined( 'WC_BOOKINGS_VERSION' ) && version_compare( WC_BOOKINGS_VERSION, '3.0.0', '>=' ) ) {
+				// Normalize format to handle both v2 (flat) and v3 (associative) formats gracefully.
+				return $this->normalize_blocks_array( $blocks_in_range );
+			}
+
+			// For v2.x and earlier, apply array_unique() to remove duplicate timestamps from flat array.
 			return array_unique( $blocks_in_range );
+		}
+
+		/**
+		 * Normalize blocks array to handle both v2 (flat) and v3 (associative) formats.
+		 * Automatically converts stale v2-format data from cached transients to v3 format.
+		 *
+		 * @param array $blocks Array of blocks (may be flat array from v2 or associative from v3).
+		 * @return array Normalized associative array compatible with v3 format.
+		 */
+		private function normalize_blocks_array( $blocks ) {
+			if ( empty( $blocks ) ) {
+				return array();
+			}
+
+			// Check if this is a v2-format flat array (numeric keys, all values are timestamps).
+			// v3 format has associative keys (timestamps) with booked counts as values.
+			$first_key   = array_key_first( $blocks );
+			$first_value = reset( $blocks );
+
+			// Detect v2 format: keys are sequential array indices starting from 0, values are timestamps (large integers).
+			// v3 format: keys are timestamps (large integers), values are booked counts (small integers).
+			if ( is_numeric( $first_key ) && 0 === $first_key
+				&& is_numeric( $first_value ) && $first_value > self::MIN_TIMESTAMP ) {
+				// Convert v2 flat array to v3 associative format.
+				// All dates from v2 are treated as available (booked_count = 0).
+				$normalized = array();
+				foreach ( $blocks as $timestamp ) {
+					if ( is_numeric( $timestamp ) && $timestamp > self::MIN_TIMESTAMP ) {
+						$normalized[ (int) $timestamp ] = 0;
+					}
+				}
+				return $normalized;
+			}
+
+			// Already in v3 format, return as-is.
+			return $blocks;
 		}
 
 		/**
