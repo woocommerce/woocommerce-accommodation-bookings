@@ -38,7 +38,7 @@
 	word-wrap: normal !important;
 }
 
-.wc-bookings-date-picker {
+.wc-bookings-date-picker-accommodation-booking.wc-bookings-date-picker {
 	fieldset {
 		position: relative;
 	}
@@ -52,7 +52,7 @@
 		}
 	}
 	
-	.ui-datepicker .ui-datepicker-calendar {
+	.ui-datepicker {
 		td.fully_booked:not(.not_bookable_by_rules),
 		td.fully_booked {
 			opacity: 1;
@@ -127,7 +127,7 @@
 	// For fully booked dates (unavailable for both check-in and check-out).
 	// Increased specificity to override the styling from the WooCommerce Bookings plugin.
 	.wc-bookings-booking-form .wc-bookings-date-picker {
-		.ui-datepicker .ui-datepicker-calendar td.fully_booked:not(.not_bookable_by_rules) {
+		.ui-datepicker td.fully_booked:not(.not_bookable_by_rules) {
 			opacity: 1;
 			span,
 			a {
