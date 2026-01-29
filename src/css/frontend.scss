@@ -97,7 +97,7 @@
 	// Check-out only: top-left is green (available), bottom-right is dark gray (unavailable)
 	.ui-datepicker td.fully_booked_start_days,
 	.ui-datepicker td.bookable.fully_booked_start_days {
-		span, a {
+		span, a:not(.ui-state-active) {
 			background-image: linear-gradient(
 				to bottom right,
 				$partial_available 0%,
@@ -111,7 +111,7 @@
 	// Check-in only: top-left is dark gray (unavailable), bottom-right is green (available)
 	.ui-datepicker td.fully_booked_end_days,
 	.ui-datepicker td.bookable.fully_booked_end_days {
-		span, a {
+		span, a:not(.ui-state-active) {
 			background-image: linear-gradient(
 				to bottom right,
 				$partial_unavailable 0%,
