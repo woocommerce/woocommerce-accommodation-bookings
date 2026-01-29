@@ -58,18 +58,14 @@
 			opacity: 1;
 
 			span, a {
-				background-color: #666666 !important;
+				background-color: #575757 !important;
 			}
-		}
-
-		td.bookable a.ui-state-default {
-			background-color: #2ecc71 !important;
 		}
 	}
 
 	.ui-datepicker td.fully_booked {
 		span, a {
-			background-color: #666666 !important;
+			background-color: #575757 !important;
 			background-image: none !important;
 			border-color: rgba(0, 0, 0, 0.1) !important;
 			color: #fff !important;
@@ -82,8 +78,8 @@
 	// Partially available dates: show a clean diagonal split.
 	// - `fully_booked_start_days` (check-out only): bottom-right triangle is unavailable (dark gray).
 	// - `fully_booked_end_days` (check-in only): top-left triangle is unavailable (dark gray).
-	$partial_available: #2ecc71;   // Green for the available half
-	$partial_unavailable: #666666; // Dark gray for the unavailable half
+	$partial_available: transparent;   // Green for the available half
+	$partial_unavailable: #575757; // Dark gray for the unavailable half
 
 	// High specificity selector to override WooCommerce Bookings' .bookable styles
 	.ui-datepicker td.fully_booked_start_days,
@@ -102,7 +98,6 @@
 	.ui-datepicker td.fully_booked_start_days,
 	.ui-datepicker td.bookable.fully_booked_start_days {
 		span, a {
-			background-color: transparent !important;
 			background-image: linear-gradient(
 				to bottom right,
 				$partial_available 0%,
@@ -117,7 +112,6 @@
 	.ui-datepicker td.fully_booked_end_days,
 	.ui-datepicker td.bookable.fully_booked_end_days {
 		span, a {
-			background-color: transparent !important;
 			background-image: linear-gradient(
 				to bottom right,
 				$partial_unavailable 0%,
@@ -135,7 +129,7 @@
 			opacity: 1;
 			span,
 			a {
-				background-color: #666666 !important;
+				background-color: #575757 !important;
 			}
 		}
 	}
