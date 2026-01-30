@@ -21,6 +21,9 @@ class WC_Accommodation_Booking_REST_And_Admin {
 		add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
 
 		add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_data' ), 25 );
+
+		// Add debug tool for clearing stale booking transients.
+		add_filter( 'woocommerce_debug_tools', array( $this, 'accommodation_bookings_debug_tools' ) );
 	}
 
 	/**
@@ -340,6 +343,79 @@ class WC_Accommodation_Booking_REST_And_Admin {
 				'product_id' => $post_id,
 			),
 			'%d'
+		);
+	}
+
+	/**
+	 * Accommodation Bookings debug tools in WooCommerce > Status > Tools.
+	 *
+	 * @param array $tools Existing tools.
+	 * @return array Tools with Accommodation Bookings tools added.
+	 */
+	public function accommodation_bookings_debug_tools( $tools ) {
+		$accommodation_tools = array(
+			'clear_stale_booking_transients' => array(
+				'name'     => __( 'Clear stale booking transients', 'woocommerce-accommodation-bookings' ),
+				'button'   => __( 'Clear transients', 'woocommerce-accommodation-bookings' ),
+				'desc'     => __( 'This tool will clear stale booking transients that may cause availability or booking issues.', 'woocommerce-accommodation-bookings' ),
+				'callback' => array( $this, 'clear_stale_booking_transients_tool' ),
+			),
+		);
+
+		return array_merge( $tools, $accommodation_tools );
+	}
+
+	/**
+	 * Callback for clearing stale booking transients tool.
+	 *
+	 * @return string Success message.
+	 */
+	public function clear_stale_booking_transients_tool() {
+		// Check user capabilities.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+			return __( 'Error: You do not have permission to run this tool.', 'woocommerce-accommodation-bookings' );
+		}
+
+		// Call the method to clear transients.
+		$this->clear_stale_booking_transients();
+
+		return __( 'Stale booking transients cleared successfully.', 'woocommerce-accommodation-bookings' );
+	}
+
+	/**
+	 * Clear stale booking transients that may cause availability or booking issues.
+	 * Can be run multiple times safely.
+	 *
+	 * @return void
+	 */
+	private function clear_stale_booking_transients() {
+		// Step 1: Use parent plugin's method first (clears tracked transients and updates tracking array).
+		if ( class_exists( 'WC_Bookings_Cache' ) && method_exists( 'WC_Bookings_Cache', 'delete_booking_slots_transient' ) ) {
+			WC_Bookings_Cache::delete_booking_slots_transient(); // No product ID = clears all tracked transients.
+		}
+
+		// Step 2: Clear any orphaned transients directly (safety net for transients not in tracking array).
+		// This catches transients that got out of sync.
+		global $wpdb;
+
+		if ( ! $wpdb || ! isset( $wpdb->options ) ) {
+			return; // Database not available.
+		}
+
+		// Delete timeout entries.
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+				$wpdb->esc_like( '_transient_timeout_book_ts_' ) . '%'
+			)
+		);
+
+		// Delete transient entries.
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+				$wpdb->esc_like( '_transient_book_ts_' ) . '%'
+			)
 		);
 	}
 }
