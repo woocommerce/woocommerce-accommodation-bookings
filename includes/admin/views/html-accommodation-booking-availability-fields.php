@@ -1,4 +1,11 @@
 <?php
+/**
+ * Display accommodation booking availability fields.
+ *
+ * @package woocommerce-accommodation-bookings
+ * @var array $availability The availability data.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

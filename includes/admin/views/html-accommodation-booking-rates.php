@@ -1,4 +1,11 @@
 <?php
+/**
+ * Display accommodation booking rates.
+ *
+ * @package woocommerce-accommodation-bookings
+ * @var int $post_id The post ID.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

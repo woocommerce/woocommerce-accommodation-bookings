@@ -1,4 +1,13 @@
 <?php
+/**
+ * Display accommodation booking availability.
+ *
+ * @package woocommerce-accommodation-bookings
+ * @var int                              $post_id          The post ID.
+ * @var WC_Product_Accommodation_Booking $bookable_product The bookable product.
+ * @var array                            $restricted_days    The restricted days.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
