@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div id="accommodation_bookings_availability" class="panel woocommerce_options_panel bookings_extension">
 	<div class="options_group">
 		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_qty', 'label' => __( 'Number of rooms available', 'woocommerce-accommodation-bookings' ), 'description' => __( 'The maximum number of rooms available.', 'woocommerce-accommodation-bookings' ), 'value' => max( absint( get_post_meta( $post_id, '_wc_booking_qty', true ) ), 1 ), 'desc_tip' => true, 'type' => 'number', 'custom_attributes' => array(
