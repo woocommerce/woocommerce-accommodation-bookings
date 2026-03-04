@@ -1,7 +1,7 @@
 === WooCommerce Accommodation Bookings ===
 Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
-Requires at least: 6.7
+Requires at least: 6.8
 Tested up to: 6.9
 Stable tag: 1.3.7
 License: GNU General Public License v3.0
@@ -40,8 +40,8 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 = 1.3.7 - 2026-01-27 =
 * Fix - Updated the Booked Blocks structure to display correct availability, ensuring compatibility with Bookings V3.
-* Dev - Bump WooCommerce "tested up to" version 10.5.
-* Dev - Bump WooCommerce minimum supported version to 10.3.
+* Dev - Bump WooCommerce "tested up to" version 10.6.
+* Dev - Bump WooCommerce minimum supported version to 10.4.
 
 = 1.3.6 - 2025-12-15 =
 * Fix - Ensure there is no fatal error on the bookings list page due to recent changes in Bookings V3.
