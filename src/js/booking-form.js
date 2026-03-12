@@ -75,6 +75,68 @@ import {
 		}
 	);
 
+	const INFO_ICON_SVG =
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
+
+	/**
+	 * Add info icons with tooltips to partially available date cells.
+	 *
+	 * @param {jQuery} $form - The booking form element.
+	 */
+	const addPartialAvailabilityIcons = ($form) => {
+		$form.find('.partial-availability-info-wrapper').remove();
+
+		const createInfoIcon = (message) => {
+			return $(`
+				<div class="partial-availability-info-wrapper">
+					<button type="button" class="partial-availability-info" aria-label="${message}">
+						${INFO_ICON_SVG}
+					</button>
+					<div class="partial-availability-tooltip" role="tooltip" aria-hidden="true">${message}</div>
+				</div>
+			`);
+		};
+
+		const appendIcon = ($cell, message) => {
+			if ($cell.find('.partial-availability-info-wrapper').length) {
+				return;
+			}
+			const $dayElement = $cell.children('span, a').first();
+			const $target = $dayElement.length ? $dayElement : $cell;
+			$target.append(createInfoIcon(message));
+		};
+
+		$form.find('.fully_booked_start_days').each(function () {
+			appendIcon(
+				$(this),
+				__(
+					'Available for check-out only.',
+					'woocommerce-accommodation-bookings'
+				)
+			);
+		});
+
+		$form.find('.fully_booked_end_days').each(function () {
+			appendIcon(
+				$(this),
+				__(
+					'Available for check-in only.',
+					'woocommerce-accommodation-bookings'
+				)
+			);
+		});
+	};
+
+	// Prevent date selection when clicking the info icon button.
+	$(document).on(
+		'click mousedown',
+		'.partial-availability-info',
+		function (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	);
+
 	/**
 	 * Add accessible text to datepicker cells.
 	 *
@@ -242,8 +304,9 @@ import {
 				.find('.fully_booked_end_days')
 				.removeClass('ui-datepicker-unselectable ui-state-disabled');
 
-			// Add screen reader text for all booking date types
+			// Add screen reader text and info icons for booking date types
 			addAccessibleTextToBookingDates($form);
+			addPartialAvailabilityIcons($form);
 		}
 	);
 
@@ -283,9 +346,10 @@ import {
 
 			$fieldset.attr('data-content', data_content);
 
-			// Re-add screen reader text after date selection triggers refresh
+			// Re-add screen reader text and info icons after date selection triggers refresh
 			setTimeout(() => {
 				addAccessibleTextToBookingDates($form);
+				addPartialAvailabilityIcons($form);
 			}, 100);
 		}
 	);
@@ -340,29 +404,28 @@ import {
 		'click',
 		'.ui-datepicker-prev, .ui-datepicker-next',
 		function () {
-			// Wait for datepicker to update before adding screen reader text
 			setTimeout(() => {
 				$('.product-type-accommodation-booking form').each(function () {
 					const $form = $(this);
 					if (is_product_type_accommodation_booking($form)) {
 						addAccessibleTextToBookingDates($form);
+						addPartialAvailabilityIcons($form);
 					}
 				});
 			}, 150);
 		}
 	);
 
-	// Also handle month/year dropdown changes
 	$(document).on(
 		'change',
 		'.ui-datepicker-month, .ui-datepicker-year',
 		function () {
-			// Wait for datepicker to update before adding screen reader text
 			setTimeout(() => {
 				$('.product-type-accommodation-booking form').each(function () {
 					const $form = $(this);
 					if (is_product_type_accommodation_booking($form)) {
 						addAccessibleTextToBookingDates($form);
+						addPartialAvailabilityIcons($form);
 					}
 				});
 			}, 150);
