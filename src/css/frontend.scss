@@ -76,9 +76,8 @@
 	}
 
 	// Partially available dates: show a clean diagonal split.
-	// - `fully_booked_start_days` (check-out only): bottom-right triangle is unavailable (dark gray).
-	// - `fully_booked_end_days` (check-in only): top-left triangle is unavailable (dark gray).
-	$partial_available: transparent;
+	// --wc-bookable-bg is set dynamically by JS from a fully-bookable cell's computed color,
+	// falling back to the default WooCommerce Bookings green.
 	$partial_unavailable: #575757;
 
 	.ui-datepicker td.fully_booked_start_days,
@@ -98,8 +97,8 @@
 		span, a:not(.ui-state-active) {
 			background-image: linear-gradient(
 				to bottom right,
-				$partial_available 0%,
-				$partial_available 50%,
+				var(--wc-bookable-bg, #2ecc71) 0%,
+				var(--wc-bookable-bg, #2ecc71) 50%,
 				$partial_unavailable 50%,
 				$partial_unavailable 100%
 			) !important;
@@ -113,8 +112,8 @@
 				to bottom right,
 				$partial_unavailable 0%,
 				$partial_unavailable 50%,
-				$partial_available 50%,
-				$partial_available 100%
+				var(--wc-bookable-bg, #2ecc71) 50%,
+				var(--wc-bookable-bg, #2ecc71) 100%
 			) !important;
 		}
 	}

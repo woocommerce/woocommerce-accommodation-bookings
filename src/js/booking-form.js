@@ -304,6 +304,22 @@ import {
 				.find('.fully_booked_end_days')
 				.removeClass('ui-datepicker-unselectable ui-state-disabled');
 
+			// Set --wc-bookable-bg from a fully-bookable cell so the
+			// partial-availability gradient uses the theme's color.
+			const $bookableLink = $form
+				.find(
+					'td.bookable:not(.fully_booked_start_days):not(.fully_booked_end_days):not(.fully_booked) a'
+				)
+				.first();
+			if ($bookableLink.length) {
+				const bgColor = window.getComputedStyle(
+					$bookableLink[0]
+				).backgroundColor;
+				$form
+					.find('.wc-bookings-date-picker')
+					.css('--wc-bookable-bg', bgColor);
+			}
+
 			// Add screen reader text and info icons for booking date types
 			addAccessibleTextToBookingDates($form);
 			addPartialAvailabilityIcons($form);
