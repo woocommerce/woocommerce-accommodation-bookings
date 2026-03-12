@@ -430,28 +430,33 @@ import {
 			return;
 		}
 
-		let debounceTimer = null;
+		let isUpdating = false;
 		const observer = new MutationObserver(() => {
-			clearTimeout(debounceTimer);
-			debounceTimer = setTimeout(() => {
-				const needsUpdate =
-					$form
-						.find(
-							'.fully_booked_start_days, .fully_booked_end_days'
-						)
-						.filter(function () {
-							return (
-								$(this).find(
-									'.partial-availability-info-wrapper'
-								).length === 0
-							);
-						}).length > 0;
+			if (isUpdating) {
+				return;
+			}
 
-				if (needsUpdate) {
-					addAccessibleTextToBookingDates($form);
-					addPartialAvailabilityIcons($form);
-				}
-			}, 100);
+			const needsUpdate =
+				$form
+					.find(
+						'.fully_booked_start_days, .fully_booked_end_days'
+					)
+					.filter(function () {
+						return (
+							$(this).find(
+								'.partial-availability-info-wrapper'
+							).length === 0
+						);
+					}).length > 0;
+
+			if (needsUpdate) {
+				isUpdating = true;
+				addAccessibleTextToBookingDates($form);
+				addPartialAvailabilityIcons($form);
+				requestAnimationFrame(() => {
+					isUpdating = false;
+				});
+			}
 		});
 
 		observer.observe(container, { childList: true, subtree: true });
