@@ -323,6 +323,9 @@ import {
 			// Add screen reader text and info icons for booking date types
 			addAccessibleTextToBookingDates($form);
 			addPartialAvailabilityIcons($form);
+
+			// Observe future DOM changes (month nav, cache) to re-add icons
+			setupDatepickerObserver($form);
 		}
 	);
 
@@ -414,37 +417,44 @@ import {
 		}
 	);
 
-	// Listen for datepicker month navigation (prev/next buttons and month/year dropdowns)
-	// This ensures screen reader text is added when navigating to different months
-	$(document).on(
-		'click',
-		'.ui-datepicker-prev, .ui-datepicker-next',
-		function () {
-			setTimeout(() => {
-				$('.product-type-accommodation-booking form').each(function () {
-					const $form = $(this);
-					if (is_product_type_accommodation_booking($form)) {
-						addAccessibleTextToBookingDates($form);
-						addPartialAvailabilityIcons($form);
-					}
-				});
-			}, 150);
+	/**
+	 * Set up a MutationObserver on the datepicker to detect DOM changes
+	 * (month navigation, AJAX refresh, cache loads) and re-add icons and
+	 * screen reader text when partial-availability cells appear without them.
+	 *
+	 * @param {jQuery} $form - The booking form element.
+	 */
+	const setupDatepickerObserver = ($form) => {
+		const container = $form.find('.wc-bookings-date-picker')[0];
+		if (!container || container.__partialIconObserver) {
+			return;
 		}
-	);
 
-	$(document).on(
-		'change',
-		'.ui-datepicker-month, .ui-datepicker-year',
-		function () {
-			setTimeout(() => {
-				$('.product-type-accommodation-booking form').each(function () {
-					const $form = $(this);
-					if (is_product_type_accommodation_booking($form)) {
-						addAccessibleTextToBookingDates($form);
-						addPartialAvailabilityIcons($form);
-					}
-				});
-			}, 150);
-		}
-	);
+		let debounceTimer = null;
+		const observer = new MutationObserver(() => {
+			clearTimeout(debounceTimer);
+			debounceTimer = setTimeout(() => {
+				const needsUpdate =
+					$form
+						.find(
+							'.fully_booked_start_days, .fully_booked_end_days'
+						)
+						.filter(function () {
+							return (
+								$(this).find(
+									'.partial-availability-info-wrapper'
+								).length === 0
+							);
+						}).length > 0;
+
+				if (needsUpdate) {
+					addAccessibleTextToBookingDates($form);
+					addPartialAvailabilityIcons($form);
+				}
+			}, 100);
+		});
+
+		observer.observe(container, { childList: true, subtree: true });
+		container.__partialIconObserver = observer;
+	};
 })(jQuery);
