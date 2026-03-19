@@ -43,29 +43,10 @@
 		position: relative;
 	}
 
-	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
-	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
-		opacity: 1;
-		
-		span, a {
-			pointer-events: none;
-		}
-	}
-	
-	.ui-datepicker {
-		td.fully_booked:not(.not_bookable_by_rules),
-		td.fully_booked {
-			opacity: 1;
-
-			span, a {
-				background-color: #575757 !important;
-			}
-		}
-	}
 
 	.ui-datepicker td.fully_booked {
 		span, a {
-			background-color: #575757 !important;
+			background-color: #c0392b !important;
 			background-image: none !important;
 			border-color: rgba(0, 0, 0, 0.1) !important;
 			color: #fff !important;
