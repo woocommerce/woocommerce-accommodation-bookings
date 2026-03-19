@@ -418,14 +418,11 @@ import {
 
 			const needsUpdate =
 				$form
-					.find(
-						'.fully_booked_start_days, .fully_booked_end_days'
-					)
+					.find('.fully_booked_start_days, .fully_booked_end_days')
 					.filter(function () {
 						return (
-							$(this).find(
-								'.partial-availability-info-wrapper'
-							).length === 0
+							$(this).find('.partial-availability-info-wrapper')
+								.length === 0
 						);
 					}).length > 0;
 
