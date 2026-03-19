@@ -54,15 +54,9 @@ import {
 			}
 
 			if (attributes.class.indexOf('fully_booked_start_days') > -1) {
-				attributes.title = __(
-					'Available for check-out only.',
-					'woocommerce-accommodation-bookings'
-				);
+				attributes.title = '';
 			} else if (attributes.class.indexOf('fully_booked_end_days') > -1) {
-				attributes.title = __(
-					'Available for check-in only.',
-					'woocommerce-accommodation-bookings'
-				);
+				attributes.title = '';
 			}
 
 			// Add data attributes for easier access to date values
@@ -101,6 +95,8 @@ import {
 			if ($cell.find('.partial-availability-info-wrapper').length) {
 				return;
 			}
+			$cell.removeAttr('title');
+			$cell.children('span, a').removeAttr('title');
 			const $dayElement = $cell.children('span, a').first();
 			const $target = $dayElement.length ? $dayElement : $cell;
 			$target.append(createInfoIcon(message));

@@ -64,6 +64,10 @@
 		span, a {
 			position: relative;
 		}
+
+		&:hover .partial-availability-tooltip {
+			display: block;
+		}
 	}
 
 	// Info icon and tooltip for partially available dates.
@@ -145,7 +149,9 @@
 	}
 
 	.ui-datepicker {
-		td.bookable-range.ui-state-disabled {
+		td.bookable-range.ui-state-disabled,
+		td.fully_booked_start_days.ui-state-disabled,
+		td.fully_booked_end_days.ui-state-disabled {
 			opacity: 1;
 		}
 	}
