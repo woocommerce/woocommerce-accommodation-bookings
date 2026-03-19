@@ -144,18 +144,6 @@
 		}
 	}
 
-	// For fully booked dates (unavailable for both check-in and check-out).
-	// Increased specificity to override the styling from the WooCommerce Bookings plugin.
-	.wc-bookings-booking-form .wc-bookings-date-picker {
-		.ui-datepicker td.fully_booked:not(.not_bookable_by_rules) {
-			opacity: 1;
-			span,
-			a {
-				background-color: #575757 !important;
-			}
-		}
-	}
-
 	.ui-datepicker {
 		td.bookable-range.ui-state-disabled {
 			opacity: 1;
