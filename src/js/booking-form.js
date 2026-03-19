@@ -81,14 +81,21 @@ import {
 		$form.find('.partial-availability-info-wrapper').remove();
 
 		const createInfoIcon = (message) => {
-			return $(`
-				<div class="partial-availability-info-wrapper">
-					<button type="button" class="partial-availability-info" aria-label="${message}">
-						${INFO_ICON_SVG}
-					</button>
-					<div class="partial-availability-tooltip" role="tooltip" aria-hidden="true">${message}</div>
-				</div>
-			`);
+			const $wrapper = $('<div>', {
+				class: 'partial-availability-info-wrapper',
+			});
+			const $icon = $('<span>', {
+				class: 'partial-availability-info',
+				role: 'button',
+				tabindex: '0',
+				'aria-label': message,
+			}).append($(INFO_ICON_SVG));
+			const $tooltip = $('<div>', {
+				class: 'partial-availability-tooltip',
+				role: 'tooltip',
+				'aria-hidden': 'true',
+			}).text(message);
+			return $wrapper.append($icon, $tooltip);
 		};
 
 		const appendIcon = ($cell, message) => {
@@ -147,9 +154,10 @@ import {
 		$targetElement.find('.screen-reader-text').remove();
 
 		// Add screen reader text
-		$targetElement.append(
-			`<span class="screen-reader-text"> ${accessibleText}</span>`
+		const $srSpan = $('<span>', { class: 'screen-reader-text' }).text(
+			` ${accessibleText}`
 		);
+		$targetElement.append($srSpan);
 	};
 
 	// Shared month and day names for screen reader formatting
@@ -230,9 +238,9 @@ import {
 			parseInt(dataMonth, 10),
 			parseInt(day, 10)
 		);
-		return `${MONTH_NAMES[date.getMonth()]}, ${dataYear}, ${
-			DAY_NAMES[date.getDay()]
-		},`;
+		return `${DAY_NAMES[date.getDay()]}, ${
+			MONTH_NAMES[date.getMonth()]
+		} ${day}, ${dataYear}`;
 	};
 
 	/**
