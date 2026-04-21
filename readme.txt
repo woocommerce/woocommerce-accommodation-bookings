@@ -2,8 +2,8 @@
 Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
 Requires at least: 6.8
-Tested up to: 6.9
-Stable tag: 1.3.7
+Tested up to: 7.0
+Stable tag: 1.3.8
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,12 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.8 - 2026-04-13 =
+* Dev - Bump WooCommerce "tested up to" version 10.7.
+* Dev - Bump WooCommerce minimum supported version to 10.5.
+* Dev - Bump WordPress "Tested up to" to 7.0.
+* Dev - Bump Wordpress minimum supported version to 6.8.
 
 = 1.3.7 - 2026-01-27 =
 * Fix - Updated the Booked Blocks structure to display correct availability, ensuring compatibility with Bookings V3.
@@ -219,31 +225,5 @@ If the prices shown on the product do not match the prices defined in the dashbo
 = 1.1.30 - 2022-06-02 =
 * Fix - PHP Warnings on the setting page.
 * Tweak - Bump tested up to WordPress version 6.0.
-
-= 1.1.29 - 2022-06-02 =
-* Fix - PHP Warnings on the setting page.
-* Tweak - Bump tested up to WordPress version 6.0.
-
-= 1.1.27 - 2022-06-02 =
-* Fix - PHP Warnings on the setting page.
-* Tweak - Bump tested up to WordPress version 6.0.
-
-= 1.1.26 - 2021-11-30 =
-* Fix - Bump y18n from 3.2.1 to 3.2.2.
-* Tweak - WC 5.9 compatibility.
-* Tweak - WP 5.8 compatibility.
-
-= 1.1.25 - 2021-10-28 =
-* Tweak - Change start days settings label to selectable days to be more accurate with functionality.
-* Tweak - WC 5.8 compatibility.
-* Tweak - WP 5.8 compatibility.
-
-= 1.1.24 - 2021-05-11 =
-* Fix - Added tested up to comment for WordPress compatibility to make it easier to use common tooling.
-* Fix - Replace deprecated jQuery 3 methods.
-
-= 1.1.23 - 2021-02-25 =
-* Fix - Dev - Fix: Add casts to float before applying the 'abs' function to potentially empty strings for compatibility with PHP8.
-* Tweak - WC 5.0 compatibility.
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-accommodation-bookings/master/changelog.txt).
