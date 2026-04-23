@@ -248,6 +248,28 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
+		if ( ! is_product() ) {
+			return;
+		}
+
+		$product = wc_get_product( get_the_ID() );
+		if ( ! $product || 'accommodation-booking' !== $product->get_type() ) {
+			return;
+		}
+
+		// wc-bookings-booking-form is registered lazily by Bookings Core inside
+		// WC_Booking_Form::output() during template rendering, which fires after
+		// wp_enqueue_scripts. Register the handle now so it's a valid dependency.
+		if ( ! wp_script_is( 'wc-bookings-booking-form', 'registered' ) ) {
+			wp_register_script(
+				'wc-bookings-booking-form',
+				WC_BOOKINGS_PLUGIN_URL . '/dist/frontend.js',
+				wc_booking_get_script_dependencies( 'frontend', array( 'jquery-blockui', 'jquery-ui-datepicker' ) ),
+				WC_BOOKINGS_VERSION,
+				true
+			);
+		}
+
 		$build_path  = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/build';
 		$style_data  = include $build_path . '/css/frontend.asset.php';
 		$script_data = include $build_path . '/js/frontend/booking-form.asset.php';
