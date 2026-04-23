@@ -1,4 +1,5 @@
 .product-type-accommodation-booking {
+
 	.wc-bookings-date-picker {
 		position: relative;
 		padding-top: 55px;
@@ -23,31 +24,157 @@
 	}
 }
 
-.wc-bookings-date-picker {
+// Screen reader only text - visually hidden but accessible to screen readers
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+.wc-bookings-date-picker-accommodation-booking.wc-bookings-date-picker {
+
 	fieldset {
 		position: relative;
 	}
 
 	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
 	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date) {
-		opacity: 0.35;
+		position: relative;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: rgba(255, 255, 255, 0.65);
+			z-index: 1;
+			pointer-events: none;
+		}
 	}
 
 	&:not([data-selected-date-type="start"]) .ui-datepicker td.fully_booked_start_days:not(.selection-end-date),
 	&[data-selected-date-type="start"] .ui-datepicker td.fully_booked_end_days:not(.selection-start-date),
 	.ui-datepicker td.fully_booked {
-		span, a {
+
+		span:not(.partial-availability-info),
+		a {
 			background-color: #c0392b !important;
 			background-image: none !important;
 			border-color: rgba(0, 0, 0, 0.1) !important;
 			color: #fff !important;
 			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 			pointer-events: none;
+			position: relative;
+		}
+	}
+
+	// Partially available dates need position: relative for the info icon overlay.
+	.ui-datepicker td.fully_booked_start_days,
+	.ui-datepicker td.fully_booked_end_days,
+	.ui-datepicker td.bookable.fully_booked_start_days,
+	.ui-datepicker td.bookable.fully_booked_end_days {
+
+		span,
+		a {
+			position: relative;
+		}
+
+		&:hover .partial-availability-tooltip {
+			display: block;
+		}
+	}
+
+	// Info icon and tooltip for partially available dates.
+	// Uses <div> elements to avoid matching the `span, a` selectors above.
+	// Positioned inside the <a>/<span> day element which has position: relative.
+	.partial-availability-info-wrapper {
+		position: absolute;
+		top: 1px;
+		right: 1px;
+		z-index: 2;
+		line-height: 1;
+		pointer-events: auto;
+
+		&:hover,
+		&:focus-within {
+			z-index: 100;
+
+			.partial-availability-tooltip {
+				display: block;
+			}
+		}
+	}
+
+	.partial-availability-info {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 16px;
+		height: 16px;
+		padding: 0;
+		margin: 0;
+		border: none;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.85);
+		color: #575757;
+		cursor: help;
+		line-height: 1;
+		box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+		pointer-events: auto;
+
+		svg {
+			display: block;
+		}
+
+		&:hover,
+		&:focus {
+			background: #fff;
+			box-shadow: 0 0 0 2px #575757;
+			outline: none;
+		}
+
+		&:focus-visible {
+			box-shadow: 0 0 0 2px #007cba;
+		}
+	}
+
+	.partial-availability-tooltip {
+		display: none;
+		position: absolute;
+		right: 0;
+		top: calc(100% + 4px);
+		background: #1e1e1e;
+		color: #fff;
+		padding: 6px 10px;
+		border-radius: 4px;
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 1.4;
+		white-space: nowrap;
+		z-index: 100;
+		pointer-events: none;
+
+		&::before {
+			content: "";
+			position: absolute;
+			bottom: 100%;
+			right: 4px;
+			border: 4px solid transparent;
+			border-bottom-color: #1e1e1e;
 		}
 	}
 
 	.ui-datepicker {
-		td.bookable-range.ui-state-disabled {
+
+		td.bookable-range.ui-state-disabled,
+		td.fully_booked_start_days.ui-state-disabled,
+		td.fully_booked_end_days.ui-state-disabled {
 			opacity: 1;
 		}
 	}
