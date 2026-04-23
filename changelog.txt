@@ -1,5 +1,26 @@
 *** Changelog ***
 
+= 1.3.8 - 2026-04-13 =
+* Dev - Bump WooCommerce "tested up to" version 10.7.
+* Dev - Bump WooCommerce minimum supported version to 10.5.
+* Dev - Bump WordPress "Tested up to" to 7.0.
+* Dev - Bump Wordpress minimum supported version to 6.8.
+
+= 1.3.7 - 2026-01-27 =
+* Fix - Updated the Booked Blocks structure to display correct availability, ensuring compatibility with Bookings V3.
+* Dev - Bump WooCommerce "tested up to" version 10.5.
+* Dev - Bump WooCommerce minimum supported version to 10.3.
+
+= 1.3.6 - 2025-12-15 =
+* Fix - Ensure there is no fatal error on the bookings list page due to recent changes in Bookings V3.
+* Fix - JavasScript error reference to jQuery on New Product page.
+* Dev - Bump WooCommerce "tested up to" version 10.4.
+* Dev - Bump WooCommerce minimum supported version to 10.2.
+* Dev - Bump WordPress "tested up to" version 6.9.
+* Dev - Update PHP Compat sniffs to a development version covering most of the PHP 8.4 changes.
+* Dev - Run the PHP Compat sniffs against the entire production release of the plugin.
+* Dev - Updates to our QIT GitHub Action workflow.
+
 = 1.3.5 - 2025-10-06 =
 * Dev - Bump WooCommerce "tested up to" version 10.2.
 * Dev - Bump WooCommerce minimum supported version to 10.0.
