@@ -85,10 +85,6 @@
 		a {
 			position: relative;
 		}
-
-		&:hover .partial-availability-tooltip {
-			display: block;
-		}
 	}
 
 	// Info icon and tooltip for partially available dates.
@@ -105,11 +101,18 @@
 		&:hover,
 		&:focus-within {
 			z-index: 100;
-
-			.partial-availability-tooltip {
-				display: block;
-			}
 		}
+
+		&:not(.partial-availability-info-wrapper--dismissed):hover
+			.partial-availability-tooltip,
+		&:not(.partial-availability-info-wrapper--dismissed):focus-within
+			.partial-availability-tooltip {
+			display: block;
+		}
+	}
+
+	.partial-availability-info-wrapper--dismissed .partial-availability-tooltip {
+		display: none !important;
 	}
 
 	.partial-availability-info {
@@ -159,7 +162,7 @@
 		line-height: 1.4;
 		white-space: nowrap;
 		z-index: 100;
-		pointer-events: none;
+		pointer-events: auto;
 
 		&::before {
 			content: "";
