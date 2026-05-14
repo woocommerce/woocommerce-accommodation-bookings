@@ -53,9 +53,10 @@ import {
 				attributes.class.push('fully_booked_end_days');
 			}
 
-			if (attributes.class.indexOf('fully_booked_start_days') > -1) {
-				attributes.title = '';
-			} else if (attributes.class.indexOf('fully_booked_end_days') > -1) {
+			if (
+				attributes.class.indexOf('fully_booked_start_days') > -1 ||
+				attributes.class.indexOf('fully_booked_end_days') > -1
+			) {
 				attributes.title = '';
 			}
 
