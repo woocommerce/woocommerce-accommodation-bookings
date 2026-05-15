@@ -116,7 +116,6 @@ class WC_Accommodation_Bookings_Plugin {
 			return;
 		}
 
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 5 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_assets' ) );
@@ -172,25 +171,6 @@ class WC_Accommodation_Bookings_Plugin {
 			$error_message = esc_html( $this->dependencies_check_result->get_error_message() );
 			echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( $error_message ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
 		}
-	}
-
-	/**
-	 * Localisation
-	 */
-	public function load_plugin_textdomain() {
-		/**
-		 * Filter locale before loading the plugin's text domain.
-		 *
-		 * @since 1.0.2
-		 *
-		 * @param string $locale The plugin's current locale.
-		 * @param string $domain Text domain. Unique identifier for retrieving translated strings.
-		 */
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-accommodation-bookings' );
-		$dir    = trailingslashit( WP_LANG_DIR );
-
-		load_textdomain( 'woocommerce-accommodation-bookings', $dir . 'woocommerce-accommodation-bookings/woocommerce-accommodation-bookings-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-accommodation-bookings', false, dirname( plugin_basename( $this->plugin_file ) ) . '/languages/' );
 	}
 
 	/**
