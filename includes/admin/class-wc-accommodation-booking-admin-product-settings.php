@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * Settings screen under WooCommerce > Settings > Products > Accommodations
+ *
+ * @version 1.3.9
  */
 class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**
@@ -83,7 +85,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 		$tabs_metadata['accommodation'] = array(
 			'name'          => __( 'Accommodation', 'woocommerce-accommodation-bookings' ),
 			'href'          => admin_url( 'edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation' ),
-			'capability'    => 'manage_options',
+			'capability'    => 'manage_woocommerce',
 			'generate_html' => 'WC_Accommodation_Booking_Admin_Product_Settings::generate_form_html',
 		);
 
