@@ -1,3 +1,15 @@
+<?php
+/**
+ * Display accommodation booking data.
+ *
+ * @package woocommerce-accommodation-bookings
+ * @var int $post_id The post ID.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="options_group show_if_accommodation-booking">
 
 	<?php
