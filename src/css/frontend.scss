@@ -25,7 +25,7 @@
 }
 
 // Screen reader only text - visually hidden but accessible to screen readers
-.screen-reader-text {
+.wc-bookings-date-picker-accommodation-booking .screen-reader-text {
 	border: 0;
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
@@ -84,10 +84,6 @@
 		a {
 			position: relative;
 		}
-
-		&:hover .partial-availability-tooltip {
-			display: block;
-		}
 	}
 
 	// Info icon and tooltip for partially available dates.
@@ -100,15 +96,25 @@
 		z-index: 2;
 		line-height: 1;
 		pointer-events: auto;
+		// Hover bridge — moving from icon toward tooltip crosses a thin gap/narrow wrapper;
+		// extra padding keeps :hover active until pointer reaches tooltip (WCAG 1.4.13).
+		padding-bottom: 4px;
 
 		&:hover,
 		&:focus-within {
 			z-index: 100;
-
-			.partial-availability-tooltip {
-				display: block;
-			}
 		}
+
+		&:not(.partial-availability-info-wrapper--dismissed):hover
+			.partial-availability-tooltip,
+		&:not(.partial-availability-info-wrapper--dismissed):focus-within
+			.partial-availability-tooltip {
+			display: block;
+		}
+	}
+
+	.partial-availability-info-wrapper--dismissed .partial-availability-tooltip {
+		display: none !important;
 	}
 
 	.partial-availability-info {
@@ -148,7 +154,7 @@
 		display: none;
 		position: absolute;
 		right: 0;
-		top: calc(100% + 4px);
+		top: 100%;
 		background: #1e1e1e;
 		color: #fff;
 		padding: 6px 10px;
@@ -158,13 +164,24 @@
 		line-height: 1.4;
 		white-space: nowrap;
 		z-index: 100;
-		pointer-events: none;
+		pointer-events: auto;
+
+		// Hit area reaching up toward icon — avoids losing hover when moving diagonally to wide text.
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 100%;
+			height: 10px;
+		}
 
 		&::before {
 			content: "";
 			position: absolute;
 			bottom: 100%;
 			right: 4px;
+			z-index: 1;
 			border: 4px solid transparent;
 			border-bottom-color: #1e1e1e;
 		}

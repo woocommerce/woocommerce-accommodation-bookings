@@ -82,15 +82,15 @@ test.describe('Product Tests', () => {
 		await visitProductPage(page, productId);
 
 		await expect(
-			page.locator('.wc-bookings-date-picker-accommodation-booking')
-		).toHaveAttribute('data-content', 'Select check-in');
+			page.locator('p.wc-bookings-accommodation-bookings-title')
+		).toContainText('Select check-in');
 
 		const startDate = getFutureDate(1);
 		await fillBookingStartDate(page, startDate);
 
 		await expect(
-			page.locator('.wc-bookings-date-picker-accommodation-booking')
-		).toHaveAttribute('data-content', 'Select check-out');
+			page.locator('p.wc-bookings-accommodation-bookings-title')
+		).toContainText('Select check-out');
 	});
 
 	test('Verify Setting Minimum Nights Restriction - "Minimum number of nights allowed in a booking" - @foundational', async ({

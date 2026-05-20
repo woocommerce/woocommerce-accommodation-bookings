@@ -53,9 +53,10 @@ import {
 				attributes.class.push('fully_booked_end_days');
 			}
 
-			if (attributes.class.indexOf('fully_booked_start_days') > -1) {
-				attributes.title = '';
-			} else if (attributes.class.indexOf('fully_booked_end_days') > -1) {
+			if (
+				attributes.class.indexOf('fully_booked_start_days') > -1 ||
+				attributes.class.indexOf('fully_booked_end_days') > -1
+			) {
 				attributes.title = '';
 			}
 
@@ -72,6 +73,37 @@ import {
 	const INFO_ICON_SVG =
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
 
+	const PARTIAL_TIP_NS = 'wcAccommPartialTip';
+	const PARTIAL_TOOLTIP_DISMISSED_CLASS =
+		'partial-availability-info-wrapper--dismissed';
+	let partialAvailabilityTooltipId = 0;
+
+	/**
+	 * Sync aria-expanded / aria-hidden with tooltip visibility (CSS + dismissed state).
+	 *
+	 * @param {jQuery} $wrapper - The .partial-availability-info-wrapper element.
+	 */
+	const syncPartialAvailabilityTooltipAria = ($wrapper) => {
+		const $btn = $wrapper.find('.partial-availability-info');
+		const $tip = $wrapper.find('.partial-availability-tooltip');
+		const dismissed = $wrapper.hasClass(PARTIAL_TOOLTIP_DISMISSED_CLASS);
+		const hovered = $wrapper.is(':hover');
+		const btnFocused = $btn.is(':focus');
+		const visible = !dismissed && (hovered || btnFocused);
+		$btn.attr('aria-expanded', visible ? 'true' : 'false');
+		$tip.attr('aria-hidden', visible ? 'false' : 'true');
+	};
+
+	/**
+	 * Clear Escape / keyboard dismissal so hover can show the tooltip again.
+	 *
+	 * @param {jQuery} $wrapper - The .partial-availability-info-wrapper element.
+	 */
+	const clearPartialTooltipDismissed = ($wrapper) => {
+		$wrapper.removeClass(PARTIAL_TOOLTIP_DISMISSED_CLASS);
+		syncPartialAvailabilityTooltipAria($wrapper);
+	};
+
 	/**
 	 * Add info icons with tooltips to partially available date cells.
 	 *
@@ -81,6 +113,8 @@ import {
 		$form.find('.partial-availability-info-wrapper').remove();
 
 		const createInfoIcon = (message) => {
+			partialAvailabilityTooltipId += 1;
+			const tooltipId = `wc-accomm-partial-tip-${partialAvailabilityTooltipId}`;
 			const $wrapper = $('<div>', {
 				class: 'partial-availability-info-wrapper',
 			});
@@ -89,9 +123,12 @@ import {
 				role: 'button',
 				tabindex: '0',
 				'aria-label': message,
+				'aria-expanded': 'false',
+				'aria-controls': tooltipId,
 			}).append($(INFO_ICON_SVG));
 			const $tooltip = $('<div>', {
 				class: 'partial-availability-tooltip',
+				id: tooltipId,
 				role: 'tooltip',
 				'aria-hidden': 'true',
 			}).text(message);
@@ -139,6 +176,70 @@ import {
 			e.preventDefault();
 		}
 	);
+
+	// WCAG 1.4.13: dismiss (Escape), hoverable tooltip; 4.1.2: aria-expanded.
+	$(document).on(
+		`mouseenter.${PARTIAL_TIP_NS} mouseleave.${PARTIAL_TIP_NS}`,
+		'.partial-availability-info-wrapper',
+		function () {
+			clearPartialTooltipDismissed($(this));
+		}
+	);
+	$(document).on(
+		`focusin.${PARTIAL_TIP_NS}`,
+		'.partial-availability-info',
+		function () {
+			syncPartialAvailabilityTooltipAria(
+				$(this).closest('.partial-availability-info-wrapper')
+			);
+		}
+	);
+	$(document).on(
+		`blur.${PARTIAL_TIP_NS}`,
+		'.partial-availability-info',
+		function () {
+			clearPartialTooltipDismissed(
+				$(this).closest('.partial-availability-info-wrapper')
+			);
+		}
+	);
+	$(document).on(
+		`keydown.${PARTIAL_TIP_NS}`,
+		'.partial-availability-info',
+		function (e) {
+			const key = e.key;
+			if (key !== ' ' && key !== 'Enter') {
+				return;
+			}
+			if (e.repeat) {
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+			const $w = $(this).closest('.partial-availability-info-wrapper');
+			$w.toggleClass(PARTIAL_TOOLTIP_DISMISSED_CLASS);
+			syncPartialAvailabilityTooltipAria($w);
+		}
+	);
+	$(document).on(`keydown.${PARTIAL_TIP_NS}`, function (e) {
+		if (e.key !== 'Escape') {
+			return;
+		}
+		let handled = false;
+		$('.partial-availability-info-wrapper').each(function () {
+			const $wrapper = $(this);
+			const $btn = $wrapper.find('.partial-availability-info');
+			if (!$wrapper.is(':hover') && !$btn.is(':focus')) {
+				return;
+			}
+			$wrapper.addClass(PARTIAL_TOOLTIP_DISMISSED_CLASS);
+			syncPartialAvailabilityTooltipAria($wrapper);
+			handled = true;
+		});
+		if (handled) {
+			e.preventDefault();
+		}
+	});
 
 	/**
 	 * Add accessible text to datepicker cells.
