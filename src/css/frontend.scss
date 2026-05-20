@@ -4,8 +4,7 @@
 		position: relative;
 		padding-top: 55px;
 
-		&::after {
-			content: attr(data-content);
+		.wc-bookings-accommodation-bookings-title {
 			position: absolute;
 			background: #fff;
 			margin: 10px 20px;
