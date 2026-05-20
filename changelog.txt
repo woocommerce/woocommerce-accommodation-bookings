@@ -1,8 +1,5 @@
 *** Changelog ***
 
-= 1.3.9 - xx-xx-xx =
-* Fix - Make the Accommodation settings tab visible to Shop Manager users by using the `manage_woocommerce` capability.
-
 = 1.3.8 - 2026-04-13 =
 * Dev - Bump WooCommerce "tested up to" version 10.7.
 * Dev - Bump WooCommerce minimum supported version to 10.5.
