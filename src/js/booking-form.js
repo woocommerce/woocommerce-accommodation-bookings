@@ -81,10 +81,23 @@ import {
 				return;
 			}
 
+			// Create the element if it doesn't exist (back-compat of older versions of Bookings core).
 			$form
-				.find('fieldset')
-				.attr(
-					'data-content',
+				.find(
+					'.wc-bookings-date-picker:not(:has(.wc-bookings-accommodation-bookings-title))'
+				)
+				.prepend(
+					'<p aria-live="polite" class="wc-bookings-accommodation-bookings-title">' +
+						__(
+							'Select check-in',
+							'woocommerce-accommodation-bookings'
+						) +
+						'</p>'
+				);
+			// Ensure the content is correct if it does.
+			$form
+				.find('.wc-bookings-accommodation-bookings-title')
+				.text(
 					__('Select check-in', 'woocommerce-accommodation-bookings')
 				);
 			$form
@@ -101,7 +114,7 @@ import {
 		'wc_bookings_date_selected',
 		'wc_accommodation_booking/booking_form',
 		({ fieldset, date_picker }) => {
-			const $fieldset = get_jquery_element(fieldset);
+			const $datePickerWrapper = get_jquery_element(fieldset);
 			const $date_picker = get_jquery_element(date_picker);
 			const date_type = get_selected_date_type($date_picker);
 			const $form = get_booking_form(fieldset);
@@ -112,7 +125,7 @@ import {
 				return;
 			}
 
-			$fieldset.attr('data-selected-date-type', date_type);
+			$datePickerWrapper.attr('data-selected-date-type', date_type);
 
 			switch (date_type) {
 				case 'end':
@@ -130,7 +143,9 @@ import {
 					);
 			}
 
-			$fieldset.attr('data-content', data_content);
+			$datePickerWrapper
+				.find('.wc-bookings-accommodation-bookings-title')
+				.text(data_content);
 		}
 	);
 

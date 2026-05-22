@@ -1,3 +1,15 @@
+<?php
+/**
+ * Display accommodation booking rates.
+ *
+ * @package woocommerce-accommodation-bookings
+ * @var int $post_id The post ID.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div id="accommodation_bookings_rates" class="panel woocommerce_options_panel bookings_extension">
 	<div class="options_group">
 		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_base_cost', 'label' => __( 'Standard room rate', 'woocommerce-accommodation-bookings' ), 'description' => __( 'Standard cost for booking the room.', 'woocommerce-accommodation-bookings' ), 'value' => get_post_meta( $post_id, '_wc_booking_base_cost', true ), 'type' => 'number', 'desc_tip' => true, 'custom_attributes' => array(
