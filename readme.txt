@@ -3,7 +3,7 @@ Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
 Requires at least: 6.8
 Tested up to: 7.0
-Stable tag: 1.3.8
+Stable tag: 1.3.9
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,17 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.9 - 2026-05-26 =
+* Fix - Make the Accommodation settings tab visible to Shop Manager users by using the `manage_woocommerce` capability.
+* Fix - Accommodation Bookings scripts now load only on accommodation product pages, resolving a console notice and a conflict with WooCommerce Product Add-Ons.
+* Fix - Updated the booked blocks structure to display the correct availability for the Bookings Availability block.
+* Fix - Use a DOM element for the booking form title to improve accessibility.
+* Update - Now declares woocommerce-bookings as a required plugin for this plugin to be activated.
+* Dev - Bump WooCommerce "tested up to" version 10.8.
+* Dev - Bump WooCommerce minimum supported version to 10.6.
+* Dev - Bump the `plugin-check-action` GitHub Action version to v1.1.5 to fix the runner path failure.
+* Dev - Fix the direct file access protection errors reported by the Plugin Check plugin.
 
 = 1.3.8 - 2026-04-13 =
 * Dev - Bump WooCommerce "tested up to" version 10.7.

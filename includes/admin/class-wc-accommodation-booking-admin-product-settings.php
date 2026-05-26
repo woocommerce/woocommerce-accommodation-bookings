@@ -76,7 +76,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**
 	 * Initialize settings by using Bookings filter.
 	 *
-	 * @since x.x.x Capability changed from `manage_options` to `manage_woocommerce`
+	 * @since 1.3.9 Capability changed from `manage_options` to `manage_woocommerce`
 	 *              so Shop Manager users can access the Accommodation tab.
 	 *
 	 * @param array $tabs_metadata Tabs metadata.
