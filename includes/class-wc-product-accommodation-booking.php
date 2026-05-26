@@ -278,7 +278,11 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 				$has_qty          = ! is_null( $booking_resource ) ? $booking_resource->has_qty() : false;
 				$has_resources    = $bookable_product->has_resources();
 
-				foreach ( $blocks as $block ) {
+				// Same contract as get_blocks_in_range(): WC Bookings 3.0+ passes [ timestamp => booked_count ];
+				// older versions may pass a flat list of timestamps. Normalize so the foreach always uses real timestamps as keys.
+				$blocks = $this->normalize_blocks_array( $blocks );
+
+				foreach ( $blocks as $block => $booked_slots ) {
 					$check_in  = self::get_check_times( 'in', $product_id );
 					$check_out = self::get_check_times( 'out', $product_id );
 					// Blocks for accommodation products are initially calculated as days but the actuall time blocks are shifted by check in and checkout times.
