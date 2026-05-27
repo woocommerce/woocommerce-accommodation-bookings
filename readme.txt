@@ -3,7 +3,7 @@ Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
 Requires at least: 6.8
 Tested up to: 7.0
-Stable tag: 1.3.9
+Stable tag: 1.3.10
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,9 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.10 - 2026-05-27 =
+* Fix - Remove "woocommerce-bookings" from the plugin dependencies, as it is not hosted on WordPress.org.
 
 = 1.3.9 - 2026-05-26 =
 * Fix - Make the Accommodation settings tab visible to Shop Manager users by using the `manage_woocommerce` capability.
