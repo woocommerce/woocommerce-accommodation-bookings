@@ -38,6 +38,9 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
+= 1.3.10 - 2026-05-27 =
+* Fix - Remove "woocommerce-bookings" from the plugin dependencies, as it is not hosted on WordPress.org.
+
 = 1.3.9 - 2026-05-26 =
 * Fix - Make the Accommodation settings tab visible to Shop Manager users by using the `manage_woocommerce` capability.
 * Fix - Accommodation Bookings scripts now load only on accommodation product pages, resolving a console notice and a conflict with WooCommerce Product Add-Ons.
