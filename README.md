@@ -3,36 +3,51 @@ woocommerce-accommodation-bookings
 
 An accommodations add-on for the WooCommerce Bookings extension.
 
-## Requirements
+> **Note:** This extension cannot be activated without the [WooCommerce Bookings](https://github.com/woocommerce/woocommerce-bookings/releases) extension installed.
 
-- Minimum node version: 20.x
-- Minimum NPM version: 10.x
+## Development
 
-## Setup
-- `nvm use`
-- `npm install`
-- `composer install`
+### Prerequisites
 
-### Dev
-- `npm run env:start` - Start wp-env local environment
-- `npm run start:webpack` - FE build tools
+- [Node.js 24](https://nodejs.org) (see `.nvmrc`; managed via [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm))
+- [Composer](https://getcomposer.org/doc/00-intro.md)
 
-After you build and launch the project locally you'll then have to manually install the WooCommerce Bookings plugin. You can download an install ready zip file from the [WooCommerce Bookings GitHub](https://github.com/woocommerce/woocommerce-bookings/releases).
+Docker is required to run the end-to-end test suite via `@wordpress/env`.
 
-**The WooCommerce Accommodations Bookings extension can not be activated without the WooCommerce Bookings extension.**
+### Quick start
 
-## NPM Scripts
+```bash
+nvm use
+npm install
+composer install
+npm run build:dev
+```
 
-WooCommerce Accommodation Bookings utilizes npm scripts for task management utilities.
+## npm scripts
 
-`nvm install` - Installs the required node version.
-`npm ci` - Installs the required node modules.
-`npm run build` - Runs the tasks necessary for a release. These include building JavaScript, SASS, CSS minification, and language files.
+```bash
+# Development build
+npm run build:dev      # Install composer deps, build JS/CSS, generate language files
 
-## WooCommerce Payments Compatibility
+# Watch mode
+npm run start:webpack  # Rebuild JS/CSS on file changes
 
-Ensure a seamless experience with WooCommerce Payments extension Version 6.3.1, offering enhanced payment options for your accommodation bookings.
+# Production build
+npm run build          # Production build + language files + zip
 
-## WooCommerce Blocks Compatibility
+# Tests
+npm run env:start      # Start the wp-env local test environment
+npm run test:e2e       # Run all E2E tests with Playwright
+npm run test:e2e-foundational    # Run only @foundational tagged tests
+npm run test:e2e-debug           # Run E2E tests in debug mode
+```
 
-This extension is compatible with [WooCommerce Blocks](https://woo.com/products/woocommerce-gutenberg-products-block/).
+## Known caveats
+
+- Moderate-severity advisories remain in transitive dependencies of `@wordpress/env` (`@wp-playground`, `@php-wasm`). These packages are only used by the local test environment and never ship in the plugin.
+
+## Compatibility
+
+This extension is compatible with:
+- [WooCommerce Blocks](https://woo.com/products/woocommerce-gutenberg-products-block/)
+- [WooCommerce Payments](https://woocommerce.com/products/woopayments/)
