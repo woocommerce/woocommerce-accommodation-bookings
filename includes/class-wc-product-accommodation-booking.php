@@ -7,7 +7,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 	/**
 	 * Class that creates our new accommodation booking product type
-	 * Mostly inheirted from WC_Product_Booking (code reuse!) but overrides a few methods
+	 * Mostly inherited from WC_Product_Booking (code reuse!) but overrides a few methods
 	 */
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
@@ -285,7 +285,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 				foreach ( $blocks as $block => $booked_slots ) {
 					$check_in  = self::get_check_times( 'in', $product_id );
 					$check_out = self::get_check_times( 'out', $product_id );
-					// Blocks for accommodation products are initially calculated as days but the actuall time blocks are shifted by check in and checkout times.
+					// Blocks for accommodation products are initially calculated as days but the actual time blocks are shifted by check in and checkout times.
 					$block_start_time = strtotime( "{$check_in}", $block );
 					$block_end_time   = strtotime( "{$check_out}", strtotime( '+1 days', $block ) );
 					$resources        = array();
@@ -360,7 +360,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 * Get an array of blocks within in a specified date range
 		 *
 		 * The WC_Product_Booking class does not account for 'nights' as a valid duration unit so it retrieves every minute of each day as a block,
-		 * severly slowing down the load time of the page.
+		 * severely slowing down the load time of the page.
 		 *
 		 * @param       $start_date
 		 * @param       $end_date

@@ -79,18 +79,18 @@ class WC_Accommodation_Booking_Date_Picker {
 	}
 
 	/**
-	 * Add partially booked accomodation bookings
+	 * Add partially booked accommodation bookings
 	 * If a calendar date has check-in ( a booking starts on that date ) if it is feasible we want it marked as
 	 * partially booked because some other booking could end on that date.
 	 * If a calendar date has check-out ( a booking ends on that date ) if it is feasible we want it marked as
 	 * partially booked because some other booking could start on that date.
 	 * When it is feasible to mark a date partially booked:
 	 *  - for a check-in date we check if a day before that date has any available resources. Only if a day before
-	 *    check-in has any avaialble resources it is possible that some booking could end ( had its check-out ) on the
+	 *    check-in has any available resources it is possible that some booking could end ( had its check-out ) on the
 	 *    check-in date we are testing.
 	 *  - for a check-out date we chack if that date has any available resources. If it does it means that some other
 	 *    booking can start ( can have its check-in ) on the check-out date that we are testing.
-	 * Function works in followin steps:
+	 * Function works in following steps:
 	 *  1. gather all check-in and checko-out dates for product
 	 *  2. loop over all dates from (1):
 	 *    a. get all available resources for: day before for check-in and current for check-out
@@ -138,7 +138,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	}
 
 	/**
-	 * Update the fully booked, fully booked start day, and fully booked end day accomodation bookings,
+	 * Update the fully booked, fully booked start day, and fully booked end day accommodation bookings,
 	 *
 	 * @param array                            $booked_data_array Array of booked days.
 	 * @param WC_Product_Accommodation_Booking $product           Product.
@@ -154,7 +154,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		$res_auto_assign    = $product->is_resource_assignment_type( 'automatic' );
 
 		// Go through each checkin and checkout days and mark them as fully booked.
-		$made_partialy = array();
+		$made_partially = array();
 		foreach ( array( 'in', 'out' ) as $which ) {
 			foreach ( $check_in_out_times[ $which ] as $resource_id => $times ) {
 				foreach ( $times as $time ) {
@@ -174,7 +174,7 @@ class WC_Accommodation_Booking_Date_Picker {
 						$booked_data_array = $this->prepare_fully_booked_start_and_end_days( $booked_data_array, $resource_id, $day, $which );
 					} else {
 						$booked_data_array             = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
-						$made_partialy[ $resource_id ] = $day;
+						$made_partially[ $resource_id ] = $day;
 					}
 				}
 			}
@@ -183,7 +183,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		// Later removing the days from `fully_booked_days` array that were moved to partially booked days.
 		// We are doing this out of the above foreach because we want a condition in
 		// `prepare_fully_booked_start_and_end_days()` to be true.
-		foreach ( $made_partialy as $resource => $partial_day ) {
+		foreach ( $made_partially as $resource => $partial_day ) {
 			if ( ! isset( $booked_data_array['fully_booked_days'][ $partial_day ][ $resource ] ) ) {
 				continue;
 			}
@@ -254,7 +254,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	}
 
 	/**
-	 * Get amount of available product resoureces on a specific timestamp
+	 * Get amount of available product resources on a specific timestamp
 	 *
 	 * @param \WC_Product_Booking $product  Product.
 	 * @param int                 $resource Resource ID.
