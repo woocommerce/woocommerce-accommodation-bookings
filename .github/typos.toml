@@ -1,0 +1,5 @@
+[default.extend-words]
+# Automattic is the correct spelling of the company name (Automattic Inc.)
+Automattic = "Automattic"
+# Artifact of i18n placeholders glued to the next word, e.g. "%1$sthe settings".
+sthe = "sthe"
