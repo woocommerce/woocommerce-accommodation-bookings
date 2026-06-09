@@ -173,7 +173,7 @@ class WC_Accommodation_Booking_Date_Picker {
 					if ( 0 === $available_on_time ) {
 						$booked_data_array = $this->prepare_fully_booked_start_and_end_days( $booked_data_array, $resource_id, $day, $which );
 					} else {
-						$booked_data_array             = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
+						$booked_data_array              = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
 						$made_partially[ $resource_id ] = $day;
 					}
 				}
