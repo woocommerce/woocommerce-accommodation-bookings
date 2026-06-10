@@ -3,7 +3,13 @@ woocommerce-accommodation-bookings
 
 An accommodations add-on for the WooCommerce Bookings extension.
 
-> **Note:** This extension cannot be activated without the [WooCommerce Bookings](https://github.com/woocommerce/woocommerce-bookings/releases) extension installed.
+- [Product page](https://woocommerce.com/products/woocommerce-accommodation-bookings/)
+- [Documentation](https://docs.woocommerce.com/document/woocommerce-accommodation-bookings/)
+
+## Dependencies
+
+- WooCommerce
+- WooCommerce Bookings
 
 ## Development
 
