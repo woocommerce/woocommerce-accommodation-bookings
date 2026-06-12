@@ -46,6 +46,11 @@ npm run env:start      # Start the wp-env local test environment
 npm run test:e2e       # Run all E2E tests with Playwright
 npm run test:e2e-foundational    # Run only @foundational tagged tests
 npm run test:e2e-debug           # Run E2E tests in debug mode
+
+# Quality
+npm run phpcompat      # PHP compatibility check
+npm run lint:js        # ESLint on JS source
+npm run lint:css       # Stylelint on CSS/SCSS
 ```
 
 ## Known caveats

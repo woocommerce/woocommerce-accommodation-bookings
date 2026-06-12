@@ -3,5 +3,5 @@
 Automattic = "Automattic"
 # Artifact of i18n placeholders glued to the next word, e.g. "%1$sthe settings".
 sthe = "sthe"
-# Legacy WordPress post meta key stored in production databases - cannot be renamed.
+# Legacy WordPress post meta key `_wc_booking_resouce_label` stored in production databases - cannot be renamed.
 resouce = "resouce"
