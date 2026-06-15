@@ -9,14 +9,15 @@ An accommodations add-on for the WooCommerce Bookings extension.
 ## Dependencies
 
 - WooCommerce
-- WooCommerce Bookings
+- [WooCommerce Bookings](https://woocommerce.com/products/woocommerce-bookings/)
 
-## Development
+## Getting started
 
 ### Prerequisites
 
-- [Node.js 24](https://nodejs.org) (see `.nvmrc`; managed via [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm))
-- [Composer](https://getcomposer.org/doc/00-intro.md)
+- [Node.js 24](https://nodejs.org) (managed via [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)): we recommend NVM to keep your Node version aligned with the development team. The repository contains an [`.nvmrc` file](.nvmrc) that pins the supported version.
+- [PHP 7.4+](https://www.php.net/manual/en/install.php): required by the plugin and to run Composer / build scripts.
+- [Composer](https://getcomposer.org/doc/00-intro.md): manages PHP dependencies and dev tooling.
 
 Docker is required to run the end-to-end test suite via `@wordpress/env`.
 
@@ -25,7 +26,6 @@ Docker is required to run the end-to-end test suite via `@wordpress/env`.
 ```bash
 nvm use
 npm install
-composer install
 npm run build:dev
 ```
 

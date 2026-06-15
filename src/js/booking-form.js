@@ -151,7 +151,7 @@ import {
 
 	// Toggle accommodated date as per selected date.
 	HookApi.addAction(
-		'wc_bookings_pre_calculate_booking_cost',
+		'wc_bookings_pre_calculte_booking_cost',
 		'wc_accommodation_booking/booking_form',
 		({ form, date_picker }) => {
 			const $date_picker = get_jquery_element(date_picker);
