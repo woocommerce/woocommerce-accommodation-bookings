@@ -53,10 +53,6 @@ npm run lint:js        # ESLint on JS source
 npm run lint:css       # Stylelint on CSS/SCSS
 ```
 
-## Known caveats
-
-- Moderate-severity advisories remain in transitive dependencies of `@wordpress/env` (`@wp-playground`, `@php-wasm`). These packages are only used by the local test environment and never ship in the plugin.
-
 ## Compatibility
 
 This extension is compatible with:
