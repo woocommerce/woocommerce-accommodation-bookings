@@ -33,7 +33,7 @@ test.describe('Order Tests', () => {
 	let adminPage;
 	let productId;
 	const productDetails = {
-		title: 'Accomodation product - Order Tests',
+		title: 'Accommodation product - Order Tests',
 		baseCost: '10.00',
 	};
 	test.beforeAll(async ({ browser }) => {

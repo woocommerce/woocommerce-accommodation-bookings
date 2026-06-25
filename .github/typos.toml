@@ -1,0 +1,9 @@
+[default.extend-words]
+# Automattic is the correct spelling of the company name (Automattic Inc.)
+Automattic = "Automattic"
+
+# Legacy WordPress post meta key `_wc_booking_resouce_label` stored in production databases - cannot be renamed.
+resouce = "resouce"
+
+# Misspelled hook name emitted by Bookings core `wc_bookings_pre_calculte_booking_cost` - must match exactly.
+calculte = "calculte"

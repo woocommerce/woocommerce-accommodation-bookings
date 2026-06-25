@@ -149,7 +149,7 @@ import {
 		}
 	);
 
-	// Toogle accomadated date as per selected date.
+	// Toggle accommodated date as per selected date.
 	HookApi.addAction(
 		'wc_bookings_pre_calculte_booking_cost',
 		'wc_accommodation_booking/booking_form',
