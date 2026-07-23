@@ -9,17 +9,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Prepare PHP
-        uses: woocommerce/grow/prepare-php@da5279aa4d76745ef32970e49b5ef7903a3b457a # v2.2.2
+        uses: woocommerce/grow/prepare-php@daa6e1e0974142ec6d5e39a2f85acb6ab046baf9 # v2.3.1
         with:
           install-deps: yes
           php-version: '8.4'
           tools: composer:v2
 
       - name: Prepare node
-        uses: woocommerce/grow/prepare-node@da5279aa4d76745ef32970e49b5ef7903a3b457a # v2.2.2
+        uses: woocommerce/grow/prepare-node@daa6e1e0974142ec6d5e39a2f85acb6ab046baf9 # v2.3.1
         with:
           node-version-file: ".nvmrc"
           ignore-scripts: "no"

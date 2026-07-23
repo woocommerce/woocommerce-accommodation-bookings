@@ -3,7 +3,8 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 /**
- * Settings screen under WooCommerce > Settings > Products > Accommodations
+ * Adds the Accommodation tab to Bookings > Settings by hooking into
+ * the `woocommerce_bookings_settings_page` filter.
  */
 class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**
@@ -75,6 +76,9 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**
 	 * Initialize settings by using Bookings filter.
 	 *
+	 * @since 1.3.9 Capability changed from `manage_options` to `manage_woocommerce`
+	 *              so Shop Manager users can access the Accommodation tab.
+	 *
 	 * @param array $tabs_metadata Tabs metadata.
 	 *
 	 * @return array Modified metadata that includes Accommodation.
@@ -83,7 +87,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 		$tabs_metadata['accommodation'] = array(
 			'name'          => __( 'Accommodation', 'woocommerce-accommodation-bookings' ),
 			'href'          => admin_url( 'edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation' ),
-			'capability'    => 'manage_options',
+			'capability'    => 'manage_woocommerce',
 			'generate_html' => 'WC_Accommodation_Booking_Admin_Product_Settings::generate_form_html',
 		);
 

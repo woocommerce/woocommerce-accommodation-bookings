@@ -287,7 +287,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 * classes, but the block renderer skips that template and never adds them — breaking both
 	 * the CSS ::after "Check-in" label and the JS is_product_type_accommodation_booking() check.
 	 *
-	 * @since x.x.x
+	 * @since 1.3.9
 	 *
 	 * @param string $block_content Rendered block HTML.
 	 * @param array  $block         Block data including attrs.
