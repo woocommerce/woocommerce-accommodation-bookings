@@ -1,4 +1,16 @@
 <?php
+/**
+ * Display accommodation booking rates fields.
+ *
+ * @package woocommerce-accommodation-bookings
+ * @var array $rate    The rate data.
+ * @var int   $post_id The post ID.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 	$intervals = array();
 
 	$intervals['months'] = array(

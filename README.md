@@ -3,36 +3,58 @@ woocommerce-accommodation-bookings
 
 An accommodations add-on for the WooCommerce Bookings extension.
 
-## Requirements
+- [Product page](https://woocommerce.com/products/woocommerce-accommodation-bookings/)
+- [Documentation](https://docs.woocommerce.com/document/woocommerce-accommodation-bookings/)
 
-- Minimum node version: 20.x
-- Minimum NPM version: 10.x
+## Dependencies
 
-## Setup
-- `nvm use`
-- `npm install`
-- `composer install`
+- WooCommerce
+- [WooCommerce Bookings](https://woocommerce.com/products/woocommerce-bookings/)
 
-### Dev
-- `npm run env:start` - Start wp-env local environment
-- `npm run start:webpack` - FE build tools
+## Getting started
 
-After you build and launch the project locally you'll then have to manually install the WooCommerce Bookings plugin. You can download an install ready zip file from the [WooCommerce Bookings GitHub](https://github.com/woocommerce/woocommerce-bookings/releases).
+### Prerequisites
 
-**The WooCommerce Accommodations Bookings extension can not be activated without the WooCommerce Bookings extension.**
+- [Node.js 24](https://nodejs.org) (managed via [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)): we recommend NVM to keep your Node version aligned with the development team. The repository contains an [`.nvmrc` file](.nvmrc) that pins the supported version.
+- [PHP 7.4+](https://www.php.net/manual/en/install.php): required by the plugin and to run Composer / build scripts.
+- [Composer](https://getcomposer.org/doc/00-intro.md): manages PHP dependencies and dev tooling.
 
-## NPM Scripts
+Docker is required to run the end-to-end test suite via `@wordpress/env`.
 
-WooCommerce Accommodation Bookings utilizes npm scripts for task management utilities.
+### Quick start
 
-`nvm install` - Installs the required node version.
-`npm ci` - Installs the required node modules.
-`npm run build` - Runs the tasks necessary for a release. These include building JavaScript, SASS, CSS minification, and language files.
+```bash
+nvm use
+npm install
+npm run build:dev
+```
 
-## WooCommerce Payments Compatibility
+## npm scripts
 
-Ensure a seamless experience with WooCommerce Payments extension Version 6.3.1, offering enhanced payment options for your accommodation bookings.
+```bash
+# Development build
+npm run build:dev      # Install composer deps, build JS/CSS, generate language files
 
-## WooCommerce Blocks Compatibility
+# Watch mode
+npm run start:webpack  # Rebuild JS/CSS on file changes
 
-This extension is compatible with [WooCommerce Blocks](https://woo.com/products/woocommerce-gutenberg-products-block/).
+# Production build
+npm run build          # Production build + language files + zip
+
+# Tests
+npm run env:start      # Start the wp-env local test environment
+npm run test:e2e       # Run all E2E tests with Playwright
+npm run test:e2e-foundational    # Run only @foundational tagged tests
+npm run test:e2e-debug           # Run E2E tests in debug mode
+
+# Quality
+npm run phpcompat      # PHP compatibility check
+npm run lint:js        # ESLint on JS source
+npm run lint:css       # Stylelint on CSS/SCSS
+```
+
+## Compatibility
+
+This extension is compatible with:
+- [WooCommerce Blocks](https://woo.com/products/woocommerce-gutenberg-products-block/)
+- [WooCommerce Payments](https://woocommerce.com/products/woopayments/)

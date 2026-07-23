@@ -54,9 +54,9 @@ class WC_Accommodation_Booking {
 	}
 
 	/**
-	 * Apply only one rate modifier to any given accomodation block.
+	 * Apply only one rate modifier to any given accommodation block.
 	 *
-	 * Rate rules for accomodation bookings define the absolute accomodation
+	 * Rate rules for accommodation bookings define the absolute accommodation
 	 * rate for a block, so it does not make sense to apply multiple concurrent
 	 * rates. This hook will cause the rate calculation loop to exit after the
 	 * first applicable rate rule modifies the block cost.
@@ -241,7 +241,7 @@ class WC_Accommodation_Booking {
 	 * @param string $datetime Date time without separator (YmdHis)
 	 * @param string $time     Time in `xx:yy` pm/am format
 	 *
-	 * @return Datetime without separtor
+	 * @return Datetime without separator
 	 */
 	protected function _get_updated_timestamp_time( $datetime, $time ) {
 		if ( empty( $time ) ) {

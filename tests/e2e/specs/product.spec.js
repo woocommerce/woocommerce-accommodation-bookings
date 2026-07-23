@@ -29,7 +29,7 @@ test.describe('Product Tests', () => {
 	let adminPage;
 	let productId;
 	const productDetails = {
-		title: 'Accomodation product #1',
+		title: 'Accommodation product #1',
 		baseCost: '10.00',
 		minimumNight: '2',
 		maximumNight: '5',
@@ -49,7 +49,7 @@ test.describe('Product Tests', () => {
 		page,
 	}) => {
 		const productData = {
-			title: 'Accomodation product #2',
+			title: 'Accommodation product #2',
 			baseCost: '10.00',
 		};
 		const product = await createProduct(adminPage, productData);
@@ -82,15 +82,15 @@ test.describe('Product Tests', () => {
 		await visitProductPage(page, productId);
 
 		await expect(
-			page.locator('.wc-bookings-date-picker-accommodation-booking')
-		).toHaveAttribute('data-content', 'Select check-in');
+			page.locator('p.wc-bookings-accommodation-bookings-title')
+		).toContainText('Select check-in');
 
 		const startDate = getFutureDate(1);
 		await fillBookingStartDate(page, startDate);
 
 		await expect(
-			page.locator('.wc-bookings-date-picker-accommodation-booking')
-		).toHaveAttribute('data-content', 'Select check-out');
+			page.locator('p.wc-bookings-accommodation-bookings-title')
+		).toContainText('Select check-out');
 	});
 
 	test('Verify Setting Minimum Nights Restriction - "Minimum number of nights allowed in a booking" - @foundational', async ({
@@ -265,7 +265,7 @@ test.describe('Product Tests', () => {
 		page,
 	}) => {
 		const productData = {
-			title: 'Accomodation product #3',
+			title: 'Accommodation product #3',
 			baseCost: '10.00',
 			canBeCancelled: true,
 		};
@@ -306,7 +306,7 @@ test.describe('Product Tests', () => {
 		page,
 	}) => {
 		const productData = {
-			title: 'Accomodation product #4',
+			title: 'Accommodation product #4',
 			baseCost: '10.00',
 			availabilityStart: '4',
 			availabilityStartUnit: 'day',
@@ -355,7 +355,7 @@ test.describe('Product Tests', () => {
 		page,
 	}) => {
 		const productData = {
-			title: 'Accomodation product #5',
+			title: 'Accommodation product #5',
 			baseCost: '10.00',
 			availabilityEnd: '1',
 			availabilityEndUnit: 'month',
@@ -400,7 +400,7 @@ test.describe('Product Tests', () => {
 		page,
 	}) => {
 		const productData = {
-			title: 'Accomodation product #5',
+			title: 'Accommodation product #5',
 			baseCost: '10.00',
 			displayCost: '20.00',
 		};
@@ -427,7 +427,7 @@ test.describe('Product Tests', () => {
 		const startDate = getFutureDate(1);
 		const endDate = getFutureDate(7);
 		const productData = {
-			title: 'Accomodation product #5',
+			title: 'Accommodation product #5',
 			baseCost: '10.00',
 			displayCost: '20.00',
 			range: {
@@ -468,7 +468,7 @@ test.describe('Product Tests', () => {
 			month = month - 12;
 		}
 		const productData = {
-			title: 'Accomodation product #6',
+			title: 'Accommodation product #6',
 			baseCost: '10.00',
 			displayCost: '20.00',
 			range: {

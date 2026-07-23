@@ -1,5 +1,25 @@
 *** Changelog ***
 
+= 1.3.10 - 2026-05-27 =
+* Fix - Remove "woocommerce-bookings" from the plugin dependencies, as it is not hosted on WordPress.org.
+
+= 1.3.9 - 2026-05-26 =
+* Fix - Make the Accommodation settings tab visible to Shop Manager users by using the `manage_woocommerce` capability.
+* Fix - Accommodation Bookings scripts now load only on accommodation product pages, resolving a console notice and a conflict with WooCommerce Product Add-Ons.
+* Fix - Updated the booked blocks structure to display the correct availability for the Bookings Availability block.
+* Fix - Use a DOM element for the booking form title to improve accessibility.
+* Update - Now declares woocommerce-bookings as a required plugin for this plugin to be activated.
+* Dev - Bump WooCommerce "tested up to" version 10.8.
+* Dev - Bump WooCommerce minimum supported version to 10.6.
+* Dev - Bump the `plugin-check-action` GitHub Action version to v1.1.5 to fix the runner path failure.
+* Dev - Fix the direct file access protection errors reported by the Plugin Check plugin.
+
+= 1.3.8 - 2026-04-13 =
+* Dev - Bump WooCommerce "tested up to" version 10.7.
+* Dev - Bump WooCommerce minimum supported version to 10.5.
+* Dev - Bump WordPress "Tested up to" to 7.0.
+* Dev - Bump Wordpress minimum supported version to 6.8.
+
 = 1.3.7 - 2026-01-27 =
 * Fix - Updated the Booked Blocks structure to display correct availability, ensuring compatibility with Bookings V3.
 * Dev - Bump WooCommerce "tested up to" version 10.5.

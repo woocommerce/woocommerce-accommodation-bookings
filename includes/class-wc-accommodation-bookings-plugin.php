@@ -116,10 +116,10 @@ class WC_Accommodation_Bookings_Plugin {
 			return;
 		}
 
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 5 );
 		add_action( 'plugins_loaded', array( $this, 'includes' ), 20 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_assets' ) );
+		add_filter( 'render_block_woocommerce/single-product', array( $this, 'add_product_type_class_to_block' ), 10, 2 );
 
 		$rest_request = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( wp_unslash( $_SERVER['REQUEST_URI'] ), 'wp-json/wc-bookings' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
@@ -172,25 +172,6 @@ class WC_Accommodation_Bookings_Plugin {
 			$error_message = esc_html( $this->dependencies_check_result->get_error_message() );
 			echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( $error_message ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
 		}
-	}
-
-	/**
-	 * Localisation
-	 */
-	public function load_plugin_textdomain() {
-		/**
-		 * Filter locale before loading the plugin's text domain.
-		 *
-		 * @since 1.0.2
-		 *
-		 * @param string $locale The plugin's current locale.
-		 * @param string $domain Text domain. Unique identifier for retrieving translated strings.
-		 */
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-accommodation-bookings' );
-		$dir    = trailingslashit( WP_LANG_DIR );
-
-		load_textdomain( 'woocommerce-accommodation-bookings', $dir . 'woocommerce-accommodation-bookings/woocommerce-accommodation-bookings-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-accommodation-bookings', false, dirname( plugin_basename( $this->plugin_file ) ) . '/languages/' );
 	}
 
 	/**
@@ -248,6 +229,25 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Frontend booking form scripts
 	 */
 	public function frontend_assets() {
+		$product = is_product() ? wc_get_product( get_the_ID() ) : $this->get_accommodation_product_from_block();
+
+		if ( ! $product || 'accommodation-booking' !== $product->get_type() ) {
+			return;
+		}
+
+		// wc-bookings-booking-form is registered lazily by Bookings Core inside
+		// WC_Booking_Form::output() during template rendering, which fires after
+		// wp_enqueue_scripts. Register the handle now so it's a valid dependency.
+		if ( ! wp_script_is( 'wc-bookings-booking-form', 'registered' ) ) {
+			wp_register_script(
+				'wc-bookings-booking-form',
+				WC_BOOKINGS_PLUGIN_URL . '/dist/frontend.js',
+				wc_booking_get_script_dependencies( 'frontend', array( 'jquery-blockui', 'jquery-ui-datepicker' ) ),
+				WC_BOOKINGS_VERSION,
+				true
+			);
+		}
+
 		$build_path  = dirname( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/build';
 		$style_data  = include $build_path . '/css/frontend.asset.php';
 		$script_data = include $build_path . '/js/frontend/booking-form.asset.php';
@@ -277,6 +277,70 @@ class WC_Accommodation_Bookings_Plugin {
 			'woocommerce-accommodation-bookings',
 			plugin_dir_path( WC_ACCOMMODATION_BOOKINGS_MAIN_FILE ) . '/languages'
 		);
+	}
+
+	/**
+	 * Adds product-type-accommodation-booking (and .product) classes to the wrapper div of a
+	 * woocommerce/single-product block when the product is an accommodation-booking type.
+	 *
+	 * On classic product pages wc_product_class() / content-single-product.php applies these
+	 * classes, but the block renderer skips that template and never adds them — breaking both
+	 * the CSS ::after "Check-in" label and the JS is_product_type_accommodation_booking() check.
+	 *
+	 * @since 1.3.9
+	 *
+	 * @param string $block_content Rendered block HTML.
+	 * @param array  $block         Block data including attrs.
+	 * @return string
+	 */
+	public function add_product_type_class_to_block( $block_content, $block ) {
+		$product_id = isset( $block['attrs']['productId'] ) ? (int) $block['attrs']['productId'] : 0;
+		if ( ! $product_id ) {
+			return $block_content;
+		}
+
+		$product = wc_get_product( $product_id );
+		if ( ! $product || 'accommodation-booking' !== $product->get_type() ) {
+			return $block_content;
+		}
+
+		$html = new WP_HTML_Tag_Processor( $block_content );
+		if ( $html->next_tag( array( 'tag_name' => 'div' ) ) ) {
+			$existing = $html->get_attribute( 'class' ) ?? '';
+			$html->set_attribute( 'class', trim( $existing . ' product product-type-accommodation-booking' ) );
+		}
+
+		return $html->get_updated_html();
+	}
+
+	/**
+	 * Returns the first accommodation-booking product found inside a woocommerce/single-product
+	 * Gutenberg block on the current page, or null if none exists.
+	 *
+	 * @return WC_Product|null
+	 */
+	private function get_accommodation_product_from_block() {
+		global $post;
+
+		if ( ! $post || ! has_block( 'woocommerce/single-product', $post ) ) {
+			return null;
+		}
+
+		foreach ( parse_blocks( $post->post_content ) as $block ) {
+			if ( 'woocommerce/single-product' !== $block['blockName'] ) {
+				continue;
+			}
+			$product_id = isset( $block['attrs']['productId'] ) ? (int) $block['attrs']['productId'] : 0;
+			if ( ! $product_id ) {
+				continue;
+			}
+			$product = wc_get_product( $product_id );
+			if ( $product && 'accommodation-booking' === $product->get_type() ) {
+				return $product;
+			}
+		}
+
+		return null;
 	}
 
 	/**
