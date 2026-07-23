@@ -1,7 +1,7 @@
 {
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
-  "version": "1.3.8",
+  "version": "1.3.10",
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings"
   },
@@ -28,8 +28,11 @@
     "webpack-remove-empty-scripts": "^1.0.4"
   },
   "overrides": {
-    "cross-spawn": "^6.0.6",
-    "webpack-dev-server": "^5.2.0"
+    "serialize-javascript": "^7.0.5",
+    "minimatch": "^3.1.5",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^9.0.5"
+    }
   },
   "scripts": {
     "prebuild": "rm -rf ./vendor && composer install",
@@ -61,7 +64,7 @@
     "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational"
   },
   "engines": {
-    "node": "~16",
-    "npm": "~8"
+    "node": "~24",
+    "npm": "~11"
   }
 }

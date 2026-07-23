@@ -98,7 +98,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 
 	/**
-	 * Hides the "virtal" option for accommodations
+	 * Hides the "virtual" option for accommodations
 	 * @param  array $options
 	 * @return array
 	 */
