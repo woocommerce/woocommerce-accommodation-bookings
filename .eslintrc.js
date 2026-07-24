@@ -1,4 +1,7 @@
 module.exports = {
+	env: {
+		browser: true,
+	},
 	extends: ['plugin:@woocommerce/eslint-plugin/recommended'],
 	globals: {
 		wp: false,
