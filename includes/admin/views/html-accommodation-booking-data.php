@@ -54,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				'description' => __( 'Choose how the calendar is displayed on the booking form.', 'woocommerce-accommodation-bookings' ),
 				'value'       => get_post_meta( $post_id, '_wc_booking_calendar_display_mode', true ),
 				'options'     => array(
-					''               => __( 'Display calendar on click', 'woocommerce-accommodation-bookings' ),
+					''               => __( 'Show calendar when date field is selected', 'woocommerce-accommodation-bookings' ),
 					'always_visible' => __( 'Calendar always visible', 'woocommerce-accommodation-bookings' ),
 				),
 				'desc_tip'    => true,
