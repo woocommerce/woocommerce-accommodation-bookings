@@ -177,7 +177,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 */
 	public function dependency_notice() {
 		if ( is_wp_error( $this->dependencies_check_result ) ) {
-			$message = esc_html__( 'Dependencies check failed. Please make sure all dependencies are met.', 'woocommerce-accommodation-bookings' );
+			$message = esc_html__( 'Dependency check failed. Please make sure all dependencies are met.', 'woocommerce-accommodation-bookings' );
 			switch ( $this->dependencies_check_result->get_error_code() ) {
 				case 'BOOKINGS_NOT_ACTIVATED':
 					$message = esc_html__( 'Accommodation Bookings requires WooCommerce Bookings plugin activated.', 'woocommerce-accommodation-bookings' );
@@ -192,7 +192,7 @@ class WC_Accommodation_Bookings_Plugin {
 			echo wp_kses_post(
 				sprintf(
 					'<div class="error">%s</div>',
-					wpautop( esc_html( $message ) )
+					wpautop( $message )
 				)
 			);
 		}
