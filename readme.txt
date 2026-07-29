@@ -38,9 +38,10 @@ If the prices shown on the product do not match the prices defined in the dashbo
 
 == Changelog ==
 
-= 1.3.11 - 2026-07-27 =
+= 1.3.11 - 2026-07-29 =
 * Update - Enhanced datepicker accessibility with screen reader support and improved visual indicators for booking availability status.
 * Update - Calendar display option text to clarify user interaction.
+* Fix - Accommodation Bookings no longer deactivates itself when WooCommerce Bookings is missing or outdated, an admin notice is shown instead.
 * Dev - Upgrade Node.js from v20 to v24 and npm from v10 to v11.
 * Dev - Upgrade npm and Composer dependencies.
 * Dev - Add a spell-check GitHub Actions workflow and fix typos.
