@@ -150,27 +150,51 @@ class WC_Accommodation_Bookings_Plugin {
 			WC_Accommodation_Dependencies::check_dependencies();
 			$this->dependencies_check_result = true;
 		} catch ( Exception $e ) {
-			if ( function_exists( 'deactivate_plugins' ) ) {
-				deactivate_plugins( plugin_basename( $this->plugin_file ) );
-			}
-
-			$this->dependencies_check_result = new WP_Error( 'unsatisfied_dependencies', $e->getMessage() );
-			add_action( 'admin_notices', array( $this, 'deactivate_notice' ) );
+			$this->dependencies_check_result = new WP_Error( $e->getMessage(), '' );
+			add_action( 'admin_notices', array( $this, 'dependency_notice' ) );
 		}
 
 		return $this->dependencies_check_result;
 	}
 
-
 	/**
 	 * Admin notice when plugin is automatically deactivated.
 	 *
+	 * @deprecated x.x.x Use dependency_notice() instead.
 	 * @return void
 	 */
 	public function deactivate_notice() {
+		wc_deprecated_function( __METHOD__, 'x.x.x', 'WC_Accommodation_Bookings_Plugin::dependency_notice' );
+		$this->dependency_notice();
+	}
+
+	/**
+	 * Admin notice when a required dependency is missing or outdated.
+	 *
+	 * @since x.x.x
+	 *
+	 * @return void
+	 */
+	public function dependency_notice() {
 		if ( is_wp_error( $this->dependencies_check_result ) ) {
-			$error_message = esc_html( $this->dependencies_check_result->get_error_message() );
-			echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( $error_message ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
+			$message = esc_html__( 'Dependency check failed. Please make sure all dependencies are met.', 'woocommerce-accommodation-bookings' );
+			switch ( $this->dependencies_check_result->get_error_code() ) {
+				case 'BOOKINGS_NOT_ACTIVATED':
+					$message = esc_html__( 'Accommodation Bookings requires WooCommerce Bookings plugin activated.', 'woocommerce-accommodation-bookings' );
+					break;
+				case 'BOOKINGS_VERSION_TOO_OLD':
+					$message = esc_html__( 'Accommodation Bookings requires WooCommerce Bookings version 1.9+.', 'woocommerce-accommodation-bookings' );
+					break;
+				case 'PHP_VERSION_TOO_OLD':
+					$message = esc_html__( 'Accommodation Bookings requires PHP version 7.4+.', 'woocommerce-accommodation-bookings' );
+					break;
+			}
+			echo wp_kses_post(
+				sprintf(
+					'<div class="error">%s</div>',
+					wpautop( $message )
+				)
+			);
 		}
 	}
 
