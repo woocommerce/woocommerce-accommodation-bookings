@@ -160,18 +160,18 @@ class WC_Accommodation_Bookings_Plugin {
 	/**
 	 * Admin notice when plugin is automatically deactivated.
 	 *
-	 * @deprecated x.x.x Use dependency_notice() instead.
+	 * @deprecated 1.3.11 Use dependency_notice() instead.
 	 * @return void
 	 */
 	public function deactivate_notice() {
-		wc_deprecated_function( __METHOD__, 'x.x.x', 'WC_Accommodation_Bookings_Plugin::dependency_notice' );
+		wc_deprecated_function( __METHOD__, '1.3.11', 'WC_Accommodation_Bookings_Plugin::dependency_notice' );
 		$this->dependency_notice();
 	}
 
 	/**
 	 * Admin notice when a required dependency is missing or outdated.
 	 *
-	 * @since x.x.x
+	 * @since 1.3.11
 	 *
 	 * @return void
 	 */
