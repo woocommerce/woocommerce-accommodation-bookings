@@ -172,7 +172,7 @@ test.describe('Order Tests', () => {
 				hasText: ` has been confirmed (Order ${orderId}) -`,
 			})
 			.first();
-		await emailRow.locator('td.sent_date').hover();
+		await emailRow.locator('.column-sent_date.sent_date').hover();
 		await emailRow.locator('.view-content a').click();
 
 		const startDateTr = await adminPage
