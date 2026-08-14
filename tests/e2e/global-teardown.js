@@ -25,7 +25,7 @@ module.exports = async (config) => {
       await adminPage.goto(
         `/wp-admin/admin.php?page=wc-settings&tab=advanced&section=keys`
       );
-      await adminPage.locator("#the-list tr td.title").first().hover();
+      await adminPage.locator("#the-list tr .column-title.title").first().hover();
       await adminPage
         .getByRole("link", { name: "Revoke", includeHidden: true })
         .first()
