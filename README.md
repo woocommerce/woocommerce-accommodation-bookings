@@ -50,7 +50,7 @@ npm run test:e2e-debug           # Run E2E tests in debug mode
 # Quality
 npm run phpcompat      # PHP compatibility check
 npm run lint:js        # ESLint on JS source
-npm run lint:css       # Stylelint on CSS/SCSS
+npm run lint:style     # Stylelint on CSS/SCSS
 ```
 
 ## Compatibility
