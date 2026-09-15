@@ -173,8 +173,8 @@ class WC_Accommodation_Booking_Date_Picker {
 					if ( 0 === $available_on_time ) {
 						$booked_data_array = $this->prepare_fully_booked_start_and_end_days( $booked_data_array, $resource_id, $day, $which );
 					} else {
-						$booked_data_array              = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
-						$made_partially[ $resource_id ] = $day;
+						$booked_data_array                      = $this->move_day_from_fully_to_partially_booked( $booked_data_array, $resource_id, $day );
+						$made_partially[ $day ][ $resource_id ] = true;
 					}
 				}
 			}
@@ -183,15 +183,13 @@ class WC_Accommodation_Booking_Date_Picker {
 		// Later removing the days from `fully_booked_days` array that were moved to partially booked days.
 		// We are doing this out of the above foreach because we want a condition in
 		// `prepare_fully_booked_start_and_end_days()` to be true.
-		foreach ( $made_partially as $resource => $partial_day ) {
-			if ( ! isset( $booked_data_array['fully_booked_days'][ $partial_day ][ $resource ] ) ) {
-				continue;
+		foreach ( $made_partially as $partial_day => $resources ) {
+			foreach ( $resources as $resource => $partially_booked ) {
+				unset( $booked_data_array['fully_booked_days'][ $partial_day ][ $resource ] );
 			}
 
-			unset( $booked_data_array['fully_booked_days'][ $day ][ $resource ] );
-
-			if ( empty( $booked_data_array['fully_booked_days'][ $day ] ) ) {
-				unset( $booked_data_array['fully_booked_days'][ $day ] );
+			if ( empty( $booked_data_array['fully_booked_days'][ $partial_day ] ) ) {
+				unset( $booked_data_array['fully_booked_days'][ $partial_day ] );
 			}
 		}
 

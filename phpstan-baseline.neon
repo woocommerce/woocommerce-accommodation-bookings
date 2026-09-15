@@ -55,12 +55,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
-			message: '#^Variable \$day might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: includes/class-wc-accommodation-booking-date-picker.php
-
-		-
 			message: '#^Action callback returns array but should not return anything\.$#'
 			identifier: return.void
 			count: 1
