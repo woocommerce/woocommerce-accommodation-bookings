@@ -39,14 +39,20 @@ class WC_Accommodation_Booking_Addons {
 	 * Only difference is the product type we are targeting.
 	 */
 	public function addon_options( $post, $addon, $loop ) {
+		// Bookings already renders the shared multiplier fields for global add-ons.
+		if ( ! is_object( $post ) ) {
+			if ( ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ) ) {
+				// Preserve the legacy checked state on the shared field until the next save.
+				$field_id = wp_json_encode( 'addon_wc_booking_block_qty_multiplier_' . $loop );
+				wp_add_inline_script( 'woocommerce_product_addons', "jQuery( document.getElementById( {$field_id} ) ).prop( 'checked', true );" );
+			}
+			return;
+		}
+
 		$css_classes = 'show_if_accommodation-booking';
 
-		if ( is_object( $post ) ) {
-			$product = wc_get_product( $post->ID );
-			if ( 'accommodation-booking' !== $product->get_type() ) {
-				$css_classes .= ' hide_initial_booking_addon_options';
-			}
-		} else {
+		$product = wc_get_product( $post->ID );
+		if ( 'accommodation-booking' !== $product->get_type() ) {
 			$css_classes .= ' hide_initial_booking_addon_options';
 		}
 
