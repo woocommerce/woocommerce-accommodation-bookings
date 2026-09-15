@@ -30,3 +30,4 @@ assets export-ignore
 .wp-env.override.json export-ignore
 .prettierrc.js export-ignore
 AGENTS.md export-ignore
+CLAUDE.md export-ignore
