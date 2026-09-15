@@ -29,17 +29,15 @@
   },
   "overrides": {
     "serialize-javascript": "^7.0.5",
-    "minimatch": "^3.1.5",
-    "@typescript-eslint/typescript-estree": {
-      "minimatch": "^9.0.5"
-    },
     "puppeteer-core": {
       "@puppeteer/browsers": "3.2.0"
     },
     "@sentry/node": "10.69.0",
     "markdownlint-cli": "0.49.1",
     "qs": "6.16.0",
-    "uuid@8": "11.1.1"
+    "uuid@8": "11.1.1",
+    "minimatch@3": "3.1.5",
+    "minimatch@9": "9.0.9"
   },
   "scripts": {
     "prebuild": "rm -rf ./vendor && composer install",
