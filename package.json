@@ -23,7 +23,7 @@
     "@wordpress/scripts": "^34.2.0",
     "mini-css-extract-plugin": "^2.9.0",
     "moment": "^2.30.1",
-    "prettier": "^2.8.3",
+    "prettier": "npm:wp-prettier@^3.9.6",
     "prettier-eslint": "^15.0.1",
     "webpack-remove-empty-scripts": "^1.0.4"
   },
