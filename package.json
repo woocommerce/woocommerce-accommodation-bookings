@@ -32,6 +32,9 @@
     "minimatch": "^3.1.5",
     "@typescript-eslint/typescript-estree": {
       "minimatch": "^9.0.5"
+    },
+    "puppeteer-core": {
+      "@puppeteer/browsers": "3.2.0"
     }
   },
   "scripts": {
