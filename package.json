@@ -13,6 +13,7 @@
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "license": "GPL-3.0+",
   "devDependencies": {
+    "@babel/runtime": "^7.29.7",
     "@playwright/test": "^1.56.1",
     "@woocommerce/dependency-extraction-webpack-plugin": "^3.0.1",
     "@woocommerce/e2e-utils-playwright": "^0.2.1",
