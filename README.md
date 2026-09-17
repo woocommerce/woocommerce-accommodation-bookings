@@ -16,7 +16,7 @@ An accommodations add-on for the WooCommerce Bookings extension.
 ### Prerequisites
 
 - [Node.js 24](https://nodejs.org) (managed via [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)): we recommend NVM to keep your Node version aligned with the development team. The repository contains an [`.nvmrc` file](.nvmrc) that pins the supported version.
-- [PHP 7.4+](https://www.php.net/manual/en/install.php): required by the plugin and to run Composer / build scripts.
+- [PHP 8.4](https://www.php.net/manual/en/install.php): use for PHPCS and QIT tooling to match CI. The plugin still supports PHP 7.4+.
 - [Composer](https://getcomposer.org/doc/00-intro.md): manages PHP dependencies and dev tooling.
 
 Docker is required to run the end-to-end test suite via `@wordpress/env`.
