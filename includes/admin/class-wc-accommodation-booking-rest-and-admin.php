@@ -54,6 +54,25 @@ class WC_Accommodation_Booking_REST_And_Admin {
 			return;
 		}
 
+		// Authorize the entire person batch before saving any product or person fields.
+		$person_ids = array();
+		if ( isset( $_POST['person_id'], $_POST['_wc_booking_has_persons'] ) ) {
+			$person_ids = filter_input( INPUT_POST, 'person_id', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY );
+			if ( ! is_array( $person_ids ) || ! $person_ids ) {
+				WC_Admin_Meta_Boxes::add_error( __( 'Person types were not saved. Please reload the product and try again.', 'woocommerce-accommodation-bookings' ) );
+				$person_ids = array();
+			}
+
+			foreach ( $person_ids as $person_id ) {
+				$person = is_int( $person_id ) && $person_id > 0 ? get_post( $person_id ) : null;
+				if ( ! $person || 'bookable_person' !== $person->post_type || (int) $post_id !== (int) $person->post_parent || ! current_user_can( 'edit_post', $person_id ) ) {
+					WC_Admin_Meta_Boxes::add_error( __( 'Person types were not saved. Please reload the product and try again.', 'woocommerce-accommodation-bookings' ) );
+					$person_ids = array();
+					break;
+				}
+			}
+		}
+
 		$meta_to_save = array(
 			'_wc_booking_has_persons'                     => 'issetyesno',
 			'_wc_booking_person_qty_multiplier'           => 'yesno',
@@ -243,14 +262,10 @@ class WC_Accommodation_Booking_REST_And_Admin {
 		}
 
 		// Person Types.
-		if ( isset( $_POST['person_id'] ) && isset( $_POST['_wc_booking_has_persons'] ) ) {
+		if ( $person_ids ) {
 			$person_data        = filter_input_array(
 				INPUT_POST,
 				array(
-					'person_id'          => array(
-						'filter' => FILTER_VALIDATE_INT,
-						'flags'  => FILTER_REQUIRE_ARRAY,
-					),
 					'person_menu_order'  => array(
 						'filter' => FILTER_VALIDATE_INT,
 						'flags'  => FILTER_REQUIRE_ARRAY,
@@ -281,7 +296,6 @@ class WC_Accommodation_Booking_REST_And_Admin {
 					),
 				)
 			);
-			$person_ids         = $person_data['person_id'];
 			$person_menu_order  = $person_data['person_menu_order'];
 			$person_name        = $person_data['person_name'];
 			$person_cost        = $person_data['person_cost'];
