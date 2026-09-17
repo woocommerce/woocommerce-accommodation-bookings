@@ -9,8 +9,7 @@ DEVELOPER.md export-ignore
 package.json export-ignore
 phpunit.xml.dist export-ignore
 .eslintrc export-ignore
-.eslintrc.js export-ignore
-.eslintignore export-ignore
+eslint.config.mjs export-ignore
 .tx export-ignore
 webpack.config.js export-ignore
 postcss.config.js export-ignore
