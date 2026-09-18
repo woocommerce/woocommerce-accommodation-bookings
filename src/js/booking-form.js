@@ -10,7 +10,6 @@ import {
 	is_product_type_accommodation_booking,
 } from './utils';
 
-// eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
 ( function ( $ ) {
 	const HookApi = window.wc_bookings.hooks;
 
@@ -439,6 +438,7 @@ import {
 			addPartialAvailabilityIcons( $form );
 
 			// Observe future DOM changes (month nav, cache) to re-add icons
+			// eslint-disable-next-line @typescript-eslint/no-use-before-define -- Bookings invokes this callback after module initialization.
 			setupDatepickerObserver( $form );
 		}
 	);

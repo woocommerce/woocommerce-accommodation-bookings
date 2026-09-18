@@ -26,6 +26,7 @@ export function is_product_type_accommodation_booking( $booking_form ) {
  */
 export function get_booking_form( $field ) {
 	// Convert to jQuery selector.
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define -- The exported helper is a hoisted function declaration.
 	$field = get_jquery_element( $field );
 
 	return $field.closest( 'form' );
