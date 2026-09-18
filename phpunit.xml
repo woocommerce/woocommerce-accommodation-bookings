@@ -13,6 +13,12 @@
 			<directory prefix="test-" suffix=".php">./tests/phpunit</directory>
 		</testsuite>
 	</testsuites>
+	<coverage includeUncoveredFiles="true">
+		<include>
+			<directory suffix=".php">includes</directory>
+			<file>woocommerce-accommodation-bookings.php</file>
+		</include>
+	</coverage>
     <php>
         <ini name="display_errors" value="On" />
         <ini name="display_startup_errors" value="On" />
