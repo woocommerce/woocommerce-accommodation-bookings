@@ -15,6 +15,7 @@ export default [
 	},
 	...woocommerce.configs.recommended,
 	{
+		files: [ 'src/js/**/*.js' ],
 		languageOptions: {
 			globals: { ...globals.browser, wp: 'readonly' },
 		},
@@ -23,12 +24,11 @@ export default [
 				'error',
 				{ allowedTextDomain: 'woocommerce-accommodation-bookings' },
 			],
-			'@wordpress/no-unused-vars-before-return': 0,
-			'@woocommerce/dependency-group': 0,
-			camelcase: 0,
-			'import/no-extraneous-dependencies': 0,
-			'import/no-unresolved': 0,
-			'import/named': 0,
+			'@wordpress/no-unused-vars-before-return': 'error',
+			'@wordpress/dependency-group': 'error',
+			'import/no-extraneous-dependencies': 'error',
+			'import/no-unresolved': 'error',
+			'import/named': 'error',
 		},
 		settings: {
 			jsdoc: { mode: 'typescript' },
@@ -36,6 +36,7 @@ export default [
 			// This helps the `import/no-extraneous-dependencies` and
 			//`import/no-unresolved` rules account for them.
 			'import/core-modules': [
+				'jquery',
 				'@woocommerce/blocks-registry',
 				'@woocommerce/settings',
 				'@wordpress/i18n',

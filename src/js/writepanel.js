@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import jQuery from 'jquery';
 
 jQuery( function ( $ ) {
