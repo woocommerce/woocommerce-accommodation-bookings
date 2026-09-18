@@ -3,7 +3,6 @@
  */
 import { expect, Page } from '@playwright/test';
 import moment from 'moment';
-import { pluginConfig } from '../config';
 import {
 	fillBillingCheckoutBlocks,
 	getOrderIdFromUrl,
@@ -12,9 +11,10 @@ import {
 /**
  * Internal dependencies
  */
-const { promisify } = require('util');
-const execAsync = promisify(require('child_process').exec);
-export const api = require('./api');
+import { pluginConfig } from '../config';
+const { promisify } = require( 'util' );
+const execAsync = promisify( require( 'child_process' ).exec );
+export const api = require( './api' );
 
 /**
  * Switch tab in add/edit product page.
@@ -23,13 +23,13 @@ export const api = require('./api');
  * @param {string} tabName       Tab name
  * @param {string} panelSelector Options Panel selector
  */
-export async function switchTab(page, tabName, panelSelector = false) {
+export async function switchTab( page, tabName, panelSelector = false ) {
 	await page
-		.locator('.wc-tabs > li:visible > a', { hasText: tabName })
+		.locator( '.wc-tabs > li:visible > a', { hasText: tabName } )
 		.last()
 		.click();
-	if (panelSelector) {
-		await expect(page.locator(panelSelector)).toBeVisible();
+	if ( panelSelector ) {
+		await expect( page.locator( panelSelector ) ).toBeVisible();
 	}
 }
 
@@ -38,11 +38,11 @@ export async function switchTab(page, tabName, panelSelector = false) {
  *
  * @param {Page} page Playwright page object
  */
-export async function publishProduct(page) {
+export async function publishProduct( page ) {
 	// Publish product
-	await page.locator('#publish').click();
-	await expect(page.locator('.updated.notice')).toBeVisible();
-	await expect(page.locator('.updated.notice')).toContainText(
+	await page.locator( '#publish' ).click();
+	await expect( page.locator( '.updated.notice' ) ).toBeVisible();
+	await expect( page.locator( '.updated.notice' ) ).toContainText(
 		'Product published.'
 	);
 }
@@ -53,145 +53,147 @@ export async function publishProduct(page) {
  * @param {Page}   page           Playwright page object.
  * @param {Object} productDetails Product details.
  */
-export async function createProduct(page, productDetails) {
-	await page.goto('/wp-admin/post-new.php?post_type=product');
+export async function createProduct( page, productDetails ) {
+	await page.goto( '/wp-admin/post-new.php?post_type=product' );
 	await page
-		.locator('#title')
-		.fill(productDetails.title || 'Accommodation Product');
-	await page.locator('#title').blur();
-	await page.locator('#sample-permalink').waitFor();
+		.locator( '#title' )
+		.fill( productDetails.title || 'Accommodation Product' );
+	await page.locator( '#title' ).blur();
+	await page.locator( '#sample-permalink' ).waitFor();
 
-	await page.locator('#product-type').selectOption('accommodation-booking');
+	await page
+		.locator( '#product-type' )
+		.selectOption( 'accommodation-booking' );
 
-	await switchTab(page, 'General');
-	if (productDetails.minimumNight) {
+	await switchTab( page, 'General' );
+	if ( productDetails.minimumNight ) {
 		await page
-			.locator('#_wc_accommodation_booking_min_duration')
-			.fill(productDetails.minimumNight);
+			.locator( '#_wc_accommodation_booking_min_duration' )
+			.fill( productDetails.minimumNight );
 	}
-	if (productDetails.maximumNight) {
+	if ( productDetails.maximumNight ) {
 		await page
-			.locator('#_wc_accommodation_booking_max_duration')
-			.fill(productDetails.maximumNight);
+			.locator( '#_wc_accommodation_booking_max_duration' )
+			.fill( productDetails.maximumNight );
 	}
 
-	if (productDetails.calendarDisplayMode !== undefined) {
+	if ( productDetails.calendarDisplayMode !== undefined ) {
 		await page
-			.locator('#_wc_accommodation_booking_calendar_display_mode')
-			.selectOption(productDetails.calendarDisplayMode);
+			.locator( '#_wc_accommodation_booking_calendar_display_mode' )
+			.selectOption( productDetails.calendarDisplayMode );
 	}
 
 	// Requires confirmation?
-	if (productDetails.requireConfirmation !== undefined) {
-		if (productDetails.requireConfirmation) {
+	if ( productDetails.requireConfirmation !== undefined ) {
+		if ( productDetails.requireConfirmation ) {
 			await page
-				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.locator( '#_wc_accommodation_booking_requires_confirmation' )
 				.check();
 		} else {
 			await page
-				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.locator( '#_wc_accommodation_booking_requires_confirmation' )
 				.uncheck();
 		}
 	}
 
 	// Can be cancelled?
-	if (productDetails.canBeCancelled !== undefined) {
-		if (productDetails.canBeCancelled) {
+	if ( productDetails.canBeCancelled !== undefined ) {
+		if ( productDetails.canBeCancelled ) {
 			await page
-				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.locator( '#_wc_accommodation_booking_user_can_cancel' )
 				.check();
 		} else {
 			await page
-				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.locator( '#_wc_accommodation_booking_user_can_cancel' )
 				.uncheck();
 		}
 	}
 
 	// Number of rooms available
-	if (productDetails.rooms) {
-		await switchTab(page, 'Availability');
+	if ( productDetails.rooms ) {
+		await switchTab( page, 'Availability' );
 		await page
-			.locator('#_wc_accommodation_booking_qty')
-			.fill(productDetails.rooms);
+			.locator( '#_wc_accommodation_booking_qty' )
+			.fill( productDetails.rooms );
 	}
 
 	// Bookings can be made starting from
-	if (productDetails.availabilityStart) {
-		await switchTab(page, 'Availability');
+	if ( productDetails.availabilityStart ) {
+		await switchTab( page, 'Availability' );
 		await page
-			.locator('#_wc_accommodation_booking_min_date')
-			.fill(productDetails.availabilityStart);
-		if (productDetails.availabilityStartUnit) {
+			.locator( '#_wc_accommodation_booking_min_date' )
+			.fill( productDetails.availabilityStart );
+		if ( productDetails.availabilityStartUnit ) {
 			await page
-				.locator('#_wc_accommodation_booking_min_date_unit')
-				.selectOption(productDetails.availabilityStartUnit);
+				.locator( '#_wc_accommodation_booking_min_date_unit' )
+				.selectOption( productDetails.availabilityStartUnit );
 		}
 	}
 
 	// Bookings can only be made up to
-	if (productDetails.availabilityEnd) {
-		await switchTab(page, 'Availability');
+	if ( productDetails.availabilityEnd ) {
+		await switchTab( page, 'Availability' );
 		await page
-			.locator('#_wc_accommodation_booking_max_date')
-			.fill(productDetails.availabilityEnd);
-		if (productDetails.availabilityEndUnit) {
+			.locator( '#_wc_accommodation_booking_max_date' )
+			.fill( productDetails.availabilityEnd );
+		if ( productDetails.availabilityEndUnit ) {
 			await page
-				.locator('#_wc_accommodation_booking_max_date_unit')
-				.selectOption(productDetails.availabilityEndUnit);
+				.locator( '#_wc_accommodation_booking_max_date_unit' )
+				.selectOption( productDetails.availabilityEndUnit );
 		}
 	}
 
-	await switchTab(page, 'Rates');
+	await switchTab( page, 'Rates' );
 	await page
-		.locator('#_wc_accommodation_booking_base_cost')
-		.fill(productDetails.baseCost || '10');
-	if (productDetails.displayCost) {
+		.locator( '#_wc_accommodation_booking_base_cost' )
+		.fill( productDetails.baseCost || '10' );
+	if ( productDetails.displayCost ) {
 		await page
-			.locator('#_wc_accommodation_booking_display_cost')
-			.fill(productDetails.displayCost);
+			.locator( '#_wc_accommodation_booking_display_cost' )
+			.fill( productDetails.displayCost );
 	}
 
-	if (productDetails.range) {
-		await page.locator('#accommodation_bookings_rates a.add_row').click();
+	if ( productDetails.range ) {
+		await page.locator( '#accommodation_bookings_rates a.add_row' ).click();
 		await page
-			.locator('select[name="wc_accommodation_booking_pricing_type[]"]')
+			.locator( 'select[name="wc_accommodation_booking_pricing_type[]"]' )
 			.waitFor();
 		await page
-			.locator('select[name="wc_accommodation_booking_pricing_type[]"]')
-			.selectOption(productDetails.range.type);
-		if (productDetails.range.type === 'custom') {
+			.locator( 'select[name="wc_accommodation_booking_pricing_type[]"]' )
+			.selectOption( productDetails.range.type );
+		if ( productDetails.range.type === 'custom' ) {
 			await page
 				.locator(
 					'input[name="wc_accommodation_booking_pricing_from_date[]"]'
 				)
-				.fill(productDetails.range.from);
+				.fill( productDetails.range.from );
 			await page
 				.locator(
 					'input[name="wc_accommodation_booking_pricing_to_date[]"]'
 				)
-				.fill(productDetails.range.to);
+				.fill( productDetails.range.to );
 		} else {
 			await page
 				.locator(
 					`select[name="wc_accommodation_booking_pricing_from_month[]"]`
 				)
-				.selectOption(productDetails.range.from);
+				.selectOption( productDetails.range.from );
 			await page
 				.locator(
 					`select[name="wc_accommodation_booking_pricing_to_month[]"]`
 				)
-				.selectOption(productDetails.range.to);
+				.selectOption( productDetails.range.to );
 		}
 		await page
 			.locator(
 				'input[name="wc_accommodation_booking_pricing_block_cost[]"]'
 			)
-			.fill(productDetails.range.cost);
+			.fill( productDetails.range.cost );
 	}
 
-	await publishProduct(page);
+	await publishProduct( page );
 
-	const postId = await page.locator('#post_ID').inputValue();
+	const postId = await page.locator( '#post_ID' ).inputValue();
 	return postId;
 }
 
@@ -202,44 +204,44 @@ export async function createProduct(page, productDetails) {
  * @param {never}  productId      Product ID.
  * @param {Object} productDetails Product details.
  */
-export async function updateProduct(page, productId, productDetails) {
-	await page.goto(`/wp-admin/post.php?post=${productId}&action=edit`);
+export async function updateProduct( page, productId, productDetails ) {
+	await page.goto( `/wp-admin/post.php?post=${ productId }&action=edit` );
 
-	await switchTab(page, 'General');
-	if (productDetails.calendarDisplayMode !== undefined) {
+	await switchTab( page, 'General' );
+	if ( productDetails.calendarDisplayMode !== undefined ) {
 		await page
-			.locator('#_wc_accommodation_booking_calendar_display_mode')
-			.selectOption(productDetails.calendarDisplayMode);
+			.locator( '#_wc_accommodation_booking_calendar_display_mode' )
+			.selectOption( productDetails.calendarDisplayMode );
 	}
 
-	if (productDetails.requireConfirmation !== undefined) {
-		if (productDetails.requireConfirmation) {
+	if ( productDetails.requireConfirmation !== undefined ) {
+		if ( productDetails.requireConfirmation ) {
 			await page
-				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.locator( '#_wc_accommodation_booking_requires_confirmation' )
 				.check();
 		} else {
 			await page
-				.locator('#_wc_accommodation_booking_requires_confirmation')
+				.locator( '#_wc_accommodation_booking_requires_confirmation' )
 				.uncheck();
 		}
 	}
 
 	// Can be cancelled?
-	if (productDetails.canBeCancelled !== undefined) {
-		if (productDetails.canBeCancelled) {
+	if ( productDetails.canBeCancelled !== undefined ) {
+		if ( productDetails.canBeCancelled ) {
 			await page
-				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.locator( '#_wc_accommodation_booking_user_can_cancel' )
 				.check();
 		} else {
 			await page
-				.locator('#_wc_accommodation_booking_user_can_cancel')
+				.locator( '#_wc_accommodation_booking_user_can_cancel' )
 				.uncheck();
 		}
 	}
 
 	// Publish product
-	await page.locator('#publish').click();
-	await expect(page.locator('.updated.notice')).toBeVisible();
+	await page.locator( '#publish' ).click();
+	await expect( page.locator( '.updated.notice' ) ).toBeVisible();
 }
 
 /**
@@ -247,10 +249,12 @@ export async function updateProduct(page, productId, productDetails) {
  *
  * @param {Page} page Playwright page object
  */
-export async function saveSettings(page) {
-	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
-		await page.getByRole('button', { name: 'Save changes' }).click();
-		await expect(page.locator('.updated').last()).toContainText(
+export async function saveSettings( page ) {
+	if (
+		await page.getByRole( 'button', { name: 'Save changes' } ).isEnabled()
+	) {
+		await page.getByRole( 'button', { name: 'Save changes' } ).click();
+		await expect( page.locator( '.updated' ).last() ).toContainText(
 			'Your settings have been saved.'
 		);
 	}
@@ -262,9 +266,9 @@ export async function saveSettings(page) {
  * @param {Page}   page      Playwright page object
  * @param {number} productId Product ID to visit
  */
-export async function visitProductPage(page, productId) {
-	await page.goto(`/?p=${productId}`);
-	await expect(page.locator('.product_title')).toBeVisible();
+export async function visitProductPage( page, productId ) {
+	await page.goto( `/?p=${ productId }` );
+	await expect( page.locator( '.product_title' ) ).toBeVisible();
 }
 
 /**
@@ -279,36 +283,36 @@ export async function fillBillingDetails(
 	customerBillingDetails,
 	isBlock = false
 ) {
-	if (isBlock) {
-		await blockFillBillingDetails(page, customerBillingDetails);
+	if ( isBlock ) {
+		await blockFillBillingDetails( page, customerBillingDetails );
 		return;
 	}
 	await page
-		.locator('#billing_first_name')
-		.fill(customerBillingDetails.firstname);
+		.locator( '#billing_first_name' )
+		.fill( customerBillingDetails.firstname );
 	await page
-		.locator('#billing_last_name')
-		.fill(customerBillingDetails.lastname);
+		.locator( '#billing_last_name' )
+		.fill( customerBillingDetails.lastname );
 	await page
-		.locator('#billing_country')
-		.selectOption(customerBillingDetails.country);
+		.locator( '#billing_country' )
+		.selectOption( customerBillingDetails.country );
 	await page
-		.locator('#billing_address_1')
-		.fill(customerBillingDetails.addressfirstline);
+		.locator( '#billing_address_1' )
+		.fill( customerBillingDetails.addressfirstline );
 	await page
-		.locator('#billing_address_2')
-		.fill(customerBillingDetails.addresssecondline);
-	await page.locator('#billing_city').fill(customerBillingDetails.city);
-	if (customerBillingDetails.state) {
+		.locator( '#billing_address_2' )
+		.fill( customerBillingDetails.addresssecondline );
+	await page.locator( '#billing_city' ).fill( customerBillingDetails.city );
+	if ( customerBillingDetails.state ) {
 		await page
-			.locator('#billing_state')
-			.selectOption(customerBillingDetails.state);
+			.locator( '#billing_state' )
+			.selectOption( customerBillingDetails.state );
 	}
 	await page
-		.locator('#billing_postcode')
-		.fill(customerBillingDetails.postcode);
-	await page.locator('#billing_phone').fill(customerBillingDetails.phone);
-	await page.locator('#billing_email').fill(customerBillingDetails.email);
+		.locator( '#billing_postcode' )
+		.fill( customerBillingDetails.postcode );
+	await page.locator( '#billing_phone' ).fill( customerBillingDetails.phone );
+	await page.locator( '#billing_email' ).fill( customerBillingDetails.email );
 }
 
 /**
@@ -316,10 +320,10 @@ export async function fillBillingDetails(
  *
  * @param {Page} page Playwright page object
  */
-export async function addToCart(page) {
-	await page.locator('.single_add_to_cart_button').click();
+export async function addToCart( page ) {
+	await page.locator( '.single_add_to_cart_button' ).click();
 	await expect(
-		page.getByRole('link', { name: 'View cart' }).first()
+		page.getByRole( 'link', { name: 'View cart' } ).first()
 	).toBeVisible();
 }
 
@@ -329,14 +333,14 @@ export async function addToCart(page) {
  * @param {Page}   page            Playwright page object
  * @param {Object} customerDetails Customer billing details
  */
-export async function blockFillBillingDetails(page, customerDetails) {
-	const card = await page.locator('.wc-block-components-address-card');
-	if (await card.isVisible()) {
-		await card.locator('.wc-block-components-address-card__edit').click();
+export async function blockFillBillingDetails( page, customerDetails ) {
+	const card = await page.locator( '.wc-block-components-address-card' );
+	if ( await card.isVisible() ) {
+		await card.locator( '.wc-block-components-address-card__edit' ).click();
 	}
-	await page.locator('#email').fill(customerDetails.email);
+	await page.locator( '#email' ).fill( customerDetails.email );
 
-	await fillBillingCheckoutBlocks(page, {
+	await fillBillingCheckoutBlocks( page, {
 		country: customerDetails.country,
 		firstName: customerDetails.firstname,
 		lastName: customerDetails.lastname,
@@ -344,12 +348,12 @@ export async function blockFillBillingDetails(page, customerDetails) {
 		zip: customerDetails.postcode,
 		city: customerDetails.city,
 		state: customerDetails.state ?? null,
-	});
-	await page.getByLabel('Add a note to your order').check();
+	} );
+	await page.getByLabel( 'Add a note to your order' ).check();
 	await page
-		.getByPlaceholder('Notes about your order', { exact: false })
-		.fill('This is to avoid flakiness');
-	await page.waitForLoadState('networkidle');
+		.getByPlaceholder( 'Notes about your order', { exact: false } )
+		.fill( 'This is to avoid flakiness' );
+	await page.waitForLoadState( 'networkidle' );
 }
 
 /**
@@ -358,18 +362,18 @@ export async function blockFillBillingDetails(page, customerDetails) {
  * @param {Page}    page    Playwright page object
  * @param {boolean} isBlock Whether to use block checkout
  */
-export async function placeOrder(page, isBlock = false) {
-	if (isBlock) {
-		await page.getByRole('button', { name: 'Place Order' }).click();
+export async function placeOrder( page, isBlock = false ) {
+	if ( isBlock ) {
+		await page.getByRole( 'button', { name: 'Place Order' } ).click();
 	} else {
-		await page.locator('#place_order').click();
+		await page.locator( '#place_order' ).click();
 	}
 
 	await expect(
-		page.getByRole('heading', { name: 'Order received' })
+		page.getByRole( 'heading', { name: 'Order received' } )
 	).toBeVisible();
 
-	return await getOrderIdFromUrl(page);
+	return await getOrderIdFromUrl( page );
 }
 
 /**
@@ -377,15 +381,15 @@ export async function placeOrder(page, isBlock = false) {
  *
  * @param {string} command
  */
-export async function runWpCliCommand(command) {
+export async function runWpCliCommand( command ) {
 	const { stderr } = await execAsync(
-		`npm --silent run env run tests-cli -- ${command}`
+		`npm --silent run env run tests-cli -- ${ command }`
 	);
 
-	if (!stderr) {
+	if ( ! stderr ) {
 		return true;
 	}
-	console.error(stderr); // eslint-disable-line no-console
+	console.error( stderr ); // eslint-disable-line no-console
 	return false;
 }
 
@@ -395,9 +399,9 @@ export async function runWpCliCommand(command) {
  * @param {Page}    page    Playwright page object
  * @param {boolean} isBlock Whether to use block checkout
  */
-export async function goToCheckout(page, isBlock = false) {
+export async function goToCheckout( page, isBlock = false ) {
 	const slug = isBlock ? 'block-checkout' : 'checkout';
-	await page.goto(slug);
+	await page.goto( slug );
 }
 
 /**
@@ -415,18 +419,18 @@ export function getFutureDate(
 	returnMoment = false
 ) {
 	const date = moment()
-		.add(days, 'days')
-		.add(months, 'months')
-		.add(years, 'years');
+		.add( days, 'days' )
+		.add( months, 'months' )
+		.add( years, 'years' );
 
-	if (returnMoment) {
+	if ( returnMoment ) {
 		return date;
 	}
 
 	const futureDateObject = {
-		date: date.format('DD'),
-		month: date.format('MM'),
-		year: date.format('YYYY'),
+		date: date.format( 'DD' ),
+		month: date.format( 'MM' ),
+		year: date.format( 'YYYY' ),
 	};
 
 	return futureDateObject;
@@ -438,9 +442,12 @@ export function getFutureDate(
  * @param {Object} date   Moment date object
  * @param {string} format Date format
  */
-export function getCheckInTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
-	const checkInTime = pluginConfig.checkInTime.split(':');
-	return date.hour(checkInTime[0]).minute(checkInTime[1]).format(format);
+export function getCheckInTime( date, format = 'MMMM D, Y \\a\\t h:mm a' ) {
+	const checkInTime = pluginConfig.checkInTime.split( ':' );
+	return date
+		.hour( checkInTime[ 0 ] )
+		.minute( checkInTime[ 1 ] )
+		.format( format );
 }
 
 /**
@@ -449,9 +456,12 @@ export function getCheckInTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
  * @param {Object} date   Moment date object
  * @param {string} format Date format
  */
-export function getCheckOutTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
-	const checkOutTime = pluginConfig.checkoutTime.split(':');
-	return date.hour(checkOutTime[0]).minute(checkOutTime[1]).format(format);
+export function getCheckOutTime( date, format = 'MMMM D, Y \\a\\t h:mm a' ) {
+	const checkOutTime = pluginConfig.checkoutTime.split( ':' );
+	return date
+		.hour( checkOutTime[ 0 ] )
+		.minute( checkOutTime[ 1 ] )
+		.format( format );
 }
 
 /**
@@ -461,8 +471,8 @@ export function getCheckOutTime(date, format = 'MMMM D, Y \\a\\t h:mm a') {
  * @param {Object}  startDate Booking start date details
  * @param {boolean} click     Whether to click on date
  */
-export async function fillBookingStartDate(page, startDate, click = true) {
-	await unBlockUI(page);
+export async function fillBookingStartDate( page, startDate, click = true ) {
+	await unBlockUI( page );
 	await fillBookingDate(
 		page,
 		'input[name="wc_bookings_field_start_date_year"]',
@@ -478,11 +488,11 @@ export async function fillBookingStartDate(page, startDate, click = true) {
 		'input[name="wc_bookings_field_start_date_day"]',
 		startDate.date
 	);
-	if (click) {
+	if ( click ) {
 		await page
-			.locator('td.selection-start-date a')
+			.locator( 'td.selection-start-date a' )
 			.first()
-			.click({ force: true });
+			.click( { force: true } );
 	}
 }
 
@@ -493,8 +503,8 @@ export async function fillBookingStartDate(page, startDate, click = true) {
  * @param {Object}  endDate Booking end date details
  * @param {boolean} click   Whether to click on date
  */
-export async function fillBookingEndDate(page, endDate, click = true) {
-	await unBlockUI(page);
+export async function fillBookingEndDate( page, endDate, click = true ) {
+	await unBlockUI( page );
 	await fillBookingDate(
 		page,
 		'input[name="wc_bookings_field_start_date_to_year"]',
@@ -512,14 +522,14 @@ export async function fillBookingEndDate(page, endDate, click = true) {
 	);
 	if (
 		click &&
-		(await page.locator('td.selection-end-date a').first().isVisible())
+		( await page.locator( 'td.selection-end-date a' ).first().isVisible() )
 	) {
 		await page
-			.locator('td.selection-end-date a')
+			.locator( 'td.selection-end-date a' )
 			.first()
-			.click({ force: true });
+			.click( { force: true } );
 	}
-	await unBlockUI(page);
+	await unBlockUI( page );
 }
 
 /**
@@ -529,12 +539,12 @@ export async function fillBookingEndDate(page, endDate, click = true) {
  * @param {string} selector Input selector
  * @param {string} value    Value to fill
  */
-async function fillBookingDate(page, selector, value) {
-	await page.locator(selector).click();
-	await page.locator(selector).fill('');
-	await page.locator(selector).type(`${value}`);
-	await page.locator(selector).blur();
-	await unBlockUI(page);
+async function fillBookingDate( page, selector, value ) {
+	await page.locator( selector ).click();
+	await page.locator( selector ).fill( '' );
+	await page.locator( selector ).type( `${ value }` );
+	await page.locator( selector ).blur();
+	await unBlockUI( page );
 }
 
 /**
@@ -542,11 +552,11 @@ async function fillBookingDate(page, selector, value) {
  *
  * @param {Page} page Playwright page object
  */
-export async function unBlockUI(page) {
+export async function unBlockUI( page ) {
 	await page
-		.locator('.blockUI.blockOverlay')
+		.locator( '.blockUI.blockOverlay' )
 		.last()
-		.waitFor({ state: 'hidden' });
+		.waitFor( { state: 'hidden' } );
 }
 
 /**
@@ -554,26 +564,26 @@ export async function unBlockUI(page) {
  *
  * @param {Page} page Playwright page object
  */
-export async function clearCart(page) {
-	await page.goto('/cart/');
-	const rows = await page.locator('.cart td a.remove');
+export async function clearCart( page ) {
+	await page.goto( '/cart/' );
+	const rows = await page.locator( '.cart td a.remove' );
 	const count = await rows.count();
 
-	for (let i = 0; i < count; i++) {
-		await rows.nth(0).click();
-		await page.locator('.woocommerce-message').waitFor();
+	for ( let i = 0; i < count; i++ ) {
+		await rows.nth( 0 ).click();
+		await page.locator( '.woocommerce-message' ).waitFor();
 	}
 }
 
-function convertTimeToHoursMinutesMeridiem(time) {
-	const [hours, minutes] = time.split(':').map(Number);
+function convertTimeToHoursMinutesMeridiem( time ) {
+	const [ hours, minutes ] = time.split( ':' ).map( Number );
 	const isPM = hours >= 12;
 	const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM/PM
 	const meridiem = isPM ? 'PM' : 'AM';
 
 	return {
-		hours: formattedHours.toString().padStart(2, '0'),
-		minutes: minutes.toString().padStart(2, '0'),
+		hours: formattedHours.toString().padStart( 2, '0' ),
+		minutes: minutes.toString().padStart( 2, '0' ),
 		meridiem,
 	};
 }
@@ -584,7 +594,7 @@ function convertTimeToHoursMinutesMeridiem(time) {
  * @param {Page}   page         Playwright page object
  * @param {Object} timeSettings Check-in and Check-out time settings
  */
-export async function updateSettings(page, timeSettings) {
+export async function updateSettings( page, timeSettings ) {
 	await page.goto(
 		'/wp-admin/edit.php?post_type=wc_booking&page=wc_bookings_settings&tab=accommodation'
 	);
@@ -597,40 +607,42 @@ export async function updateSettings(page, timeSettings) {
 	);
 
 	const checkInTimeLocator = await page
-		.locator('.wc-bookings-render-wp-time-picker')
-		.locator('nth=0');
+		.locator( '.wc-bookings-render-wp-time-picker' )
+		.locator( 'nth=0' );
 	const checkOutTimeLocator = await page
-		.locator('.wc-bookings-render-wp-time-picker')
-		.locator('nth=1');
+		.locator( '.wc-bookings-render-wp-time-picker' )
+		.locator( 'nth=1' );
 
 	await checkInTimeLocator
-		.locator('.components-datetime__time-field-hours-input input')
-		.fill(checkInTime.hours);
+		.locator( '.components-datetime__time-field-hours-input input' )
+		.fill( checkInTime.hours );
 	await checkInTimeLocator
-		.locator('.components-datetime__time-field-minutes-input input')
-		.fill(checkInTime.minutes);
+		.locator( '.components-datetime__time-field-minutes-input input' )
+		.fill( checkInTime.minutes );
 	await checkInTimeLocator
 		.locator(
-			`button.components-toggle-group-control-option-base[value="${checkInTime.meridiem}"]`
+			`button.components-toggle-group-control-option-base[value="${ checkInTime.meridiem }"]`
 		)
 		.click();
 
 	await checkOutTimeLocator
-		.locator('.components-datetime__time-field-hours-input input')
-		.fill(checkoutTime.hours);
+		.locator( '.components-datetime__time-field-hours-input input' )
+		.fill( checkoutTime.hours );
 	await checkOutTimeLocator
-		.locator('.components-datetime__time-field-minutes-input input')
-		.fill(checkoutTime.minutes);
+		.locator( '.components-datetime__time-field-minutes-input input' )
+		.fill( checkoutTime.minutes );
 	await checkOutTimeLocator
 		.locator(
-			`button.components-toggle-group-control-option-base[value="${checkoutTime.meridiem}"]`
+			`button.components-toggle-group-control-option-base[value="${ checkoutTime.meridiem }"]`
 		)
 		.click();
 
-	if (await page.getByRole('button', { name: 'Save changes' }).isEnabled()) {
-		await page.getByRole('button', { name: 'Save changes' }).click();
+	if (
+		await page.getByRole( 'button', { name: 'Save changes' } ).isEnabled()
+	) {
+		await page.getByRole( 'button', { name: 'Save changes' } ).click();
 		await expect(
-			page.locator('.updated', { hasText: 'Settings saved' })
+			page.locator( '.updated', { hasText: 'Settings saved' } )
 		).toBeVisible();
 	}
 }
@@ -641,10 +653,10 @@ export async function updateSettings(page, timeSettings) {
  * @param {Page}   page      Playwright page object.
  * @param {number} bookingId Booking ID.
  */
-export async function confirmBooking(page, bookingId) {
-	await page.goto(`/wp-admin/post.php?post=${bookingId}&action=edit`);
-	await page.locator('#_booking_status').selectOption('confirmed');
-	await page.getByRole('button', { name: 'Save Booking' }).click();
+export async function confirmBooking( page, bookingId ) {
+	await page.goto( `/wp-admin/post.php?post=${ bookingId }&action=edit` );
+	await page.locator( '#_booking_status' ).selectOption( 'confirmed' );
+	await page.getByRole( 'button', { name: 'Save Booking' } ).click();
 }
 
 /**
@@ -652,16 +664,16 @@ export async function confirmBooking(page, bookingId) {
  *
  * @param {Page} page Playwright page object
  */
-export async function clearEmailLogs(page) {
-	await page.goto('/wp-admin/admin.php?page=email-log');
-	await page.goto('/wp-admin/admin.php?page=email-log');
-	const bulkAction = await page.locator('#bulk-action-selector-top');
-	if (await bulkAction.isVisible()) {
-		await page.locator('#cb-select-all-1').click();
-		await bulkAction.selectOption('el-log-list-delete-all');
-		await page.locator('#doaction').click();
+export async function clearEmailLogs( page ) {
+	await page.goto( '/wp-admin/admin.php?page=email-log' );
+	await page.goto( '/wp-admin/admin.php?page=email-log' );
+	const bulkAction = await page.locator( '#bulk-action-selector-top' );
+	if ( await bulkAction.isVisible() ) {
+		await page.locator( '#cb-select-all-1' ).click();
+		await bulkAction.selectOption( 'el-log-list-delete-all' );
+		await page.locator( '#doaction' ).click();
 		await expect(
-			page.locator('#setting-error-deleted-email-logs p').first()
-		).toContainText('email logs deleted');
+			page.locator( '#setting-error-deleted-email-logs p' ).first()
+		).toContainText( 'email logs deleted' );
 	}
 }

@@ -42,18 +42,5 @@ jobs:
           composer install
           npm ci
 
-      - name: Run ESLint
-        run: npm run lint:js
-
-  format:
-    name: Application JavaScript formatting
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
-      - run: npm ci --ignore-scripts
-      - run: npm run format:js:check
+      - name: Check authored JavaScript
+        run: npm run lint:js:all
