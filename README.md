@@ -114,3 +114,8 @@ This extension is compatible with:
 See [the integration guide](tests/integration/README.md) for isolated setup,
 selectable dependency versions, reset, full/focused runs and optional PHP coverage.
 This suite uses real WordPress, WooCommerce, Bookings and Product Add-ons.
+
+### Browser persistence regressions
+
+See [tests/e2e/README.md](tests/e2e/README.md) for isolated setup, full and focused
+commands, supported checkout modes and fixture reset.

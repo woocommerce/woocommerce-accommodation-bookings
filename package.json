@@ -67,7 +67,10 @@
     "test:e2e-debug": "npx playwright test --config tests/e2e/playwright.config.js --debug",
     "test:e2e-codegen": "npx playwright codegen",
     "test:e2e-report": "npx playwright show-report tests/e2e/test-results/playwright-report",
-    "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational"
+    "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational",
+    "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 playwright test --config tests/e2e/playwright.config.js",
+    "test:e2e:reset": "node -e \"require('./tests/e2e/utils/local').seed()\"",
+    "test:e2e:setup": "bash tests/e2e/bin/setup-local.sh"
   },
   "engines": {
     "node": "^24.15.0",
