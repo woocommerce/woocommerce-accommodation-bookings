@@ -28,7 +28,14 @@ npm ci
 composer install
 npm run build:dev       # Composer dependencies, webpack, and translations
 npm run start:webpack   # Watch source assets
-npm run lint:js
+npm run lint:js         # Application source
+npm run lint:js:all     # All authored JavaScript and formatting (same as CI)
+npm run lint:js:tests   # Playwright specs, fixtures and helpers
+npm run lint:js:tooling # Root Node configuration
+npm run lint:js:tests:fix
+npm run lint:js:tooling:fix
+npm run format:js:tests
+npm run format:js:tooling
 npm run format:js:check # Check authored application JavaScript formatting
 npm run format:js:fix   # Apply the same WordPress formatter
 npm run lint:style

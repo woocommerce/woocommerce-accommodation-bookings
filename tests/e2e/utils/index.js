@@ -3,7 +3,6 @@
  */
 import { expect, Page } from '@playwright/test';
 import moment from 'moment';
-import { pluginConfig } from '../config';
 import {
 	fillBillingCheckoutBlocks,
 	getOrderIdFromUrl,
@@ -12,6 +11,7 @@ import {
 /**
  * Internal dependencies
  */
+import { pluginConfig } from '../config';
 const { promisify } = require( 'util' );
 const execAsync = promisify( require( 'child_process' ).exec );
 export const api = require( './api' );

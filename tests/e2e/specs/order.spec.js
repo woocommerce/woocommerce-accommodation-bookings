@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-done-callback */
 /**
  * External dependencies
  */

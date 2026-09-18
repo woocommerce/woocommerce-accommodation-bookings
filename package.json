@@ -22,6 +22,8 @@
     "@wordpress/env": "11.15.0",
     "@wordpress/prettier-config": "^2.8.0",
     "@wordpress/scripts": "^34.2.0",
+    "eslint-plugin-playwright": "2.12.0",
+    "globals": "16.5.0",
     "mini-css-extract-plugin": "^2.9.0",
     "moment": "^2.30.1",
     "prettier": "npm:wp-prettier@^3.9.6",
@@ -69,7 +71,14 @@
     "test:e2e-report": "npx playwright show-report tests/e2e/test-results/playwright-report",
     "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational",
     "format:js:check": "prettier --check \"src/js/**/*.js\"",
-    "format:js:fix": "prettier --write \"src/js/**/*.js\""
+    "format:js:fix": "prettier --write \"src/js/**/*.js\"",
+    "lint:js:tests": "wp-scripts lint-js tests/e2e --max-warnings 0",
+    "lint:js:tests:fix": "npm run lint:js:tests -- --fix",
+    "lint:js:tooling": "wp-scripts lint-js webpack.config.js .prettierrc.js eslint.config.mjs --max-warnings 0",
+    "lint:js:tooling:fix": "npm run lint:js:tooling -- --fix",
+    "lint:js:all": "npm run lint:js && npm run lint:js:tests && npm run lint:js:tooling && npm run format:js:check",
+    "format:js:tests": "prettier --write \"tests/e2e/{bin,config,specs,utils}/**/*.js\" \"tests/e2e/*.js\"",
+    "format:js:tooling": "prettier --write webpack.config.js .prettierrc.js eslint.config.mjs"
   },
   "engines": {
     "node": "^24.15.0",

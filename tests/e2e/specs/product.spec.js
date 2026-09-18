@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-done-callback */
 /**
  * External dependencies
  */
@@ -358,7 +357,6 @@ test.describe( 'Product Tests', () => {
 		await expect( addToCardButton ).not.toHaveClass( /disabled/ );
 	} );
 
-	// eslint-disable-next-line jest/no-disabled-tests
 	test( 'Availability > Booking Can Be Booked Till Setting - @foundational', async ( {
 		page,
 	} ) => {
