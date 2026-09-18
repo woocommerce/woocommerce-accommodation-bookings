@@ -334,7 +334,9 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	if (await card.isVisible()) {
 		await card.locator('.wc-block-components-address-card__edit').click();
 	}
-	await page.locator('#email').fill(customerDetails.email);
+	if (await page.locator('#email').isVisible()) {
+		await page.locator('#email').fill(customerDetails.email);
+	}
 
 	await fillBillingCheckoutBlocks(page, {
 		country: customerDetails.country,

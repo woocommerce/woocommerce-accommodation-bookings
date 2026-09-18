@@ -7,6 +7,7 @@ const { baseUrl } = require("./config");
  */
 module.exports = defineConfig({
   testDir: "../../tests",
+  testMatch: process.env.ACCOM_E2E_REGRESSION ? "**/persistence.spec.js" : "**/*.spec.js",
 
   /* Maximum time one test can run for. */
   timeout: 90 * 1000,
@@ -75,6 +76,6 @@ module.exports = defineConfig({
   ],
 
   // path to the global setup files.
-  globalSetup: require.resolve("./global-setup"),
-  globalTeardown: require.resolve("./global-teardown"),
+  globalSetup: process.env.ACCOM_E2E_REGRESSION ? undefined : require.resolve("./global-setup"),
+  globalTeardown: process.env.ACCOM_E2E_REGRESSION ? undefined : require.resolve("./global-teardown"),
 });
