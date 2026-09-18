@@ -18,7 +18,8 @@
         "wp-cli/i18n-command": "^2.6",
         "phpstan/phpstan": "^2.1",
         "szepeviktor/phpstan-wordpress": "^2.0",
-        "php-stubs/woocommerce-stubs": "^10.6"
+        "php-stubs/woocommerce-stubs": "^10.6",
+        "yoast/phpunit-polyfills": "^1.1"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
@@ -31,7 +32,8 @@
             "@lint:phpcs:baseline"
         ],
         "lint:phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
-        "lint:phpstan:baseline:update": "@lint:phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline"
+        "lint:phpstan:baseline:update": "@lint:phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
+        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml"
     },
     "config": {
         "platform": {

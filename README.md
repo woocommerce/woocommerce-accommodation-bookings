@@ -108,3 +108,9 @@ PR. Human review and CI checks still apply.
 This extension is compatible with:
 - [WooCommerce Blocks](https://woo.com/products/woocommerce-gutenberg-products-block/)
 - [WooCommerce Payments](https://woocommerce.com/products/woopayments/)
+
+### Database integration tests
+
+See [the integration guide](tests/integration/README.md) for isolated setup,
+selectable dependency versions, reset, full/focused runs and optional PHP coverage.
+This suite uses real WordPress, WooCommerce, Bookings and Product Add-ons.
