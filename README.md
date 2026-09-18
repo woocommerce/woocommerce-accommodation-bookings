@@ -53,6 +53,27 @@ npm run lint:js        # ESLint on JS source
 npm run lint:style     # Stylelint on CSS/SCSS
 ```
 
+## AI code reviews
+
+[CodeRabbit](https://docs.coderabbit.ai/platforms/github-com) requires its GitHub App
+to have access to this repository. A WooCommerce organization owner must grant that
+access; committing [`.coderabbit.yaml`](.coderabbit.yaml) does not install the app.
+
+Once enabled, CodeRabbit reviews non-draft PRs targeting the default branch when
+opened or marked ready, then reviews new commits. The configuration follows the
+default branch if it is renamed. Reviews use the repository's agent guidance and
+pause after five reviewed commits to limit repeated reviews.
+
+Use these [PR comment commands](https://docs.coderabbit.ai/guides/commands):
+
+- `@coderabbitai review`: review changes since the last review.
+- `@coderabbitai full review`: review the whole PR again.
+- `@coderabbitai pause`: pause automatic reviews.
+- `@coderabbitai resume`: resume automatic reviews.
+
+Add `@coderabbitai ignore` to the PR description to skip automatic reviews for that
+PR. Human review and CI checks still apply.
+
 ## Compatibility
 
 This extension is compatible with:
