@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+tone_instructions: 'Keep reviews concise. Focus on actionable issues; avoid filler praise and style-only suggestions.'
+
+reviews:
+  profile: chill
+  high_level_summary: false
+  poem: false
+  in_progress_fortune: false
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    auto_pause_after_reviewed_commits: 5
+    drafts: false
+    # The default branch is always reviewed; no additional branches are needed.
+    base_branches: []
+  path_instructions:
+    - path: '**/*'
+      instructions: |
+        Review correctness, security, backwards compatibility, and performance
+        using surrounding code, callers, and tests. Preserve public contracts,
+        hooks, saved store data, and upgrade/rollback paths for existing sites.
+        Prefer existing WordPress and WooCommerce APIs, and verify compatibility
+        with the supported PHP, WordPress, WooCommerce, and extension versions.
+        Check authorization, nonce protection where needed, input validation,
+        and context-aware output escaping at the relevant entry points.
+        Validate filterable values and optional APIs before using them. Flag
+        unbounded work and repeated queries that affect large stores.
+        Report concrete regressions with their impact and a proposed fix.
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - files: '.github/instructions/php.instructions.md'
+        applyTo: '**/*.php'
