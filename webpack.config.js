@@ -1,7 +1,7 @@
-const defaultConfig = require('@wordpress/scripts/config/webpack.config');
-const WooDependencyExtractionWebpackPlugin = require('@woocommerce/dependency-extraction-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+const WooDependencyExtractionWebpackPlugin = require( '@woocommerce/dependency-extraction-webpack-plugin' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
 
 module.exports = {
 	...defaultConfig,
@@ -13,15 +13,15 @@ module.exports = {
 	},
 	plugins: [
 		...defaultConfig.plugins.filter(
-			(plugin) =>
+			( plugin ) =>
 				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
 		),
 		new WooDependencyExtractionWebpackPlugin(),
-		new MiniCssExtractPlugin({
+		new MiniCssExtractPlugin( {
 			filename: `[name].css`,
-		}),
-		new RemoveEmptyScriptsPlugin({
+		} ),
+		new RemoveEmptyScriptsPlugin( {
 			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
-		}),
+		} ),
 	],
 };
