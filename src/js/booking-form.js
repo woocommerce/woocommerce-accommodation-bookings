@@ -1,8 +1,16 @@
-// External dependencies.
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
+
+/**
+ * External dependencies
+ */
 import jQuery from 'jquery';
 
-// Internal dependencies.
+/**
+ * Internal dependencies
+ */
 import {
 	get_booking_form,
 	get_jquery_element,
@@ -448,8 +456,10 @@ import {
 		'wc_bookings_date_selected',
 		'wc_accommodation_booking/booking_form',
 		( { fieldset, date_picker } ) => {
+			// eslint-disable-next-line @wordpress/no-unused-vars-before-return -- Preserve jQuery access before the product-type check.
 			const $datePickerWrapper = get_jquery_element( fieldset );
 			const $date_picker = get_jquery_element( date_picker );
+			// eslint-disable-next-line @wordpress/no-unused-vars-before-return -- Preserve the date-picker read before the product-type check.
 			const date_type = get_selected_date_type( $date_picker );
 			const $form = get_booking_form( fieldset );
 			let data_content = '';
@@ -496,6 +506,7 @@ import {
 		( { form, date_picker } ) => {
 			const $date_picker = get_jquery_element( date_picker );
 			const $form = get_jquery_element( form );
+			// eslint-disable-next-line @wordpress/no-unused-vars-before-return -- Preserve the date-picker read before the product-type check.
 			const date_type = get_selected_date_type( $date_picker );
 
 			// Exit if product is not accommodation booking.
