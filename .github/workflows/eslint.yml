@@ -47,3 +47,16 @@ jobs:
       - name: Run ESLint
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
         run: npm run lint:js ${{ steps.changed-files.outputs.all_changed_files }}
+
+  format:
+    name: Application JavaScript formatting
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run format:js:check

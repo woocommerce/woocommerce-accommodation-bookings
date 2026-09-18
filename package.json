@@ -67,7 +67,9 @@
     "test:e2e-debug": "npx playwright test --config tests/e2e/playwright.config.js --debug",
     "test:e2e-codegen": "npx playwright codegen",
     "test:e2e-report": "npx playwright show-report tests/e2e/test-results/playwright-report",
-    "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational"
+    "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational",
+    "format:js:check": "prettier --check \"src/js/**/*.js\"",
+    "format:js:fix": "prettier --write \"src/js/**/*.js\""
   },
   "engines": {
     "node": "^24.15.0",

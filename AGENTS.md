@@ -29,6 +29,8 @@ composer install
 npm run build:dev       # Composer dependencies, webpack, and translations
 npm run start:webpack   # Watch source assets
 npm run lint:js
+npm run format:js:check # Check authored application JavaScript formatting
+npm run format:js:fix   # Apply the same WordPress formatter
 npm run lint:style
 ```
 

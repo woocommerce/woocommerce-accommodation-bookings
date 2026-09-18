@@ -19,6 +19,10 @@ export default [
 			globals: { ...globals.browser, wp: 'readonly' },
 		},
 		rules: {
+			'@wordpress/i18n-text-domain': [
+				'error',
+				{ allowedTextDomain: 'woocommerce-accommodation-bookings' },
+			],
 			'@wordpress/no-unused-vars-before-return': 0,
 			'@woocommerce/dependency-group': 0,
 			camelcase: 0,
