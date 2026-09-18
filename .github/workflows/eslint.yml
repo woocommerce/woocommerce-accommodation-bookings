@@ -8,42 +8,15 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          fetch-depth: 0
-
-      - name: Setup proper PHP version
-        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
-        with:
-          php-version: 7.4
-          tools: composer
-
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache dependencies
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@9426d40962ed5378910ee2e21d5f8c6fcbf2dd96 # v47.0.6
-        with:
-          files: |
-            **/*.js
+          node-version-file: '.nvmrc'
+          cache: npm
 
       - name: Install dependencies
-        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
-        run: |
-          composer install
-          npm install
+        run: npm ci
 
-      - name: Run ESLint
-        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
-        run: npx wp-scripts lint-js ${{ steps.changed-files.outputs.all_changed_files }} --ext=js
+      - name: Check authored JavaScript
+        run: npm run lint:js
