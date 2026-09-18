@@ -28,8 +28,8 @@ npm ci
 composer install
 npm run build:dev       # Composer dependencies, webpack, and translations
 npm run start:webpack   # Watch source assets
-npm run lint:js         # Application JavaScript and formatting (same as CI)
-npm run lint:js-fix     # Fix application JavaScript and formatting
+npm run lint:js         # Authored JavaScript and formatting (same as CI)
+npm run lint:js-fix     # Fix lint and WordPress formatting findings
 npm run lint:style
 ```
 

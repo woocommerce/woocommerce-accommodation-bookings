@@ -17,6 +17,7 @@ module.exports = async ( config ) => {
 	const keysRetries = 5;
 	for ( let i = 0; i < keysRetries; i++ ) {
 		try {
+			// eslint-disable-next-line no-console -- Report teardown retries and failures to the test runner.
 			console.log( 'Trying to clear consumer token... Try:' + i );
 			await adminPage.goto( `/wp-admin` );
 			await adminPage
@@ -37,15 +38,18 @@ module.exports = async ( config ) => {
 				.getByRole( 'link', { name: 'Revoke', includeHidden: true } )
 				.first()
 				.click();
+			// eslint-disable-next-line no-console -- Report teardown retries and failures to the test runner.
 			console.log( 'Cleared up consumer token successfully.' );
 			consumerTokenCleared = true;
 			break;
-		} catch ( e ) {
+		} catch {
+			// eslint-disable-next-line no-console -- Report teardown retries and failures to the test runner.
 			console.log( 'Failed to clear consumer token. Retrying...' );
 		}
 	}
 
 	if ( ! consumerTokenCleared ) {
+		// eslint-disable-next-line no-console -- Report teardown retries and failures to the test runner.
 		console.error( 'Could not clear consumer token.' );
 		process.exit( 1 );
 	}
