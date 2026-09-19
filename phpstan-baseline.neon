@@ -1,0 +1,157 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Action callback returns array but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Instantiated class WC_Product_Booking not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Function wc_bookings_string_to_bool not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: includes/admin/views/html-accommodation-booking-data.php
+
+		-
+			message: '#^Function wc_bookings_date_format not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-cart-manager.php
+
+		-
+			message: '#^Call to static method get_all_existing_bookings\(\) on an unknown class WC_Booking_Data_Store\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to static method get_all_existing_bookings\(\) on an unknown class WC_Bookings_Controller\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Callback expects 2 parameters, \$accepted_args is set to 3\.$#'
+			identifier: arguments.count
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Function wc_bookings_get_time_slots not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Function wc_bookings_get_total_available_bookings_for_range not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Action callback returns array but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: includes/class-wc-accommodation-booking-product-tabs.php
+
+		-
+			message: '#^Action callback returns bool\|WP_Error but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Function wc_booking_get_script_dependencies not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking_Resource\:\:get_id\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: includes/class-wc-product-accommodation-booking-resource.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking_Resource\:\:get_parent_id\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: includes/class-wc-product-accommodation-booking-resource.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_blocks_in_range_for_day\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_display_cost\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_id\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_price\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_price_suffix\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_prop\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_resource_ids\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to static method get_all_existing_bookings\(\) on an unknown class WC_Booking_Data_Store\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to static method get_all_existing_bookings\(\) on an unknown class WC_Bookings_Controller\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Class WC_Product_Accommodation_Booking_Resource does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^WC_Product_Accommodation_Booking\:\:__construct\(\) calls parent\:\:__construct\(\) but WC_Product_Accommodation_Booking does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^WC_Product_Accommodation_Booking\:\:get_resource\(\) calls parent\:\:get_resource\(\) but WC_Product_Accommodation_Booking does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php

@@ -22,3 +22,16 @@ The workflow lists specific ignored codes for existing findings and established
 WooCommerce names and behavior. These exclusions also hide future occurrences of
 the same codes; review them when changing affected code. No whole check category
 is disabled. The action's result artifact contains all remaining findings.
+
+### PHPStan
+
+After `composer install`, run `composer lint:phpstan`. CI runs the same command
+on PHP, Composer and PHPStan configuration changes using PHP 8.4. PHPStan checks
+owned production PHP at level 0 against the plugin's minimum PHP version.
+WordPress and WooCommerce stubs supply core symbols. Vendor code, generated files,
+tests and build tools are outside analysis.
+
+The baseline records existing findings by message, rule, file and count. New
+findings and unmatched baseline entries fail the check. Run
+`composer lint:phpstan:baseline:update` only for a reviewed baseline change;
+never regenerate it to hide new findings. PHPCS and PHPCompatibility remain separate checks.
