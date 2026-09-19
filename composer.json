@@ -18,7 +18,15 @@
         "wp-cli/i18n-command": "^2.6"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "lint:php": "bash bin/phplint.sh",
+        "lint:phpcs": "phpcs",
+        "lint:phpcs:baseline": "bash bin/phpcs.sh",
+        "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
+        "check:php": [
+            "@lint:php",
+            "@lint:phpcs:baseline"
+        ]
     },
     "config": {
         "platform": {

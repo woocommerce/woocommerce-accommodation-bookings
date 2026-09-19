@@ -32,3 +32,5 @@ assets export-ignore
 .prettierrc.js export-ignore
 AGENTS.md export-ignore
 CLAUDE.md export-ignore
+phpcs.baseline export-ignore
+tools export-ignore

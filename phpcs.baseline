@@ -1,0 +1,3479 @@
+{
+    "historyAnalyser": "git",
+    "historyMarker": "a36e095953837cc3a93d20cfd1273fb7ffe5de41",
+    "resultsParser": "phpcodesniffer-json",
+    "analysisResults": [
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 2,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 30,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 31,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 32,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 49,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 59,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 67,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 75,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 85,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore",
+            "message": "Expected 1 space before \"=\"; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 85,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "WordPress.WhiteSpace.OperatorSpacing.NoSpaceAfter",
+            "message": "Expected 1 space after \"=\"; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 85,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceBeforeCloseParenthesis",
+            "message": "No space before closing parenthesis is prohibited",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 87,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "WordPress.PHP.StrictInArray.MissingTrueStrict",
+            "message": "Not using strict comparison for in_array; supply true for $strict argument.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 95,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 96,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 106,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 18 spaces but found 1 space",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 108,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-panels.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 3 spaces but found 1 space",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 2,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 16,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "PSR2.Classes.PropertyDeclaration.Underscore",
+            "message": "Property name \"$_instance\" should not be prefixed with an underscore to indicate visibility",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.IncorrectWarning",
+            "message": "Equals sign not aligned correctly; expected 1 space but found 3 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 40,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"woocommerce_accommodation_bookings_\" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 41,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 8 spaces but found 1 space",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 41,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"times\" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 56,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.IncorrectWarning",
+            "message": "Equals sign not aligned correctly; expected 1 space but found 2 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 69,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 69,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 70,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'check_in'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 72,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 125,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 139,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'check_in'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 210,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$key\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 212,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 212,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamNameNoMatch",
+            "message": "Doc comment for parameter $value does not match actual variable name $key",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 221,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 233,
+            "fileName": "includes\/admin\/class-wc-accommodation-booking-admin-product-settings.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 27,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 37,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 40,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Generic.WhiteSpace.IncrementDecrementSpacing.SpaceAfterIncrement",
+            "message": "Expected no spaces between $i and the increment operator; 1 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 52,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 1 tabs, found 0",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 69,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 69,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 76,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 76,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 83,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 83,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 88,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 88,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 88,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 88,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 95,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 95,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 109,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 109,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 114,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 114,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 114,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.SpacingBeforeClose",
+            "message": "Expected 1 space before closing PHP tag; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket",
+            "message": "Space after closing parenthesis of function call prohibited",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.WhiteSpace.SemicolonSpacing.Incorrect",
+            "message": "Space found before semicolon; expected \");\" but found \") ;\"",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.SpacingBeforeClose",
+            "message": "Expected 1 space before closing PHP tag; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket",
+            "message": "Space after closing parenthesis of function call prohibited",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability-fields.php",
+            "type": "Squiz.WhiteSpace.SemicolonSpacing.Incorrect",
+            "message": "Space found before semicolon; expected \");\" but found \") ;\"",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
+            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'min'\" and double arrow, but found 3.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Universal.WhiteSpace.DisallowInlineTabs.NonIndentTabsUsed",
+            "message": "Spaces must be used for mid-line alignment; tabs are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 1 space(s) between \"'step'\" and double arrow, but found 2.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 20,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 20,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 0 space(s) but found 10",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 20,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
+            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 20,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 20,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 36,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 36,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 36,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 38,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 55,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 57,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 84,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 20 space(s) but found 24",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 4 tabs, found 5",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.WhiteSpace.OperatorSpacing.NoSpaceBefore",
+            "message": "Expected 1 space before \"=\"; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.WhiteSpace.OperatorSpacing.NoSpaceAfter",
+            "message": "Expected 1 space after \"=\"; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceBeforeCloseParenthesis",
+            "message": "No space before closing parenthesis is prohibited",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 87,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 5 tabs, found 6",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 4 tabs, found 5",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "PEAR.Files.IncludingFile.UseRequire",
+            "message": "File is being unconditionally included; use \"require\" instead",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 126,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 134,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 5 tabs, found 6",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 135,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 6 tabs, found 7",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 136,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 137,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 6 tabs, found 7",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 138,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-availability.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 5 tabs, found 6",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 28,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 38,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 41,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Generic.WhiteSpace.IncrementDecrementSpacing.SpaceAfterIncrement",
+            "message": "Expected no spaces between $i and the increment operator; 1 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 49,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 1 tabs, found 0",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 67,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 67,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 74,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 74,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 81,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 81,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 100,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 100,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 107,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.NoSemicolon",
+            "message": "Inline PHP statement must end with a semicolon",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 107,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 112,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 112,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 112,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 116,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 120,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 124,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "PSR2.ControlStructures.ElseIfDeclaration.NotAllowed",
+            "message": "Usage of ELSE IF is discouraged; use ELSEIF instead",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 127,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 133,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 134,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates-fields.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
+            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 16,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'min'\" and double arrow, but found 3.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Universal.WhiteSpace.DisallowInlineTabs.NonIndentTabsUsed",
+            "message": "Spaces must be used for mid-line alignment; tabs are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 1 space(s) between \"'step'\" and double arrow, but found 2.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 17,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 0 space(s) but found 10",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
+            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
+            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 22,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'min'\" and double arrow, but found 3.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 23,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Universal.WhiteSpace.DisallowInlineTabs.NonIndentTabsUsed",
+            "message": "Spaces must be used for mid-line alignment; tabs are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 23,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 1 space(s) between \"'step'\" and double arrow, but found 2.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 23,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 0 space(s) but found 10",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
+            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 26,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed",
+            "message": "Tabs must be used to indent lines; spaces are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 26,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 44,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentBeforeOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 46,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Files.IncludingFile.UseRequire",
+            "message": "File is being unconditionally included; use \"require\" instead",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 46,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 49,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterEnd",
+            "message": "Closing PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 56,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 5 tabs, found 6",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 57,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 6 tabs, found 7",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 58,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "PEAR.Files.IncludingFile.BracketsNotRequired",
+            "message": "\"include\" is a statement not a function; no parentheses are required",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 59,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 6 tabs, found 7",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 60,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 5 tabs, found 6",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 65,
+            "fileName": "includes\/admin\/views\/html-accommodation-booking-rates.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 2,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 23,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Squiz.Scope.MethodScope.Missing",
+            "message": "Visibility must be declared on method \"add_to_cart\"",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 30,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 31,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 38,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket",
+            "message": "Expected 1 spaces before closing parenthesis; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 43,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"Today \" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 44,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 51,
+            "fileName": "includes\/class-wc-accommodation-booking-cart-manager.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"Today \" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 68,
+            "fileName": "includes\/class-wc-accommodation-booking-date-picker.php",
+            "type": "Generic.CodeAnalysis.UnusedFunctionParameter.Found",
+            "message": "The method parameter $label is never used",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 77,
+            "fileName": "includes\/class-wc-accommodation-booking-date-picker.php",
+            "type": "Generic.CodeAnalysis.UnusedFunctionParameter.Found",
+            "message": "The method parameter $label is never used",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 265,
+            "fileName": "includes\/class-wc-accommodation-booking-date-picker.php",
+            "type": "Universal.NamingConventions.NoReservedKeywordParameterNames.resourceFound",
+            "message": "It is recommended not to use reserved keyword \"resource\" as function parameter name. Found: $resource",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 279,
+            "fileName": "includes\/class-wc-accommodation-booking-date-picker.php",
+            "type": "Universal.NamingConventions.NoReservedKeywordParameterNames.resourceFound",
+            "message": "It is recommended not to use reserved keyword \"resource\" as function parameter name. Found: $resource",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 300,
+            "fileName": "includes\/class-wc-accommodation-booking-date-picker.php",
+            "type": "Universal.NamingConventions.NoReservedKeywordParameterNames.resourceFound",
+            "message": "It is recommended not to use reserved keyword \"resource\" as function parameter name. Found: $resource",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 312,
+            "fileName": "includes\/class-wc-accommodation-booking-date-picker.php",
+            "type": "Universal.ControlStructures.DisallowLonelyIf.Found",
+            "message": "If control structure block found as the only statement within an \"else\" block. Use elseif instead.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$item_id\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$item\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 19,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$order\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 22,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed",
+            "message": "The method parameter $order is never used",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 41,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 43,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket",
+            "message": "Expected 1 spaces before closing parenthesis; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 44,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"Today \" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 59,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket",
+            "message": "Expected 1 spaces before closing parenthesis; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 62,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket",
+            "message": "Expected 1 spaces before closing parenthesis; 0 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 63,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"Today \" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 73,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 74,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 74,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 4 spaces after parameter type; 1 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 87,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$order_status\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 87,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$order_id\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 92,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamType",
+            "message": "Missing parameter type",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamType",
+            "message": "Missing parameter type",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 115,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 125,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "PSR2.Classes.ClassDeclaration.CloseBraceAfterBody",
+            "message": "The closing brace for the class must go on the next line after the body",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 127,
+            "fileName": "includes\/class-wc-accommodation-booking-order-manager.php",
+            "type": "PSR12.Classes.ClassInstantiation.MissingParentheses",
+            "message": "Parentheses must be used when instantiating a new class",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Squiz.Commenting.VariableComment.MissingVar",
+            "message": "Missing @var tag in member variable comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 27,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 48,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 71,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 30 spaces but found 1 space",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 71,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 91,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"Today \" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 94,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Squiz.Strings.DoubleQuoteUsage.NotRequired",
+            "message": "String \"Today \" does not require double quotes; use single quotes instead",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 96,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "Squiz.PHP.EmbeddedPhp.ContentAfterOpen",
+            "message": "Opening PHP tag must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 98,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "PSR2.Classes.ClassDeclaration.CloseBraceAfterBody",
+            "message": "The closing brace for the class must go on the next line after the body",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 100,
+            "fileName": "includes\/class-wc-accommodation-booking-product-tabs.php",
+            "type": "PSR12.Classes.ClassInstantiation.MissingParentheses",
+            "message": "Parentheses must be used when instantiating a new class",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 22,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.WhiteSpace.SuperfluousWhitespace.EndLine",
+            "message": "Whitespace found at end of line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 49,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 50,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "WordPress.DateTime.RestrictedFunctions.date_date",
+            "message": "date() is affected by runtime timezone changes which can cause date\/time to be incorrectly displayed. Use gmdate() instead.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 66,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 67,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 80,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 80,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 1 spaces after parameter type; 2 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 92,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 92,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 99,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$is_product_valid\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 99,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$product\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 106,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function add_checkin_time_to_booking_start_time()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 112,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 113,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 118,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function add_checkout_time_to_booking_end_time()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 124,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 125,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 130,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$terms\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 201,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 205,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 4 spaces but found 3 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 241,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 242,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 246,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "PSR2.Methods.MethodDeclaration.Underscore",
+            "message": "Method name \"_get_updated_timestamp_time\" should not be prefixed with an underscore to indicate visibility",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 251,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 1 space but found 2 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 252,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 1 space but found 2 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 257,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "PSR2.Classes.ClassDeclaration.CloseBraceAfterBody",
+            "message": "The closing brace for the class must go on the next line after the body",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 259,
+            "fileName": "includes\/class-wc-accommodation-booking.php",
+            "type": "PSR12.Classes.ClassInstantiation.MissingParentheses",
+            "message": "Parentheses must be used when instantiating a new class",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 8,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 1 tabs, found 0",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 15,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 1 tabs, found 0",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 16,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 2 tabs, found 1",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 23,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 1",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.CodeAnalysis.AssignmentInCondition.Found",
+            "message": "Variable assignment found within a condition. Did you mean to do a comparison ?",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 24,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure",
+            "message": "Assignments must be the first block of code on a line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 25,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 4 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 26,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 4 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 27,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 28,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 4 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 28,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.IncorrectWarning",
+            "message": "Equals sign not aligned correctly; expected 1 space but found 3 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 29,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 31,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 32,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 1",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 34,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 2 tabs, found 1",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 36,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 41,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 1",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 42,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 42,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.CodeAnalysis.AssignmentInCondition.Found",
+            "message": "Variable assignment found within a condition. Did you mean to do a comparison ?",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 42,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure",
+            "message": "Assignments must be the first block of code on a line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 43,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 4 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 43,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 1 space but found 2 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 44,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 4 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 44,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+            "message": "Equals sign not aligned with surrounding assignments; expected 2 spaces but found 3 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 45,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 46,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 4 tabs, found 3",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 46,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.Formatting.MultipleStatementAlignment.IncorrectWarning",
+            "message": "Equals sign not aligned correctly; expected 1 space but found 3 spaces",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 47,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 48,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.Incorrect",
+            "message": "Line indented incorrectly; expected at least 3 tabs, found 2",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 49,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 2 tabs, found 1",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 50,
+            "fileName": "includes\/class-wc-product-accommodation-booking-resource.php",
+            "type": "Generic.WhiteSpace.ScopeIndent.IncorrectExact",
+            "message": "Line indented incorrectly; expected 1 tabs, found 0",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 50,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$product\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 55,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamType",
+            "message": "Missing parameter type",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 71,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 97,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamName",
+            "message": "Missing parameter name",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 137,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 144,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 155,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 194,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 200,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 204,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Universal.Operators.StrictComparisons.LooseEqual",
+            "message": "Loose comparisons are not allowed. Expected: \"===\"; Found: \"==\"",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 204,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "WordPress.PHP.YodaConditions.NotYoda",
+            "message": "Use Yoda Condition checks, you must.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 231,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingHookComment",
+            "message": "A hook was found, but was not accompanied by a docblock comment on the line above to clarify the meaning of the hook.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 234,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$include_sold_out\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 237,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 238,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 238,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamNameNoMatch",
+            "message": "Doc comment for parameter $intervals does not match actual variable name $resource_id",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 239,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 239,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamNameNoMatch",
+            "message": "Doc comment for parameter $resource_id does not match actual variable name $from",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 240,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamNameNoMatch",
+            "message": "Doc comment for parameter $from does not match actual variable name $to",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 240,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamCommentFullStop",
+            "message": "Parameter comment must end with a full stop",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 241,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 241,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.ParamNameNoMatch",
+            "message": "Doc comment for parameter $to does not match actual variable name $include_sold_out",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 329,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 334,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
+            "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 359,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$start_date\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 359,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$end_date\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 365,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamType",
+            "message": "Missing parameter type",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 366,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamType",
+            "message": "Missing parameter type",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 367,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 367,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 1 spaces after parameter type; 6 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 368,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 368,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 3 spaces after parameter type; 8 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 369,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 369,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 1 spaces after parameter type; 6 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 370,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 370,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 2 spaces after parameter type; 7 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 458,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "WooCommerce.Commenting.CommentHooks.MissingSinceComment",
+            "message": "Docblock comment was found for the hook but does not contain a \"@since\" versioning.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 466,
+            "fileName": "includes\/class-wc-product-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 2,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Generic.ControlStructures.InlineControlStructure.NotAllowed",
+            "message": "Inline control structures are not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 22,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 22,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 22,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
+            "message": "Expected 3 spaces after parameter type; 1 found",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 23,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
+            "message": "Missing parameter comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 37,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$post\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 37,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$addon\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 37,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$loop\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 95,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Universal.NamingConventions.NoReservedKeywordParameterNames.boolFound",
+            "message": "It is recommended not to use reserved keyword \"bool\" as function parameter name. Found: $bool",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$cart_item_data\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$addon\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$product_id\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$post_data\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 104,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Generic.Commenting.DocComment.SpacingBeforeTags",
+            "message": "There must be exactly one blank line before the tags in a doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 106,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed",
+            "message": "The method parameter $product_id is never used",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 106,
+            "fileName": "includes\/integrations\/class-wc-accommodation-booking-addons.php",
+            "type": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed",
+            "message": "The method parameter $post_data is never used",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 5,
+            "fileName": "tests\/phpunit\/bootstrap.php",
+            "type": "Squiz.Commenting.FileComment.MissingPackageTag",
+            "message": "Missing @package tag in file comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 7,
+            "fileName": "tests\/phpunit\/bootstrap.php",
+            "type": "Modernize.FunctionCalls.Dirname.FileConstant",
+            "message": "Use the __DIR__ constant instead of calling dirname(__FILE__) (PHP >= 5.3)",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 1,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FileComment.Missing",
+            "message": "Missing file doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 9,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.VariableComment.Missing",
+            "message": "Missing member variable doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 18,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PSR12.Functions.ReturnTypeDeclaration.SpaceBeforeReturnType",
+            "message": "There must be a single space between the colon and type in a return type declaration",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 21,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.DateTime.RestrictedFunctions.timezone_change_date_default_timezone_set",
+            "message": "Using date_default_timezone_set() and similar isn't allowed, instead use WP internal timezone support.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 30,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PSR12.Functions.ReturnTypeDeclaration.SpaceBeforeReturnType",
+            "message": "There must be a single space between the colon and type in a return type declaration",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 31,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.DateTime.RestrictedFunctions.timezone_change_date_default_timezone_set",
+            "message": "Using date_default_timezone_set() and similar isn't allowed, instead use WP internal timezone support.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 35,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 42,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 68,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 72,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 73,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'accommodation night'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 73,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 74,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 75,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'ordinary booking night'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 75,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 76,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'ordinary booking label'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 76,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 80,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 80,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$datetime\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 80,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$time\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 80,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$expected\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 82,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Classes.RequireAnonClassParentheses.Missing",
+            "message": "Parenthesis required when creating a new anonymous class.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 83,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function timestamp()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 90,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function timestampProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 91,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 92,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 12 space(s) between \"'no override'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 92,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 7 space(s) between \"'missing override'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 93,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 94,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'midnight at year end'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 94,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 95,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'new year check in'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 95,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 96,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 5 space(s) between \"'leap day check out'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 96,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 97,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 9 space(s) between \"'month boundary'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 97,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 98,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$product_class\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$enabled\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 102,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$expected\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 110,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function overlappingRatesProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 111,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 112,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'accommodation disables overlap'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 112,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 113,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 4 space(s) between \"'accommodation keeps disabled'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 113,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 114,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'ordinary booking keeps enabled'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 114,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 115,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 119,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 119,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$method\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 119,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$expected\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 124,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 125,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 128,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 128,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 128,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
+            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 128,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 128,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 130,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 130,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 8 space(s) but found 10",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 130,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
+            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 130,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 131,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 133,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'start'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 134,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 8 space(s) between \"'end'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 139,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function formattedDatesProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 140,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 141,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'check in'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 141,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 142,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 146,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 146,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$method\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 146,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$product_type\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 153,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 154,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 157,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function unrelatedDatesProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 158,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 159,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'missing check in product'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 159,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 160,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'ordinary check in product'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 160,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 161,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'missing check out product'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 161,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 162,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 166,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function testDataStoreRegistrationKeepsUnrelatedStores()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 168,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 168,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 170,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 170,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 171,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 171,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 186,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 186,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 186,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 187,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 187,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 188,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 188,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 188,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 190,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 191,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 191,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 191,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
+            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 191,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 191,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 191,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 194,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 194,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 8 space(s) but found 10",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 194,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
+            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 194,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 196,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 196,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
+            "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 199,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Generic.Commenting.DocComment.MissingShort",
+            "message": "Missing short description in doc comment",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 199,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$product_class\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 199,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
+            "message": "Doc comment for parameter \"$expected\" missing",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 209,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 209,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 209,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 214,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function icsDatesProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 215,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 216,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 31 space(s) between \"'no booking'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 216,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 217,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'accommodation retains filtered date'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 217,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 218,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        }
+    ]
+}
