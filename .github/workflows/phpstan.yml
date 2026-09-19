@@ -1,0 +1,27 @@
+name: PHPStan
+
+on:
+  pull_request:
+    paths:
+      - '**/*.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpstan*.neon*'
+      - '.github/workflows/phpstan.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer
+      - run: composer install --prefer-dist --no-progress --no-interaction
+      - run: composer lint:phpstan

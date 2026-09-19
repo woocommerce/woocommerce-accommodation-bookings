@@ -1,0 +1,16 @@
+{
+    "name": "woocommerce/woocommerce-accommodation-bookings-phpcs-tools",
+    "description": "Development tools for the PHP coding standards baseline.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "require-dev": {
+        "dave-liddament/sarb": "1.10.0",
+        "php-parallel-lint/php-parallel-lint": "1.4.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.0"
+        },
+        "sort-packages": true
+    }
+}

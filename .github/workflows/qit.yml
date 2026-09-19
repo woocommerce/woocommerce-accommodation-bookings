@@ -69,7 +69,7 @@ jobs:
         run: ./vendor/bin/qit partner:add --user='${{ secrets.PARTNER_USER }}' --application_password='${{ secrets.PARTNER_SECRET }}'
 
       - name: Run activation test
-        if: "${{ ( inputs.tests == 'default' || inputs.tests == 'activation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit activation test') }}"
+        if: "${{ ( inputs.test == 'default' || inputs.test == 'activation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit activation test') }}"
         id: run-activation-test
         run: ./vendor/bin/qit run:activation ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --plugin=woocommerce-bookings --wait > activation-result.txt
 
@@ -81,7 +81,7 @@ jobs:
           path: activation-result.txt
 
       - name: Run API test
-        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'api' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit api test') ) && ( success() || failure() ) }}"
+        if: "${{ ( ( inputs.test == 'default' || inputs.test == 'api' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit api test') ) && ( success() || failure() ) }}"
         id: run-api-test
         run: ./vendor/bin/qit run:woo-api ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --extension_set=compatibility --wait > api-result.txt
 
@@ -93,7 +93,7 @@ jobs:
           path: api-result.txt
 
       - name: Run security test
-        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'security' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit security test') ) && ( success() || failure() ) }}"
+        if: "${{ ( ( inputs.test == 'default' || inputs.test == 'security' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit security test') ) && ( success() || failure() ) }}"
         id: run-security-test
         run: ./vendor/bin/qit run:security ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > security-result.txt
 
@@ -105,7 +105,7 @@ jobs:
           path: security-result.txt
 
       - name: Run malware test
-        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'malware' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit malware test') ) && ( success() || failure() ) }}"
+        if: "${{ ( ( inputs.test == 'default' || inputs.test == 'malware' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit malware test') ) && ( success() || failure() ) }}"
         id: run-malware-test
         run: ./vendor/bin/qit run:malware ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > malware-result.txt
 
@@ -117,7 +117,7 @@ jobs:
           path: malware-result.txt
 
       - name: Run PHPCompat test
-        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'phpcompat' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit phpcompat test') ) && ( success() || failure() ) }}"
+        if: "${{ ( ( inputs.test == 'default' || inputs.test == 'phpcompat' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit phpcompat test') ) && ( success() || failure() ) }}"
         id: run-phpcompat-test
         run: ./vendor/bin/qit run:phpcompatibility ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > phpcompat-result.txt
 
@@ -129,7 +129,7 @@ jobs:
           path: phpcompat-result.txt
 
       - name: Run Validation test
-        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'validation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit validation test') ) && ( success() || failure() ) }}"
+        if: "${{ ( ( inputs.test == 'default' || inputs.test == 'validation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit validation test') ) && ( success() || failure() ) }}"
         id: run-validation-test
         run: ./vendor/bin/qit run:validation ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > validation-result.txt
 
@@ -141,7 +141,7 @@ jobs:
           path: validation-result.txt
 
       - name: Run E2E test
-        if: "${{ ( ( inputs.tests == 'default' || inputs.tests == 'e2e' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit e2e test') ) && ( success() || failure() ) }}"
+        if: "${{ ( ( inputs.test == 'default' || inputs.test == 'e2e' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit e2e test') ) && ( success() || failure() ) }}"
         id: run-e2e-test
         run: ./vendor/bin/qit run:woo-e2e ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --extension_set=compatibility --wait > e2e-result.txt
 
@@ -153,7 +153,7 @@ jobs:
           path: e2e-result.txt
 
       - name: Run PHPStan test
-        if: "${{ inputs.tests == 'phpstan' || contains(github.event.pull_request.labels.*.name, 'needs: qit phpstan test') && ( success() || failure() ) }}"
+        if: "${{ inputs.test == 'phpstan' || contains(github.event.pull_request.labels.*.name, 'needs: qit phpstan test') && ( success() || failure() ) }}"
         id: run-phpstan-test
         run: ./vendor/bin/qit run:phpstan ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > phpstan-result.txt
 

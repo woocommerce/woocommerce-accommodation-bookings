@@ -15,10 +15,23 @@
         "sirbrillig/phpcs-changed": "^2.13.0",
         "phpunit/phpunit": "^9.6",
         "10up/wp_mock": "^1.0.1",
-        "wp-cli/i18n-command": "^2.6"
+        "wp-cli/i18n-command": "^2.6",
+        "phpstan/phpstan": "^2.1",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "php-stubs/woocommerce-stubs": "^10.6"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "lint:php": "bash bin/phplint.sh",
+        "lint:phpcs": "phpcs",
+        "lint:phpcs:baseline": "bash bin/phpcs.sh",
+        "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
+        "check:php": [
+            "@lint:php",
+            "@lint:phpcs:baseline"
+        ],
+        "lint:phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
+        "lint:phpstan:baseline:update": "@lint:phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline"
     },
     "config": {
         "platform": {

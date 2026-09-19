@@ -6,9 +6,9 @@ on:
     - develop
 
   pull_request:
-    branches:
-      - trunk
-      - develop
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -21,15 +21,11 @@ jobs:
     - name: Run plugin check
       uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
       with:
-        exclude-checks: |
-          plugin_readme
-          plugin_updater
-          file_type
-          trademarks
-          direct_db_queries
-          performant_wp_query_params
-          enqueued_scripts_in_footer
-          plugin_header_text_domain
+        # Keep results in annotations and artifacts.
+        repo-token: ''
+        # Enforce warnings; ignore only reviewed codes below.
+        ignore-warnings: false
+        strict: true
 
         exclude-directories: |
           .github
@@ -39,8 +35,36 @@ jobs:
           bin
           build
           assets
+          tools
 
-        ignore-warnings: true
+        # Development configuration and documentation.
+        exclude-files: |
+          .git
+          .gitignore
+          .gitattributes
+          .nvmrc
+          .wp-env.json
+          .stylelintrc.json
+          .prettierrc.js
+          .coderabbit.yaml
+          phpcs.xml.dist
+          phpcs-compat.xml.dist
+          phpstan.neon.dist
+          phpstan-baseline.neon
+          AGENTS.md
+          CLAUDE.md
+          DEVELOPER.md
 
+        # Existing metadata, WooCommerce contracts and reviewed legacy debt.
+        # These codes also suppress future occurrences; review before extending.
         ignore-codes: |
+          WordPress.DB.DirectDatabaseQuery.DirectQuery
+          WordPress.DB.DirectDatabaseQuery.NoCaching
           WordPress.DateTime.RestrictedFunctions.date_date
+          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+          WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+          plugin_header_nonexistent_domain_path
+          trademarked_term

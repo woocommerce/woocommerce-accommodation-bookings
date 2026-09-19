@@ -7,6 +7,7 @@
 	<!-- Test PHP 7.4 thru 8.4 -->
 	<config name="testVersion" value="7.4-8.4"/>
 	<file>.</file>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<arg name="extensions" value="php,inc" />
 
     <rule ref="PHPCompatibility">
