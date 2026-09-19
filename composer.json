@@ -15,10 +15,12 @@
         "sirbrillig/phpcs-changed": "^2.13.0",
         "phpunit/phpunit": "^9.6",
         "10up/wp_mock": "^1.0.1",
-        "wp-cli/i18n-command": "^2.6"
+        "wp-cli/i18n-command": "^2.6",
+        "yoast/phpunit-polyfills": "^1.1"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml"
     },
     "config": {
         "platform": {
