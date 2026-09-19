@@ -41,7 +41,7 @@ vendor/bin/phpcs       # Coding standards from phpcs.xml.dist
 npm run phpcompat     # Separate PHP compatibility ruleset
 ```
 
-CI uses `vendor/bin/phpcs-changed -s --git --git-base origin/trunk` with the changed PHP paths (`.github/workflows/phpcs.yml`). Supply the paths being reviewed for an equivalent focused local run; a full PHPCS run can include existing violations. The compatibility script uses `phpcs-compat.xml.dist`, not the coding-standard ruleset. Run checks for the changed files and report their scope.
+CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:phpcs` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.
 
 ### Unit tests
 

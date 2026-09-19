@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e9a84d678d9929984b3e4e391bd17b0f",
+    "content-hash": "b3c6af3e93ca61c3dd24b514f12e240a",
     "packages": [],
     "packages-dev": [
         {
@@ -2887,60 +2887,6 @@
                 }
             ],
             "time": "2020-09-28T06:39:44+00:00"
-        },
-        {
-            "name": "sirbrillig/phpcs-changed",
-            "version": "v2.13.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sirbrillig/phpcs-changed.git",
-                "reference": "a369fce181a5064b6150708c3b0a1045c518a248"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sirbrillig/phpcs-changed/zipball/a369fce181a5064b6150708c3b0a1045c518a248",
-                "reference": "a369fce181a5064b6150708c3b0a1045c518a248",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1 || ^8.0"
-            },
-            "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1 || ^1.0.0",
-                "phpunit/phpunit": "^6.4 || ^7.0 || ^8.0 || ^9.5",
-                "sirbrillig/phpcs-variable-analysis": "^2.1.3",
-                "squizlabs/php_codesniffer": "^3.2.1",
-                "vimeo/psalm": "^4.24 || ^5.0 || ^6.0"
-            },
-            "bin": [
-                "bin/phpcs-changed"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "PhpcsChanged/Cli.php",
-                    "PhpcsChanged/functions.php"
-                ],
-                "psr-4": {
-                    "PhpcsChanged\\": "PhpcsChanged/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Payton Swick",
-                    "email": "payton@foolord.com"
-                }
-            ],
-            "description": "Run phpcs on files, but only report warnings/errors from lines which were changed.",
-            "support": {
-                "issues": "https://github.com/sirbrillig/phpcs-changed/issues",
-                "source": "https://github.com/sirbrillig/phpcs-changed/tree/v2.13.0"
-            },
-            "time": "2026-04-26T18:04:30+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
