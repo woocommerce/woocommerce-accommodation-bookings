@@ -53,6 +53,35 @@ npm run lint:js        # ESLint on JS source
 npm run lint:style     # Stylelint on CSS/SCSS
 ```
 
+## PHP unit tests
+
+Install PHP 7.4 or newer and Composer, then run these commands from a fresh checkout:
+
+```bash
+composer install
+composer test
+composer test -- --filter testTimestampKeepsTheDate
+```
+
+This suite uses PHPUnit and WP_Mock. It does not need Docker, a database, WordPress,
+WooCommerce, or a Bookings ZIP. If `vendor/bin/phpunit` is missing, run
+`composer install` first. Mocked functions and the timezone reset between cases;
+rerunning the suite needs no fixture cleanup.
+
+To collect local line and branch coverage, install a PHP-compatible Xdebug driver
+and enable its coverage mode:
+
+```bash
+XDEBUG_MODE=coverage composer test -- --path-coverage --coverage-html coverage/unit --coverage-text
+```
+
+PCOV can collect line coverage with `php -d pcov.enabled=1 vendor/bin/phpunit
+--coverage-html coverage/unit --coverage-text`; it does not provide branch coverage.
+An absent or disabled driver produces PHPUnit's coverage-driver warning.
+`coverage/unit/index.html` includes unexecuted PHP in `includes/` and the plugin
+entry point. Tests, mocks, dependencies and generated files are outside its source
+scope. Coverage is optional and does not change the normal test command.
+
 ## AI code reviews
 
 [CodeRabbit](https://docs.coderabbit.ai/platforms/github-com) requires its GitHub App
