@@ -334,10 +334,6 @@ export async function blockFillBillingDetails(page, customerDetails) {
 	if (await card.isVisible()) {
 		await card.locator('.wc-block-components-address-card__edit').click();
 	}
-	if (await page.locator('#email').isVisible()) {
-		await page.locator('#email').fill(customerDetails.email);
-	}
-
 	await fillBillingCheckoutBlocks(page, {
 		country: customerDetails.country,
 		firstName: customerDetails.firstname,
@@ -347,6 +343,9 @@ export async function blockFillBillingDetails(page, customerDetails) {
 		city: customerDetails.city,
 		state: customerDetails.state ?? null,
 	});
+	if (await page.locator('#email').isVisible()) {
+		await page.locator('#email').fill(customerDetails.email);
+	}
 	await page.getByLabel('Add a note to your order').check();
 	await page
 		.getByPlaceholder('Notes about your order', { exact: false })
