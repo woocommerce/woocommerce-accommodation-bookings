@@ -46,4 +46,4 @@ jobs:
 
       - name: Run ESLint
         if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
-        run: npm run lint:js ${{ steps.changed-files.outputs.all_changed_files }}
+        run: npx wp-scripts lint-js ${{ steps.changed-files.outputs.all_changed_files }} --ext=js
