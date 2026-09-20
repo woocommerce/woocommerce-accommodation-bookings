@@ -53,13 +53,9 @@ jobs:
           PR_TITLE=$(jq -r .pull_request.title "$GITHUB_EVENT_PATH")
           PR_URL=$(jq -r .pull_request.html_url "$GITHUB_EVENT_PATH")
 
-          # Escape backticks and double-quotes to prevent shell command substitution or quote-breaking
-          SAFE_TITLE="${PR_TITLE//\`/\\\`}"
-          SAFE_TITLE="${SAFE_TITLE//\"/\\\"}"
-
           # Create the Issue; gh prints the new Issue URL to stdout
           ISSUE_URL=$(gh issue create \
-            --title "Tracking Issue for PR #${PR_NUMBER}: ${SAFE_TITLE}" \
+            --title "Tracking Issue for PR #${PR_NUMBER}: ${PR_TITLE}" \
             --body "PR ${PR_URL} did not have a linked issue, so this issue has been created for tracking purposes.")
 
           echo "Created GitHub issue: $ISSUE_URL"
