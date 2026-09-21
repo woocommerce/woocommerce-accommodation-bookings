@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import jQuery from 'jquery';
 /**
  * Should return whether the product is a accommodation booking or not.
@@ -8,9 +11,9 @@ import jQuery from 'jquery';
  *
  * @return {boolean} Returns true if the product is a accommodation booking product type.
  */
-export function is_product_type_accommodation_booking($booking_form) {
+export function is_product_type_accommodation_booking( $booking_form ) {
 	return (
-		$booking_form.closest('.product.product-type-accommodation-booking')
+		$booking_form.closest( '.product.product-type-accommodation-booking' )
 			.length > 0
 	);
 }
@@ -24,11 +27,12 @@ export function is_product_type_accommodation_booking($booking_form) {
  *
  * @return {Object} Return booking form jQuery element.
  */
-export function get_booking_form($field) {
+export function get_booking_form( $field ) {
 	// Convert to jQuery selector.
-	$field = get_jquery_element($field);
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define -- The exported helper is a hoisted function declaration.
+	$field = get_jquery_element( $field );
 
-	return $field.closest('form');
+	return $field.closest( 'form' );
 }
 
 /**
@@ -40,8 +44,8 @@ export function get_booking_form($field) {
  *
  * @return {jQuery} Return jQuery element.
  */
-export function get_jquery_element($field) {
-	return jQuery($field);
+export function get_jquery_element( $field ) {
+	return jQuery( $field );
 }
 
 /**
@@ -51,11 +55,11 @@ export function get_jquery_element($field) {
  * @param {jQuery} $date_picker Date picker jQuery element.
  * @return {string} date_type Selected date type. Value can be 'start' or 'end'.
  */
-export function get_selected_date_type($date_picker) {
-	const next_date_type = $date_picker.data('start_or_end_date');
+export function get_selected_date_type( $date_picker ) {
+	const next_date_type = $date_picker.data( 'start_or_end_date' );
 	let date_type = null;
 
-	switch (next_date_type) {
+	switch ( next_date_type ) {
 		case 'end':
 			date_type = 'start';
 			break;

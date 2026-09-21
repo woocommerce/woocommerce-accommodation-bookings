@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports -- Shared with the plain Node reset command. */
 const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
 const { expect } = require( '@playwright/test' );
