@@ -44,9 +44,7 @@ jobs:
       QIT_DISABLE_ONBOARDING: yes
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
+      # No checkout: pull-request code and its Composer config never run alongside the partner secrets.
       - name: Download build
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -63,10 +61,13 @@ jobs:
           coverage: none
 
       - name: Install QIT via composer
-        run: composer config --unset platform.php && composer require woocommerce/qit-cli
+        run: composer require 'woocommerce/qit-cli:^1.3'
 
       - name: Add partner
-        run: ./vendor/bin/qit partner:add --user='${{ secrets.PARTNER_USER }}' --application_password='${{ secrets.PARTNER_SECRET }}'
+        run: ./vendor/bin/qit partner:add --user="$PARTNER_USER" --application_password="$PARTNER_SECRET"
+        env:
+          PARTNER_USER: ${{ secrets.PARTNER_USER }}
+          PARTNER_SECRET: ${{ secrets.PARTNER_SECRET }}
 
       - name: Run activation test
         if: "${{ ( inputs.test == 'default' || inputs.test == 'activation' ) || contains(github.event.pull_request.labels.*.name, 'needs: qit default tests') || contains(github.event.pull_request.labels.*.name, 'needs: qit activation test') }}"
@@ -153,7 +154,7 @@ jobs:
           path: e2e-result.txt
 
       - name: Run PHPStan test
-        if: "${{ inputs.test == 'phpstan' || contains(github.event.pull_request.labels.*.name, 'needs: qit phpstan test') && ( success() || failure() ) }}"
+        if: "${{ ( inputs.test == 'phpstan' || contains(github.event.pull_request.labels.*.name, 'needs: qit phpstan test') ) && ( success() || failure() ) }}"
         id: run-phpstan-test
         run: ./vendor/bin/qit run:phpstan ${{ github.event.repository.name }} --zip=${{ github.event.repository.name }}.zip --wait > phpstan-result.txt
 
