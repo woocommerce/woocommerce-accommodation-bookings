@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/integration/bootstrap.php" colors="true" backupGlobals="false">
+    <testsuites>
+        <testsuite name="Accommodation integration">
+            <directory prefix="test-" suffix=".php">tests/integration</directory>
+        </testsuite>
+    </testsuites>
+    <coverage includeUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">includes</directory>
+            <file>woocommerce-accommodation-bookings.php</file>
+        </include>
+    </coverage>
+</phpunit>

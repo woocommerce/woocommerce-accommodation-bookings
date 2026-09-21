@@ -24,6 +24,7 @@ babel.config.js export-ignore
 .travis.yml export-ignore
 .editorconfig export-ignore
 phpunit.xml export-ignore
+phpunit-integration.xml export-ignore
 jest-puppeteer.config.js export-ignore
 .nvmrc export-ignore
 assets export-ignore

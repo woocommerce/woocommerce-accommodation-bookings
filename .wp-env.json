@@ -13,6 +13,10 @@
       "mappings": {
         "wp-cli.yml": "./tests/e2e/bin/wp-cli.yml",
         "wp-content/plugins/woocommerce-accommodation-bookings": "."
+      },
+      "config": {
+        "ACCOM_E2E": true,
+        "DISABLE_WP_CRON": true
       }
     }
   }
