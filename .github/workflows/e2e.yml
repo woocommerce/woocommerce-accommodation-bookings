@@ -6,16 +6,17 @@ on:
     branches:
       - smoke-testing
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - trunk
 
 jobs:
   e2e:
-    if: "${{ ( github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'needs: e2e testing') ) ||  github.event_name == 'push' }}"
+    # Every revision of a ready-for-review PR runs the full suite.
+    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
     name: E2E Test
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
 
     steps:
       # Runs before checkout so no pull-request code or dependency can observe the token.
@@ -58,66 +59,13 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium
 
-      - name: Set the core version
-        if: "${{ contains(github.event.pull_request.labels.*.name, 'needs: WP RC test') }}"
-        id: run-rc-test
-        run: ./tests/e2e/bin/set-core-version.js WordPress/WordPress#master
-
       - name: Stage WooCommerce Bookings
         run: mv "$RUNNER_TEMP/woocommerce-bookings.zip" .
 
       - name: Setup WP environment
         run: npm run env:start
 
-      - name: Run E2E Foundational Test
-        id: e2e_tests
-        if: ${{ github.event_name == 'pull_request' }}
-        run: npm run test:e2e-foundational
-
-      - name: Update Success Label
-        if: |
-          always() &&
-          steps.e2e_tests.conclusion == 'success'
-        uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
-        continue-on-error: true
-        with:
-          script: |
-            github.rest.issues.removeLabel({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: ['needs: e2e testing']
-            })
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['status: e2e tests passing']
-            })
-
-      - name: Update Failure Label
-        if: |
-          always() &&
-          steps.e2e_tests.conclusion == 'failure'
-        uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
-        continue-on-error: true
-        with:
-          script: |
-            github.rest.issues.removeLabel({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: ['needs: e2e testing']
-            })
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['status: e2e tests failing']
-            })
-
-      - name: Run E2E Smoke Test
-        if: ${{ github.event_name == 'push' }}
+      - name: Run E2E tests
         run: npm run test:e2e
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
