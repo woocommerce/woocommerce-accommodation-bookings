@@ -5,12 +5,17 @@
     "license": "GPL-2.0-or-later",
     "require-dev": {
         "dave-liddament/sarb": "1.10.0",
-        "php-parallel-lint/php-parallel-lint": "1.4.0"
+        "dealerdirect/phpcodesniffer-composer-installer": "1.2.1",
+        "php-parallel-lint/php-parallel-lint": "1.4.0",
+        "phpcompatibility/php-compatibility": "dev-develop#8daeec54772a592ad369be23ae02ed593c71e7f1"
     },
     "config": {
         "platform": {
             "php": "8.4.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

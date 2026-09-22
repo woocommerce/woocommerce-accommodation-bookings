@@ -35,3 +35,9 @@ The baseline records existing findings by message, rule, file and count. New
 findings and unmatched baseline entries fail the check. Run
 `composer lint:phpstan:baseline:update` only for a reviewed baseline change;
 never regenerate it to hide new findings. PHPCS and PHPCompatibility remain separate checks.
+
+### Production PHP compatibility
+
+Use PHP 8.4 and the Node version in `.nvmrc`, install npm dependencies with `npm ci`, then run `npm run phpcompat`. CI runs the same command: it builds the release ZIP, extracts it into a temporary directory and checks only its PHP files. The checker and its dependencies are locked in `tools/php-quality/composer.lock`, using PHPCompatibility revision `8daeec54772a592ad369be23ae02ed593c71e7f1`. The shared `phpcs-compat.xml.dist` keeps the PHP 7.4–8.4 range and WordPress polyfill exclusions.
+
+Run `npm run phpcompat -- /absolute/path/production.zip` to check an existing release artifact without rebuilding it. The ZIP must contain the plugin directory named in `package.json`. The command uses the repository's release builder unchanged; builders based on `git archive HEAD` package committed PHP, so commit intended PHP changes before building those packages. Builds can remove root `vendor/`; run `composer install` again before other PHP checks. The isolated checker does not change global Composer packages.

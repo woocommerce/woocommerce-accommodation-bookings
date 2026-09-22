@@ -39,7 +39,7 @@ npm run lint:style
 
 ```bash
 vendor/bin/phpcs       # Coding standards from phpcs.xml.dist
-npm run phpcompat     # Separate PHP compatibility ruleset
+npm run phpcompat     # Builds/checks release ZIP; run composer install afterward
 ```
 
 CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:phpcs` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.

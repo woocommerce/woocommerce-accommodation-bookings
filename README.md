@@ -48,7 +48,7 @@ npm run test:e2e-foundational    # Run only @foundational tagged tests
 npm run test:e2e-debug           # Run E2E tests in debug mode
 
 # Quality
-npm run phpcompat      # PHP compatibility check
+npm run phpcompat      # Builds/checks release ZIP; run composer install afterward
 npm run lint:js        # Authored JavaScript and formatting (same as CI)
 npm run lint:style     # Stylelint on CSS/SCSS
 ```
