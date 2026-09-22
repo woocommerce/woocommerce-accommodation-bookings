@@ -12,8 +12,9 @@ on:
 
 jobs:
   e2e:
-    # Every revision of a ready-for-review PR runs the full suite.
-    if: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
+    # Manual runs, smoke-testing pushes and every revision of a
+    # ready-for-review PR run the full suite.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     name: E2E Test
     runs-on: ubuntu-latest
     timeout-minutes: 25
