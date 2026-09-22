@@ -45,6 +45,8 @@ jobs:
           .nvmrc
           .wp-env.json
           .stylelintrc.json
+          .markdownlintignore
+          .npmpackagejsonlintrc.json
           .prettierrc.js
           .coderabbit.yaml
           phpcs.xml.dist

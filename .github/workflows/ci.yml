@@ -24,6 +24,7 @@ jobs:
     outputs:
       php: ${{ steps.categories.outputs.php == 'true' || steps.categories.outputs.workflows == 'true' }}
       frontend: ${{ steps.categories.outputs.frontend == 'true' || steps.categories.outputs.workflows == 'true' }}
+      docs: ${{ steps.categories.outputs.docs == 'true' || steps.categories.outputs.workflows == 'true' }}
       product: ${{ steps.product.outputs.product == 'true' || steps.categories.outputs.workflows == 'true' }}
       workflows: ${{ steps.categories.outputs.workflows }}
       deps: ${{ steps.categories.outputs.deps == 'true' || steps.categories.outputs.workflows == 'true' }}
@@ -48,6 +49,10 @@ jobs:
               - 'package-lock.json'
               - '.nvmrc'
               - '.stylelintrc.json'
+              - '.npmpackagejsonlintrc.json'
+            docs:
+              - '**/*.md'
+              - '.markdownlintignore'
             workflows:
               - '.github/**'
             deps:
@@ -74,6 +79,7 @@ jobs:
               - '!phpunit.xml'
               - '!phpunit-integration.xml'
               - '!**/*.md'
+              - '!.markdownlintignore'
               - '!changelog.txt'
               - '!readme.txt'
               - '!.coderabbit.yaml'
@@ -107,10 +113,13 @@ jobs:
     uses: ./.github/workflows/css-lint.yml
 
   javascript:
-    name: JavaScript
+    name: JavaScript and Markdown
     needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    if: ${{ needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }}
     uses: ./.github/workflows/js-lint.yml
+    with:
+      frontend: ${{ needs.changes.outputs.frontend == 'true' }}
+      docs: ${{ needs.changes.outputs.docs == 'true' }}
 
   actionlint:
     name: Workflow lint
@@ -188,7 +197,7 @@ jobs:
           "phpstan": ${{ needs.changes.outputs.php == 'true' }},
           "php-compatibility": ${{ needs.changes.outputs.php == 'true' }},
           "css": ${{ needs.changes.outputs.frontend == 'true' }},
-          "javascript": ${{ needs.changes.outputs.frontend == 'true' }},
+          "javascript": ${{ needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }},
           "actionlint": ${{ needs.changes.outputs.workflows == 'true' }},
           "audit": ${{ needs.changes.outputs.deps == 'true' }},
           "php-unit": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }},

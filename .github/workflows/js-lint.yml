@@ -2,6 +2,15 @@ name: JavaScript Lint
 
 on:
   workflow_call:
+    inputs:
+      frontend:
+        description: Run the JavaScript and package checks.
+        type: boolean
+        default: true
+      docs:
+        description: Run the Markdown check.
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -24,4 +33,13 @@ jobs:
         run: npm ci
 
       - name: Check authored JavaScript
+        if: ${{ inputs.frontend }}
         run: npm run lint:js
+
+      - name: Check package metadata
+        if: ${{ !cancelled() && inputs.frontend }}
+        run: npm run lint:pkg-json
+
+      - name: Check Markdown documentation
+        if: ${{ !cancelled() && inputs.docs }}
+        run: npm run lint:md:docs

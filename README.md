@@ -1,5 +1,4 @@
-woocommerce-accommodation-bookings
-====================
+# woocommerce-accommodation-bookings
 
 An accommodations add-on for the WooCommerce Bookings extension.
 
@@ -106,6 +105,7 @@ PR. Human review and CI checks still apply.
 ## Compatibility
 
 This extension is compatible with:
+
 - [WooCommerce Blocks](https://woo.com/products/woocommerce-gutenberg-products-block/)
 - [WooCommerce Payments](https://woocommerce.com/products/woopayments/)
 

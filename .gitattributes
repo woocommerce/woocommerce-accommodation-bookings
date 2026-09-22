@@ -37,3 +37,5 @@ phpcs.baseline export-ignore
 tools export-ignore
 phpstan.neon.dist export-ignore
 phpstan-baseline.neon export-ignore
+.markdownlintignore export-ignore
+.npmpackagejsonlintrc.json export-ignore
