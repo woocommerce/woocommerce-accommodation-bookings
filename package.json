@@ -53,6 +53,8 @@
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
     "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --exclude=tests,src",
     "phpcompat": "bash bin/phpcompat.sh",
+    "audit:npm": "npm audit --package-lock-only --audit-level=high --include=dev",
+    "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",
     "lint:js": "wp-scripts lint-js --max-warnings 0",
     "lint:js-fix": "npm run lint:js -- --fix",
     "lint:style": "wp-scripts lint-style src/css/frontend.scss --max-warnings 0",

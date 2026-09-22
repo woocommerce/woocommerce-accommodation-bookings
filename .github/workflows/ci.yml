@@ -26,6 +26,7 @@ jobs:
       frontend: ${{ steps.categories.outputs.frontend == 'true' || steps.categories.outputs.workflows == 'true' }}
       product: ${{ steps.product.outputs.product == 'true' || steps.categories.outputs.workflows == 'true' }}
       workflows: ${{ steps.categories.outputs.workflows }}
+      deps: ${{ steps.categories.outputs.deps == 'true' || steps.categories.outputs.workflows == 'true' }}
     steps:
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: categories
@@ -49,6 +50,11 @@ jobs:
               - '.stylelintrc.json'
             workflows:
               - '.github/**'
+            deps:
+              - 'package.json'
+              - 'package-lock.json'
+              - '**/composer.json'
+              - '**/composer.lock'
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: product
         with:
@@ -128,6 +134,13 @@ jobs:
       - name: Lint workflows
         run: '"$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes='
 
+  # High and critical advisories also fail the weekly scheduled run.
+  audit:
+    name: Dependency advisories
+    needs: changes
+    if: ${{ needs.changes.outputs.deps == 'true' }}
+    uses: ./.github/workflows/run-audit.yml
+
   # The jobs below run only for ready-for-review PRs.
 
   php-unit:
@@ -160,7 +173,7 @@ jobs:
   required:
     name: Required checks
     if: ${{ always() }}
-    needs: [changes, spelling, phpcs, phpstan, php-compatibility, css, javascript, actionlint, php-unit, plugin-check, e2e]
+    needs: [changes, spelling, phpcs, phpstan, php-compatibility, css, javascript, actionlint, audit, php-unit, plugin-check, e2e]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
@@ -177,6 +190,7 @@ jobs:
           "css": ${{ needs.changes.outputs.frontend == 'true' }},
           "javascript": ${{ needs.changes.outputs.frontend == 'true' }},
           "actionlint": ${{ needs.changes.outputs.workflows == 'true' }},
+          "audit": ${{ needs.changes.outputs.deps == 'true' }},
           "php-unit": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }},
           "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
           "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
