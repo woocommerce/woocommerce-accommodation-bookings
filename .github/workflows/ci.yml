@@ -1,0 +1,179 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Detect which kinds of files changed so each check runs only when its
+  # inputs change. A workflow change counts as every kind of change, so CI
+  # edits exercise the whole pipeline.
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      php: ${{ steps.categories.outputs.php == 'true' || steps.categories.outputs.workflows == 'true' }}
+      frontend: ${{ steps.categories.outputs.frontend == 'true' || steps.categories.outputs.workflows == 'true' }}
+      product: ${{ steps.product.outputs.product == 'true' || steps.categories.outputs.workflows == 'true' }}
+    steps:
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: categories
+        with:
+          filters: |
+            php:
+              - '**/*.php'
+              - 'composer.json'
+              - 'composer.lock'
+              - 'phpcs*.xml*'
+              - 'phpcs.baseline'
+              - 'phpstan*.neon*'
+              - 'phpunit.xml*'
+              - 'bin/php*.sh'
+              - 'tools/php-quality/**'
+            frontend:
+              - '**/*.{js,jsx,ts,tsx,mjs,cjs,scss,css}'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.nvmrc'
+              - '.stylelintrc.json'
+            workflows:
+              - '.github/**'
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: product
+        with:
+          # A file must satisfy EVERY pattern below to count as a product
+          # change. Without this the action ORs them ('some', the default),
+          # so '**' matches on its own and every '!' negation is dead code.
+          predicate-quantifier: 'every'
+          filters: |
+            product:
+              # Anything that can affect the build or browser behavior:
+              # everything except unit and integration tests, docs, and
+              # tooling config.
+              - '**'
+              - '!tests/phpunit/**'
+              - '!tests/integration/**'
+              - '!tests/bin/**'
+              - '!phpunit.xml'
+              - '!phpunit-integration.xml'
+              - '!**/*.md'
+              - '!changelog.txt'
+              - '!readme.txt'
+              - '!.coderabbit.yaml'
+
+  spelling:
+    name: Spelling
+    uses: ./.github/workflows/spell-check.yml
+
+  phpcs:
+    name: PHPCS
+    needs: changes
+    if: ${{ needs.changes.outputs.php == 'true' }}
+    uses: ./.github/workflows/phpcs.yml
+
+  phpstan:
+    name: PHPStan
+    needs: changes
+    if: ${{ needs.changes.outputs.php == 'true' }}
+    uses: ./.github/workflows/phpstan.yml
+
+  php-compatibility:
+    name: PHP compatibility
+    needs: changes
+    if: ${{ needs.changes.outputs.php == 'true' }}
+    uses: ./.github/workflows/php-compat.yml
+
+  css:
+    name: CSS
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    uses: ./.github/workflows/css-lint.yml
+
+  javascript:
+    name: JavaScript
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    uses: ./.github/workflows/js-lint.yml
+
+  # The jobs below run only for ready-for-review PRs.
+
+  php-unit:
+    name: PHP unit tests
+    needs: changes
+    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }}
+    uses: ./.github/workflows/phpunit.yml
+
+  plugin-check:
+    name: Plugin Check
+    needs: changes
+    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
+    uses: ./.github/workflows/plugin-check.yml
+
+  # The tests need WooCommerce Bookings, a private download. Fork PRs never
+  # receive the secret, so E2E is skipped for them. Dependabot PRs still run it
+  # and need ORG_DOWNLOADS as a Dependabot secret.
+  e2e:
+    name: E2E
+    needs: changes
+    if: ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
+    uses: ./.github/workflows/e2e.yml
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+  # The single status that branch protection requires. It fails when any
+  # applicable check failed, was cancelled, is missing or was skipped
+  # unexpectedly, and always fails on drafts so a draft-era result can never
+  # satisfy branch protection once the PR is ready for review.
+  required:
+    name: Required checks
+    if: ${{ always() }}
+    needs: [changes, spelling, phpcs, phpstan, php-compatibility, css, javascript, php-unit, plugin-check, e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    env:
+      CI_DRAFT: ${{ github.event.pull_request.draft }}
+      CI_RESULTS: ${{ toJSON(needs) }}
+      CI_EXPECTED: >-
+        {
+          "changes": true,
+          "spelling": true,
+          "phpcs": ${{ needs.changes.outputs.php == 'true' }},
+          "phpstan": ${{ needs.changes.outputs.php == 'true' }},
+          "php-compatibility": ${{ needs.changes.outputs.php == 'true' }},
+          "css": ${{ needs.changes.outputs.frontend == 'true' }},
+          "javascript": ${{ needs.changes.outputs.frontend == 'true' }},
+          "php-unit": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }},
+          "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
+          "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
+        }
+    steps:
+      - name: Check required results
+        run: |
+          node <<'NODE'
+          const results = JSON.parse(process.env.CI_RESULTS);
+          const expected = JSON.parse(process.env.CI_EXPECTED);
+          let failed = false;
+          for (const job of new Set([...Object.keys(expected), ...Object.keys(results)])) {
+            const result = results[job]?.result;
+            const passed = Object.hasOwn(expected, job) &&
+              (result === 'success' || (result === 'skipped' && expected[job] === false));
+            console.log(`${job}: ${result || 'missing'}${passed ? '' : ' (required check failed)'}`);
+            failed ||= !passed;
+          }
+          if (process.env.CI_DRAFT === 'true') {
+            console.log('::error::Draft PR: PHP unit tests, Plugin Check and E2E tests run once the PR is ready for review.');
+            failed = true;
+          }
+          process.exitCode = failed ? 1 : 0;
+          NODE

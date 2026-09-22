@@ -5,16 +5,13 @@ on:
   push:
     branches:
       - smoke-testing
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-    branches:
-      - trunk
+  workflow_call:
+    secrets:
+      ORG_DOWNLOADS:
+        required: false
 
 jobs:
   e2e:
-    # Manual runs, smoke-testing pushes and every revision of a
-    # ready-for-review PR run the full suite.
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     name: E2E Test
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -22,7 +19,12 @@ jobs:
     steps:
       # Runs before checkout so no pull-request code or dependency can observe the token.
       - name: Download WooCommerce Bookings
-        run: gh release download --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$RUNNER_TEMP"
+        run: |
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::The ORG_DOWNLOADS secret isn't available to this run (fork and Dependabot PRs don't receive it), so WooCommerce Bookings can't be downloaded."
+            exit 1
+          fi
+          gh release download --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$RUNNER_TEMP"
         env:
           GH_TOKEN: ${{ secrets.ORG_DOWNLOADS }}
 

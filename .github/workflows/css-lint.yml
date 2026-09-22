@@ -1,14 +1,7 @@
 name: CSS Lint
 
 on:
-  pull_request:
-    paths:
-      - 'src/css/frontend.scss'
-      - '.stylelintrc.json'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.nvmrc'
-      - '.github/workflows/css-lint.yml'
+  workflow_call:
 
 permissions:
   contents: read

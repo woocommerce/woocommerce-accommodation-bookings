@@ -1,13 +1,7 @@
 name: PHPStan
 
 on:
-  pull_request:
-    paths:
-      - '**/*.php'
-      - 'composer.json'
-      - 'composer.lock'
-      - 'phpstan*.neon*'
-      - '.github/workflows/phpstan.yml'
+  workflow_call:
 
 permissions:
   contents: read
