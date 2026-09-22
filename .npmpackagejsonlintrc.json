@@ -1,6 +1,6 @@
 {
 	"extends": "@wordpress/npm-package-json-lint-config",
 	"rules": {
-		"valid-values-license": [ "error", [ "GPL-3.0+" ] ]
+		"valid-values-license": [ "error", [ "GPL-3.0-or-later" ] ]
 	}
 }

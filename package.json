@@ -4,7 +4,7 @@
   "version": "1.3.12",
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "author": "WooCommerce",
-  "license": "GPL-3.0+",
+  "license": "GPL-3.0-or-later",
   "keywords": [],
   "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
   "repository": {
