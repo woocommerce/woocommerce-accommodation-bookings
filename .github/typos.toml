@@ -1,9 +1,12 @@
+[files]
+extend-exclude = ["languages/", "*.min.js", "*.min.css", "package-lock.json", "composer.lock", "phpstan-baseline.neon", "changelog.txt", "phpcs.baseline", "phpcs*.baseline", "vendor/", "node_modules/", "build/", "assets/dist/"]
+
 [default.extend-words]
-# Automattic is the correct spelling of the company name (Automattic Inc.)
+# Automattic is the correct spelling of the company name (Automattic Inc.).
 Automattic = "Automattic"
 
-# Legacy WordPress post meta key `_wc_booking_resouce_label` stored in production databases - cannot be renamed.
-resouce = "resouce"
-
-# Misspelled hook name emitted by Bookings core `wc_bookings_pre_calculte_booking_cost` - must match exactly.
-calculte = "calculte"
+[default.extend-identifiers]
+# public API: post meta key stored on existing sites (`resouce`).
+_wc_booking_resouce_label = "_wc_booking_resouce_label"
+# public API: hook name fired by WooCommerce Bookings (`calculte`).
+wc_bookings_pre_calculte_booking_cost = "wc_bookings_pre_calculte_booking_cost"
