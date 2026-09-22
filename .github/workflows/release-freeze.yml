@@ -1,0 +1,102 @@
+name: Release Freeze
+
+# Code freeze gate: while a same-repository release PR (head release/*) is open, this required
+# check fails on every other PR targeting trunk. When the release PR opens or
+# closes, the propagate job re-runs the check on all open trunk PRs so their
+# status flips without anyone having to re-run it manually.
+
+on:
+  pull_request:
+    branches:
+      - trunk
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - closed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+
+    freeze-check:
+        name: Check release freeze
+        if: github.event.action != 'closed'
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions:
+          pull-requests: read
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+        steps:
+
+            - name: Fail if a release is in progress
+              shell: bash
+              env:
+                # Interpolating the head ref into the script would let a
+                # crafted branch name run arbitrary code on the runner.
+                HEAD_REF: ${{ github.event.pull_request.head.ref }}
+                HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+              run: |
+                if [[ "$HEAD_REPO" == "$GITHUB_REPOSITORY" && "$HEAD_REF" == release/* ]]; then
+                  echo "This is the release PR itself - exempt from the freeze."
+                  exit 0
+                fi
+
+                # Joined in awk: paste -d cycles multi-char delimiter lists, and
+                # jq can't join across pages under --paginate.
+                OPEN_RELEASE_PRS=$(gh api --paginate "repos/${{ github.repository }}/pulls?state=open&base=trunk&per_page=100" \
+                  --jq '.[] | select(.head.repo.full_name == .base.repo.full_name) | select(.head.ref | startswith("release/")) | "#\(.number) (\(.head.ref))"' \
+                  | awk 'NR > 1 { printf ", " } { printf "%s", $0 }')
+
+                if [[ -n "$OPEN_RELEASE_PRS" ]]; then
+                  echo "::error::Code freeze: release PR ${OPEN_RELEASE_PRS} is open. Merging to trunk is blocked until the release completes."
+                  exit 1
+                fi
+
+                echo "No release in progress. Trunk is open for merges."
+
+    propagate:
+        name: Propagate freeze state to open PRs
+        if: >-
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.event.pull_request.head.ref, 'release/') &&
+          contains(fromJSON('["opened", "reopened", "closed"]'), github.event.action)
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        permissions:
+          actions: write
+          pull-requests: read
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+        steps:
+
+            - name: Re-run freeze checks on open PRs
+              run: |
+                # Captured separately so a failed API call fails the step instead
+                # of silently running an empty loop and leaving stale statuses.
+                PR_HEADS=$(gh api --paginate "repos/${{ github.repository }}/pulls?state=open&base=trunk&per_page=100" \
+                  --jq '.[] | select(.head.repo.full_name != .base.repo.full_name or (.head.ref | startswith("release/") | not)) | [.head.ref, .head.sha, .head.repo.full_name] | @tsv')
+
+                while IFS=$'\t' read -r BRANCH HEAD_SHA HEAD_REPO; do
+                  [[ -z "$BRANCH" || -z "$HEAD_SHA" || -z "$HEAD_REPO" ]] && continue
+
+                  # Query params passed via -f/-F so branch names are URL-encoded.
+                  RUNS=$(gh api -X GET --paginate "repos/${{ github.repository }}/actions/workflows/release-freeze.yml/runs" \
+                    -f event=pull_request -f "branch=${BRANCH}" -f "head_sha=${HEAD_SHA}" -F per_page=100 \
+                    --jq '.workflow_runs[] | [.id, .head_repository.full_name] | @tsv')
+                  # Forks can share both a branch name and commit with the release PR.
+                  RUN_ID=$(awk -v repo="$HEAD_REPO" '$2 == repo && !found { print $1; found = 1 }' <<< "$RUNS")
+
+                  if [[ -n "$RUN_ID" ]]; then
+                    echo "Re-running freeze check for ${BRANCH} (run ${RUN_ID})"
+                    gh api -X POST "repos/${{ github.repository }}/actions/runs/${RUN_ID}/rerun" || true
+                  else
+                    echo "No freeze check run found for ${BRANCH}, skipping."
+                  fi
+                done <<< "$PR_HEADS"

@@ -1,0 +1,37 @@
+name: PHP Unit Tests
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  phpunit:
+    name: PHP unit tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        # The minimum supported version (plugin header "Requires PHP") and the highest
+        # tested one ("PHP tested up to").
+        php: ['7.4', '8.4']
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Run isolated PHP unit tests
+        run: composer test -- --log-junit "$RUNNER_TEMP/phpunit-results.xml"
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: phpunit-results-php${{ matrix.php }}
+          path: ${{ runner.temp }}/phpunit-results.xml
+          if-no-files-found: ignore

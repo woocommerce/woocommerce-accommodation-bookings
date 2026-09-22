@@ -1,0 +1,104 @@
+name: Changelog
+
+# Release entries come from the PR description, under "### Changelog entry".
+# WooRelease skips line breaks after the heading, then reads consecutive entry
+# lines until a blank line, HTML comment or heading. This check fails when that
+# would silently drop or garble an intended entry.
+#
+# The description and labels are read live through the API rather than from
+# the event payload, which freezes them at trigger time.
+
+on:
+  pull_request:
+    branches:
+      - trunk
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+      - unlabeled
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check-changelog:
+    name: Check changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+      PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+    steps:
+      - name: Check the changelog entry
+        run: |
+          if [[ "$HEAD_REPO" == "$GITHUB_REPOSITORY" && "$HEAD_REF" == release/* ]]; then
+            echo "Release branch: it compiles the entries rather than adding one."
+            exit 0
+          fi
+          if [[ "$PR_AUTHOR" == "dependabot[bot]" ]]; then
+            echo "Dependabot pull request: dependency bumps are summarized at release time."
+            exit 0
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > pr.json
+          node <<'NODE'
+          // Mirrors WooRelease's Changelog::parse_entry().
+          const pr = JSON.parse(require('fs').readFileSync('pr.json', 'utf8'));
+          const fail = (message) => {
+            console.log(`::error::${message}`);
+            process.exit(1);
+          };
+          if (pr.labels.some((label) => label.name === 'changelog: none')) {
+            console.log("Labeled 'changelog: none': .github/release.yml excludes it from the release notes.");
+            process.exit(0);
+          }
+          const body = pr.body || '';
+          const match = body.match(/### Changelog entry[\r\n]+([\s\S]*)/);
+          if (!match) {
+            if (/^\s*#+\s*changelog entry/im.test(body)) {
+              fail('WooRelease only reads a heading written exactly as "### Changelog entry" with nothing after it on the line; otherwise it uses the PR title.');
+            }
+            console.log('No "### Changelog entry" heading, so WooRelease uses the PR title.');
+            process.exit(0);
+          }
+          const lines = match[1].split(/\r?\n/);
+          const trim = (line) => line.replace(/^[*>\- \t]+/, '');
+          const stops = (line) => trim(line) === '' || /^\s*(#|<!--)/.test(trim(line));
+          const entries = [];
+          let i = 0;
+          for (; i < lines.length && !stops(lines[i]); i++) {
+            entries.push(trim(lines[i]));
+          }
+          const prefix = /^(add|fix|tweak|update|dev|break|doc)\s+[-:]\s?\S/i;
+          if (entries.length === 0) {
+            const rest = lines.slice(i);
+            const heading = rest.findIndex((line) => /^\s*#/.test(line));
+            const section = heading === -1 ? rest : rest.slice(0, heading);
+            if (/^\s*<!--/.test(lines[i] ?? '') && !section.some((line) => prefix.test(trim(line)))) {
+              console.log('The HTML comment after the heading records that no entry is needed.');
+              process.exit(0);
+            }
+            if (section.some((line) => prefix.test(trim(line)))) {
+              fail('WooRelease stops at the first blank line, whitespace-only line or HTML comment after "### Changelog entry", so the entry below it would be dropped. Put the entry directly under the heading.');
+            }
+            fail('The changelog entry is empty. Add an entry, explain in an HTML comment directly under the heading why none is needed, or add the "changelog: none" label.');
+          }
+          for (const entry of entries) {
+            if (/Enter a summary of all changes on this Pull Request/.test(entry)) {
+              fail('Replace the template placeholder with the real changelog entry.');
+            }
+            if (!prefix.test(entry)) {
+              fail(`Changelog line "${entry}" must start with Add, Fix, Tweak, Update, Dev, Break or Doc, followed by " - ".`);
+            }
+          }
+          console.log(`Changelog entries:\n${entries.join('\n')}`);
+          NODE
