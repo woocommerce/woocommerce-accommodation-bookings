@@ -69,6 +69,7 @@
     "lint:style": "wp-scripts lint-style src/css/frontend.scss --max-warnings 0",
     "lint:style-fix": "npm run lint:style -- --fix",
     "lint:md:docs": "wp-scripts lint-md-docs --dot",
+    "check-licenses": "wp-scripts check-licenses --ignore=@woocommerce/e2e-utils-playwright",
     "lint:pkg-json": "wp-scripts lint-pkg-json",
     "env": "wp-env",
     "env:start": "wp-env start",

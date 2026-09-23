@@ -36,6 +36,10 @@ jobs:
         if: ${{ inputs.frontend }}
         run: npm run lint:js
 
+      - name: Check dependency licenses
+        if: ${{ !cancelled() && inputs.frontend }}
+        run: npm run check-licenses
+
       - name: Check package metadata
         if: ${{ !cancelled() && inputs.frontend }}
         run: npm run lint:pkg-json
