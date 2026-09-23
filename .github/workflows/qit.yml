@@ -18,6 +18,21 @@ on:
           - validation
           - security
           - malware
+  # Called by manual-ci.yml with the versions requested by WooCommerce core's canonical runner.
+  workflow_call:
+    inputs:
+      test:
+        type: string
+        default: 'default'
+      wp-version:
+        type: string
+        default: ''
+      wc-version:
+        type: string
+        default: ''
+      php-version:
+        type: string
+        default: ''
   schedule:
     # Run at 02:00 on Tuesdays.
     - cron: '0 2 * * 2'
@@ -41,6 +56,11 @@ jobs:
       EXTENSION: ${{ github.event.repository.name }}
       # Scheduled runs use the default set.
       SELECTED: ${{ inputs.test || 'default' }}
+      # Requested versions (empty keeps QIT's defaults); QIT has no `nightly`, only `rc`.
+      VERSION_ARGS: >-
+        ${{ inputs.wp-version && format('--wordpress_version={0}', inputs.wp-version == 'nightly' && 'rc' || inputs.wp-version) || '' }}
+        ${{ inputs.wc-version && format('--woocommerce_version={0}', inputs.wc-version == 'nightly' && 'rc' || inputs.wc-version) || '' }}
+        ${{ inputs.php-version && format('--php_version={0}', inputs.php-version) || '' }}
 
     steps:
       # No checkout: repository code and its Composer config never run alongside the partner secrets.
@@ -72,14 +92,14 @@ jobs:
       # Each selected test runs even if an earlier one failed. Any nonzero QIT
       # exit code, including a warning, fails the run (the shell uses pipefail).
       - name: Run Activation test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'activation' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'prerelease' || env.SELECTED == 'activation' ) }}
         shell: bash
-        run: ./vendor/bin/qit run:activation "$EXTENSION" --zip="$EXTENSION.zip" --plugin=woocommerce-bookings --wait | tee activation-result.txt
+        run: ./vendor/bin/qit run:activation "$EXTENSION" --zip="$EXTENSION.zip" --plugin=woocommerce-bookings $VERSION_ARGS --wait | tee activation-result.txt
 
       - name: Run API test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'api' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'prerelease' || env.SELECTED == 'api' ) }}
         shell: bash
-        run: ./vendor/bin/qit run:woo-api "$EXTENSION" --zip="$EXTENSION.zip" --extension_set=compatibility --wait | tee api-result.txt
+        run: ./vendor/bin/qit run:woo-api "$EXTENSION" --zip="$EXTENSION.zip" --extension_set=compatibility $VERSION_ARGS --wait | tee api-result.txt
 
       - name: Run Security test
         if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'security' ) }}
@@ -102,9 +122,9 @@ jobs:
         run: ./vendor/bin/qit run:validation "$EXTENSION" --zip="$EXTENSION.zip" --wait | tee validation-result.txt
 
       - name: Run E2E test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'e2e' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'prerelease' || env.SELECTED == 'e2e' ) }}
         shell: bash
-        run: ./vendor/bin/qit run:woo-e2e "$EXTENSION" --zip="$EXTENSION.zip" --extension_set=compatibility --wait | tee e2e-result.txt
+        run: ./vendor/bin/qit run:woo-e2e "$EXTENSION" --zip="$EXTENSION.zip" --extension_set=compatibility $VERSION_ARGS --wait | tee e2e-result.txt
 
       - name: Run PHPStan test
         if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'phpstan' ) }}

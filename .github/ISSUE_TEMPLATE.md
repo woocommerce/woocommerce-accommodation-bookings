@@ -1,3 +1,5 @@
+<!-- markdownlint-disable-file MD026 MD041 -->
+
 <!-- Thanks for contributing to this extension! Pick a clear title ("Order: Unable to refund when gateway X is used") and proceed. -->
 
 #### Affected ticket(s)

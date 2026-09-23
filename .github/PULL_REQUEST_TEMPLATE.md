@@ -1,3 +1,5 @@
+<!-- markdownlint-disable-file MD026 MD041 -->
+
 ### All Submissions:
 
 <!-- Mark completed items with an [x] -->
