@@ -1,0 +1,51 @@
+name: Test Runner
+
+# Entry point for WooCommerce core's `pnpm run-canonical-extensions-tests`
+# (bin/run-canonical-extensions-tests.sh), which dispatches the four inputs below.
+on:
+  workflow_dispatch:
+    inputs:
+      wp-version:
+        description: 'WordPress version to be tested: `latest`, `rc` or a specific version number.'
+        type: string
+        default: 'latest'
+      wc-version:
+        description: 'WooCommerce version to be tested: `latest`, `nightly`, `rc` or a specific version number (e.g. `10.3.0-rc.1`).'
+        type: string
+        default: 'latest'
+      php-version:
+        description: 'PHP version. Default is `8.4`.'
+        type: string
+        default: '8.4'
+      qit-tests:
+        description: 'QIT Tests'
+        type: choice
+        default: 'WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)'
+        options:
+          - 'WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)'
+          - 'Weekly default set'
+          - 'Activation'
+          - 'WooCommerce API'
+          - 'WooCommerce E2E'
+          - 'Security'
+          - 'Malware'
+          - 'PHP Compatibility'
+          - 'PHPStan'
+          - 'Validation'
+
+run-name: Tests with WP-${{ inputs.wp-version }} - WC-${{ inputs.wc-version }} - PHP ${{ inputs.php-version }} - QIT ${{ inputs.qit-tests }}
+
+permissions:
+  contents: read
+
+jobs:
+  qit-tests:
+    name: QIT
+    uses: ./.github/workflows/qit.yml
+    with:
+      test: ${{ fromJSON('{"WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)":"prerelease","Weekly default set":"default","Activation":"activation","WooCommerce API":"api","WooCommerce E2E":"e2e","Security":"security","Malware":"malware","PHP Compatibility":"phpcompat","PHPStan":"phpstan","Validation":"validation"}')[inputs.qit-tests] }}
+      # `latest` is QIT's `stable`; every other value (including empty) is passed on unchanged.
+      wp-version: ${{ inputs.wp-version == 'latest' && 'stable' || inputs.wp-version }}
+      wc-version: ${{ inputs.wc-version == 'latest' && 'stable' || inputs.wc-version }}
+      php-version: ${{ inputs.php-version }}
+    secrets: inherit
