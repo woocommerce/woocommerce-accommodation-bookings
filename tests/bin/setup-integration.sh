@@ -28,7 +28,13 @@ if [[ ! "$ACCOM_TEST_DB_NAME" =~ ^accommodation_test_[a-zA-Z0-9_]+$ ]]; then
   exit 1
 fi
 
-for required_command in php curl svn unzip gh; do
+# CI sets ACCOM_TEST_DOWNLOADS to a directory holding the licensed plugin ZIPs it
+# downloaded before checking out pull-request code, so this script never sees the token.
+required_commands=(php curl svn unzip)
+if [ -z "${ACCOM_TEST_DOWNLOADS:-}" ]; then
+  required_commands+=(gh)
+fi
+for required_command in "${required_commands[@]}"; do
   if ! command -v "$required_command" >/dev/null; then
     echo "Missing required command: $required_command" >&2
     exit 1
@@ -59,8 +65,12 @@ svn export --quiet "https://develop.svn.wordpress.org/tags/$wp_version/tests/php
 
 mkdir -p dependencies
 curl --fail --location --silent --show-error "https://downloads.wordpress.org/plugin/woocommerce.$wc_version.zip" -o dependencies/woocommerce.zip
-gh release download "$bookings_version" --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir dependencies
-gh release download "$addons_version" --repo woocommerce/woocommerce-product-addons --pattern woocommerce-product-addons.zip --dir dependencies
+if [ -n "${ACCOM_TEST_DOWNLOADS:-}" ]; then
+  cp "$ACCOM_TEST_DOWNLOADS/woocommerce-bookings.zip" "$ACCOM_TEST_DOWNLOADS/woocommerce-product-addons.zip" dependencies/
+else
+  gh release download "$bookings_version" --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir dependencies
+  gh release download "$addons_version" --repo woocommerce/woocommerce-product-addons --pattern woocommerce-product-addons.zip --dir dependencies
+fi
 
 for archive in dependencies/*.zip; do
   unzip -q "$archive" -d dependencies

@@ -13,6 +13,12 @@ jobs:
     name: PHP unit tests
     uses: ./.github/workflows/phpunit.yml
 
+  php-integration:
+    name: PHP integration tests
+    uses: ./.github/workflows/phpunit-integration.yml
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
   e2e:
     name: E2E
     uses: ./.github/workflows/e2e.yml
@@ -21,7 +27,7 @@ jobs:
 
   notify:
     name: Notify Slack
-    needs: [php-unit, e2e]
+    needs: [php-unit, php-integration, e2e]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

@@ -53,6 +53,12 @@ tests_add_filter(
 	}
 );
 require $tests_dir . '/includes/bootstrap.php';
+// Tables created inside a test become temporary, and MySQL cannot join a temporary table to itself.
+// WooCommerce skips the HPOS tables on this pre-init install, so create them before the HPOS cases enable it.
+$hpos_synchronizer = wc_get_container()->get( Automattic\WooCommerce\Internal\DataStores\Orders\DataSynchronizer::class );
+if ( ! $hpos_synchronizer->check_orders_table_exists() ) {
+	$hpos_synchronizer->create_database_tables();
+}
 // Reinitialize the installer after the temporary dependency-version check above.
 delete_option( 'wc_bookings_version' );
 WC_Bookings_Install::init();

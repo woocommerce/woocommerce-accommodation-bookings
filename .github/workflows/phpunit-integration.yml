@@ -1,0 +1,115 @@
+name: PHP Integration Tests
+
+on:
+  workflow_call:
+    secrets:
+      ORG_DOWNLOADS:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    name: PHP integration tests (PHP ${{ matrix.php }}, ${{ matrix.versions }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.4']
+        versions: [latest]
+        include:
+          - php: minimum
+            versions: minimum
+    env:
+      # The runner's own MySQL server; the setup script only accepts accommodation_test_* databases.
+      ACCOM_TEST_DB_NAME: accommodation_test_ci
+      ACCOM_TEST_DB_USER: root
+      ACCOM_TEST_DB_PASSWORD: root
+      ACCOM_TEST_DB_HOST: 127.0.0.1:3306
+    steps:
+      # Runs before checkout so no pull-request code or dependency can observe the token.
+      - name: Download WooCommerce Bookings and Product Add-Ons
+        env:
+          GH_TOKEN: ${{ secrets.ORG_DOWNLOADS }}
+        run: |
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::The ORG_DOWNLOADS secret isn't available to this run (fork and Dependabot PRs don't receive it), so WooCommerce Bookings and Product Add-Ons can't be downloaded."
+            exit 1
+          fi
+          BOOKINGS_VERSION=$(gh release view --repo woocommerce/woocommerce-bookings --json tagName --jq .tagName)
+          ADDONS_VERSION=$(gh release view --repo woocommerce/woocommerce-product-addons --json tagName --jq .tagName)
+          gh release download "$BOOKINGS_VERSION" --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$RUNNER_TEMP/downloads"
+          gh release download "$ADDONS_VERSION" --repo woocommerce/woocommerce-product-addons --pattern woocommerce-product-addons.zip --dir "$RUNNER_TEMP/downloads"
+          { echo "BOOKINGS_VERSION=$BOOKINGS_VERSION"; echo "ADDONS_VERSION=$ADDONS_VERSION"; } >> "$GITHUB_ENV"
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Read declared platform minimums
+        if: ${{ matrix.versions == 'minimum' }}
+        run: |
+          main_file="${GITHUB_REPOSITORY#*/}.php"
+          WP_MINIMUM=$(awk -F ': ' '/^[[:space:]]*\* Requires at least:/{print $2; exit}' "$main_file")
+          WC_MINIMUM=$(awk -F ': ' '/^[[:space:]]*\* WC requires at least:/{print $2; exit}' "$main_file")
+          PHP_MINIMUM=$(awk -F ': ' '/^[[:space:]]*\* Requires PHP:/{print $2; exit}' "$main_file")
+          [[ "$WP_MINIMUM" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]
+          [[ "$WC_MINIMUM" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]
+          [[ "$PHP_MINIMUM" =~ ^[0-9]+\.[0-9]+$ ]]
+          [[ "$WC_MINIMUM" =~ ^[0-9]+\.[0-9]+$ ]] && WC_MINIMUM="$WC_MINIMUM.0"
+          { echo "WP_MINIMUM=$WP_MINIMUM"; echo "WC_MINIMUM=$WC_MINIMUM"; echo "PHP_MINIMUM=$PHP_MINIMUM"; } >> "$GITHUB_ENV"
+
+      - uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
+        with:
+          php-version: ${{ matrix.php == 'minimum' && env.PHP_MINIMUM || matrix.php }}
+          extensions: mysqli
+          coverage: none
+          tools: composer
+
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Install locked dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # The minimum row uses the header versions; the setup script needs explicit releases.
+      - name: Resolve WordPress and WooCommerce versions
+        run: |
+          WP_VERSION=${WP_MINIMUM:-$(curl --fail --silent --show-error https://api.wordpress.org/core/version-check/1.7/ | jq -r '.offers[0].version')}
+          WC_VERSION=${WC_MINIMUM:-$(curl --fail --silent --show-error https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r '.version')}
+          { echo "WP_VERSION=$WP_VERSION"; echo "WC_VERSION=$WC_VERSION"; } >> "$GITHUB_ENV"
+
+      - name: Provision WordPress, WooCommerce, Bookings and Product Add-Ons
+        env:
+          ACCOM_TEST_DOWNLOADS: ${{ runner.temp }}/downloads
+        run: |
+          sudo /etc/init.d/mysql start
+          ./tests/bin/setup-integration.sh "$RUNNER_TEMP/accommodation" "$WP_VERSION" "$WC_VERSION" "$BOOKINGS_VERSION" "$ADDONS_VERSION"
+
+      - name: Verify installed versions
+        env:
+          WC_DIR: ${{ runner.temp }}/accommodation/dependencies/woocommerce
+        run: |
+          php -v
+          INSTALLED_WP=$(php -r 'include getenv("RUNNER_TEMP") . "/accommodation/wordpress/wp-includes/version.php"; echo $wp_version;')
+          INSTALLED_WC=$(awk '/^[[:space:]]*\*[[:space:]]*Version:/{print $NF; exit}' "$WC_DIR/woocommerce.php")
+          echo "WordPress $INSTALLED_WP, WooCommerce $INSTALLED_WC"
+          if [[ '${{ matrix.versions }}' == 'minimum' ]]; then
+            php -r 'exit(version_compare($argv[1], $argv[2], "==") ? 0 : 1);' "$INSTALLED_WP" "$WP_MINIMUM" || { echo "::error::WordPress $INSTALLED_WP installed, expected $WP_MINIMUM"; exit 1; }
+            php -r 'exit(version_compare($argv[1], $argv[2], "==") ? 0 : 1);' "$INSTALLED_WC" "$WC_MINIMUM" || { echo "::error::WooCommerce $INSTALLED_WC installed, expected $WC_MINIMUM"; exit 1; }
+          fi
+
+      # --verbose lists each skipped test with its reason; skips don't fail the job.
+      - name: Run integration tests
+        run: ./tests/bin/run-integration.sh "$RUNNER_TEMP/accommodation" --verbose --log-junit "$RUNNER_TEMP/phpunit-integration-results.xml"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: phpunit-integration-results-php${{ matrix.php }}-${{ matrix.versions }}
+          path: ${{ runner.temp }}/phpunit-integration-results.xml
+          if-no-files-found: ignore
