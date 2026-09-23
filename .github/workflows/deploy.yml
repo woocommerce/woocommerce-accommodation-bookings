@@ -55,7 +55,9 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: woocommerce/woo-product-deploy
-          ref: trunk
+          # Pinned for review. To bump: take `gh api repos/woocommerce/woo-product-deploy/commits/trunk --jq .sha`,
+          # review the diff since this SHA, then update the SHA and date.
+          ref: c36d132b80747d6a96569712d69937177d7a0274 # trunk @ 2026-09-10
           path: ./.github/actions/woo-product-deploy
           token: ${{ secrets.ORG_DEPLOY_SECRET }}  # Need PAT with access to the action repository
 
