@@ -1,0 +1,36 @@
+name: Cron CI
+
+on:
+  schedule:
+    # Run at 01:00 on Mondays.
+    - cron: '0 1 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  php-unit:
+    name: PHP unit tests
+    uses: ./.github/workflows/phpunit.yml
+
+  e2e:
+    name: E2E
+    uses: ./.github/workflows/e2e.yml
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+  notify:
+    name: Notify Slack
+    needs: [php-unit, e2e]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      # Skipped until a maintainer adds the SLACK_WEBHOOK_URL secret.
+      - if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+        with:
+          status: failure
+          message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."
