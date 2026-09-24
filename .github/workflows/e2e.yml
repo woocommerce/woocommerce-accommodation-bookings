@@ -54,7 +54,7 @@ jobs:
           key: node-${{ hashFiles('package-lock.json') }}
 
       - name: Node install
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run prebuild && npm run build:webpack && npm run archive
