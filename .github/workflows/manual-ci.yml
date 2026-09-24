@@ -49,3 +49,13 @@ jobs:
       wc-version: ${{ inputs.wc-version == 'latest' && 'stable' || inputs.wc-version }}
       php-version: ${{ inputs.php-version }}
     secrets: inherit
+
+  # WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and `nightly` or an exact version (e.g. 10.3.0-rc.1) is installed as given.
+  php-integration:
+    name: PHP integration tests
+    if: ${{ inputs.wc-version != 'rc' }}
+    uses: ./.github/workflows/phpunit-integration.yml
+    with:
+      wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}

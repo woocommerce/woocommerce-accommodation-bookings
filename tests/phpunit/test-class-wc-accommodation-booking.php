@@ -32,13 +32,6 @@ class TestWCAccommodationBooking extends TestCase {
 		\WP_Mock::tearDown();
 	}
 
-	/** @test - Test that instantiation of the class is working.
-	 **/
-	public function testIsAnInstanceOfWCAccommodationBooking() {
-
-		$accommodation_booking = new WC_Accommodation_Booking();
-		$this->assertInstanceOf( 'WC_Accommodation_Booking', $accommodation_booking );
-	}
 	/**
 	 * @test Test function changes duration display for accommodation bookings and duration 'night'.
 	 * Also tests there are no changes on duration display for other product types

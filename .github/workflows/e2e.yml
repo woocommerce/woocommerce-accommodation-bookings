@@ -54,7 +54,7 @@ jobs:
           key: node-${{ hashFiles('package-lock.json') }}
 
       - name: Node install
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run prebuild && npm run build:webpack && npm run archive
@@ -75,5 +75,8 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: tests/e2e/test-results/report
+          # Keep the Playwright login state (storageState files) out of the artifact.
+          path: |
+            tests/e2e/test-results/
+            !tests/e2e/test-results/storage*
           retention-days: 2

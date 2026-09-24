@@ -19,6 +19,14 @@ jobs:
     secrets:
       ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
+  php-integration-nightly:
+    name: PHP integration tests (WooCommerce nightly)
+    uses: ./.github/workflows/phpunit-integration.yml
+    with:
+      wc-version: nightly
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
   e2e:
     name: E2E
     uses: ./.github/workflows/e2e.yml
@@ -27,7 +35,7 @@ jobs:
 
   notify:
     name: Notify Slack
-    needs: [php-unit, php-integration, e2e]
+    needs: [php-unit, php-integration, php-integration-nightly, e2e]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

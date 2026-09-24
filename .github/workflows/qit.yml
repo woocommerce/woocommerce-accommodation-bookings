@@ -85,8 +85,8 @@ jobs:
       - name: Add partner
         id: add-partner
         env:
-          PARTNER_USER: ${{ secrets.PARTNER_USER }}
-          PARTNER_SECRET: ${{ secrets.PARTNER_SECRET }}
+          PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+          PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
         run: ./vendor/bin/qit partner:add --user="$PARTNER_USER" --application_password="$PARTNER_SECRET"
 
       # Each selected test runs even if an earlier one failed. Any nonzero QIT
