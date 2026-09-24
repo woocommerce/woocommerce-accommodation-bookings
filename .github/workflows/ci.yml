@@ -178,6 +178,13 @@ jobs:
     if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
     uses: ./.github/workflows/plugin-check.yml
 
+  # Builds the production ZIP with the release command and keeps it as an artifact for review and manual testing.
+  package:
+    name: Package
+    needs: changes
+    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
+    uses: ./.github/workflows/generate-zip.yml
+
   # The tests need WooCommerce Bookings, a private download. Fork PRs never
   # receive the secret, so E2E is skipped for them. Dependabot PRs still run it
   # and need ORG_DOWNLOADS as a Dependabot secret.
@@ -196,7 +203,7 @@ jobs:
   required:
     name: Required checks
     if: ${{ always() }}
-    needs: [changes, spelling, phpcs, phpstan, php-compatibility, css, javascript, actionlint, audit, php-unit, php-integration, plugin-check, e2e]
+    needs: [changes, spelling, phpcs, phpstan, php-compatibility, css, javascript, actionlint, audit, php-unit, php-integration, plugin-check, package, e2e]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: {}
@@ -217,6 +224,7 @@ jobs:
           "php-unit": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }},
           "php-integration": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.php == 'true' }},
           "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
+          "package": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
           "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
         }
       # Checks that need a private download and are skipped for fork PRs; reviewers must run them from a branch here.
@@ -245,7 +253,7 @@ jobs:
             }
           }
           if (process.env.CI_DRAFT === 'true') {
-            console.log('::error::Draft PR: PHP unit and integration tests, Plugin Check and E2E tests run once the PR is ready for review.');
+            console.log('::error::Draft PR: PHP unit and integration tests, Plugin Check, the package build and E2E tests run once the PR is ready for review.');
             failed = true;
           }
           process.exitCode = failed ? 1 : 0;
