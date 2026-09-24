@@ -6,7 +6,7 @@ set -euo pipefail
 umask 077
 
 if [ "$#" -ne 5 ]; then
-  echo "Usage: $0 <empty-test-directory> <WP-version> <WC-version> <Bookings-version> <Add-ons-version>" >&2
+  echo "Usage: $0 <empty-test-directory> <WP-version> <WC-version|nightly> <Bookings-version> <Add-ons-version>" >&2
   echo "Set ACCOM_TEST_DB_NAME (accommodation_test_*), ACCOM_TEST_DB_USER, ACCOM_TEST_DB_PASSWORD and ACCOM_TEST_DB_HOST (host[:port])." >&2
   exit 1
 fi
@@ -41,12 +41,18 @@ for required_command in "${required_commands[@]}"; do
   fi
 done
 
-for version in "$wp_version" "$wc_version" "$bookings_version" "$addons_version"; do
+for version in "$wp_version" "$bookings_version" "$addons_version"; do
   if [[ ! "$version" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
     echo "Use explicit release versions." >&2
     exit 1
   fi
 done
+
+# WooCommerce also accepts its pre-releases (e.g. 10.3.0-rc.1) and the nightly build.
+if [[ "$wc_version" != nightly && ! "$wc_version" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z]+\.[0-9]+)?$ ]]; then
+  echo "Use an explicit WooCommerce release or nightly." >&2
+  exit 1
+fi
 
 mkdir -p "$test_directory"
 export ACCOM_TEST_ROOT="$(cd "$test_directory" && pwd)"
@@ -64,7 +70,12 @@ svn export --quiet "https://develop.svn.wordpress.org/tags/$wp_version/tests/php
 svn export --quiet "https://develop.svn.wordpress.org/tags/$wp_version/tests/phpunit/data" wordpress-tests-lib/data
 
 mkdir -p dependencies
-curl --fail --location --silent --show-error "https://downloads.wordpress.org/plugin/woocommerce.$wc_version.zip" -o dependencies/woocommerce.zip
+if [ "$wc_version" = nightly ]; then
+  wc_url="https://github.com/woocommerce/woocommerce/releases/download/nightly/woocommerce-trunk-nightly.zip"
+else
+  wc_url="https://downloads.wordpress.org/plugin/woocommerce.$wc_version.zip"
+fi
+curl --fail --location --silent --show-error "$wc_url" -o dependencies/woocommerce.zip
 if [ -n "${ACCOM_TEST_DOWNLOADS:-}" ]; then
   cp "$ACCOM_TEST_DOWNLOADS/woocommerce-bookings.zip" "$ACCOM_TEST_DOWNLOADS/woocommerce-product-addons.zip" dependencies/
 else
