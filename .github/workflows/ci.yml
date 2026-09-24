@@ -219,6 +219,12 @@ jobs:
           "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
           "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
         }
+      # Checks that need a private download and are skipped for fork PRs; reviewers must run them from a branch here.
+      CI_FORK_SKIPPED: >-
+        {
+          "php-integration": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.php == 'true' }},
+          "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.product == 'true' }}
+        }
     steps:
       - name: Check required results
         run: |
@@ -232,6 +238,11 @@ jobs:
               (result === 'success' || (result === 'skipped' && expected[job] === false));
             console.log(`${job}: ${result || 'missing'}${passed ? '' : ' (required check failed)'}`);
             failed ||= !passed;
+          }
+          for (const [job, skipped] of Object.entries(JSON.parse(process.env.CI_FORK_SKIPPED))) {
+            if (skipped) {
+              console.log(`::warning title=Skipped for fork PR::${job} needs the private WooCommerce Bookings download, which fork PRs cannot access. Run it from a branch in this repository before merging.`);
+            }
           }
           if (process.env.CI_DRAFT === 'true') {
             console.log('::error::Draft PR: PHP unit and integration tests, Plugin Check and E2E tests run once the PR is ready for review.');
