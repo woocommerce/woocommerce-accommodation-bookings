@@ -1,18 +1,23 @@
-# Basic set up for three package managers
-#  - Disables version-updates
-
 version: 2
 updates:
+    # SHA-pinned Actions get no Dependabot security alerts, so these monthly
+    # version-update PRs are how the pins stay current. Review each bump; this repo
+    # has no auto-merge, so every bump is merged by hand.
     - package-ecosystem: 'github-actions'
-      directory: '/'
+      directories:
+        - '/'
       schedule:
-          interval: 'weekly'
-      # Disable version updates for GitHub Actions dependencies
-      open-pull-requests-limit: 0
+          interval: 'monthly'
+      cooldown:
+          default-days: 7
+      open-pull-requests-limit: 5
+      groups:
+          github-actions:
+              patterns:
+                  - '*'
       labels:
-        - "changelog: none"
-        - "type: dependency"
-        - "github_actions"
+        - 'changelog: none'
+        - 'type: dependency'
 
       # Maintain dependencies for npm
     - package-ecosystem: 'npm'
