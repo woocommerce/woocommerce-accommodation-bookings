@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       wp-version:
-        description: 'WordPress version to be tested: `latest`, `rc` or a specific version number.'
+        description: 'WordPress version to be tested: `latest`, `rc` (QIT only) or a specific version number.'
         type: string
         default: 'latest'
       wc-version:
-        description: 'WooCommerce version to be tested: `latest`, `nightly`, `rc` or a specific version number (e.g. `10.3.0-rc.1`).'
+        description: 'WooCommerce version to be tested: `latest`, `nightly`, `rc` (QIT only) or a specific version number (e.g. `10.3.0-rc.1`).'
         type: string
         default: 'latest'
       php-version:
@@ -50,12 +50,14 @@ jobs:
       php-version: ${{ inputs.php-version }}
     secrets: inherit
 
-  # WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and `nightly` or an exact version (e.g. 10.3.0-rc.1) is installed as given.
+  # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: empty keeps the default versions, anything else replaces them.
   php-integration:
     name: PHP integration tests
-    if: ${{ inputs.wc-version != 'rc' }}
+    if: ${{ inputs.wp-version != 'rc' && inputs.wc-version != 'rc' }}
     uses: ./.github/workflows/phpunit-integration.yml
     with:
+      wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
       wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
+      php-version: ${{ inputs.php-version }}
     secrets:
       ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}

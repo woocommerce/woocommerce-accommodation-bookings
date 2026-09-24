@@ -7,6 +7,14 @@ on:
         description: 'WooCommerce version for the latest row: empty for the latest stable release, `nightly`, or an explicit version.'
         type: string
         default: ''
+      wp-version:
+        description: 'WordPress version for the latest row: empty for the latest release, or an explicit version.'
+        type: string
+        default: ''
+      php-version:
+        description: 'PHP version for the latest row: empty for the default, or a version number.'
+        type: string
+        default: ''
     secrets:
       ORG_DOWNLOADS:
         required: false
@@ -22,10 +30,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.4']
+        php: ${{ fromJSON(inputs.php-version && format('["{0}"]', inputs.php-version) || '["8.4"]') }}
         versions: ["${{ inputs.wc-version || 'latest' }}"]
-        # Minimum-version rows pin their own WooCommerce, so they run only when no wc-version is requested.
-        include: ${{ fromJSON(inputs.wc-version == '' && '[{"php":"minimum","versions":"minimum"}]' || '[]') }}
+        # Minimum-version rows pin their own versions, so they run only when no version is requested.
+        include: ${{ fromJSON(inputs.wp-version == '' && inputs.wc-version == '' && inputs.php-version == '' && '[{"php":"minimum","versions":"minimum"}]' || '[]') }}
     env:
       # The runner's own MySQL server; the setup script only accepts accommodation_test_* databases.
       ACCOM_TEST_DB_NAME: accommodation_test_ci
@@ -80,12 +88,13 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       # The minimum row uses the header versions; the setup script needs explicit releases
-      # (or `nightly` for WooCommerce), so a requested wc-version replaces the latest stable one.
+      # (or `nightly` for WooCommerce), so a requested version replaces the latest stable one.
       - name: Resolve WordPress and WooCommerce versions
         env:
+          WP_VERSION_INPUT: ${{ inputs.wp-version }}
           WC_VERSION_INPUT: ${{ inputs.wc-version }}
         run: |
-          WP_VERSION=${WP_MINIMUM:-$(curl --fail --silent --show-error https://api.wordpress.org/core/version-check/1.7/ | jq -r '.offers[0].version')}
+          WP_VERSION=${WP_MINIMUM:-${WP_VERSION_INPUT:-$(curl --fail --silent --show-error https://api.wordpress.org/core/version-check/1.7/ | jq -r '.offers[0].version')}}
           WC_VERSION=${WC_MINIMUM:-${WC_VERSION_INPUT:-$(curl --fail --silent --show-error https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r '.version')}}
           { echo "WP_VERSION=$WP_VERSION"; echo "WC_VERSION=$WC_VERSION"; } >> "$GITHUB_ENV"
 
