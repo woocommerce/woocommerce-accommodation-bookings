@@ -3,8 +3,12 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 0
+    level: 1
     phpVersion: 70400
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    dynamicConstantNames:
+        - WC_BOOKINGS_VERSION
     parallel:
         maximumNumberOfProcesses: 2
     paths:

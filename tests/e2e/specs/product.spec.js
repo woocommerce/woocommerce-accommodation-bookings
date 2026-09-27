@@ -327,9 +327,25 @@ test.describe( 'Product Tests', () => {
 			'.single_add_to_cart_button'
 		);
 
-		await expect(
-			page.locator( '.ui-datepicker-calendar .ui-datepicker-today' )
-		).toHaveClass( /ui-state-disabled/ );
+		// The date picker opens on the first bookable day's month, which is not
+		// today's month in the last days of a month, so check the first
+		// selectable day instead of today's cell.
+		const firstBookableDay = page
+			.locator( '.ui-datepicker-calendar td[data-handler="selectDay"]' )
+			.first();
+		const minDate = getFutureDate( 4, 0, 0, true );
+		await expect( firstBookableDay ).toHaveAttribute(
+			'data-year',
+			String( minDate.year() )
+		);
+		await expect( firstBookableDay ).toHaveAttribute(
+			'data-month',
+			String( minDate.month() )
+		);
+		// The link text is the day number followed by a screen-reader label.
+		await expect( firstBookableDay.locator( 'a' ) ).toHaveText(
+			new RegExp( `^${ minDate.date() }(?!\\d)` )
+		);
 
 		// TODO: UNCOMMENT THIS. (commented due to bug)
 		// Verify Booking can't be made before 4 days into the future
