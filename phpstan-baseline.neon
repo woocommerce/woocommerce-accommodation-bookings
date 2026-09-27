@@ -7,10 +7,28 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
 
 		-
+			message: '#^Constant WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Constant WC_BOOKINGS_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
 			message: '#^Instantiated class WC_Product_Booking not found\.$#'
 			identifier: class.notFound
 			count: 1
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Constant WC_BOOKINGS_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability.php
 
 		-
 			message: '#^Function wc_bookings_string_to_bool not found\.$#'
@@ -43,6 +61,12 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Constant WC_BOOKINGS_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Function wc_bookings_get_time_slots not found\.$#'
 			identifier: function.notFound
 			count: 1
@@ -55,6 +79,12 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Variable \$day might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Action callback returns array but should not return anything\.$#'
 			identifier: return.void
 			count: 1
@@ -63,6 +93,36 @@ parameters:
 		-
 			message: '#^Action callback returns bool\|WP_Error but should not return anything\.$#'
 			identifier: return.void
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Constant WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH not found\.$#'
+			identifier: constant.notFound
+			count: 12
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Constant WC_ACCOMMODATION_BOOKINGS_MAIN_FILE not found\.$#'
+			identifier: constant.notFound
+			count: 3
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Constant WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL not found\.$#'
+			identifier: constant.notFound
+			count: 2
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Constant WC_BOOKINGS_PLUGIN_URL not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Constant WC_BOOKINGS_VERSION not found\.$#'
+			identifier: constant.notFound
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
@@ -142,6 +202,18 @@ parameters:
 			message: '#^Class WC_Product_Accommodation_Booking_Resource does not have a constructor and must be instantiated without any parameters\.$#'
 			identifier: new.noConstructor
 			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Constant WC_BOOKINGS_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Variable \$intervals in empty\(\) is never defined\.$#'
+			identifier: empty.variable
+			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-

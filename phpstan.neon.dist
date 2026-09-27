@@ -3,7 +3,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 0
+    level: 1
     phpVersion: 70400
     parallel:
         maximumNumberOfProcesses: 2
