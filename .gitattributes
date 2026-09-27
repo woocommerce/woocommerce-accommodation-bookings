@@ -35,6 +35,7 @@ AGENTS.md export-ignore
 CLAUDE.md export-ignore
 phpcs.baseline export-ignore
 tools export-ignore
+changelog export-ignore
 phpstan.neon.dist export-ignore
 phpstan-baseline.neon export-ignore
 .markdownlintignore export-ignore
