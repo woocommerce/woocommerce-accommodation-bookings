@@ -39,6 +39,7 @@ npm run start:webpack  # Rebuild JS/CSS on file changes
 
 # Production build
 npm run build          # Production build + language files + zip
+npm run build:zip      # Release zip, as Release CI builds it
 
 # Tests
 npm run env:start      # Start the wp-env local test environment
@@ -80,6 +81,45 @@ An absent or disabled driver produces PHPUnit's coverage-driver warning.
 `coverage/unit/index.html` includes unexecuted PHP in `includes/` and the plugin
 entry point. Tests, mocks, dependencies and generated files are outside its source
 scope. Coverage is optional and does not change the normal test command.
+
+## Changelog
+
+`changelog.txt` is generated. Never edit it by hand. Each pull request adds a change file under [`changelog/`](changelog/) instead, and [Jetpack Changelogger](https://github.com/Automattic/jetpack-changelogger) compiles them into `changelog.txt` at release time.
+
+```bash
+npm run changelog add          # Interactive: significance, type, and the entry
+npm run changelog validate     # Check every change file under changelog/
+npm run changelog:check        # What CI runs: this branch has a valid change file
+```
+
+The `Changelog / Check changelog` check requires an added change file on every pull request. Label the pull request `no changelog` for changes that need no entry (CI, tooling, docs).
+
+## Release
+
+Releases are started with the `Start Release` workflow and shipped by merging the release PR it creates.
+
+Before starting a release, make sure that:
+
+- Everything you want to ship has been merged into `trunk`, and each of those pull requests left a change file under [`changelog/`](changelog/).
+- An open [milestone](https://github.com/woocommerce/woocommerce-accommodation-bookings/milestones) titled after the version (e.g. `1.3.13`) exists. The workflow refuses to start without one.
+
+To start the release, run the [Start Release workflow](https://github.com/woocommerce/woocommerce-accommodation-bookings/actions/workflows/release-start.yml) from the Actions tab, or locally with:
+
+```bash
+bin/release_start.sh
+```
+
+Run it with no arguments to be prompted for the version and the WP/WC "tested up to" values (press enter to keep the current ones), or pass them directly: `bin/release_start.sh X.Y.Z --wp A.B --wc C.D`. The script dispatches the workflow, watches it, and prints the release PR URL when it's done.
+
+On a `release/X.Y.Z` branch, the workflow bumps the version and tested-up-to headers, compiles the change files under `changelog/` into `changelog.txt` and deletes the ones it consumed, copies the new entries into the `readme.txt` changelog that WordPress.org shows, then opens a pull request against `trunk`. It also posts a comment on the PR comparing the changelog entries with the issues in the milestone. Review that comment to make sure nothing is missing.
+
+While the release PR is open, `trunk` is under code freeze: the `Release Freeze / Check release freeze` required check fails on all other pull requests, and flips back automatically once the release PR is merged or closed.
+
+A smoke test workflow runs on the release branch ([ci-release-smoke-test.yml](.github/workflows/ci-release-smoke-test.yml)), and the release PR goes through the regular PR CI and review like any other PR.
+
+Merging the release PR into `trunk` triggers the release workflow ([ci-release.yml](.github/workflows/ci-release.yml)), which runs the test suites, builds the zip, creates the GitHub release and tag, and deploys the plugin to WordPress.org. Progress is posted in the `#team-somewherewarm-releases` Slack channel.
+
+After a successful release, the workflow closes the released milestone and creates one for the next patch version (rename it if the next release will be a minor/major).
 
 ## AI code reviews
 
