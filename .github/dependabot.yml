@@ -16,7 +16,7 @@ updates:
               patterns:
                   - '*'
       labels:
-        - 'changelog: none'
+        - 'no changelog'
         - 'type: dependency'
 
       # Maintain dependencies for npm
@@ -27,7 +27,7 @@ updates:
       # Disable version updates for npm dependencies
       open-pull-requests-limit: 0
       labels:
-        - "changelog: none"
+        - "no changelog"
         - "type: dependency"
         - "javascript"
 
@@ -39,6 +39,6 @@ updates:
       # Disable version updates for Composer dependencies
       open-pull-requests-limit: 0
       labels:
-        - "changelog: none"
+        - "no changelog"
         - "type: dependencies"
         - "php"

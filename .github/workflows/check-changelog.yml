@@ -1,12 +1,16 @@
 name: Changelog
 
-# Release entries come from the PR description, under "### Changelog entry".
-# WooRelease skips line breaks after the heading, then reads consecutive entry
-# lines until a blank line, HTML comment or heading. This check fails when that
-# would silently drop or garble an intended entry.
+# Every pull request drops a change file into changelog/ instead of editing
+# changelog.txt; changelogger compiles them into changelog.txt at release time.
 #
-# The description and labels are read live through the API rather than from
-# the event payload, which freezes them at trigger time.
+# This runs as its own workflow rather than a job in ci.yml so that adding or
+# removing the 'no changelog' label re-runs the check on its own, without
+# replaying the whole pipeline.
+#
+# The label is read live through the API rather than from the event payload.
+# The payload freezes the labels at trigger time, so a run queued before the
+# label was added would not see it. Concurrency cancels by dispatch order, so
+# that stale run can be the one that survives and fails a labeled pull request.
 
 on:
   pull_request:
@@ -14,7 +18,6 @@ on:
       - trunk
     types:
       - opened
-      - edited
       - synchronize
       - reopened
       - ready_for_review
@@ -26,79 +29,109 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check-changelog:
-    name: Check changelog
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      pull-requests: read
-    env:
-      GH_TOKEN: ${{ github.token }}
-      PR_NUMBER: ${{ github.event.pull_request.number }}
-      HEAD_REF: ${{ github.event.pull_request.head.ref }}
-      HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
-      PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-    steps:
-      - name: Check the changelog entry
-        run: |
-          if [[ "$HEAD_REPO" == "$GITHUB_REPOSITORY" && "$HEAD_REF" == release/* ]]; then
-            echo "Release branch: it compiles the entries rather than adding one."
-            exit 0
-          fi
-          if [[ "$PR_AUTHOR" == "dependabot[bot]" ]]; then
-            echo "Dependabot pull request: dependency bumps are summarized at release time."
-            exit 0
-          fi
-          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > pr.json
-          node <<'NODE'
-          // Mirrors WooRelease's Changelog::parse_entry().
-          const pr = JSON.parse(require('fs').readFileSync('pr.json', 'utf8'));
-          const fail = (message) => {
-            console.log(`::error::${message}`);
-            process.exit(1);
-          };
-          if (pr.labels.some((label) => label.name === 'changelog: none')) {
-            console.log("Labeled 'changelog: none': .github/release.yml excludes it from the release notes.");
-            process.exit(0);
-          }
-          const body = pr.body || '';
-          const match = body.match(/### Changelog entry[\r\n]+([\s\S]*)/);
-          if (!match) {
-            if (/^\s*#+\s*changelog entry/im.test(body)) {
-              fail('WooRelease only reads a heading written exactly as "### Changelog entry" with nothing after it on the line; otherwise it uses the PR title.');
-            }
-            console.log('No "### Changelog entry" heading, so WooRelease uses the PR title.');
-            process.exit(0);
-          }
-          const lines = match[1].split(/\r?\n/);
-          const trim = (line) => line.replace(/^[*>\- \t]+/, '');
-          const stops = (line) => trim(line) === '' || /^\s*(#|<!--)/.test(trim(line));
-          const entries = [];
-          let i = 0;
-          for (; i < lines.length && !stops(lines[i]); i++) {
-            entries.push(trim(lines[i]));
-          }
-          const prefix = /^(add|fix|tweak|update|dev|break|doc)\s+[-:]\s?\S/i;
-          if (entries.length === 0) {
-            const rest = lines.slice(i);
-            const heading = rest.findIndex((line) => /^\s*#/.test(line));
-            const section = heading === -1 ? rest : rest.slice(0, heading);
-            if (/^\s*<!--/.test(lines[i] ?? '') && !section.some((line) => prefix.test(trim(line)))) {
-              console.log('The HTML comment after the heading records that no entry is needed.');
-              process.exit(0);
-            }
-            if (section.some((line) => prefix.test(trim(line)))) {
-              fail('WooRelease stops at the first blank line, whitespace-only line or HTML comment after "### Changelog entry", so the entry below it would be dropped. Put the entry directly under the heading.');
-            }
-            fail('The changelog entry is empty. Add an entry, explain in an HTML comment directly under the heading why none is needed, or add the "changelog: none" label.');
-          }
-          for (const entry of entries) {
-            if (/Enter a summary of all changes on this Pull Request/.test(entry)) {
-              fail('Replace the template placeholder with the real changelog entry.');
-            }
-            if (!prefix.test(entry)) {
-              fail(`Changelog line "${entry}" must start with Add, Fix, Tweak, Update, Dev, Break or Doc, followed by " - ".`);
-            }
-          }
-          console.log(`Changelog entries:\n${entries.join('\n')}`);
-          NODE
+
+    check-changelog:
+        name: Check changelog
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions:
+          contents: read
+          pull-requests: read
+
+        # Read through the environment, never interpolated into shell source.
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+
+        steps:
+
+            # The job always runs to completion so it can be a required check:
+            # a job skipped by a condition reports as skipped, not as passing.
+            - name: Decide what to check
+              id: decide
+              env:
+                GH_TOKEN: ${{ github.token }}
+                PR_NUMBER: ${{ github.event.pull_request.number }}
+              run: |
+                # Paginated: a pull request can carry more labels than one API page holds.
+                if ! LABELS=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels" --jq '.[].name'); then
+                  echo "::error::Could not read the pull request labels, so it is unknown whether a change file is required."
+                  exit 1
+                fi
+
+                if grep -qxF 'no changelog' <<< "$LABELS"; then
+                  HAS_SKIP_LABEL="true"
+                else
+                  HAS_SKIP_LABEL="false"
+                fi
+
+                # skip:     nothing to check at all.
+                # optional: no change file is required, but one that is there is
+                #           still validated. The label waives the entry, not the
+                #           format: a malformed change file merged under the label
+                #           would only surface as a broken release compile.
+                # require:  a change file must be there, and must be valid.
+                if [[ "$HEAD_REPO" == "$GITHUB_REPOSITORY" && "$HEAD_REF" == release/* ]]; then
+                  MODE="skip"
+                  REASON="Release branch: it compiles the change files rather than adding one."
+                elif [[ "$PR_AUTHOR" == "dependabot[bot]" ]]; then
+                  MODE="skip"
+                  REASON="Dependabot pull request: dependency bumps are summarized in one entry at release time."
+                elif [[ "$HAS_SKIP_LABEL" == "true" ]]; then
+                  MODE="optional"
+                  REASON="Labeled 'no changelog', so no change file is required. Any change file in the pull request is still validated."
+                else
+                  MODE="require"
+                  REASON=""
+                fi
+
+                echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+
+                if [[ -n "$REASON" ]]; then
+                  echo "$REASON" >> "$GITHUB_STEP_SUMMARY"
+                  echo "$REASON"
+                fi
+
+            - name: Checkout repository
+              if: steps.decide.outputs.mode != 'skip'
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                # The check diffs against the merge base with the target branch.
+                fetch-depth: 0
+
+            - name: Set up PHP
+              if: steps.decide.outputs.mode != 'skip'
+              uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
+              with:
+                php-version: '8.4'
+                coverage: none
+                tools: composer
+
+            - name: Get composer cache directory
+              if: steps.decide.outputs.mode != 'skip'
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache composer dependencies
+              if: steps.decide.outputs.mode != 'skip'
+              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              if: steps.decide.outputs.mode != 'skip'
+              run: composer install --prefer-dist --no-progress --no-ansi --no-interaction
+
+            - name: Check change file
+              if: steps.decide.outputs.mode != 'skip'
+              env:
+                MODE: ${{ steps.decide.outputs.mode }}
+              run: |
+                if [[ "$MODE" == "optional" ]]; then
+                  bash bin/check_changelog.sh --optional
+                else
+                  bash bin/check_changelog.sh
+                fi
