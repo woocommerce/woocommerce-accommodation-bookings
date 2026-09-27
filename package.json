@@ -88,6 +88,7 @@
     "test:e2e-foundational": "npx playwright test --config tests/e2e/playwright.config.js --grep @foundational",
     "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 playwright test --config tests/e2e/playwright.config.js",
     "test:e2e:reset": "node -e \"require('./tests/e2e/utils/local').seed()\"",
-    "test:e2e:setup": "bash tests/e2e/bin/setup-local.sh"
+    "test:e2e:setup": "bash tests/e2e/bin/setup-local.sh",
+    "version:update": "./bin/update_version.sh"
   }
 }

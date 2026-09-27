@@ -1,0 +1,47 @@
+name: Validate PHP @version Tags
+
+on:
+  pull_request:
+    branches:
+      - trunk
+
+jobs:
+  version-check:
+    name: Validate @version Tag
+    # Release bumps replace 'x.x.x' with the real version by design.
+    if: ${{ !(github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 2  # Ensure we have enough history for 'git diff'
+
+      - name: Fetch trunk branch
+        run: git fetch origin trunk --depth=1  # Ensure trunk is available for comparison
+
+      - name: Make validate-version script executable
+        run: chmod +x bin/version_updated.sh
+
+      - name: Get changed PHP files
+        id: changed-files
+        run: |
+          echo "🔍 Checking for modified PHP files..."
+          FILES=$(git diff --name-only --diff-filter=ACM origin/trunk...HEAD | grep '\.php$' || true)
+          if [ -z "$FILES" ]; then
+            echo "✅ No PHP files changed. Skipping validation."
+            exit 0
+          fi
+          FILES_STRING=$(echo "$FILES" | tr '\n' ' ')  # Convert to space-separated string
+          echo "FILES=$FILES_STRING" >> $GITHUB_ENV
+          echo "🔹 Changed PHP files: $FILES_STRING"
+
+      - name: Run validation script on changed PHP files
+        id: validation
+        if: env.FILES != ''
+        run: |
+          echo "🔍 Running validation on changed PHP files..."
+          IFS=' ' read -r -a FILE_ARRAY <<< "${{ env.FILES }}"
+          ./bin/version_updated.sh "${FILE_ARRAY[@]}"
