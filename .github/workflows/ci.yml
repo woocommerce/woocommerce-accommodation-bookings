@@ -85,6 +85,7 @@ jobs:
               - '!**/*.md'
               - '!.markdownlintignore'
               - '!changelog.txt'
+              - '!changelog/**'
               - '!readme.txt'
               - '!.coderabbit.yaml'
 
