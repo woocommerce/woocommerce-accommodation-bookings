@@ -67,7 +67,7 @@ jobs:
           startsWith(github.event.pull_request.head.ref, 'release/') &&
           contains(fromJSON('["opened", "reopened", "closed"]'), github.event.action)
         runs-on: ubuntu-latest
-        timeout-minutes: 10
+        timeout-minutes: 5
         permissions:
           actions: write
           pull-requests: read
