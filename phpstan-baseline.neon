@@ -151,12 +151,6 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
-			message: '#^Variable \$intervals in empty\(\) is never defined\.$#'
-			identifier: empty.variable
-			count: 1
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
 			message: '#^WC_Product_Accommodation_Booking\:\:__construct\(\) calls parent\:\:__construct\(\) but WC_Product_Accommodation_Booking does not extend any class\.$#'
 			identifier: class.noParent
 			count: 1

@@ -250,10 +250,8 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			$available_slots = $product_cache ? WC_Bookings_Cache::get_product_cache( $transient_name, $product_id ) : get_transient( $transient_name );
 
 			if ( false === $available_slots ) {
-				if ( empty( $intervals ) ) {
-					$interval  = $bookable_product->get_min_duration();
-					$intervals = array( $interval, 1 );
-				}
+				$interval  = $bookable_product->get_min_duration();
+				$intervals = array( $interval, 1 );
 
 				list( $interval, $base_interval ) = $intervals;
 
