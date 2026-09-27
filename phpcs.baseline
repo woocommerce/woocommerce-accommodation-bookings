@@ -1,6 +1,6 @@
 {
     "historyAnalyser": "git",
-    "historyMarker": "a36e095953837cc3a93d20cfd1273fb7ffe5de41",
+    "historyMarker": "f723561fb3679a916cdb9ce7685a134eae5d45ef",
     "resultsParser": "phpcodesniffer-json",
     "analysisResults": [
         {
@@ -2314,112 +2314,112 @@
             "severity": "error"
         },
         {
-            "lineNumber": 329,
+            "lineNumber": 317,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
             "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
             "severity": "error"
         },
         {
-            "lineNumber": 334,
+            "lineNumber": 322,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.InlineComment.InvalidEndChar",
             "message": "Inline comments must end in full-stops, exclamation marks, or question marks",
             "severity": "error"
         },
         {
-            "lineNumber": 359,
+            "lineNumber": 380,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$start_date\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 359,
+            "lineNumber": 380,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$end_date\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 365,
+            "lineNumber": 386,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamType",
             "message": "Missing parameter type",
             "severity": "error"
         },
         {
-            "lineNumber": 366,
+            "lineNumber": 387,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamType",
             "message": "Missing parameter type",
             "severity": "error"
         },
         {
-            "lineNumber": 367,
+            "lineNumber": 388,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
             "message": "Missing parameter comment",
             "severity": "error"
         },
         {
-            "lineNumber": 367,
+            "lineNumber": 388,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
             "message": "Expected 1 spaces after parameter type; 6 found",
             "severity": "error"
         },
         {
-            "lineNumber": 368,
+            "lineNumber": 389,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
             "message": "Missing parameter comment",
             "severity": "error"
         },
         {
-            "lineNumber": 368,
+            "lineNumber": 389,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
             "message": "Expected 3 spaces after parameter type; 8 found",
             "severity": "error"
         },
         {
-            "lineNumber": 369,
+            "lineNumber": 390,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
             "message": "Missing parameter comment",
             "severity": "error"
         },
         {
-            "lineNumber": 369,
+            "lineNumber": 390,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
             "message": "Expected 1 spaces after parameter type; 6 found",
             "severity": "error"
         },
         {
-            "lineNumber": 370,
+            "lineNumber": 391,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
             "message": "Missing parameter comment",
             "severity": "error"
         },
         {
-            "lineNumber": 370,
+            "lineNumber": 391,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.SpacingAfterParamType",
             "message": "Expected 2 spaces after parameter type; 7 found",
             "severity": "error"
         },
         {
-            "lineNumber": 458,
+            "lineNumber": 479,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "WooCommerce.Commenting.CommentHooks.MissingSinceComment",
             "message": "Docblock comment was found for the hook but does not contain a \"@since\" versioning.",
             "severity": "error"
         },
         {
-            "lineNumber": 466,
+            "lineNumber": 487,
             "fileName": "includes\/class-wc-product-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamComment",
             "message": "Missing parameter comment",
@@ -2608,122 +2608,206 @@
             "severity": "error"
         },
         {
-            "lineNumber": 42,
+            "lineNumber": 61,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Generic.Commenting.DocComment.MissingShort",
             "message": "Missing short description in doc comment",
             "severity": "error"
         },
         {
-            "lineNumber": 68,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Generic.Commenting.DocComment.MissingShort",
-            "message": "Missing short description in doc comment",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 72,
+            "lineNumber": 65,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 73,
+            "lineNumber": 66,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'accommodation night'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 73,
+            "lineNumber": 66,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 74,
+            "lineNumber": 67,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 75,
+            "lineNumber": 68,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'ordinary booking night'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 75,
+            "lineNumber": 68,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 76,
+            "lineNumber": 69,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'ordinary booking label'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 76,
+            "lineNumber": 69,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 80,
+            "lineNumber": 73,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Generic.Commenting.DocComment.MissingShort",
             "message": "Missing short description in doc comment",
             "severity": "error"
         },
         {
-            "lineNumber": 80,
+            "lineNumber": 73,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$datetime\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 80,
+            "lineNumber": 73,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$time\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 80,
+            "lineNumber": 73,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$expected\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 82,
+            "lineNumber": 75,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Classes.RequireAnonClassParentheses.Missing",
             "message": "Parenthesis required when creating a new anonymous class.",
             "severity": "error"
         },
         {
-            "lineNumber": 83,
+            "lineNumber": 76,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.Missing",
             "message": "Missing doc comment for function timestamp()",
             "severity": "error"
         },
         {
-            "lineNumber": 90,
+            "lineNumber": 83,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.Missing",
             "message": "Missing doc comment for function timestampProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 84,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 85,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 12 space(s) between \"'no override'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 85,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 7 space(s) between \"'missing override'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 86,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 87,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'midnight at year end'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 87,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 88,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'new year check in'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 88,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 89,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 5 space(s) between \"'leap day check out'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 89,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 90,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 9 space(s) between \"'month boundary'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 90,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
@@ -2734,227 +2818,213 @@
             "severity": "error"
         },
         {
-            "lineNumber": 92,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 12 space(s) between \"'no override'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 92,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 93,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 7 space(s) between \"'missing override'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 93,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 94,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'midnight at year end'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 94,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
             "lineNumber": 95,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'new year check in'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 95,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 96,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 5 space(s) between \"'leap day check out'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 96,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 97,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 9 space(s) between \"'month boundary'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 97,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 98,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 102,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Generic.Commenting.DocComment.MissingShort",
             "message": "Missing short description in doc comment",
             "severity": "error"
         },
         {
-            "lineNumber": 102,
+            "lineNumber": 95,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$product_class\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 102,
+            "lineNumber": 95,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$enabled\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 102,
+            "lineNumber": 95,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$expected\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 110,
+            "lineNumber": 103,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.Missing",
             "message": "Missing doc comment for function overlappingRatesProvider()",
             "severity": "error"
         },
         {
-            "lineNumber": 111,
+            "lineNumber": 104,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 112,
+            "lineNumber": 105,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'accommodation disables overlap'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 112,
+            "lineNumber": 105,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 113,
+            "lineNumber": 106,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 4 space(s) between \"'accommodation keeps disabled'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 113,
+            "lineNumber": 106,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 114,
+            "lineNumber": 107,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'ordinary booking keeps enabled'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 114,
+            "lineNumber": 107,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 115,
+            "lineNumber": 108,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 119,
+            "lineNumber": 112,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Generic.Commenting.DocComment.MissingShort",
             "message": "Missing short description in doc comment",
             "severity": "error"
         },
         {
-            "lineNumber": 119,
+            "lineNumber": 112,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$method\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 119,
+            "lineNumber": 112,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$expected\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 123,
+            "lineNumber": 116,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 123,
+            "lineNumber": 116,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 123,
+            "lineNumber": 116,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 117,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 118,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
+            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
+            "message": "Only one argument is allowed per line in a multi-line function call",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
+            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 121,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
+            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
+            "message": "There should be a comma after the last array item in a multi-line array.",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
+            "message": "Array closer not aligned correctly; expected 8 space(s) but found 10",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
+            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 123,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
+            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
             "severity": "error"
         },
         {
@@ -2965,151 +3035,123 @@
             "severity": "error"
         },
         {
-            "lineNumber": 125,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 128,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
-            "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 128,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
-            "message": "Only one argument is allowed per line in a multi-line function call",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 128,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
-            "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 128,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 128,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
-            "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 130,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
-            "message": "There should be a comma after the last array item in a multi-line array.",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 130,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
-            "message": "Array closer not aligned correctly; expected 8 space(s) but found 10",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 130,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
-            "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 130,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
-            "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 131,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 133,
+            "lineNumber": 126,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'start'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 134,
+            "lineNumber": 127,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 8 space(s) between \"'end'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 139,
+            "lineNumber": 132,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.Missing",
             "message": "Missing doc comment for function formattedDatesProvider()",
             "severity": "error"
         },
         {
-            "lineNumber": 140,
+            "lineNumber": 133,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 141,
+            "lineNumber": 134,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'check in'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 141,
+            "lineNumber": 134,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 142,
+            "lineNumber": 135,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 146,
+            "lineNumber": 139,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Generic.Commenting.DocComment.MissingShort",
             "message": "Missing short description in doc comment",
             "severity": "error"
         },
         {
-            "lineNumber": 146,
+            "lineNumber": 139,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$method\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 146,
+            "lineNumber": 139,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$product_type\" missing",
             "severity": "error"
+        },
+        {
+            "lineNumber": 146,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 147,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 150,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Squiz.Commenting.FunctionComment.Missing",
+            "message": "Missing doc comment for function unrelatedDatesProvider()",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 151,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 152,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'missing check in product'\" and double arrow, but found 1.",
+            "severity": "warning"
+        },
+        {
+            "lineNumber": 152,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
+            "message": "Short array syntax is not allowed",
+            "severity": "error"
+        },
+        {
+            "lineNumber": 153,
+            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
+            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'ordinary check in product'\" and double arrow, but found 1.",
+            "severity": "warning"
         },
         {
             "lineNumber": 153,
@@ -3121,355 +3163,306 @@
         {
             "lineNumber": 154,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 157,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Squiz.Commenting.FunctionComment.Missing",
-            "message": "Missing doc comment for function unrelatedDatesProvider()",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 158,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 159,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 3 space(s) between \"'missing check in product'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 159,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 160,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
-            "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'ordinary check in product'\" and double arrow, but found 1.",
-            "severity": "warning"
-        },
-        {
-            "lineNumber": 160,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
-            "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
-            "message": "Short array syntax is not allowed",
-            "severity": "error"
-        },
-        {
-            "lineNumber": 161,
-            "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 2 space(s) between \"'missing check out product'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 161,
+            "lineNumber": 154,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 162,
+            "lineNumber": 155,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 166,
+            "lineNumber": 159,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.Missing",
             "message": "Missing doc comment for function testDataStoreRegistrationKeepsUnrelatedStores()",
             "severity": "error"
         },
         {
-            "lineNumber": 168,
+            "lineNumber": 161,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 168,
+            "lineNumber": 161,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 170,
+            "lineNumber": 163,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 170,
+            "lineNumber": 163,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
             "severity": "error"
         },
         {
-            "lineNumber": 171,
+            "lineNumber": 164,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 171,
+            "lineNumber": 164,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
             "severity": "error"
         },
         {
-            "lineNumber": 186,
+            "lineNumber": 179,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 186,
+            "lineNumber": 179,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 186,
+            "lineNumber": 179,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
             "severity": "error"
         },
         {
-            "lineNumber": 187,
+            "lineNumber": 180,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 187,
+            "lineNumber": 180,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
             "severity": "error"
         },
         {
-            "lineNumber": 188,
+            "lineNumber": 181,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 188,
+            "lineNumber": 181,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 188,
+            "lineNumber": 181,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
             "severity": "error"
         },
         {
-            "lineNumber": 190,
+            "lineNumber": 183,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 191,
+            "lineNumber": 184,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket",
             "message": "Opening parenthesis of a multi-line function call must be the last content on the line",
             "severity": "error"
         },
         {
-            "lineNumber": 191,
+            "lineNumber": 184,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
             "message": "Only one argument is allowed per line in a multi-line function call",
             "severity": "error"
         },
         {
-            "lineNumber": 191,
+            "lineNumber": 184,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerMultiLine",
             "message": "Expected a new line after the array opener in a multi line array. Found: 1 space",
             "severity": "error"
         },
         {
-            "lineNumber": 191,
+            "lineNumber": 184,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 191,
+            "lineNumber": 184,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
             "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
             "severity": "error"
         },
         {
-            "lineNumber": 191,
+            "lineNumber": 184,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine",
             "message": "Each item in a multi-line array must be on a new line. Found: 1 space",
             "severity": "error"
         },
         {
-            "lineNumber": 194,
+            "lineNumber": 187,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "NormalizedArrays.Arrays.CommaAfterLast.MissingMultiLineCloserSameLine",
             "message": "There should be a comma after the last array item in a multi-line array.",
             "severity": "error"
         },
         {
-            "lineNumber": 194,
+            "lineNumber": 187,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayIndentation.CloseBraceNotAligned",
             "message": "Array closer not aligned correctly; expected 8 space(s) but found 10",
             "severity": "error"
         },
         {
-            "lineNumber": 194,
+            "lineNumber": 187,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserMultiLine",
             "message": "Expected a new line before the array closer in a multi line array. Found: 1 space",
             "severity": "error"
         },
         {
-            "lineNumber": 194,
+            "lineNumber": 187,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "PEAR.Functions.FunctionCallSignature.CloseBracketLine",
             "message": "Closing parenthesis of a multi-line function call must be on a line by itself",
             "severity": "error"
         },
         {
-            "lineNumber": 196,
+            "lineNumber": 189,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 196,
+            "lineNumber": 189,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound",
             "message": "When a multi-item array is declared with explicit keys, each value should start on a new line.",
             "severity": "error"
         },
         {
-            "lineNumber": 199,
+            "lineNumber": 192,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Generic.Commenting.DocComment.MissingShort",
             "message": "Missing short description in doc comment",
             "severity": "error"
         },
         {
-            "lineNumber": 199,
+            "lineNumber": 192,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$product_class\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 199,
+            "lineNumber": 192,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.MissingParamTag",
             "message": "Doc comment for parameter \"$expected\" missing",
             "severity": "error"
         },
         {
-            "lineNumber": 209,
+            "lineNumber": 202,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
             "message": "Only one argument is allowed per line in a multi-line function call",
             "severity": "error"
         },
         {
-            "lineNumber": 209,
+            "lineNumber": 202,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
             "message": "Only one argument is allowed per line in a multi-line function call",
             "severity": "error"
         },
         {
-            "lineNumber": 209,
+            "lineNumber": 202,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "PEAR.Functions.FunctionCallSignature.MultipleArguments",
             "message": "Only one argument is allowed per line in a multi-line function call",
             "severity": "error"
         },
         {
-            "lineNumber": 214,
+            "lineNumber": 207,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Squiz.Commenting.FunctionComment.Missing",
             "message": "Missing doc comment for function icsDatesProvider()",
             "severity": "error"
         },
         {
-            "lineNumber": 215,
+            "lineNumber": 208,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 216,
+            "lineNumber": 209,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 31 space(s) between \"'no booking'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 216,
+            "lineNumber": 209,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 217,
+            "lineNumber": 210,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
             "message": "Array double arrow not aligned correctly; expected 6 space(s) between \"'accommodation retains filtered date'\" and double arrow, but found 1.",
             "severity": "warning"
         },
         {
-            "lineNumber": 217,
+            "lineNumber": 210,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
             "severity": "error"
         },
         {
-            "lineNumber": 218,
+            "lineNumber": 211,
             "fileName": "tests\/phpunit\/test-class-wc-accommodation-booking.php",
             "type": "Universal.Arrays.DisallowShortArraySyntax.Found",
             "message": "Short array syntax is not allowed",
