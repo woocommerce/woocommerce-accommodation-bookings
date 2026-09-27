@@ -54,6 +54,7 @@
   "scripts": {
     "prebuild": "rm -rf ./vendor && composer install",
     "build": "npm run build:webpack && npm run makepot && npm run archive",
+    "build:zip": "npm run build",
     "build:webpack": "wp-scripts build",
     "start:webpack": "wp-scripts start",
     "build:dev": "composer install && npm run build:webpack && npm run makepot",
