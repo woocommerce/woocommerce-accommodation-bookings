@@ -2,7 +2,7 @@
     "name": "woocommerce/woocommerce-accommodation-bookings-phpcs-tools",
     "description": "Development tools for the PHP coding standards baseline.",
     "type": "project",
-    "license": "GPL-2.0-or-later",
+    "license": "GPL-3.0-or-later",
     "require-dev": {
         "dave-liddament/sarb": "1.10.0",
         "dealerdirect/phpcodesniffer-composer-installer": "1.2.1",
