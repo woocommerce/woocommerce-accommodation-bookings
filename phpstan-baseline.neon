@@ -13,6 +13,48 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
 
 		-
+			message: '#^Call to method admin_options\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Call to method get_option\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Call to method get_option_key\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:instance\(\) has invalid return type WC_Bookings_Timezone_Settings\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$_instance\)\: Unexpected token "\$_instance", expected type at offset 55 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:has_restricted_days\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability.php
+
+		-
 			message: '#^Function wc_bookings_string_to_bool not found\.$#'
 			identifier: function.notFound
 			count: 2
@@ -23,6 +65,48 @@ parameters:
 			identifier: function.notFound
 			count: 1
 			path: includes/class-wc-accommodation-booking-cart-manager.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_id\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:is_resource_assignment_type\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to method get_blocks_in_range_for_day\(\) on an unknown class WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to method get_duration_unit\(\) on an unknown class WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to method get_id\(\) on an unknown class WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to method has_resources\(\) on an unknown class WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to method is_resource_assignment_type\(\) on an unknown class WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
 			message: '#^Call to static method get_all_existing_bookings\(\) on an unknown class WC_Booking_Data_Store\.$#'
@@ -55,10 +139,34 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Parameter \$product of method WC_Accommodation_Booking_Date_Picker\:\:add_accommodation_posted_data\(\) has invalid type WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_check_in_and_out_times\(\) has invalid type WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_product_resource_available_blocks_on_time\(\) has invalid type WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Variable \$day might not be defined\.$#'
 			identifier: variable.undefined
 			count: 3
 			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Call to an undefined method WC_Order_Item\:\:get_product\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
 
 		-
 			message: '#^Action callback returns array but should not return anything\.$#'
@@ -67,8 +175,32 @@ parameters:
 			path: includes/class-wc-accommodation-booking-product-tabs.php
 
 		-
+			message: '#^Call to method get_product\(\) on an unknown class WC_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Parameter \$booking of method WC_Accommodation_Booking\:\:disable_ics_formatting_for_accommodation\(\) has invalid type WC_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Parameter \$product of method WC_Accommodation_Booking\:\:disable_overlapping_rates\(\) has invalid type WC_Product_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
 			message: '#^Action callback returns bool\|WP_Error but should not return anything\.$#'
 			identifier: return.void
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Call to an undefined method WC_Product\:\:get_person_types\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
@@ -77,6 +209,18 @@ parameters:
 			identifier: function.notFound
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Call to an undefined method WC_Product\:\:get_resource_base_costs\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking-resource.php
+
+		-
+			message: '#^Call to an undefined method WC_Product\:\:get_resource_block_costs\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking-resource.php
 
 		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking_Resource\:\:get_id\(\)\.$#'
@@ -89,6 +233,12 @@ parameters:
 			identifier: method.notFound
 			count: 4
 			path: includes/class-wc-product-accommodation-booking-resource.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:check_availability_rules_against_time\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
 
 		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_blocks_in_range_for_day\(\)\.$#'
@@ -105,7 +255,13 @@ parameters:
 		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_id\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 3
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_min_duration\(\)\.$#'
+			identifier: method.notFound
+			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
@@ -127,8 +283,44 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_qty\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:get_resource_ids\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:has_person_qty_multiplier\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:has_resources\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to method get_id\(\) on an unknown class WC_Product_Booking_Resource\.$#'
+			identifier: class.notFound
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to method get_qty\(\) on an unknown class WC_Product_Booking_Resource\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to method has_qty\(\) on an unknown class WC_Product_Booking_Resource\.$#'
+			identifier: class.notFound
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
@@ -148,6 +340,34 @@ parameters:
 			message: '#^Class WC_Product_Accommodation_Booking_Resource does not have a constructor and must be instantiated without any parameters\.$#'
 			identifier: new.noConstructor
 			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) has invalid return type WC_Product_Booking_Resource\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(WC_Product\)\: Unexpected token "\\n\\t\\t \*", expected variable at offset 59 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$intervals$#'
+			identifier: parameter.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '''
+				#^PHPDoc tag @return has invalid value \(array\(
+				  type WC_Product_Accommodation_Booking_Resource
+				\)\)\: Unexpected token "\(", expected TOKEN_HORIZONTAL_WS at offset 83 on line 6$#
+			'''
+			identifier: phpDoc.parseError
+			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
