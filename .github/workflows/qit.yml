@@ -13,6 +13,7 @@ on:
           - activation
           - api
           - e2e
+          # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (phpstan.yml) is the gate.
           - phpstan
           - phpcompat
           - validation
