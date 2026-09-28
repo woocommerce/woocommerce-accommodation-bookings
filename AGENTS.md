@@ -16,7 +16,9 @@ The plugin header requires PHP 7.4+, WordPress 6.9+, and WooCommerce 10.9+. Chec
 | `includes/admin/`, `includes/integrations/` | Admin screens and integration code. |
 | `src/js/`, `src/css/` | Source assets; webpack writes generated files under `build/`. |
 | `tests/phpunit/` | Isolated PHPUnit/WP_Mock tests. |
+| `tests/isolated/` | Composer-only PHPUnit tests (the changelog formatter); no WordPress or WP_Mock. |
 | `tests/e2e/` | Playwright specs, fixtures, and configuration. |
+| `changelog/`, `tools/changelogger/` | Pending change files and the Jetpack Changelogger formatter that compiles them into `changelog.txt`. |
 
 ## Commands
 
@@ -48,6 +50,7 @@ CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline c
 
 ```bash
 composer test
+composer test:isolated   # tests/isolated: changelog formatter round-trip, no WordPress
 ```
 
 `phpunit.xml` loads `tests/phpunit/bootstrap.php`, which boots WP_Mock, defines a stub `WC_VERSION`, and loads `WC_Accommodation_Booking`. This is an isolated suite, not a full WordPress/WooCommerce/Bookings integration environment. Use it for supported isolated cases and Playwright or manual integration checks for behavior involving Bookings products, dates, availability, cart, or orders.
@@ -75,6 +78,45 @@ npm run env:destroy             # Remove this environment's containers and volum
 Run these from the active worktree after installing dependencies and building the plugin. The fixtures in `tests/e2e/bin/initialize.sh` create users, pages, and store settings; use a disposable test environment. Extend the existing Playwright specs in `tests/e2e/specs/` and report which scenarios ran. A foundational or focused run is not full-suite coverage.
 
 `tests/e2e/config/index.js` fixes the base URL to `http://localhost:8889`. Run one default-port wp-env environment at a time across worktrees; stop the other worktree's environment from that worktree before starting this one. Changing wp-env ports alone does not update Playwright's URL. Keep each worktree's dependencies and fixtures separate, and destroy its test environment before removing it. Configurable parallel ports are follow-up tooling work.
+
+### Changelog
+
+`changelog.txt` is **generated**. Never edit it by hand. Each pull request drops a change file
+into `changelog/` instead, and [Jetpack Changelogger](https://github.com/Automattic/jetpack-changelogger)
+compiles them into `changelog.txt` at release time.
+
+```bash
+npm run changelog add          # Interactive: significance, type, and the entry
+npm run changelog validate     # Check every change file under changelog/
+npm run changelog:check        # What CI runs: this branch has a valid change file
+```
+
+`changelog:check` also counts a change file that is only staged or still untracked, and says
+so in its listing. CI diffs commits, so an uncommitted change file is one CI will never see.
+
+`changelog add` names the file after the current git branch. Commit it with the rest of the
+pull request:
+
+```text
+Significance: patch
+Type: fix
+
+Validate person-record ownership and edit permissions before saving accommodation person types.
+```
+
+| Field | Values | Notes |
+| --- | --- | --- |
+| `Significance` | `patch`, `minor`, `major` | Only `patch` may have an empty entry. Versions are set at release time, so this does not pick the next version. |
+| `Type` | `new`, `fix`, `tweak`, `dev` | Becomes the `* Fix - ...` prefix in `changelog.txt`. Entries are grouped by type in that order. |
+| Entry | One line | Multi-line entries are rejected: every line after the first is re-read as its own entry when the changelog is next parsed. Put extra detail in a `Comment:` header instead, which is not compiled into `changelog.txt`. |
+
+The `Changelog / Check changelog` CI job requires an added change file on every pull request.
+Label the pull request **`no changelog`** for changes that need no entry (CI, tooling, docs). The
+label waives the requirement, not the format: a change file added anyway is still validated.
+Release branches and Dependabot pull requests are skipped entirely.
+
+The formatter that preserves the `changelog.txt` format lives in `tools/changelogger/`, and is
+configured under `extra.changelogger` in `composer.json`.
 
 ## Repository compatibility contracts
 
@@ -158,8 +200,8 @@ Build on existing extension points such as `WC_Data`, `WC_Data_Store_WP`, `WC_Se
 ## Contribution and tooling notes
 
 - Follow the parent SWW instructions for Git/Linear work and the repository's `.github/PULL_REQUEST_TEMPLATE.md`. Use the global authenticated `gh` CLI for GitHub operations; commit, push, and draft-PR creation each need their own authorization.
-- The current template keeps the changelog entry in the PR body, with `Add|Fix|Dev` prefixes. Its exemption label is `changelog: none`. In this workspace, record a docs-only exemption in the PR body; do not change GitHub labels without authorization. Keep the changelog heading so the template's fallback does not use the PR title as an entry.
-- The template has no auto-assign-milestone checkbox. Report that missing control instead of inventing a checked box. Changelog-file and milestone automation remain separate alignment work.
+- **Always add a changelog file.** Run `npm run changelog add` and commit the file it creates under `changelog/`, one per PR. Never edit `changelog.txt` directly - it is compiled from the change files at release time. See [Changelog](#changelog).
+- The template has no auto-assign-milestone checkbox. Report that missing control instead of inventing a checked box. Milestone automation remains separate alignment work.
 - QIT runs weekly with validation; QIT PHPStan stays off because the repo's own PHPStan (level 1) is the gate.
 - `.github/workflows/deploy.yml` uses the `Deploy Product` workflow and `woocommerce/woo-product-deploy`. Building a ZIP does not authorize dispatching a release. Keep the existing release tooling.
 - Review rules for PHP DocBlock version tags live in `.github/instructions/php.instructions.md`. Ignore missing, incorrect, or placeholder `@version`/`@since` tags in review; continue following the configured coding standards when editing PHP.

@@ -1,0 +1,4 @@
+Significance: minor
+Type: dev
+
+Managed changelog entries with the Jetpack Changelogger, so pull requests add a change file instead of writing the entry in the pull request description.

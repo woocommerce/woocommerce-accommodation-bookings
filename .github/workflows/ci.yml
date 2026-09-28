@@ -45,6 +45,7 @@ jobs:
               - 'tests/bin/*.sh'
               - 'bin/php*.sh'
               - 'tools/php-quality/**'
+              - 'tests/isolated/**'
             frontend:
               - '**/*.{js,jsx,ts,tsx,mjs,cjs,scss,css}'
               - 'package.json'
@@ -78,6 +79,7 @@ jobs:
               # tooling config.
               - '**'
               - '!tests/phpunit/**'
+              - '!tests/isolated/**'
               - '!tests/integration/**'
               - '!tests/bin/**'
               - '!phpunit.xml'
@@ -85,6 +87,7 @@ jobs:
               - '!**/*.md'
               - '!.markdownlintignore'
               - '!changelog.txt'
+              - '!changelog/**'
               - '!readme.txt'
               - '!.coderabbit.yaml'
 

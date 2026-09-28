@@ -18,10 +18,17 @@
         "phpstan/phpstan": "^2.1",
         "szepeviktor/phpstan-wordpress": "^2.0",
         "php-stubs/woocommerce-stubs": "^10.9",
-        "yoast/phpunit-polyfills": "^1.1"
+        "yoast/phpunit-polyfills": "^1.1",
+        "automattic/jetpack-changelogger": "^6.0"
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tools/changelogger/"
+        ]
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
+        "test:isolated": "phpunit -c tests/isolated/phpunit.xml.dist",
         "lint:php": "bash bin/phplint.sh",
         "lint:phpcs": "phpcs",
         "lint:phpcs:baseline": "bash bin/phpcs.sh",
@@ -42,6 +49,26 @@
             "composer/installers": true,
             "automattic/jetpack-autoloader": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "extra": {
+        "changelogger": {
+            "changelog": "changelog.txt",
+            "changes-dir": "changelog",
+            "types": {
+                "new": "New",
+                "fix": "Fix",
+                "tweak": "Tweak",
+                "dev": "Dev"
+            },
+            "ordering": [
+                "subheading"
+            ],
+            "formatter": {
+                "class": "SomewhereWarm\\Changelogger\\Changelog_Formatter",
+                "title": "*** Changelog ***"
+            },
+            "versioning": "semver"
         }
     }
 }

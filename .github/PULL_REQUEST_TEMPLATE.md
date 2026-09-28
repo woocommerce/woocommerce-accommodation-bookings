@@ -23,22 +23,16 @@ Closes # .
 1.
 1.
 
-<!--
-Optional.
-Enter a summary of all changes in this Pull Request, which will be added to the changelog if accepted.
-Each line should start with change type prefix`(Fix|Add|…) - `, for example:
-> Break - A change breaking previous API or functionality.
-> Add - A new feature, function or functionality was added.
-> Update - Big changes to something that wasn't broken.
-> Fix - Took care of something that wasn't working.
-> Tweak - Small change, that isn't actually very important.
-> Dev - Developer-facing only change.
-> Doc - Updated customer or developer facing documentation
-
-If you remove the "Changelog entry" header, the Pull Request title will be used as the changelog entry.
-
-Add the `changelog: none` label if no changelog entry is needed.
--->
 ### Changelog entry
 
->
+* [ ] Have you added a change file with `npm run changelog add`?
+
+<!--
+Changelog entries are change files under `changelog/`. Run
+`npm run changelog add`, answer the prompts (significance, type, and a one-line entry),
+and commit the file it creates. Do not edit `changelog.txt` by hand - it is compiled
+from the change files at release time.
+
+If this change needs no entry (CI, tooling, docs), label the Pull Request `no changelog`
+instead.
+-->

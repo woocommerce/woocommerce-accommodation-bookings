@@ -36,6 +36,7 @@ jobs:
           build
           assets
           tools
+          changelog
 
         # Development configuration and documentation.
         exclude-files: |
