@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Run PHPCS and QIT tooling on PHP 8.4.

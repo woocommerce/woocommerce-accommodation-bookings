@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Bound accommodation availability caching and avoid duplicate registry entries on cache hits.
