@@ -20,7 +20,7 @@ require_once dirname( __DIR__, 2 ) . '/vendor/autoload.php';
  *
  * @version x.x.x
  */
-class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
+class SomewhereWarm_Changelog_Formatter_Tests extends TestCase {
 
 	/**
 	 * The formatter under test.
@@ -34,7 +34,18 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
-		$this->formatter = new Changelog_Formatter( array( 'title' => '*** Changelog ***' ) );
+		$this->formatter = new Changelog_Formatter( array( 'title' => $this->configured_title() ) );
+	}
+
+	/**
+	 * Title configured for the formatter under `extra.changelogger` in composer.json.
+	 *
+	 * @return string
+	 */
+	private function configured_title() {
+		$composer = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/composer.json' ), true );
+
+		return $composer['extra']['changelogger']['formatter']['title'];
 	}
 
 	/**
@@ -73,10 +84,12 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 * The shipped changelog must parse into entries, not silently into one blob.
 	 */
 	public function test_real_changelog_parses_into_entries() {
-		$changelog = $this->formatter->parse( file_get_contents( $this->changelog_path() ) );
+		$contents  = file_get_contents( $this->changelog_path() );
+		$changelog = $this->formatter->parse( $contents );
 
-		$this->assertSame( '*** Changelog ***', $changelog->getPrologue() );
-		$this->assertGreaterThan( 70, count( $changelog->getEntries() ) );
+		$this->assertSame( $this->configured_title(), $changelog->getPrologue() );
+		$this->assertNotEmpty( $changelog->getEntries() );
+		$this->assertCount( preg_match_all( '/^= /m', $contents ), $changelog->getEntries() );
 
 		$latest = $changelog->getLatestEntry();
 
@@ -89,8 +102,8 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_parses_headings_and_typed_entries() {
 		$changelog = $this->formatter->parse(
-			"*** Changelog ***\n\n"
-			. "= 1.3.12 - 2026-08-26 =\n"
+			"*** Title ***\n\n"
+			. "= 1.5.1 - 2026-09-17 =\n"
 			. "* Fix - Fixed a thing.\n"
 			. "* Tweak - Tweaked a thing.\n"
 		);
@@ -98,8 +111,8 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 		$entries = $changelog->getEntries();
 
 		$this->assertCount( 1, $entries );
-		$this->assertSame( '1.3.12', $entries[0]->getVersion() );
-		$this->assertSame( '2026-08-26', $entries[0]->getTimestamp()->format( 'Y-m-d' ) );
+		$this->assertSame( '1.5.1', $entries[0]->getVersion() );
+		$this->assertSame( '2026-09-17', $entries[0]->getTimestamp()->format( 'Y-m-d' ) );
 
 		$changes = $entries[0]->getChanges();
 
@@ -114,18 +127,18 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_entry_content_may_contain_the_separator() {
 		$changelog = $this->formatter->parse(
-			"*** Title ***\n\n= 1.3.12 - 2026-08-26 =\n* Fix - Booked nights - and their rates - are restored.\n"
+			"*** Title ***\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Saved settings - and their defaults - are restored.\n"
 		);
 
 		$change = $changelog->getEntries()[0]->getChanges()[0];
 
 		$this->assertSame( 'Fix', $change->getSubheading() );
-		$this->assertSame( 'Booked nights - and their rates - are restored.', $change->getContent() );
+		$this->assertSame( 'Saved settings - and their defaults - are restored.', $change->getContent() );
 	}
 
 	/**
-	 * Legacy shapes the file still carries must round-trip untouched: bullets with no
-	 * type at all, and types this plugin no longer issues.
+	 * Legacy shapes changelogs still carry must round-trip untouched: bullets with no
+	 * type at all, types we no longer issue, and types written with a colon or an en dash.
 	 *
 	 * @dataProvider provide_legacy_shapes
 	 *
@@ -142,13 +155,14 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function provide_legacy_shapes() {
 		return array(
-			'bullet with no type'    => array( "*** Title ***\n\n= 1.0 - 2016-01-04 =\n* Initial version.\n" ),
-			'retired type Add'       => array( "*** Title ***\n\n= 1.1.15 - 2020-03-06 =\n* Add - Add basic unit tests suite.\n" ),
-			'retired type Update'    => array( "*** Title ***\n\n= 1.3.11 - 2026-07-29 =\n* Update - Calendar display option text to clarify user interaction.\n" ),
-			'retired type Feature'   => array( "*** Title ***\n\n= 1.0.4 - 2016-05-26 =\n* Feature - Add support for Persons\n" ),
-			'retired type Fixed'     => array( "*** Title ***\n\n= 1.1.34 - 2022-11-01 =\n* Fixed - PHP 8.0/8.1 Compatibility issue fixed: Critical error when cost in range is empty if Standard room rate is empty as well.\n" ),
-			'retired type Remove'    => array( "*** Title ***\n\n= 1.1.6 - 2019-04-17 =\n* Remove - partially booked days styling.\n" ),
-			'several entries'        => array( "*** Title ***\n\n= 1.3.12 - 2026-08-26 =\n* Fix - Second.\n\n= 1.3.11 - 2026-07-29 =\n* New - First.\n" ),
+			'bullet with no type'    => array( "*** Title ***\n\n= 1.0.0 - 2021-10-25 =\n* Initial release.\n" ),
+			'retired type Add'       => array( "*** Title ***\n\n= 1.1.0 - 2022-01-10 =\n* Add - Settings link to plugin action links.\n" ),
+			'retired type Feature'   => array( "*** Title ***\n\n= 1.1.0 - 2022-01-10 =\n* Feature - Introduced a filter.\n" ),
+			'retired type Important' => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Important - Declared support for WooCommerce 6.2.\n" ),
+			'retired type Update'    => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Update - Updated the settings screen copy.\n" ),
+			'colon in the type'      => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Feature: Added support for a third-party plugin.\n" ),
+			'en dash in the type'    => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Fix – Fixed the changelog for the 1.1.0 release.\n" ),
+			'several entries'        => array( "*** Title ***\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Second.\n\n= 1.5.0 - 2026-09-09 =\n* New - First.\n" ),
 		);
 	}
 
@@ -157,11 +171,11 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 * headings below it.
 	 */
 	public function test_new_entry_leaves_legacy_dates_alone() {
-		$changelog = $this->formatter->parse( "*** Title ***\n\n= 1.0 - 2016-01-04 =\n* Fix - Fixed a thing.\n" );
+		$changelog = $this->formatter->parse( "*** Title ***\n\n= 1.0.0 - 2021-10-25 =\n* Fix - Fixed a thing.\n" );
 
 		$changelog->addEntry(
 			$this->formatter->newChangelogEntry(
-				'1.3.13',
+				'1.5.2',
 				array(
 					'timestamp' => new DateTime( '2026-09-01', new DateTimeZone( 'UTC' ) ),
 					'changes'   => array(
@@ -177,7 +191,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 		);
 
 		$this->assertSame(
-			"*** Title ***\n\n= 1.3.13 - 2026-09-01 =\n* New - Added a thing.\n\n= 1.0 - 2016-01-04 =\n* Fix - Fixed a thing.\n",
+			"*** Title ***\n\n= 1.5.2 - 2026-09-01 =\n* New - Added a thing.\n\n= 1.0.0 - 2021-10-25 =\n* Fix - Fixed a thing.\n",
 			$this->formatter->format( $changelog )
 		);
 	}
@@ -192,7 +206,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 
 		$changelog->addEntry(
 			$this->formatter->newChangelogEntry(
-				'1.3.13',
+				'1.5.2',
 				array(
 					'timestamp' => new DateTime( '2026-09-01', new DateTimeZone( 'UTC' ) ),
 					'changes'   => array(
@@ -214,7 +228,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 		);
 
 		$this->assertSame(
-			"*** Changelog ***\n\n= 1.3.13 - 2026-09-01 =\n* Tweak - Tweaked a thing.\n",
+			$this->configured_title() . "\n\n= 1.5.2 - 2026-09-01 =\n* Tweak - Tweaked a thing.\n",
 			$this->formatter->format( $changelog )
 		);
 	}
@@ -227,16 +241,16 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 
 		$changelog->addEntry(
 			$this->formatter->newChangelogEntry(
-				'1.0',
+				'1.0.0',
 				array(
-					'timestamp' => new DateTime( '2016-01-04', new DateTimeZone( 'UTC' ) ),
+					'timestamp' => new DateTime( '2021-10-25', new DateTimeZone( 'UTC' ) ),
 					'changes'   => array( $this->formatter->newChangeEntry( array( 'content' => 'Initial release.' ) ) ),
 				)
 			)
 		);
 
 		$this->assertSame(
-			"*** Changelog ***\n\n= 1.0 - 2016-01-04 =\n* Initial release.\n",
+			$this->configured_title() . "\n\n= 1.0.0 - 2021-10-25 =\n* Initial release.\n",
 			$this->formatter->format( $changelog )
 		);
 	}
@@ -247,7 +261,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_parse_rejects_a_bullet_before_the_first_heading() {
 		$this->expectException( InvalidArgumentException::class );
-		$this->formatter->parse( "*** Title ***\n\n* Fix - Orphaned entry.\n\n= 1.3.12 - 2026-08-26 =\n* Fix - Fixed a thing.\n" );
+		$this->formatter->parse( "*** Title ***\n\n* Fix - Orphaned entry.\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Fixed a thing.\n" );
 	}
 
 	/**
@@ -256,7 +270,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_parse_rejects_a_placeholder_date() {
 		$this->expectException( InvalidArgumentException::class );
-		$this->formatter->parse( "*** Title ***\n\n= 1.3.12 - 2026-xx-xx =\n* Fix - Fixed a thing.\n" );
+		$this->formatter->parse( "*** Title ***\n\n= 1.5.1 - 2026-xx-xx =\n* Fix - Fixed a thing.\n" );
 	}
 
 	/**
@@ -292,7 +306,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_parse_rejects_a_placeholder_heading_after_the_first_release() {
 		$this->expectException( InvalidArgumentException::class );
-		$this->formatter->parse( "*** Title ***\n\n= 1.3.12 - 2026-08-26 =\n* Fix - Fixed a thing.\n\n= {$this->placeholder_version()} - 2026-07-01 =\n* Fix - Fixed another thing.\n" );
+		$this->formatter->parse( "*** Title ***\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Fixed a thing.\n\n= {$this->placeholder_version()} - 2026-07-01 =\n* Fix - Fixed another thing.\n" );
 	}
 
 	/**
@@ -311,7 +325,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_parse_rejects_an_impossible_date() {
 		$this->expectException( InvalidArgumentException::class );
-		$this->formatter->parse( "*** Title ***\n\n= 1.3.12 - 2026-02-30 =\n* Fix - Fixed a thing.\n" );
+		$this->formatter->parse( "*** Title ***\n\n= 1.5.1 - 2026-02-30 =\n* Fix - Fixed a thing.\n" );
 	}
 
 	/**
@@ -323,7 +337,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 
 		$changelog->addEntry(
 			$this->formatter->newChangelogEntry(
-				'1.3.13',
+				'1.5.2',
 				array(
 					'timestamp' => null,
 					'changes'   => array(
@@ -340,11 +354,11 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 
 		$written = $this->formatter->format( $changelog );
 
-		$this->assertSame( "*** Changelog ***\n\n= 1.3.13 - unreleased =\n* Fix - Fixed a thing.\n", $written );
+		$this->assertSame( $this->configured_title() . "\n\n= 1.5.2 - unreleased =\n* Fix - Fixed a thing.\n", $written );
 
 		$entry = $this->formatter->parse( $written )->getLatestEntry();
 
-		$this->assertSame( '1.3.13', $entry->getVersion() );
+		$this->assertSame( '1.5.2', $entry->getVersion() );
 		$this->assertNull( $entry->getTimestamp() );
 		$this->assertSame( $written, $this->round_trip( $written ) );
 	}
@@ -353,7 +367,7 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 * A title starting with `==`, like a readme section, is a title, not a heading.
 	 */
 	public function test_a_title_starting_with_equals_signs_is_not_a_heading() {
-		$changelog = "== Changelog ==\n\n= 1.0 - 2016-01-04 =\n* Initial release.\n";
+		$changelog = "== Changelog ==\n\n= 1.0.0 - 2021-10-25 =\n* Initial release.\n";
 
 		$this->assertSame( '== Changelog ==', $this->formatter->parse( $changelog )->getPrologue() );
 		$this->assertSame( $changelog, $this->round_trip( $changelog ) );
@@ -369,12 +383,12 @@ class WC_Accommodation_Bookings_Changelog_Formatter_Tests extends TestCase {
 	 */
 	public function test_parse_rejects_a_malformed_heading( $heading ) {
 		$this->expectException( InvalidArgumentException::class );
-		$this->formatter->parse( "*** Title ***\n\n= 1.3.12 - 2026-08-26 =\n* Fix - Fixed a thing.\n\n$heading\n* Fix - Fixed another thing.\n" );
+		$this->formatter->parse( "*** Title ***\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Fixed a thing.\n\n$heading\n* Fix - Fixed another thing.\n" );
 	}
 
 	/**
-	 * Malformed headings: broken WordPress.org ones, and the WooCommerce.com shape the
-	 * paid extensions use.
+	 * Malformed headings: broken WordPress.org ones, and the older WooCommerce.com shape
+	 * the changelogs used before.
 	 *
 	 * @return array
 	 */
