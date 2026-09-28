@@ -10,7 +10,7 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**
 	 * The single instance of the class.
 	 *
-	 * @var $_instance
+	 * @var WC_Accommodation_Booking_Admin_Product_Settings|null
 	 * @since 1.13.0
 	 */
 	protected static $_instance = null;

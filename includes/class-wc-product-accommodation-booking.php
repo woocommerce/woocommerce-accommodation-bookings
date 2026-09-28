@@ -94,11 +94,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		/**
 		 * Get resources objects.
 		 *
-		 * @param WC_Product
-		 *
-		 * @return array(
-		 *   type WC_Product_Accommodation_Booking_Resource
-		 * )
+		 * @return array Array of WC_Product_Accommodation_Booking_Resource objects.
 		 */
 		public function get_resources() {
 			$product_resources = array();

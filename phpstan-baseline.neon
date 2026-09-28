@@ -37,12 +37,6 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$_instance\)\: Unexpected token "\$_instance", expected type at offset 55 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
 			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -349,24 +343,8 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(WC_Product\)\: Unexpected token "\\n\\t\\t \*", expected variable at offset 59 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$intervals$#'
 			identifier: parameter.notFound
-			count: 1
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
-			message: '''
-				#^PHPDoc tag @return has invalid value \(array\(
-				  type WC_Product_Accommodation_Booking_Resource
-				\)\)\: Unexpected token "\(", expected TOKEN_HORIZONTAL_WS at offset 83 on line 6$#
-			'''
-			identifier: phpDoc.parseError
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
