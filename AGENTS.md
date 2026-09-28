@@ -202,6 +202,6 @@ Build on existing extension points such as `WC_Data`, `WC_Data_Store_WP`, `WC_Se
 - Follow the parent SWW instructions for Git/Linear work and the repository's `.github/PULL_REQUEST_TEMPLATE.md`. Use the global authenticated `gh` CLI for GitHub operations; commit, push, and draft-PR creation each need their own authorization.
 - **Always add a changelog file.** Run `npm run changelog add` and commit the file it creates under `changelog/`, one per PR. Never edit `changelog.txt` directly - it is compiled from the change files at release time. See [Changelog](#changelog).
 - The template has no auto-assign-milestone checkbox. Report that missing control instead of inventing a checked box. Milestone automation remains separate alignment work.
-- QIT runs weekly with validation; QIT PHPStan stays off because the repo's own PHPStan (level 1) is the gate.
+- QIT runs weekly with validation; QIT PHPStan stays off because the repo's own PHPStan (level 2) is the gate.
 - `.github/workflows/deploy.yml` uses the `Deploy Product` workflow and `woocommerce/woo-product-deploy`. Building a ZIP does not authorize dispatching a release. Keep the existing release tooling.
 - Review rules for PHP DocBlock version tags live in `.github/instructions/php.instructions.md`. Ignore missing, incorrect, or placeholder `@version`/`@since` tags in review; continue following the configured coding standards when editing PHP.
