@@ -3,7 +3,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 1
+    level: 2
     phpVersion: 70400
     bootstrapFiles:
         - phpstan-bootstrap.php
