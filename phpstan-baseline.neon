@@ -343,12 +343,6 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$intervals$#'
-			identifier: parameter.notFound
-			count: 1
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
 			message: '#^WC_Product_Accommodation_Booking\:\:__construct\(\) calls parent\:\:__construct\(\) but WC_Product_Accommodation_Booking does not extend any class\.$#'
 			identifier: class.noParent
 			count: 1

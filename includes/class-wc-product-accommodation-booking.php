@@ -231,7 +231,6 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 * Find available and booked blocks for specific resources (if any) and return them as array.
 		 *
 		 * @param  array   $blocks
-		 * @param  array   $intervals
 		 * @param  integer $resource_id
 		 * @param  integer $from The starting date for the set of blocks
 		 * @param  integer $to
