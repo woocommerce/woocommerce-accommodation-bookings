@@ -109,12 +109,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
-			message: '#^Callback expects 2 parameters, \$accepted_args is set to 3\.$#'
-			identifier: arguments.count
-			count: 1
-			path: includes/class-wc-accommodation-booking-date-picker.php
-
-		-
 			message: '#^Function wc_bookings_get_time_slots not found\.$#'
 			identifier: function.notFound
 			count: 1
