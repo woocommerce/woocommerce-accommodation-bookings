@@ -22,7 +22,7 @@ class WC_Accommodation_Booking_Date_Picker {
 		add_filter( 'woocommerce_bookings_date_picker_start_label', array( $this, 'start_label' ) );
 		add_filter( 'woocommerce_bookings_date_picker_end_label', array( $this, 'end_label' ) );
 		add_filter( 'woocommerce_booking_form_get_posted_data', array( $this, 'add_accommodation_posted_data' ), 10, 3 );
-		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'update_fully_booked_dates' ), 10, 3 );
+		add_filter( 'woocommerce_bookings_booked_day_blocks', array( $this, 'update_fully_booked_dates' ), 10, 2 );
 		add_filter( 'woocommerce_bookings_find_booked_day_blocks', array( $this, 'find_booked_day_blocks' ), 10, 2 );
 	}
 
