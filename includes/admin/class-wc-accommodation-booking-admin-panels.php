@@ -21,7 +21,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'general_product_data' ) );
 
-		add_action( 'woocommerce_product_data_tabs', array( $this, 'add_tabs' ), 5 );
+		add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_tabs' ), 5 );
 	}
 
 	/**

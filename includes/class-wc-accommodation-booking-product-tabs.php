@@ -19,7 +19,7 @@ class WC_Accommodation_Booking_Product_Tabs {
 	 * Hook into WooCommerce..
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_product_tabs', array( $this, 'add_time_tab' ), 30 );
+		add_filter( 'woocommerce_product_tabs', array( $this, 'add_time_tab' ), 30 );
 	}
 
 	/**

@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Action callback returns array but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
-
-		-
 			message: '#^Instantiated class WC_Product_Booking not found\.$#'
 			identifier: class.notFound
 			count: 1
@@ -161,12 +155,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: includes/class-wc-accommodation-booking-order-manager.php
-
-		-
-			message: '#^Action callback returns array but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: includes/class-wc-accommodation-booking-product-tabs.php
 
 		-
 			message: '#^Call to method get_product\(\) on an unknown class WC_Booking\.$#'
