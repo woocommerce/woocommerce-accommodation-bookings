@@ -24,19 +24,19 @@ use InvalidArgumentException;
  *
  *     *** Changelog ***
  *
- *     = 1.3.12 - 2026-08-26 =
+ *     = 1.5.1 - 2026-09-17 =
  *     * Fix - Something that was broken.
  *     * Tweak - Something that was adjusted.
  *
- * This is the WordPress.org variant of the SomewhereWarm formatter: its version headings
- * are the `= X.Y.Z - YYYY-MM-DD =` shape WordPress.org uses. The paid extensions use
- * `YYYY.MM.DD - version X.Y.Z`. Everything below the headings is the same in both.
+ * Version headings use the `= X.Y.Z - YYYY-MM-DD =` shape WordPress.org uses, which
+ * WooCommerce.com reads too. Every SomewhereWarm extension ships this same formatter,
+ * so a change here belongs in all of them.
  *
  * The entry type lives inline on each bullet rather than under a subheading, so it is
  * carried on the change entry's subheading and re-emitted verbatim. Nothing is mapped
- * back through the configured types on output: a decade of history contains types this
- * plugin no longer issues (`Add`, `Update`, `Feature`, `Fixed`, `Remove`), and rewriting them
- * would turn every release into a changelog-wide diff.
+ * back through the configured types on output: a decade of history contains types we
+ * no longer issue (such as `Add` and `Update`), and rewriting them would turn every
+ * release into a changelog-wide diff.
  *
  * @version x.x.x
  */
@@ -73,7 +73,7 @@ class Changelog_Formatter extends Parser implements FormatterPlugin {
 	const DATE_FORMAT = 'Y-m-d';
 
 	/**
-	 * Matches a version heading, e.g. `= 1.3.12 - 2026-08-26 =`.
+	 * Matches a version heading, e.g. `= 1.5.1 - 2026-09-17 =`.
 	 *
 	 * Month and day are zero-padded only, the shape WordPress.org and the WooCommerce.com
 	 * changelog parser read. The two-part versions of the earliest releases are accepted.
@@ -147,7 +147,7 @@ class Changelog_Formatter extends Parser implements FormatterPlugin {
 			// A near-miss heading is never a change: absorbed into the entry above it, its
 			// own changes would merge into that release and the section would be gone on the
 			// next write. Fail instead. That is any line starting with a single `=`, and any
-			// WooCommerce.com heading (`... - version X.Y.Z`) pasted in from a paid extension.
+			// heading in the older WooCommerce.com shape (`YYYY.MM.DD - version X.Y.Z`).
 			// A title starting with `==` is not a heading.
 			if ( ! $is_bullet && ( preg_match( '/^=(?!=)/', $line ) || false !== strpos( $line, self::SEPARATOR . 'version ' ) ) ) {
 				throw new InvalidArgumentException( "Line looks like a version heading but is not one: $line" );
