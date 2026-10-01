@@ -156,13 +156,13 @@ class SomewhereWarm_Changelog_Formatter_Tests extends TestCase {
 	public function provide_legacy_shapes() {
 		return array(
 			'bullet with no type'    => array( "*** Title ***\n\n= 1.0.0 - 2021-10-25 =\n* Initial release.\n" ),
-			'retired type Add'       => array( "*** Title ***\n\n= 1.1.0 - 2022-01-10 =\n* Add - Settings link to plugin action links.\n" ),
+			'retired type New'       => array( "*** Title ***\n\n= 1.1.0 - 2022-01-10 =\n* New - Settings link to plugin action links.\n" ),
 			'retired type Feature'   => array( "*** Title ***\n\n= 1.1.0 - 2022-01-10 =\n* Feature - Introduced a filter.\n" ),
 			'retired type Important' => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Important - Declared support for WooCommerce 6.2.\n" ),
 			'retired type Update'    => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Update - Updated the settings screen copy.\n" ),
 			'colon in the type'      => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Feature: Added support for a third-party plugin.\n" ),
 			'en dash in the type'    => array( "*** Title ***\n\n= 1.1.1 - 2022-02-16 =\n* Fix – Fixed the changelog for the 1.1.0 release.\n" ),
-			'several entries'        => array( "*** Title ***\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Second.\n\n= 1.5.0 - 2026-09-09 =\n* New - First.\n" ),
+			'several entries'        => array( "*** Title ***\n\n= 1.5.1 - 2026-09-17 =\n* Fix - Second.\n\n= 1.5.0 - 2026-09-09 =\n* Add - First.\n" ),
 		);
 	}
 
@@ -181,7 +181,7 @@ class SomewhereWarm_Changelog_Formatter_Tests extends TestCase {
 					'changes'   => array(
 						$this->formatter->newChangeEntry(
 							array(
-								'subheading' => 'New',
+								'subheading' => 'Add',
 								'content'    => 'Added a thing.',
 							)
 						),
@@ -191,7 +191,7 @@ class SomewhereWarm_Changelog_Formatter_Tests extends TestCase {
 		);
 
 		$this->assertSame(
-			"*** Title ***\n\n= 1.5.2 - 2026-09-01 =\n* New - Added a thing.\n\n= 1.0.0 - 2021-10-25 =\n* Fix - Fixed a thing.\n",
+			"*** Title ***\n\n= 1.5.2 - 2026-09-01 =\n* Add - Added a thing.\n\n= 1.0.0 - 2021-10-25 =\n* Fix - Fixed a thing.\n",
 			$this->formatter->format( $changelog )
 		);
 	}

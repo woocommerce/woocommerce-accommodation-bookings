@@ -54,7 +54,7 @@
             "changelog": "changelog.txt",
             "changes-dir": "changelog",
             "types": {
-                "new": "New",
+                "add": "Add",
                 "fix": "Fix",
                 "tweak": "Tweak",
                 "dev": "Dev"
