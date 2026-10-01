@@ -35,7 +35,7 @@ use InvalidArgumentException;
  * The entry type lives inline on each bullet rather than under a subheading, so it is
  * carried on the change entry's subheading and re-emitted verbatim. Nothing is mapped
  * back through the configured types on output: a decade of history contains types we
- * no longer issue (such as `New` and `Update`), and rewriting them would turn every
+ * no longer issue (such as `Feature` and `Update`), and rewriting them would turn every
  * release into a changelog-wide diff.
  *
  * @version x.x.x
