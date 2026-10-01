@@ -107,7 +107,7 @@ Validate person-record ownership and edit permissions before saving accommodatio
 | Field | Values | Notes |
 | --- | --- | --- |
 | `Significance` | `patch`, `minor`, `major` | Only `patch` may have an empty entry. Versions are set at release time, so this does not pick the next version. |
-| `Type` | `new`, `fix`, `tweak`, `dev` | Becomes the `* Fix - ...` prefix in `changelog.txt`. Entries are grouped by type in that order. |
+| `Type` | `add`, `fix`, `tweak`, `dev` | Becomes the `* Fix - ...` prefix in `changelog.txt`. Entries are grouped by type in that order. |
 | Entry | One line | Multi-line entries are rejected: every line after the first is re-read as its own entry when the changelog is next parsed. Put extra detail in a `Comment:` header instead, which is not compiled into `changelog.txt`. |
 
 The `Changelog / Check changelog` CI job requires an added change file on every pull request.
