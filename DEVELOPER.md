@@ -44,4 +44,4 @@ Run `npm run phpcompat -- /absolute/path/production.zip` to check an existing re
 
 ## Dependency advisories
 
-Run `npm run audit:npm` and `npm run audit:composer` to check locked dependencies, including development ones, for high or critical advisories. CI runs both when a manifest or lockfile changes and every Monday.
+Run `npm run audit:npm` and `npm run audit:composer` to check locked dependencies, including development ones, for high or critical advisories. CI does not run them. Instead, a scheduled run every Monday fails when the repository has open high or critical Dependabot alerts.
