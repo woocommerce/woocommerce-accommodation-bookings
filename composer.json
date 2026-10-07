@@ -6,6 +6,7 @@
     "license": "GPL-3.0-or-later",
     "archive": {
         "exclude": [
+            "/deploy",
             "node_modules",
             "!/assets"
         ]
