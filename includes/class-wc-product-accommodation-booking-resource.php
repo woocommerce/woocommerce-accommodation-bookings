@@ -9,7 +9,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking_Resource' ) && class_exis
  * Class that creates our new accommodation booking product resource type
  * Mostly inherited from WC_Product_Booking_Resource (code reuse!) but overrides a few methods
  *
- * @version 1.0.9
+ * @version 1.1.3
  * @since 1.0.9
  */
 class WC_Product_Accommodation_Booking_Resource extends WC_Product_Booking_Resource {

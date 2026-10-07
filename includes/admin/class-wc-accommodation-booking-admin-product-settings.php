@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) )
 /**
  * Adds the Accommodation tab to Bookings > Settings by hooking into
  * the `woocommerce_bookings_settings_page` filter.
+ *
+ * @class   WC_Accommodation_Booking_Admin_Product_Settings
+ * @version 1.3.13
  */
 class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**

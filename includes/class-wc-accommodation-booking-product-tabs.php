@@ -7,6 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds some new tabs to the front end display of a accommodation product.
  * The new tab shows check-in and check-out times.
  * In the future, other accommodation specific tabs might show up here.
+ *
+ * @class   WC_Accommodation_Booking_Product_Tabs
+ * @version 1.3.13
  */
 class WC_Accommodation_Booking_Product_Tabs {
 
