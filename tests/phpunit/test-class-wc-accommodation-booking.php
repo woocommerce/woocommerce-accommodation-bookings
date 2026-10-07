@@ -4,6 +4,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * The TestWCAccommodationBookin class tests the functions on file class-wc-accommodation-booking.php.
+ *
+ * @version 1.3.13
  */
 class TestWCAccommodationBooking extends TestCase {
 	private $timezone;
