@@ -5,7 +5,11 @@
  * @package WooCommerceAccommodationBookings\Tests
  */
 
-/** Exercise persisted pricing, migrations and order hooks. */
+/**
+ * Exercise persisted pricing, migrations and order hooks.
+ *
+ * @version 1.3.13
+ */
 class Accommodation_Persistence_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.
 	public function set_up() {

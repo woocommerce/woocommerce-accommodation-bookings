@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) )
  * We need to change a couple things about how the cart manager works:
  * - The add-to-cart action for accommodation bookings should just call the booking action
  * - We should display check-in/check-out times on the cart
+ *
+ * @class   WC_Accommodation_Booking_Cart_Manager
+ * @version 1.1.40
  */
 class WC_Accommodation_Booking_Cart_Manager {
 

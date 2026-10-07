@@ -10,6 +10,9 @@
  *
  * Checks if WooCommerce Bookings is enabled and if it is the correct
  * version for accommodations to work.
+ *
+ * @class   WC_Accommodation_Dependencies
+ * @version 1.3.11
  */
 class WC_Accommodation_Dependencies {
 

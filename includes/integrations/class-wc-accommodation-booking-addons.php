@@ -4,6 +4,9 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * Addons integration class.
+ *
+ * @class   WC_Accommodation_Booking_Addons
+ * @version 1.3.2
  */
 class WC_Accommodation_Booking_Addons {
 

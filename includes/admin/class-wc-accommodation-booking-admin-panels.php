@@ -4,6 +4,9 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * Sets up our "write" panels for accommodations products.
+ *
+ * @class   WC_Accommodation_Booking_Admin_Panels
+ * @version 1.3.13
  */
 class WC_Accommodation_Booking_Admin_Panels {
 

@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Adds some additional info (such as check-in/check-out time) to the order info line item
+ *
+ * @class   WC_Accommodation_Booking_Order_Manager
+ * @version 1.1.40
  */
 class WC_Accommodation_Booking_Order_Manager {
 
