@@ -27,6 +27,13 @@ export default [
 			: config
 	),
 	{
+		settings: {
+			// The WooCommerce config applies Jest rules to test files, and
+			// @wordpress/scripts 36 no longer installs Jest for them to detect.
+			jest: { version: 30 },
+		},
+	},
+	{
 		files: [ 'src/js/**/*.js' ],
 		languageOptions: {
 			globals: { ...globals.browser, wp: 'readonly' },
