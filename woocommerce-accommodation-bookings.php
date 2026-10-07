@@ -4,13 +4,13 @@
  * Requires Plugins: woocommerce
  * Plugin URI: https://woocommerce.com/products/woocommerce-accommodation-bookings/
  * Description: An accommodations add-on for the WooCommerce Bookings extension.
- * Version: 1.3.12
+ * Version: 1.3.13
  * Author: WooCommerce
  * Author URI: https://woocommerce.com
  * Text Domain: woocommerce-accommodation-bookings
  * Domain Path: /languages
  * Requires at least: 6.9
- * WC tested up to: 11.1
+ * WC tested up to: 11.2
  * WC requires at least: 10.9
  * PHP tested up to: 8.4
  * Requires PHP: 7.4
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '1.3.12' ); // WRCS: DEFINED_VERSION.
+define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '1.3.13' ); // WRCS: DEFINED_VERSION.
 
 require_once 'includes/class-wc-accommodation-bookings-plugin.php';
 $wc_accom_plugin = new WC_Accommodation_Bookings_Plugin( __FILE__, WC_ACCOMMODATION_BOOKINGS_VERSION );

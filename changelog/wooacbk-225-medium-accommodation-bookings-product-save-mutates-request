@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Validate person-record ownership and edit permissions before saving accommodation person types.

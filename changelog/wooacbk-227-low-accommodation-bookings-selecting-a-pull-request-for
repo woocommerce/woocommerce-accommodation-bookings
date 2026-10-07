@@ -1,4 +1,0 @@
-Significance: patch
-Type: dev
-
-Keep CI credentials out of steps that run pull-request code.

@@ -4,9 +4,9 @@ Tags: woocommerce, bookings, accommodations
 Requires at least: 6.9
 Requires PHP: 7.4
 WC requires at least: 10.9
-WC tested up to: 11.1
+WC tested up to: 11.2
 Tested up to: 7.1
-Stable tag: 1.3.12
+Stable tag: 1.3.13
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,18 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.13 - 2026-10-07 =
+* Fix - Bound accommodation availability caching and avoid duplicate registry entries on cache hits.
+* Fix - Validate person-record ownership and edit permissions before saving accommodation person types.
+* Tweak - Declared compatibility with WooCommerce 11.2.
+* Dev - Updated development dependencies to address security advisories.
+* Dev - Enforce checks for authored stylesheets.
+* Dev - Run PHPCS and QIT tooling on PHP 8.4.
+* Dev - Read pull-request metadata as data in the issue-link workflow.
+* Dev - Keep CI credentials out of steps that run pull-request code.
+* Dev - Managed changelog entries with the Jetpack Changelogger, so pull requests add a change file instead of writing the entry in the pull request description.
+* Dev - Updated the development toolchain to Node 24.18 and @wordpress/scripts 35.
 
 = 1.3.12 - 2026-08-26 =
 * Dev - Bump WordPress "Tested up to" to 7.1.
