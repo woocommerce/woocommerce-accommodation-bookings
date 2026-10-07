@@ -425,21 +425,59 @@ import {
 						) +
 						'</p>'
 				);
-			// Ensure the content is correct if it does.
-			$form
-				.find( '.wc-bookings-accommodation-bookings-title' )
-				.text(
-					__(
-						'Select check-in',
-						'woocommerce-accommodation-bookings'
-					)
+			// Bookings can refresh the picker after a date is selected (it does
+			// on every duration change since 3.11.0), so follow its selection
+			// state instead of assuming that nothing is selected yet. A refresh
+			// without a target covers every picker on the page.
+			get_jquery_element( date_picker ).each( ( index, picker ) => {
+				const $picker = get_jquery_element( picker );
+				const $picker_form = get_booking_form( $picker );
+				const next_date_type = $picker.data( 'start_or_end_date' );
+				// Bookings keeps that flag when it clears a selection, so a
+				// check-in date has to be set as well.
+				const has_check_in = !! $picker_form
+					.find( 'input.booking_date_day' )
+					.val();
+				const is_check_in_selected =
+					has_check_in && next_date_type === 'end';
+				const is_stay_selected =
+					has_check_in &&
+					next_date_type === 'start' &&
+					!! $picker_form.find( 'input.booking_to_date_day' ).val();
+				let title = __(
+					'Select check-in',
+					'woocommerce-accommodation-bookings'
 				);
-			$form
-				.find( '.fully_booked_start_days' )
-				.addClass( 'ui-datepicker-unselectable ui-state-disabled' );
-			$form
-				.find( '.fully_booked_end_days' )
-				.removeClass( 'ui-datepicker-unselectable ui-state-disabled' );
+
+				if ( is_check_in_selected ) {
+					title = __(
+						'Select check-out',
+						'woocommerce-accommodation-bookings'
+					);
+				} else if ( is_stay_selected ) {
+					title = __(
+						'Selected! Re-select to change your check-in date.',
+						'woocommerce-accommodation-bookings'
+					);
+				}
+
+				// Ensure the content is correct if it does.
+				$picker_form
+					.find( '.wc-bookings-accommodation-bookings-title' )
+					.text( title );
+				$picker_form
+					.find( '.fully_booked_start_days' )
+					.toggleClass(
+						'ui-datepicker-unselectable ui-state-disabled',
+						! is_check_in_selected
+					);
+				$picker_form
+					.find( '.fully_booked_end_days' )
+					.toggleClass(
+						'ui-datepicker-unselectable ui-state-disabled',
+						is_check_in_selected
+					);
+			} );
 
 			// Add screen reader text and info icons for booking date types
 			addAccessibleTextToBookingDates( $form );

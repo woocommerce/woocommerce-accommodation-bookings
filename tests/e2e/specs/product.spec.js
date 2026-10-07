@@ -78,18 +78,36 @@ test.describe( 'Product Tests', () => {
 	test( 'Verify labels "Select check-in" and "Select check-out" works expected. - @foundational', async ( {
 		page,
 	} ) => {
+		const minimumNights = parseInt( productDetails.minimumNight, 10 );
+
 		await visitProductPage( page, productId );
 
 		await expect(
 			page.locator( 'p.wc-bookings-accommodation-bookings-title' )
 		).toContainText( 'Select check-in' );
 
-		const startDate = getFutureDate( 1 );
+		// Keep both dates in one calendar month: the check-out helper only
+		// clicks a day that the open calendar shows.
+		const checkInOffset =
+			getFutureDate( 1, 0, 0, true ).month() ===
+			getFutureDate( 1 + minimumNights, 0, 0, true ).month()
+				? 1
+				: 2 + minimumNights;
+		const startDate = getFutureDate( checkInOffset );
 		await fillBookingStartDate( page, startDate );
 
 		await expect(
 			page.locator( 'p.wc-bookings-accommodation-bookings-title' )
 		).toContainText( 'Select check-out' );
+
+		await fillBookingEndDate(
+			page,
+			getFutureDate( checkInOffset + minimumNights )
+		);
+
+		await expect(
+			page.locator( 'p.wc-bookings-accommodation-bookings-title' )
+		).toContainText( 'Selected! Re-select to change your check-in date.' );
 	} );
 
 	test( 'Verify Setting Minimum Nights Restriction - "Minimum number of nights allowed in a booking" - @foundational', async ( {
