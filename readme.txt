@@ -4,7 +4,7 @@ Tags: woocommerce, bookings, accommodations
 Requires at least: 6.9
 Requires PHP: 7.4
 WC requires at least: 10.9
-WC tested up to: 11.1
+WC tested up to: 11.2
 Tested up to: 7.1
 Stable tag: 1.3.13
 License: GNU General Public License v3.0
@@ -44,6 +44,7 @@ If the prices shown on the product do not match the prices defined in the dashbo
 = 1.3.13 - 2026-10-07 =
 * Fix - Bound accommodation availability caching and avoid duplicate registry entries on cache hits.
 * Fix - Validate person-record ownership and edit permissions before saving accommodation person types.
+* Tweak - Declared compatibility with WooCommerce 11.2.
 * Dev - Updated development dependencies to address security advisories.
 * Dev - Enforce checks for authored stylesheets.
 * Dev - Run PHPCS and QIT tooling on PHP 8.4.

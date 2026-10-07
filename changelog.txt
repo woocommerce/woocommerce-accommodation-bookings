@@ -3,6 +3,7 @@
 = 1.3.13 - 2026-10-07 =
 * Fix - Bound accommodation availability caching and avoid duplicate registry entries on cache hits.
 * Fix - Validate person-record ownership and edit permissions before saving accommodation person types.
+* Tweak - Declared compatibility with WooCommerce 11.2.
 * Dev - Updated development dependencies to address security advisories.
 * Dev - Enforce checks for authored stylesheets.
 * Dev - Run PHPCS and QIT tooling on PHP 8.4.
