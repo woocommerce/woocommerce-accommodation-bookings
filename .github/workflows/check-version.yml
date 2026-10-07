@@ -1,0 +1,40 @@
+name: Validate PHP @version Tags
+
+on:
+  pull_request:
+    branches:
+      - trunk
+
+permissions:
+  contents: read
+
+jobs:
+  version-check:
+    name: Validate @version Tag
+    # Release bumps replace 'x.x.x' with the real version by design.
+    if: ${{ !(github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0  # The comparison below needs the merge base with trunk.
+
+      - name: Make validate-version script executable
+        run: chmod +x bin/version_updated.sh
+
+      - name: Validate @version tags on changed PHP files
+        run: |
+          # git runs on its own line so a failed comparison fails the check, and the
+          # file names stay in shell variables, never in workflow expression syntax.
+          FILES=$(git diff --name-only --diff-filter=ACM origin/trunk...HEAD -- '*.php')
+          if [ -z "$FILES" ]; then
+            echo "✅ No PHP files changed. Skipping validation."
+            exit 0
+          fi
+          echo "🔹 Changed PHP files:"
+          echo "$FILES"
+          mapfile -t FILE_ARRAY <<< "$FILES"
+          ./bin/version_updated.sh "${FILE_ARRAY[@]}"
