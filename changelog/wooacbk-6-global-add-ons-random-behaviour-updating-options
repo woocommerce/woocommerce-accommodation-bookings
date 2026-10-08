@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Avoid duplicate booking multiplier options in global add-on groups.
