@@ -6,7 +6,7 @@ Guide for coding agents: repository contracts, daily development, and validation
 
 An accommodation product extends WooCommerce Bookings with nightly stays and check-in/out times. WooCommerce and WooCommerce Bookings must both be available; the dependency check lives in `includes/class-wc-accommodation-dependencies.php`.
 
-The plugin header requires PHP 7.4+, WordPress 6.9+, and WooCommerce 10.9+. Check the header when those floors change. Use `nvm use` for the Node version pinned in `.nvmrc`; `package.json` records Node/npm engine requirements. Keep syntax compatible with the supported PHP floor.
+The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Check the header when those floors change. Use `nvm use` for the Node version pinned in `.nvmrc`; `package.json` records Node/npm engine requirements. Keep syntax compatible with the supported PHP floor.
 
 | Path | Purpose |
 | --- | --- |
