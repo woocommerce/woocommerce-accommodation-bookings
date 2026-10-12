@@ -34,9 +34,6 @@ on:
       php-version:
         type: string
         default: ''
-  schedule:
-    # Run at 02:00 on Tuesdays.
-    - cron: '0 2 * * 2'
 
 permissions:
   contents: read
@@ -55,7 +52,6 @@ jobs:
       NO_COLOR: 1
       QIT_DISABLE_ONBOARDING: yes
       EXTENSION: ${{ github.event.repository.name }}
-      # Scheduled runs use the default set.
       SELECTED: ${{ inputs.test || 'default' }}
       # Requested versions (empty keeps QIT's defaults); QIT has no `nightly`, only `rc`.
       VERSION_ARGS: >-
@@ -139,19 +135,3 @@ jobs:
           name: qit-results
           path: '*-result.txt'
           if-no-files-found: ignore
-
-  notify:
-    name: Notify Slack
-    needs: [build, test]
-    if: ${{ failure() && github.event_name == 'schedule' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    steps:
-      # Skipped until a maintainer adds the SLACK_WEBHOOK_URL secret.
-      - if: ${{ env.SLACK_WEBHOOK_URL != '' }}
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-        with:
-          status: failure
-          message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."
