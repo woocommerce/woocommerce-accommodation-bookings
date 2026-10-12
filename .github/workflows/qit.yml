@@ -19,7 +19,7 @@ on:
           - validation
           - security
           - malware
-  # Called by manual-ci.yml with the versions requested by WooCommerce core's canonical runner.
+  # Called by the cron workflows, and by manual-ci.yml with the versions requested by WooCommerce core's canonical runner.
   workflow_call:
     inputs:
       test:
