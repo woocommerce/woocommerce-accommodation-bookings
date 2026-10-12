@@ -2,6 +2,9 @@
 # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions
 # Remove these entries once https://github.com/rhysd/actionlint/issues/666 is released.
 paths:
+  .github/workflows/ci-cron.yml:
+    ignore:
+      - 'unknown permission scope "vulnerability-alerts"'
   .github/workflows/run-audit.yml:
     ignore:
       - 'unknown permission scope "vulnerability-alerts"'

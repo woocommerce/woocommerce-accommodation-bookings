@@ -1,50 +1,98 @@
 name: Cron CI
 
 on:
-  schedule:
-    # Run at 01:00 on Mondays.
-    - cron: '0 1 * * 1'
+    schedule:
+        # Run at 01:00 on Monday.
+        - cron:  '0 1 * * 1'
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  php-unit:
-    name: PHP unit tests
-    uses: ./.github/workflows/phpunit.yml
 
-  php-integration:
-    name: PHP integration tests
-    uses: ./.github/workflows/phpunit-integration.yml
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+    php-lint:
+        name: PHP
+        uses: ./.github/workflows/phpcs.yml
 
-  php-integration-nightly:
-    name: PHP integration tests (WooCommerce nightly)
-    uses: ./.github/workflows/phpunit-integration.yml
-    with:
-      wc-version: nightly
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+    js-lint:
+        name: JS Linting
+        uses: ./.github/workflows/js-lint.yml
 
-  e2e:
-    name: E2E
-    uses: ./.github/workflows/e2e.yml
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+    css-lint:
+        name: CSS Linting
+        uses: ./.github/workflows/css-lint.yml
 
-  notify:
-    name: Notify Slack
-    needs: [php-unit, php-integration, php-integration-nightly, e2e]
-    if: ${{ failure() }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    steps:
-      # Skipped until a maintainer adds the SLACK_WEBHOOK_URL secret.
-      - if: ${{ env.SLACK_WEBHOOK_URL != '' }}
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+    php-tests:
+        name: PHP
+        needs: [php-lint, js-lint, css-lint]
+        uses: ./.github/workflows/phpunit.yml
+
+    integration-tests:
+        name: Integration tests
+        needs: [php-lint, js-lint, css-lint]
+        uses: ./.github/workflows/phpunit-integration.yml
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    e2e-tests:
+        name: E2E tests
+        needs: [php-tests, integration-tests]
+        uses: ./.github/workflows/e2e.yml
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    qit-tests:
+        name: QIT tests
+        needs: [php-tests, integration-tests]
+        uses: ./.github/workflows/qit.yml
+        secrets: inherit
         with:
-          status: failure
-          message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."
+          test: 'stable'
+
+    audit:
+        name: Dependency advisories
+        permissions:
+            vulnerability-alerts: read
+        uses: ./.github/workflows/run-audit.yml
+
+    handle-success:
+        if: ${{ success() }}
+        needs: [e2e-tests, qit-tests, audit]
+        name: Handle success
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: success
+                message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> passed."
+
+    handle-cancelled:
+        if: ${{ cancelled() }}
+        needs: [e2e-tests, qit-tests, audit]
+        name: Handle cancellation
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: cancelled
+                message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> cancelled."
+
+    handle-error:
+        if: ${{ failure() }}
+        needs: [e2e-tests, qit-tests, audit]
+        name: Handle failure
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: failure
+                message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."

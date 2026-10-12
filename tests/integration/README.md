@@ -15,7 +15,7 @@ export ACCOM_TEST_DB_NAME=accommodation_test_current
 export ACCOM_TEST_DB_USER=root
 export ACCOM_TEST_DB_PASSWORD=your_local_test_password
 export ACCOM_TEST_DB_HOST=127.0.0.1:3306
-./tests/bin/setup-integration.sh /tmp/accommodation-current 6.9 10.9.0 3.10.0 8.4.2
+./tests/bin/setup-integration.sh /tmp/accommodation-current 7.0 11.1.0 3.10.0 8.4.2
 ./tests/bin/run-integration.sh /tmp/accommodation-current
 ./tests/bin/run-integration.sh /tmp/accommodation-current --filter test_historical_migrations
 ```

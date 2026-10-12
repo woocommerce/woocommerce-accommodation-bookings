@@ -6,7 +6,7 @@ Guide for coding agents: repository contracts, daily development, and validation
 
 An accommodation product extends WooCommerce Bookings with nightly stays and check-in/out times. WooCommerce and WooCommerce Bookings must both be available; the dependency check lives in `includes/class-wc-accommodation-dependencies.php`.
 
-The plugin header requires PHP 7.4+, WordPress 6.9+, and WooCommerce 10.9+. Check the header when those floors change. Use `nvm use` for the Node version pinned in `.nvmrc`; `package.json` records Node/npm engine requirements. Keep syntax compatible with the supported PHP floor.
+The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Check the header when those floors change. Use `nvm use` for the Node version pinned in `.nvmrc`; `package.json` records Node/npm engine requirements. Keep syntax compatible with the supported PHP floor.
 
 | Path | Purpose |
 | --- | --- |
@@ -202,7 +202,7 @@ Build on existing extension points such as `WC_Data`, `WC_Data_Store_WP`, `WC_Se
 - Follow the parent SWW instructions for Git/Linear work and the repository's `.github/PULL_REQUEST_TEMPLATE.md`. Use the global authenticated `gh` CLI for GitHub operations; commit, push, and draft-PR creation each need their own authorization.
 - **Always add a changelog file.** Run `npm run changelog add` and commit the file it creates under `changelog/`, one per PR. Never edit `changelog.txt` directly - it is compiled from the change files at release time. See [Changelog](#changelog).
 - The template has no auto-assign-milestone checkbox. Report that missing control instead of inventing a checked box. The release workflows require and roll over the release milestone, but pull requests are not assigned to it automatically.
-- QIT runs weekly with validation; QIT PHPStan stays off because the repo's own PHPStan (level 2) is the gate.
+- QIT runs twice a week: four tests on the stable versions in Cron CI on Mondays, and the full set on the pre-release versions in Cron QIT on Wednesdays. QIT PHPStan stays off because the repo's own PHPStan (level 2) is the gate.
 - Releases are started via the `Start Release` GitHub Actions workflow (Actions UI, or locally with `bin/release_start.sh [X.Y.Z] [--wp A.B] [--wc C.D]`, which dispatches it). It bumps versions, compiles `changelog/` into `changelog.txt` and copies the release's entries into the `readme.txt` changelog on a `release/X.Y.Z` branch, then opens a release PR against `trunk`. Merging the release PR triggers `.github/workflows/ci-release.yml`, which builds the ZIP, tags the release, deploys that ZIP to WordPress.org through `woocommerce/woo-product-deploy` (`config.wp_org_slug` in `package.json` names the plugin slug), and rolls the milestone over. Building a ZIP does not authorize starting a release.
 - **Never merge to `trunk` while a release PR (head `release/*`) is open.** Trunk is under code freeze until the release completes, enforced by the `Release Freeze / Check release freeze` required check.
 - **Set `@version x.x.x` on the class docblock** when modifying a class, trait, or interface. The release bump replaces `x.x.x` with the released version. Enforced in CI by `check-version.yml`. Review rules for PHP DocBlock version tags live in `.github/instructions/php.instructions.md`.

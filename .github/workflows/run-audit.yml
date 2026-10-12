@@ -1,48 +1,30 @@
 name: Dependency advisories
 
 on:
-  schedule:
-    # Run at 01:00 on Mondays.
-    - cron: '0 1 * * 1'
+    workflow_call:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  dependabot:
-    name: Dependabot alerts
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      vulnerability-alerts: read
-    steps:
-      # Dismissed and fixed alerts are ignored, so a triaged advisory stops failing the run.
-      # The step also fails when the alerts cannot be read, for example when Dependabot
-      # alerts are disabled for the repository.
-      - name: Check for open high or critical alerts
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          alerts="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/dependabot/alerts?state=open&severity=high,critical&per_page=100" --jq '.[] | "- [#\(.number)](\(.html_url)) \(.security_advisory.severity): \(.dependency.package.name) (\(.dependency.package.ecosystem), \(.dependency.scope)) - \(.security_advisory.summary)"')"
-          if [ -n "$alerts" ]; then
-            echo "$alerts" | tee -a "$GITHUB_STEP_SUMMARY"
-            echo "::error::The repository has open high or critical Dependabot alerts."
-            exit 1
-          fi
-          echo "No open high or critical Dependabot alerts."
 
-  notify:
-    name: Notify Slack
-    needs: dependabot
-    if: ${{ failure() && github.event_name == 'schedule' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    steps:
-      # Skipped until a maintainer adds the SLACK_WEBHOOK_URL secret.
-      - if: ${{ env.SLACK_WEBHOOK_URL != '' }}
-        uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-        with:
-          status: failure
-          message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."
+    dependabot:
+        name: Dependabot alerts
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions:
+            vulnerability-alerts: read
+        steps:
+            # Dismissed and fixed alerts are ignored, so a triaged advisory stops failing the run.
+            # The step also fails when the alerts cannot be read, for example when Dependabot
+            # alerts are disabled for the repository.
+            - name: Check for open high or critical alerts
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  alerts="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/dependabot/alerts?state=open&severity=high,critical&per_page=100" --jq '.[] | "- [#\(.number)](\(.html_url)) \(.security_advisory.severity): \(.dependency.package.name) (\(.dependency.package.ecosystem), \(.dependency.scope)) - \(.security_advisory.summary)"')"
+                  if [ -n "$alerts" ]; then
+                      echo "$alerts" | tee -a "$GITHUB_STEP_SUMMARY"
+                      echo "::error::The repository has open high or critical Dependabot alerts."
+                      exit 1
+                  fi
+                  echo "No open high or critical Dependabot alerts."
