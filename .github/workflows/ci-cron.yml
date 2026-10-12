@@ -49,9 +49,15 @@ jobs:
         with:
           test: 'stable'
 
+    audit:
+        name: Dependency advisories
+        permissions:
+            vulnerability-alerts: read
+        uses: ./.github/workflows/run-audit.yml
+
     notify:
         name: Notify Slack
-        needs: [e2e-tests, qit-tests]
+        needs: [e2e-tests, qit-tests, audit]
         if: ${{ failure() }}
         runs-on: ubuntu-latest
         timeout-minutes: 5
