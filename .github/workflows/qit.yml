@@ -93,7 +93,7 @@ jobs:
       # Each selected test runs even if an earlier one failed. Any nonzero QIT
       # exit code, including a warning, fails the run (the shell uses pipefail).
       - name: Run Activation test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'prerelease' || env.SELECTED == 'activation' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'prerelease' || env.SELECTED == 'activation' || env.SELECTED == 'stable' ) }}
         shell: bash
         run: ./vendor/bin/qit run:activation "$EXTENSION" --zip="$EXTENSION.zip" --plugin=woocommerce-bookings $VERSION_ARGS --wait | tee activation-result.txt
 
@@ -103,7 +103,7 @@ jobs:
         run: ./vendor/bin/qit run:woo-api "$EXTENSION" --zip="$EXTENSION.zip" --extension_set=compatibility $VERSION_ARGS --wait | tee api-result.txt
 
       - name: Run Security test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'security' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'security' || env.SELECTED == 'stable' ) }}
         shell: bash
         run: ./vendor/bin/qit run:security "$EXTENSION" --zip="$EXTENSION.zip" --wait | tee security-result.txt
 
@@ -113,12 +113,12 @@ jobs:
         run: ./vendor/bin/qit run:malware "$EXTENSION" --zip="$EXTENSION.zip" --wait | tee malware-result.txt
 
       - name: Run PHPCompat test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'phpcompat' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'phpcompat' || env.SELECTED == 'stable' ) }}
         shell: bash
         run: ./vendor/bin/qit run:phpcompatibility "$EXTENSION" --zip="$EXTENSION.zip" --wait | tee phpcompat-result.txt
 
       - name: Run Validation test
-        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'validation' ) }}
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' && ( env.SELECTED == 'default' || env.SELECTED == 'validation' || env.SELECTED == 'stable' ) }}
         shell: bash
         run: ./vendor/bin/qit run:validation "$EXTENSION" --zip="$EXTENSION.zip" --wait | tee validation-result.txt
 
