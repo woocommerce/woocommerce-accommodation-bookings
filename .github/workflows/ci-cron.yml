@@ -55,18 +55,44 @@ jobs:
             vulnerability-alerts: read
         uses: ./.github/workflows/run-audit.yml
 
-    notify:
-        name: Notify Slack
+    handle-success:
+        if: ${{ success() }}
         needs: [e2e-tests, qit-tests, audit]
-        if: ${{ failure() }}
+        name: Handle success
         runs-on: ubuntu-latest
         timeout-minutes: 5
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         steps:
-            # Skipped until a maintainer adds the SLACK_WEBHOOK_URL secret.
-            - if: ${{ env.SLACK_WEBHOOK_URL != '' }}
-              uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-              with:
-                  status: failure
-                  message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: success
+                message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> passed."
+
+    handle-cancelled:
+        if: ${{ cancelled() }}
+        needs: [e2e-tests, qit-tests, audit]
+        name: Handle cancellation
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: cancelled
+                message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> cancelled."
+
+    handle-error:
+        if: ${{ failure() }}
+        needs: [e2e-tests, qit-tests, audit]
+        name: Handle failure
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: failure
+                message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."
