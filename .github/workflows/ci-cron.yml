@@ -41,9 +41,17 @@ jobs:
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
+    qit-tests:
+        name: QIT tests
+        needs: [php-tests, integration-tests]
+        uses: ./.github/workflows/qit.yml
+        secrets: inherit
+        with:
+          test: 'stable'
+
     notify:
         name: Notify Slack
-        needs: [e2e-tests]
+        needs: [e2e-tests, qit-tests]
         if: ${{ failure() }}
         runs-on: ubuntu-latest
         timeout-minutes: 5
