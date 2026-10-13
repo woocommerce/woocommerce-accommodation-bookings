@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * The TestWCAccommodationBookin class tests the functions on file class-wc-accommodation-booking.php.
  *
- * @version 1.3.13
+ * @version x.x.x
  */
 class TestWCAccommodationBooking extends TestCase {
 	private $timezone;
@@ -192,11 +192,23 @@ class TestWCAccommodationBooking extends TestCase {
 	}
 
 	/** @dataProvider icsDatesProvider */
-	public function testIcsDateFormatting( $product_class, $expected ) {
+	public function testIcsDateFormatting( $all_day, $product_type, $expected ) {
 		$booking = null;
-		if ( $product_class ) {
-			$booking = \Mockery::mock();
-			$booking->shouldReceive( 'get_product' )->andReturn( \Mockery::mock( $product_class ) );
+		if ( null !== $all_day ) {
+			$product = \Mockery::mock( 'WC_Product_Booking' );
+			$product->shouldReceive( 'get_type' )->andReturn( $product_type );
+			\WP_Mock::userFunction(
+				'wc_get_product',
+				array(
+					'args'   => array( 17 ),
+					// Only an all-day booking needs its product.
+					'times'  => $all_day ? 1 : 0,
+					'return' => $product,
+				)
+			);
+			$booking = \Mockery::mock( 'WC_Booking' );
+			$booking->shouldReceive( 'is_all_day' )->andReturn( $all_day );
+			$booking->shouldReceive( 'get_product_id' )->andReturn( 17 );
 		}
 		$this->assertSame(
 			$expected,
@@ -207,10 +219,12 @@ class TestWCAccommodationBooking extends TestCase {
 	}
 
 	public function icsDatesProvider() {
-		return [
-			'no booking' => [ null, 'filtered date' ],
-			'accommodation retains filtered date' => [ 'WC_Product_Accommodation_Booking', 'filtered date' ],
-			'ordinary booking uses original timestamp' => [ 'WC_Product_Booking', '20261231T143000' ],
-		];
+		return array(
+			'no booking'               => array( null, null, 'filtered date' ),
+			'timed stay'               => array( false, 'accommodation-booking', '20261231T143000' ),
+			'timed ordinary booking'   => array( false, 'booking', '20261231T143000' ),
+			'all-day stay'             => array( true, 'accommodation-booking', '20261231' ),
+			'all-day ordinary booking' => array( true, 'booking', 'filtered date' ),
+		);
 	}
 }
