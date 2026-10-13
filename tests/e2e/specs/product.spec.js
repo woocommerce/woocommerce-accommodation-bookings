@@ -262,10 +262,16 @@ test.describe( 'Product Tests', () => {
 	test( 'Verify Accommodation Booking with Confirmation Setting - @foundational', async ( {
 		page,
 	} ) => {
-		await updateProduct( adminPage, productId, {
+		// Use a product of its own so the shared product keeps its settings
+		// and bookings held by other tests cannot make these dates unavailable.
+		const product = await createProduct( adminPage, {
+			title: 'Accommodation product #8',
+			baseCost: '10.00',
 			requireConfirmation: true,
 		} );
-		await visitProductPage( page, productId );
+
+		await clearCart( page );
+		await visitProductPage( page, product );
 		await unBlockUI( page );
 		await expect(
 			page.locator( '.single_add_to_cart_button' )
