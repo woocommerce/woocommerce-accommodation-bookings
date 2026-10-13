@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Added regression coverage for critical merchant flows.
