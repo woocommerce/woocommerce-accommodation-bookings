@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds our new product type to the list of WooCommerce product types.
  *
  * @class   WC_Accommodation_Booking
- * @version 1.3.11
+ * @version x.x.x
  */
 class WC_Accommodation_Booking {
 
@@ -32,9 +32,13 @@ class WC_Accommodation_Booking {
 	}
 
 	/**
-	 * Skip formatting the date for accommodation bookings products.
+	 * Keep the calendar (.ics) dates of a booking on the days it really covers.
 	 *
-	 * @param int        $value     Formatted value.
+	 * Bookings moves the end of every multi-day booking to the following day. That suits an
+	 * all-day booking, whose date-only end is exclusive, but not a stay that ends at the
+	 * check-out time, so the original timestamp is exported instead.
+	 *
+	 * @param string     $value     Formatted value.
 	 * @param int        $timestamp Timestamp to format.
 	 * @param int        $old_ts    Original timestamp.
 	 * @param WC_Booking $booking   Booking object.
@@ -42,17 +46,23 @@ class WC_Accommodation_Booking {
 	 * @return string Formatted date for ICS.
 	 */
 	public function disable_ics_formatting_for_accommodation( $value, $timestamp, $old_ts, $booking ) {
-		if ( ! $booking ) {
+		if ( ! is_a( $booking, 'WC_Booking' ) ) {
 			return $value;
 		}
 
-		$product = $booking->get_product();
-
-		if ( ! is_a( $product, 'WC_Product_Accommodation_Booking' ) ) {
-			// Return original, unmodified value
-			return date( 'Ymd\THis', $old_ts );
+		if ( ! $booking->is_all_day() ) {
+			return date( 'Ymd\THis', $old_ts ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- Bookings timestamps hold site-local time, as in WC_Bookings_ICS_Exporter::format_date().
 		}
 
+		// WC_Booking::get_product() returns a plain WC_Product_Booking for every product type.
+		$product = wc_get_product( $booking->get_product_id() );
+
+		if ( $product && 'accommodation-booking' === $product->get_type() ) {
+			// A date-only end is exclusive: the check-out day itself ends the stay.
+			return date( 'Ymd', $old_ts ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- See above.
+		}
+
+		// All-day bookings of other products keep the date-only value Bookings wrote.
 		return $value;
 	}
 

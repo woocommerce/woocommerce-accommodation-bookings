@@ -145,7 +145,13 @@ parameters:
 			path: includes/class-wc-accommodation-booking-order-manager.php
 
 		-
-			message: '#^Call to method get_product\(\) on an unknown class WC_Booking\.$#'
+			message: '#^Call to method get_product_id\(\) on an unknown class WC_Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Call to method is_all_day\(\) on an unknown class WC_Booking\.$#'
 			identifier: class.notFound
 			count: 1
 			path: includes/class-wc-accommodation-booking.php
