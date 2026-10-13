@@ -6,8 +6,9 @@ import {
 	fillBillingDetails,
 	placeOrder,
 	visitProductPage,
+	confirmBooking,
 } from '../utils';
-import { customer } from '../config';
+import { customer, admin as administrator, baseUrl } from '../config';
 import { wp, read, seed, customerLogin, savedStays } from '../utils/local';
 
 let fixture;
@@ -15,7 +16,7 @@ let originalOptions;
 test.beforeAll( () => {
 	// These settings also belong to the existing browser suite running after this file.
 	originalOptions = read(
-		'array_reduce(array("woocommerce_coming_soon","woocommerce_currency","woocommerce_default_country","timezone_string","date_format","time_format","woocommerce_calc_taxes","woocommerce_enable_guest_checkout","woocommerce_cod_settings","woocommerce_accommodation_bookings_times_settings","woocommerce_checkout_page_id"),function($saved,$key){$saved[$key]=get_option($key,null);return $saved;},array())'
+		'array_reduce(array("woocommerce_coming_soon","woocommerce_currency","woocommerce_default_country","timezone_string","date_format","time_format","woocommerce_calc_taxes","woocommerce_enable_guest_checkout","woocommerce_cod_settings","woocommerce_cheque_settings","woocommerce_accommodation_bookings_times_settings","woocommerce_checkout_page_id"),function($saved,$key){$saved[$key]=get_option($key,null);return $saved;},array())'
 	);
 } );
 test.afterAll( () => {
@@ -30,14 +31,16 @@ test.afterAll( () => {
 		`foreach(json_decode(base64_decode('${ options }'),true) as $key=>$value){if(null===$value){delete_option($key);}else{update_option($key,$value);}}`
 	);
 } );
+function localRoute( route ) {
+	return [ 'localhost', '127.0.0.1' ].includes(
+		new URL( route.request().url() ).hostname
+	)
+		? route.continue()
+		: route.abort();
+}
 test.beforeEach( async ( { context } ) => {
 	fixture = seed();
-	await context.route( '**/*', ( route ) => {
-		const url = new URL( route.request().url() );
-		return [ 'localhost', '127.0.0.1' ].includes( url.hostname )
-			? route.continue()
-			: route.abort();
-	} );
+	await context.route( '**/*', localRoute );
 } );
 function dateParts( date ) {
 	const [ year, month, day ] = date.split( '-' );
@@ -172,15 +175,9 @@ test( 'independent customers cannot oversell; cancellation permits a new booking
 } ) => {
 	await customerLogin( page );
 	const otherContext = await browser.newContext( {
-		baseURL: process.env.ACCOM_E2E_URL || 'http://localhost:8889',
+		baseURL: baseUrl,
 	} );
-	await otherContext.route( '**/*', ( route ) =>
-		[ 'localhost', '127.0.0.1' ].includes(
-			new URL( route.request().url() ).hostname
-		)
-			? route.continue()
-			: route.abort()
-	);
+	await otherContext.route( '**/*', localRoute );
 	try {
 		const guest = await otherContext.newPage();
 		const stay = fixture.stays.year;
@@ -242,5 +239,111 @@ test( 'independent customers cannot oversell; cancellation permits a new booking
 		).toBe( 2 );
 	} finally {
 		await otherContext.close();
+	}
+} );
+
+test( 'confirmation approval and deferred payment preserve the reserved room', async ( {
+	page,
+	browser,
+} ) => {
+	const stay = fixture.stays.year;
+	wp(
+		'eval',
+		`$p=wc_get_product(${ stay.product });$p->set_requires_confirmation(true);$p->save();update_option("woocommerce_cheque_settings",array("enabled"=>"yes"));`
+	);
+	await customerLogin( page );
+	await selectStay( page, stay );
+	await addToCart( page );
+	wp(
+		'option',
+		'update',
+		'woocommerce_checkout_page_id',
+		String( fixture.pages.classic )
+	);
+	await page.goto( `/?page_id=${ fixture.pages.classic }` );
+	await fillBillingDetails( page, customer.billing, false );
+	await page.locator( '#place_order' ).click();
+	await expect(
+		page.locator( '.status-pending-confirmation' ).first()
+	).toBeVisible();
+	const pending = savedStays( stay.product );
+	expect( pending ).toHaveLength( 1 );
+	expect( pending[ 0 ] ).toMatchObject( {
+		status: 'pending-confirmation',
+		product: stay.product,
+		resource: stay.resource,
+		cost: 430,
+		order: { status: 'pending', total: 430, customer: fixture.customer },
+	} );
+	const booking = pending[ 0 ];
+	const admin = await browser.newContext( {
+		baseURL: baseUrl,
+	} );
+	await admin.route( '**/*', localRoute );
+	try {
+		const approval = await admin.newPage();
+		await approval.goto( '/wp-login.php' );
+		await approval.locator( '#user_login' ).fill( administrator.username );
+		await approval.locator( '#user_pass' ).fill( administrator.password );
+		await approval.locator( '#wp-submit' ).click();
+		await confirmBooking( approval, booking.id );
+		await expect
+			.poll( () => savedStays( stay.product ) )
+			.toMatchObject( [
+				{
+					id: booking.id,
+					status: 'confirmed',
+					order: {
+						id: booking.order.id,
+						status: 'pending',
+						total: 430,
+					},
+				},
+			] );
+		const pay = read(
+			`wc_get_order(${ booking.order.id })->get_checkout_payment_url()`
+		);
+		await page.goto( pay );
+		await page.locator( '#payment_method_cheque' ).check();
+		if ( await page.locator( '#terms' ).isVisible() ) {
+			await page.locator( '#terms' ).check();
+		}
+		await page.locator( '#place_order' ).click();
+		await expect(
+			page.getByRole( 'heading', { name: 'Order received' } )
+		).toBeVisible();
+		expect( savedStays( stay.product ) ).toMatchObject( [
+			{
+				id: booking.id,
+				status: 'confirmed',
+				order: { id: booking.order.id, status: 'on-hold', total: 430 },
+			},
+		] );
+		// Deliver the native payment notification after the offline cheque clears.
+		wp(
+			'eval',
+			`$o=wc_get_order(${ booking.order.id });$o->payment_complete("accommodation-local-cheque");$o->payment_complete("accommodation-local-cheque");`
+		);
+		expect( savedStays( stay.product ) ).toMatchObject( [
+			{
+				id: booking.id,
+				status: 'paid',
+				cost: 430,
+				order: {
+					id: booking.order.id,
+					status: 'completed',
+					total: 430,
+					currency: 'EUR',
+					item: booking.order.item,
+				},
+			},
+		] );
+		await selectStay( approval, stay );
+		await expect(
+			approval.locator( '.wc-bookings-booking-cost' )
+		).toContainText( 'This block cannot be booked.' );
+		expect( savedStays( stay.product ) ).toHaveLength( 1 );
+	} finally {
+		await admin.close();
 	}
 } );

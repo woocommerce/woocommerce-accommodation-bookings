@@ -8,7 +8,7 @@
 /**
  * Exercise persisted pricing, migrations and order hooks.
  *
- * @version 1.3.13
+ * @version x.x.x
  */
 class Accommodation_Persistence_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.
@@ -154,6 +154,141 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 
 	public function order_storage_and_transition() {
 		return array( array( 'no', 'cancelled' ), array( 'yes', 'cancelled' ), array( 'no', 'refunded' ), array( 'yes', 'refunded' ) );
+	}
+
+	/**
+	 * Only eligible virtual accommodation orders auto-complete.
+	 *
+	 * @dataProvider completion_cases
+	 */
+	public function test_native_payment_status_eligibility( $storage, $kind, $status, $incoming, $expected ) {
+		update_option( 'woocommerce_custom_orders_table_enabled', $storage );
+		$product  = accommodation_test_room( array( 'virtual' => 'physical-room' !== $kind ) );
+		$order    = wc_create_order();
+		$mixed    = 0 === strpos( $kind, 'mixed-' );
+		$reversed = false !== strpos( $kind, '-reversed' );
+		if ( $mixed ) {
+			$simple = new WC_Product_Simple();
+			$simple->set_name( 'Unrelated merchandise' );
+			$simple->set_regular_price( '25' );
+			$simple->set_virtual( false !== strpos( $kind, 'virtual' ) );
+			$simple->save();
+			if ( $reversed ) {
+				$order->add_product( $simple, 1 );
+			}
+		}
+		if ( 'empty' !== $kind ) {
+			$order->add_product(
+				$product,
+				1,
+				array(
+					'subtotal' => 100,
+					'total'    => 100,
+				)
+			);
+		}
+		if ( $mixed && ! $reversed ) {
+			$order->add_product( $simple, 1 );
+		}
+		$order->calculate_totals( false );
+		$order->set_status( $status );
+		$order->save();
+		if ( 'deleted' === $kind ) {
+			$product->delete( true );
+		}
+		$saved = wc_get_order( $order->get_id() );
+		$items = array_keys( $saved->get_items() );
+		$total = 'empty' === $kind ? '0.00' : ( $mixed ? '125.00' : '100.00' );
+		$this->assertSame( 'yes' === $storage, Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() );
+		$this->assertSame( $expected, apply_filters( 'woocommerce_payment_complete_order_status', $incoming, $order->get_id(), $saved ) ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment -- Exercise the existing WooCommerce payment hook.
+		$this->assertSame( $status, wc_get_order( $order->get_id() )->get_status() );
+		$this->assertSame( $total, wc_get_order( $order->get_id() )->get_total() );
+		$this->assertSame( $items, array_keys( wc_get_order( $order->get_id() )->get_items() ) );
+	}
+
+	public function completion_cases() {
+		$cases = array();
+		foreach ( array( 'no', 'yes' ) as $storage ) {
+			foreach ( array( 'pending', 'on-hold', 'failed' ) as $status ) {
+				$cases[ $storage . '-room-' . $status ] = array( $storage, 'room', $status, 'processing', 'completed' );
+			}
+			foreach ( array( 'physical-room', 'mixed-physical', 'mixed-virtual', 'mixed-physical-reversed', 'mixed-virtual-reversed', 'empty', 'deleted' ) as $kind ) {
+				$cases[ $storage . '-' . $kind ] = array( $storage, $kind, 'pending', 'processing', 'processing' );
+			}
+			foreach ( array( 'processing', 'completed', 'cancelled', 'refunded' ) as $status ) {
+				$cases[ $storage . '-existing-' . $status ] = array( $storage, 'room', $status, 'processing', 'processing' );
+			}
+			$cases[ $storage . '-incoming-completed' ] = array( $storage, 'room', 'pending', 'completed', 'completed' );
+		}
+		return $cases;
+	}
+
+	/**
+	 * Rejected customer requests leave the persisted stay and money intact.
+	 *
+	 * @dataProvider denied_cancellations
+	 */
+	public function test_native_cancel_denials_preserve_stay_and_order( $storage, $reason ) {
+		update_option( 'woocommerce_custom_orders_table_enabled', $storage );
+		$product                 = accommodation_test_room(
+			array(
+				'user_can_cancel'   => 'disabled' !== $reason,
+				'cancel_limit'      => 2,
+				'cancel_limit_unit' => 'day',
+			)
+		);
+		$start                   = strtotime( 'cutoff' === $reason ? '+1 day midnight' : '+1 month midnight' );
+		list( $order, $booking ) = $this->persist_stay( $product, 200, $start, strtotime( '+2 days', $start ) );
+		$owner                   = self::factory()->user->create( array( 'role' => 'customer' ) );
+		$order->set_customer_id( $owner );
+		$order->save();
+		$booking->set_customer_id( $owner );
+		$booking->save();
+		$before   = get_post_meta( $booking->get_id() );
+		$previous = get_current_user_id();
+		$request  = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Restore caller-owned request data; the native handler verifies the test nonce.
+		try {
+			wp_set_current_user( 'owner' === $reason ? self::factory()->user->create( array( 'role' => 'customer' ) ) : $owner );
+			$_GET = array(
+				'cancel_booking' => 'true',
+				'booking_id'     => $booking->get_id(),
+				'redirect'       => '',
+				'_wpnonce'       => 'nonce' === $reason ? 'invalid' : wp_create_nonce( 'woocommerce-bookings-cancel_booking_' . $booking->get_id() ),
+			);
+			wc_clear_notices();
+			$this->assertNotFalse( has_action( 'init', array( 'WC_Booking_Form_Handler', 'cancel_booking' ) ) );
+			WC_Booking_Form_Handler::cancel_booking();
+			$this->assertSame( 'unpaid', ( new WC_Booking( $booking->get_id() ) )->get_status() );
+			$this->assertSame( $before, get_post_meta( $booking->get_id() ) );
+			$this->assertSame( 'pending', wc_get_order( $order->get_id() )->get_status() );
+			$this->assertSame( '200.00', wc_get_order( $order->get_id() )->get_total() );
+			$this->assertCount( 0, wc_get_order( $order->get_id() )->get_refunds() );
+			$notice = in_array( $reason, array( 'cutoff', 'disabled' ), true ) ? 'Your booking can no longer be cancelled. Please contact us if you need assistance.' : 'Invalid booking.';
+			$this->assertSame(
+				array(
+					array(
+						'notice' => $notice,
+						'data'   => array(),
+					),
+				),
+				wc_get_notices( 'error' )
+			);
+			$this->assertSame( array( $booking->get_id() ), array_map( 'intval', WC_Booking_Data_Store::get_bookings_for_objects_query( array( $product->get_id() ), get_wc_booking_statuses( 'fully_booked' ), $start, strtotime( '+2 days', $start ) ) ) );
+		} finally {
+			$_GET = $request;
+			wp_set_current_user( $previous );
+			wc_clear_notices();
+		}
+	}
+
+	public function denied_cancellations() {
+		$cases = array();
+		foreach ( array( 'no', 'yes' ) as $storage ) {
+			foreach ( array( 'owner', 'nonce', 'cutoff', 'disabled' ) as $reason ) {
+				$cases[ $storage . '-' . $reason ] = array( $storage, $reason );
+			}
+		}
+		return $cases;
 	}
 
 	/** Read the actual slot API twice to include its cache hit. */
