@@ -195,9 +195,16 @@ test.describe( 'Product Tests', () => {
 	test( 'Verify the Number of Rooms Availability - @foundational', async ( {
 		page,
 	} ) => {
+		// Fill the rooms of a product no other test books: bookings held on
+		// the shared product would use up rooms before this test starts.
+		const product = await createProduct( adminPage, {
+			...productDetails,
+			title: 'Accommodation product #7',
+		} );
+
 		await clearCart( page );
 		for ( let i = 0; i < productDetails.rooms; i++ ) {
-			await visitProductPage( page, productId );
+			await visitProductPage( page, product );
 			await fillBookingStartDate( page, getFutureDate( 1 ) );
 			await fillBookingEndDate(
 				page,
@@ -206,7 +213,7 @@ test.describe( 'Product Tests', () => {
 			await addToCart( page );
 		}
 
-		await visitProductPage( page, productId );
+		await visitProductPage( page, product );
 		await fillBookingStartDate( page, getFutureDate( 1 ), false );
 		await fillBookingEndDate(
 			page,
@@ -221,6 +228,9 @@ test.describe( 'Product Tests', () => {
 		await expect(
 			page.locator( '.wc-bookings-booking-cost .booking-error' )
 		).toContainText( 'There are a maximum of 0 places remaining on' );
+
+		// Removing the in-cart bookings releases the rooms they hold.
+		await clearCart( page );
 	} );
 
 	test( 'Verify Calendar Display Mode - @foundational', async ( {
@@ -252,10 +262,16 @@ test.describe( 'Product Tests', () => {
 	test( 'Verify Accommodation Booking with Confirmation Setting - @foundational', async ( {
 		page,
 	} ) => {
-		await updateProduct( adminPage, productId, {
+		// Use a product of its own so the shared product keeps its settings
+		// and bookings held by other tests cannot make these dates unavailable.
+		const product = await createProduct( adminPage, {
+			title: 'Accommodation product #8',
+			baseCost: '10.00',
 			requireConfirmation: true,
 		} );
-		await visitProductPage( page, productId );
+
+		await clearCart( page );
+		await visitProductPage( page, product );
 		await unBlockUI( page );
 		await expect(
 			page.locator( '.single_add_to_cart_button' )
