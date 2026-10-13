@@ -567,13 +567,18 @@ export async function unBlockUI( page ) {
  */
 export async function clearCart( page ) {
 	await page.goto( '/cart/' );
-	const rows = await page.locator( '.cart td a.remove' );
-	const count = await rows.count();
+	const removeButtons = page.locator( '.wc-block-cart-item__remove-link' );
+	const emptyCart = page.getByText( /Your cart is (currently )?empty/i );
 
-	for ( let i = 0; i < count; i++ ) {
-		await rows.nth( 0 ).click();
-		await page.locator( '.woocommerce-message' ).waitFor();
+	// The Cart block renders its items after the page loads, so wait for
+	// either state before counting: an early count finds nothing to remove.
+	await expect( removeButtons.or( emptyCart ).first() ).toBeVisible();
+
+	for ( let i = await removeButtons.count(); i > 0; i-- ) {
+		await removeButtons.first().click();
+		await expect( removeButtons ).toHaveCount( i - 1 );
 	}
+	await expect( emptyCart.first() ).toBeVisible();
 }
 
 function convertTimeToHoursMinutesMeridiem( time ) {
