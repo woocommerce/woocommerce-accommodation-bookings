@@ -63,7 +63,7 @@ Docker is required. Before the first `env:start`, put the Bookings release ZIP i
 gh release download --repo woocommerce/woocommerce-bookings --pattern 'woocommerce-bookings.zip' --dir .
 ```
 
-Use the Bookings version needed for the task and state the version tested. The existing `env:install-plugins` script uses a separate bot token; the CLI download avoids that local requirement.
+Use the Bookings version needed for the task and state the version tested. The existing `env:install-plugins` script reads `ORG_DOWNLOADS`, falling back to the GitHub CLI login.
 
 ```bash
 npx playwright install chromium
