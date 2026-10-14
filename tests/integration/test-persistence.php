@@ -131,13 +131,13 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		/**
 		 * Retry the real order status event without duplicating booking state.
 		 *
-		 * @since x.x.x
+		 * @since 1.3.14
 		 */
 		do_action( 'woocommerce_order_status_' . $transition, $order->get_id() );
 		/**
 		 * Repeat delivery to verify that the status callback remains idempotent.
 		 *
-		 * @since x.x.x
+		 * @since 1.3.14
 		 */
 		do_action( 'woocommerce_order_status_' . $transition, $order->get_id() );
 		$saved = new WC_Booking( $booking->get_id() );
@@ -248,13 +248,13 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		/**
 		 * Apply the real add-on callbacks to the legacy per-night fixture.
 		 *
-		 * @since x.x.x
+		 * @since 1.3.14
 		 */
 		$addons = apply_filters( 'woocommerce_product_addon_cart_item_data', array( $addon ), array( 'wc_accommodation_booking_block_qty_multiplier' => 1 ), $product->get_id(), array() );
 		/**
 		 * Build booking cart data through the registered extension callbacks.
 		 *
-		 * @since x.x.x
+		 * @since 1.3.14
 		 */
 		$cart_data = apply_filters(
 			'woocommerce_add_cart_item_data',
@@ -271,7 +271,7 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		/**
 		 * Verify that add-ons leave the accommodation price calculation intact.
 		 *
-		 * @since x.x.x
+		 * @since 1.3.14
 		 */
 		$this->assertFalse( apply_filters( 'woocommerce_product_addons_adjust_price', true, array( 'data' => $product ) ) );
 		list( $order, $booking ) = $this->persist_stay( $product, $cart_data['booking']['_cost'], $data['_start_date'], $data['_end_date'] );

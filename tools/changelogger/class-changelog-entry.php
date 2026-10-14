@@ -3,7 +3,7 @@
  * Changelog_Entry class
  *
  * @package  WooCommerce Accommodation Bookings
- * @since    x.x.x
+ * @since    1.3.14
  */
 
 namespace SomewhereWarm\Changelogger;
@@ -19,7 +19,7 @@ use Automattic\Jetpack\Changelog\ChangelogEntry;
  * history is exactly what the round-trip test exists to prevent. Entries created by
  * `changelogger write` have no raw string and are formatted canonically.
  *
- * @version x.x.x
+ * @version 1.3.14
  */
 class Changelog_Entry extends ChangelogEntry {
 

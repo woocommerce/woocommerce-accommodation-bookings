@@ -8,7 +8,7 @@
 /**
  * Run real requests without Bookings and check what they leave behind.
  *
- * @version x.x.x
+ * @version 1.3.14
  */
 class Accommodation_Dependencies_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.

@@ -8,7 +8,7 @@
 /**
  * Verify the shared Bookings options are not duplicated on global add-ons.
  *
- * @version x.x.x
+ * @version 1.3.14
  */
 class TestWCAccommodationBookingAddons extends \PHPUnit\Framework\TestCase {
 	/** Set up WordPress function doubles. */

@@ -6,7 +6,7 @@ Requires PHP: 7.4
 WC requires at least: 11.1
 WC tested up to: 11.2
 Tested up to: 7.1
-Stable tag: 1.3.13
+Stable tag: 1.3.14
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,15 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.14 - 2026-10-14 =
+* Fix - Stopped hiding available accommodation dates when several resources have bookings.
+* Fix - Restored the "Select check-out" prompt after a check-in date is picked with WooCommerce Bookings 3.11.0.
+* Fix - Corrected calendar (.ics) dates for all-day bookings, which were written with a time and, for other bookable products, ended a day early.
+* Fix - Prevented duplicate booking multiplier options in global add-on groups.
+* Tweak - Raised minimum requirements to WordPress 7.0 and WooCommerce 11.1.
+* Dev - Updated @wordpress/scripts to 36.1.
+* Dev - Updated development dependencies to address security advisories.
 
 = 1.3.13 - 2026-10-07 =
 * Fix - Bound accommodation availability caching and avoid duplicate registry entries on cache hits.

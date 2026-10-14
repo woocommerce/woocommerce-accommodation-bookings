@@ -3,7 +3,7 @@
  * Changelog_Formatter class
  *
  * @package  WooCommerce Accommodation Bookings
- * @since    x.x.x
+ * @since    1.3.14
  */
 
 namespace SomewhereWarm\Changelogger;
@@ -38,7 +38,7 @@ use InvalidArgumentException;
  * no longer issue (such as `Feature` and `Update`), and rewriting them would turn every
  * release into a changelog-wide diff.
  *
- * @version x.x.x
+ * @version 1.3.14
  */
 class Changelog_Formatter extends Parser implements FormatterPlugin {
 
