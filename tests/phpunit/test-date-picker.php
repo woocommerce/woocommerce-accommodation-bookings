@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Partially booked days must not remain fully booked.
  *
- * @version x.x.x
+ * @version 1.3.14
  */
 class TestAccommodationDatePicker extends TestCase {
 

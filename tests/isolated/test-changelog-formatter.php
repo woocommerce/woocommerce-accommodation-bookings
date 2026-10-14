@@ -18,7 +18,7 @@ require_once dirname( __DIR__, 2 ) . '/vendor/autoload.php';
  * The formatter rewrites the whole file on every release, so the tests that matter
  * are the ones asserting that nothing but the new entry changes.
  *
- * @version x.x.x
+ * @version 1.3.14
  */
 class SomewhereWarm_Changelog_Formatter_Tests extends TestCase {
 

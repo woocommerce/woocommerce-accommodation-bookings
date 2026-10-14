@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Export valid calendar (.ics) dates for all-day bookings, which were written with a time and, for other bookable products, ended a day early.
