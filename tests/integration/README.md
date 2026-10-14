@@ -48,6 +48,12 @@ The Product Add-ons case uses the legacy Accommodation per-night flag, now mappe
 to Bookings' block multiplier, and checks that the later Add-ons price adjustment
 cannot charge it a second time.
 
+`test-dependencies.php` covers start-up when Bookings is inactive, and when it is listed
+as active but its files are missing. Bookings cannot be unloaded from the PHPUnit process,
+so each case runs `dependency-request.php` in a separate PHP process: one storefront or
+wp-admin request with WordPress, WooCommerce and this plugin on the same test tables.
+That request rolls back its own transaction.
+
 With Xdebug, add `--coverage-html coverage/integration --path-coverage` and set
 `XDEBUG_MODE=coverage`. PCOV supports the HTML report without `--path-coverage`.
 The report includes unexecuted plugin PHP files; no report is produced without a
