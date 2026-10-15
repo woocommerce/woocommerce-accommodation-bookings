@@ -361,56 +361,141 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		}
 	}
 
-	public function test_legacy_per_night_addon_is_charged_once_per_night() {
-		$product       = accommodation_test_room();
-		$data          = wc_bookings_get_posted_data(
-			array(
+	/**
+	 * Legacy and modern per-night add-on flags charge once per night through native checkout.
+	 *
+	 * @dataProvider nightly_addon_cases
+	 * @param array $scenario Independent inputs and monetary expectations.
+	 */
+	public function test_nightly_addon_is_charged_once_per_night_through_checkout( $scenario ) {
+		$original = array( WC()->session, WC()->customer, WC()->cart, $_POST, get_current_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Snapshot caller-owned input in the native CLI fixture.
+		try {
+			$user = self::factory()->user->create( array( 'role' => 'customer' ) );
+			wp_set_current_user( $user );
+			WC()->session = new WC_Session_Handler();
+			WC()->session->init();
+			WC()->customer = new WC_Customer( $user );
+			WC()->cart     = new WC_Cart();
+			$product       = accommodation_test_room(
+				array(
+					'block_cost'                 => $scenario['night'],
+					'has_persons'                => $scenario['multipliers'],
+					'has_person_cost_multiplier' => $scenario['multipliers'],
+					'min_persons'                => 1,
+					'max_persons'                => 4,
+				)
+			);
+			$resource_id   = 0;
+			if ( $scenario['multipliers'] ) {
+				$resource = new WC_Product_Booking_Resource();
+				$resource->set_name( 'Owned room resource' );
+				$resource->set_qty( 4 );
+				$resource_id = $resource->save();
+				$product->set_has_resources( true );
+				$product->set_resources_assignment( 'customer' );
+				$product->set_resource_ids( array( $resource_id ) );
+				$product->set_resource_base_costs( array( $resource_id => '5.55' ) );
+				$product->set_resource_block_costs( array( $resource_id => '2.25' ) );
+			}
+			$product->update_meta_data(
+				'_product_addons',
+				array(
+					array(
+						'name'                             => 'Breakfast',
+						'type'                             => 'custom_text',
+						'price'                            => $scenario['addon'],
+						'price_type'                       => 'quantity_based',
+						'adjust_price'                     => 1,
+						( $scenario['legacy'] ? 'wc_accommodation_booking_block_qty_multiplier' : 'wc_booking_block_qty_multiplier' ) => 1,
+						'wc_booking_person_qty_multiplier' => $scenario['multipliers'] ? 1 : 0,
+					),
+				)
+			);
+			$product->save();
+			$_POST = array(
+				'add-to-cart'                        => $product->get_id(),
 				'wc_bookings_field_start_date_year'  => (int) gmdate( 'Y' ) + 1,
 				'wc_bookings_field_start_date_month' => 3,
 				'wc_bookings_field_start_date_day'   => 27,
 				'wc_bookings_field_duration'         => 3,
+				'addon-' . $product->get_id() . '-0' => 'Breakfast',
+			);
+			if ( $scenario['multipliers'] ) {
+				$_POST['wc_bookings_field_resource'] = $resource_id;
+				$_POST['wc_bookings_field_persons']  = 2;
+			}
+			$key = WC()->cart->add_to_cart( $product->get_id() );
+			$this->assertIsString( $key, wp_json_encode( wc_get_notices() ) );
+			$cart = WC()->cart->get_cart_item( $key );
+			$this->assertSame( $scenario['total'], round( (float) $cart['booking']['_cost'], 2 ) );
+			$this->assertSame( $scenario['addon_total'], round( (float) $cart['addons'][0]['price'], 2 ) );
+			/**
+			 * The registered callbacks must prevent Product Add-ons charging the add-on twice.
+			 *
+			 * @since 1.3.14
+			 */
+			$this->assertFalse( apply_filters( 'woocommerce_product_addons_adjust_price', true, array( 'data' => $product ) ) );
+			WC()->cart->calculate_totals();
+			$this->assertSame( $scenario['total'], (float) WC()->cart->get_total( 'edit' ) );
+			$order_id = WC()->checkout()->create_order(
+				array(
+					'billing_email'  => 'owned@example.test',
+					'payment_method' => 'cod',
+				)
+			);
+			$this->assertNotWPError( $order_id );
+			$order = wc_get_order( $order_id );
+			$this->assertSame( number_format( $scenario['total'], 2, '.', '' ), $order->get_total() );
+			$item    = array_values( $order->get_items() )[0];
+			$booking = new WC_Booking( $cart['booking']['_booking_id'] );
+			$this->assertSame( $order_id, $booking->get_order_id() );
+			$this->assertSame( $item->get_id(), $booking->get_order_item_id() );
+		} finally {
+			list( WC()->session, WC()->customer, WC()->cart, $_POST, $original_user ) = $original;
+			wp_set_current_user( $original_user );
+		}
+	}
+
+	/**
+	 * Three nights with a per-night breakfast add-on.
+	 *
+	 * @return array Independent expected cart and order totals.
+	 */
+	public static function nightly_addon_cases() {
+		return array(
+			// 3 nights * 100 + breakfast 12 * 3 nights.
+			'legacy accommodation flag'        => array(
+				array(
+					'legacy'      => true,
+					'multipliers' => false,
+					'night'       => 100,
+					'addon'       => 12,
+					'addon_total' => 36.0,
+					'total'       => 336.0,
+				),
 			),
-			$product
-		);
-		$data['_cost'] = WC_Bookings_Cost_Calculation::calculate_booking_cost( $data, $product );
-		$this->assertNotWPError( $data['_cost'] );
-		$addon = array(
-			'name'       => 'Breakfast',
-			'value'      => 'Breakfast',
-			'price'      => 12,
-			'price_type' => 'quantity_based',
-		);
-		/**
-		 * Apply the real add-on callbacks to the legacy per-night fixture.
-		 *
-		 * @since 1.3.14
-		 */
-		$addons = apply_filters( 'woocommerce_product_addon_cart_item_data', array( $addon ), array( 'wc_accommodation_booking_block_qty_multiplier' => 1 ), $product->get_id(), array() );
-		/**
-		 * Build booking cart data through the registered extension callbacks.
-		 *
-		 * @since 1.3.14
-		 */
-		$cart_data = apply_filters(
-			'woocommerce_add_cart_item_data',
-			array(
-				'booking' => $data,
-				'addons'  => $addons,
+			// 3 nights * 22.35 + breakfast 2.35 * 3 nights.
+			'modern bookings flag'             => array(
+				array(
+					'legacy'      => false,
+					'multipliers' => false,
+					'night'       => 22.35,
+					'addon'       => 2.35,
+					'addon_total' => 7.05,
+					'total'       => 74.10,
+				),
 			),
-			$product->get_id(),
-			0,
-			1
+			// (22.35 * 3 + 5.55 + 2.25 * 3) * 2 persons = 158.70; breakfast 2.35 * 3 nights * 2 persons = 14.10.
+			'modern with resource and persons' => array(
+				array(
+					'legacy'      => false,
+					'multipliers' => true,
+					'night'       => 22.35,
+					'addon'       => 2.35,
+					'addon_total' => 14.10,
+					'total'       => 172.80,
+				),
+			),
 		);
-		$this->assertSame( 336.0, (float) $cart_data['booking']['_cost'] );
-		$this->assertSame( 36.0, (float) $cart_data['addons'][0]['price'] );
-		/**
-		 * Verify that add-ons leave the accommodation price calculation intact.
-		 *
-		 * @since 1.3.14
-		 */
-		$this->assertFalse( apply_filters( 'woocommerce_product_addons_adjust_price', true, array( 'data' => $product ) ) );
-		list( $order, $booking ) = $this->persist_stay( $product, $cart_data['booking']['_cost'], $data['_start_date'], $data['_end_date'] );
-		$this->assertSame( '336.00', wc_get_order( $order->get_id() )->get_total() );
-		$this->assertSame( 336.0, (float) ( new WC_Booking( $booking->get_id() ) )->get_cost() );
 	}
 }
