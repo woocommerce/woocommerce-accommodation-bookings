@@ -8,7 +8,7 @@ const { baseUrl } = require( './config' );
 module.exports = defineConfig( {
 	testDir: '../../tests',
 	testMatch: process.env.ACCOM_E2E_REGRESSION
-		? '**/persistence.spec.js'
+		? '**/{persistence,admin-save-preservation}.spec.js'
 		: '**/*.spec.js',
 
 	/* Maximum time one test can run for. */
