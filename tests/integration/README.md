@@ -46,9 +46,10 @@ Historical pricing is the Accommodation 1.1.2 `_wc_booking_pricing` shape with
 relative nightly adjustment. The legacy separate check-in/out options move to
 `woocommerce_accommodation_bookings_times_settings`. Both real migrations run
 twice while an existing booking, linked order and merchant metadata remain intact.
-The Product Add-ons case uses the legacy Accommodation per-night flag, now mapped
-to Bookings' block multiplier, and checks that the later Add-ons price adjustment
-cannot charge it a second time.
+The Product Add-ons cases submit the legacy Accommodation per-night flag, now
+mapped to Bookings' block multiplier, and the modern Bookings flag through the
+real cart and checkout, and check that the later Add-ons price adjustment cannot
+charge the add-on a second time.
 
 `test-dependencies.php` covers start-up when Bookings is inactive, and when it is listed
 as active but its files are missing. Bookings cannot be unloaded from the PHPUnit process,
