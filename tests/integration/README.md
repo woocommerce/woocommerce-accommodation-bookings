@@ -33,6 +33,8 @@ its options cache until the request ends; the browser cancellation journey check
 restored capacity in the next customer request. The suite does not flush caches
 to make that same-request behavior pass.
 
+The payment-status matrix also runs on Bookings 2.2.8, where Bookings' completion callback excludes accommodation products and Accommodation supplies their completion behavior; Bookings 3.0.0+ handles these products itself. Bookings versions before 3.10.0 do not enforce the cancellation cutoff or disabled cancellation setting in the native request handler. A full 2.2.8 run has four expected failures in that denial matrix, across both order stores. Those assertions remain active to expose this historical dependency gap; use current Bookings for the complete passing suite.
+
 For an existing isolated WordPress test installation, set `WP_TESTS_DIR`, `WC_DIR`,
 `BOOKINGS_DIR` and `ADDONS_DIR` to its actual paths and run
 `vendor/bin/phpunit -c phpunit-integration.xml`. The repository's existing wp-env
