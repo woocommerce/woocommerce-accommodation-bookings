@@ -498,4 +498,37 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 			),
 		);
 	}
+
+	/**
+	 * The stale-transient tool clears booking slot rows without touching look-alike options.
+	 */
+	public function test_maintenance_cleanup_preserves_unrelated_options() {
+		global $wpdb;
+		$tools   = apply_filters( 'woocommerce_debug_tools', array() ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment -- Exercise the registered native status tool.
+		$product = accommodation_test_room();
+		$orphan  = 'book_ts_orphan_' . $product->get_id();
+		$timeout = '_transient_timeout_book_ts_timeout_only_' . $product->get_id();
+		set_transient( $orphan, array( 'source' => 'orphan' ), DAY_IN_SECONDS );
+		add_option( $timeout, time() + DAY_IN_SECONDS, '', false );
+		set_transient( 'merchant_book_ts_' . $product->get_id(), array( 'preserve' => 'foreign' ), DAY_IN_SECONDS );
+		update_option( 'book_ts_merchant_setting', array( 'preserve' => 'option' ) );
+		// "_" is a LIKE wildcard: an unescaped prefix would also match this option.
+		update_option( 'xtransient_book_ts_keep', 'preserve-pattern' );
+		$previous_user = get_current_user_id();
+		try {
+			wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+			call_user_func( $tools['clear_stale_booking_transients']['callback'] );
+		} finally {
+			wp_set_current_user( $previous_user );
+		}
+		$saved = static function ( $name ) use ( $wpdb ) {
+			return $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $name ) );
+		};
+		$this->assertNull( $saved( '_transient_' . $orphan ) );
+		$this->assertNull( $saved( '_transient_timeout_' . $orphan ) );
+		$this->assertNull( $saved( $timeout ) );
+		$this->assertSame( maybe_serialize( array( 'preserve' => 'foreign' ) ), $saved( '_transient_merchant_book_ts_' . $product->get_id() ) );
+		$this->assertSame( maybe_serialize( array( 'preserve' => 'option' ) ), $saved( 'book_ts_merchant_setting' ) );
+		$this->assertSame( 'preserve-pattern', $saved( 'xtransient_book_ts_keep' ) );
+	}
 }

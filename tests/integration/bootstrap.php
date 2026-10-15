@@ -69,6 +69,10 @@ if ( method_exists( WC_Bookings::instance(), 'activate' ) ) {
 	woocommerce_bookings_activate();
 }
 require_once $plugin_dir . '/includes/admin/class-wc-accommodation-booking-admin-product-settings.php';
+if ( ! class_exists( 'WC_Accommodation_Booking_REST_And_Admin' ) ) {
+	global $wc_accom_plugin;
+	$wc_accom_plugin->rest_admin_includes();
+}
 require_once __DIR__ . '/fixtures.php';
 
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CLI version diagnostic.
