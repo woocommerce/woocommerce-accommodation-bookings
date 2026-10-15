@@ -42,3 +42,5 @@ checks out and cancels through My Account, the second session reloads availabili
 and completes its own checkout. Assertions check both saved bookings/orders and
 permit only one active booking. Boundary fixtures cross December/January and the
 Europe/Berlin spring clock change, with distinct nightly rates.
+
+The regression command also runs `admin-save-preservation.spec.js`, which submits the real WordPress product form as a shop manager and checks the person-batch guard: a later foreign person, a non-person record, or a person the manager cannot edit rejects the whole person batch and leaves every person record unchanged, while independently valid product fields still save. Each case owns and cleans its users, products, resources, people and journal.
