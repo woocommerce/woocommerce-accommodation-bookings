@@ -702,4 +702,49 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 			}
 		}
 	}
+
+	/**
+	 * Cache entries cannot reuse another block selection inside the same range.
+	 *
+	 * @dataProvider block_formats
+	 */
+	public function test_native_cache_isolates_changed_block_selection( $flat ) {
+		$product = accommodation_test_room();
+		$year    = (int) gmdate( 'Y' ) + 1;
+		$one     = strtotime( "$year-01-01 14:00" );
+		$two     = strtotime( "$year-01-02 14:00" );
+		$from    = strtotime( "$year-01-01" );
+		$to      = strtotime( "$year-01-03" );
+		$booking = get_wc_booking(
+			array(
+				'product_id' => $product->get_id(),
+				'start_date' => $two,
+				'end_date'   => strtotime( "$year-01-03 11:00" ),
+				'all_day'    => false,
+			)
+		);
+		$booking->create( 'confirmed' );
+		$available = array(
+			$one => array(
+				'booked'    => 0,
+				'available' => 1,
+				'resources' => array( 0 => 1 ),
+			),
+		);
+		$occupied  = array(
+			$two => array(
+				'booked'    => 1,
+				'available' => 0,
+				'resources' => array( 0 => 0 ),
+			),
+		);
+		$this->assertSame( $available, $product->get_time_slots( $flat ? array( $one ) : array( $one => 0 ), 0, $from, $to, true ) );
+		$this->assertSame( $occupied, $product->get_time_slots( $flat ? array( $two ) : array( $two => 0 ), 0, $from, $to, true ) );
+		$this->assertSame( array(), $product->get_time_slots( array(), 0, $from, $to, true ) );
+		$this->assertSame( $available, $product->get_time_slots( $flat ? array( $one ) : array( $one => 0 ), 0, $from, $to, true ) );
+	}
+
+	public function block_formats() {
+		return array( array( false ), array( true ) );
+	}
 }

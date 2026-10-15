@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 	 * Mostly inherited from WC_Product_Booking (code reuse!) but overrides a few methods
 	 *
 	 * @class   WC_Product_Accommodation_Booking
-	 * @version 1.3.13
+	 * @version x.x.x
 	 */
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
@@ -242,8 +242,10 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		public function get_time_slots( $blocks, $resource_id = 0, $from = 0, $to = 0, $include_sold_out = false ) {
 			$bookable_product = $this;
 
+			// Equivalent v2/v3 selections share a cache; empty selections also need their own key.
+			$blocks          = $this->normalize_blocks_array( $blocks );
 			$product_id      = $bookable_product->get_id();
-			$transient_name  = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to ) ) );
+			$transient_name  = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to, wp_json_encode( array_keys( $blocks ) ) ) ) );
 			$product_cache   = class_exists( 'WC_Bookings_Cache' ) && method_exists( 'WC_Bookings_Cache', 'get_product_cache' ) && method_exists( 'WC_Bookings_Cache', 'set_product_cache' );
 			$available_slots = $product_cache ? WC_Bookings_Cache::get_product_cache( $transient_name, $product_id ) : get_transient( $transient_name );
 
@@ -263,10 +265,6 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 				$available_slots  = array();
 				$has_qty          = ! is_null( $booking_resource ) ? $booking_resource->has_qty() : false;
 				$has_resources    = $bookable_product->has_resources();
-
-				// Same contract as get_blocks_in_range(): WC Bookings 3.0+ passes [ timestamp => booked_count ];
-				// older versions may pass a flat list of timestamps. Normalize so the foreach always uses real timestamps as keys.
-				$blocks = $this->normalize_blocks_array( $blocks );
 
 				foreach ( $blocks as $block => $booked_slots ) {
 					$check_in  = self::get_check_times( 'in', $product_id );
