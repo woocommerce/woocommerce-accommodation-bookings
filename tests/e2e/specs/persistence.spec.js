@@ -244,3 +244,75 @@ test( 'independent customers cannot oversell; cancellation permits a new booking
 		await otherContext.close();
 	}
 } );
+
+for ( const release of [ 'cancelled', 'expired' ] ) {
+	test( `simultaneous last-room requests allow one hold and ${ release } permits retry`, async () => {
+		const result = JSON.parse(
+			wp(
+				'eval-file',
+				'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/concurrent-reservations.php',
+				release
+			)
+				.split( 'ACCOM_RACE:' )
+				.pop()
+		);
+		expect( result.first.pid ).not.toBe( result.second.pid );
+		expect( result.first.connection ).not.toBe( result.second.connection );
+		expect( result.before.connection ).not.toBe( result.first.connection );
+		expect( result.before.connection ).not.toBe( result.second.connection );
+		expect( result.first.accepted ).toBe( true );
+		expect( result.first.quantity ).toBe( 1 );
+		expect( result.second.accepted ).toBe( false );
+		expect( result.second.quantity ).toBe( 0 );
+		expect( result.second.order ).toBe( 0 );
+		expect( result.second.notices ).toHaveLength( 1 );
+		expect( result.before.bookings ).toHaveLength( 1 );
+		const original = result.before.bookings[ 0 ];
+		expect( original.customer ).toBe( result.customers[ 0 ] );
+		expect( original.cost ).toBe( 200 );
+		if ( release === 'cancelled' ) {
+			expect( original.status ).toBe( 'unpaid' );
+			expect( original.order ).toMatchObject( {
+				id: result.first.order,
+				customer: result.customers[ 0 ],
+				total: '200.00',
+				status: 'pending',
+			} );
+			expect( result.released.bookings ).toHaveLength( 1 );
+			expect( result.released.bookings[ 0 ] ).toMatchObject( {
+				id: original.id,
+				status: 'cancelled',
+				order: { status: 'cancelled' },
+			} );
+		} else {
+			expect( original.status ).toBe( 'in-cart' );
+			expect( original.order ).toBeNull();
+			expect( result.released.bookings ).toHaveLength( 0 );
+		}
+		expect( result.retry.accepted ).toBe( true );
+		expect( result.retry.quantity ).toBe( 1 );
+		const active = result.after.bookings.filter( ( booking ) =>
+			[
+				'in-cart',
+				'unpaid',
+				'confirmed',
+				'paid',
+				'pending-confirmation',
+			].includes( booking.status )
+		);
+		expect( active ).toHaveLength( 1 );
+		expect( active[ 0 ].id ).not.toBe( original.id );
+		expect( active[ 0 ] ).toMatchObject( {
+			customer: result.customers[ 1 ],
+			cost: 200,
+		} );
+		if ( release === 'cancelled' ) {
+			expect( active[ 0 ].order ).toMatchObject( {
+				id: result.retry.order,
+				customer: result.customers[ 1 ],
+				total: '200.00',
+				status: 'pending',
+			} );
+		}
+	} );
+}

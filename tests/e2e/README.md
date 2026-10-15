@@ -6,7 +6,7 @@ no customer is given administrator credentials. Their room factory comes from
 `tests/integration/fixtures.php`.
 
 Install Node 24, locked npm/Composer dependencies, Docker and a licensed Bookings
-release (tested with 3.10.0). Extract Bookings outside this repository, then run:
+release (the concurrent reservation cases were tested with 3.11.0 and require its reservation mutex). Extract Bookings outside this repository, then run:
 
 ```bash
 BOOKINGS_DIR=/absolute/path/to/woocommerce-bookings npm run test:e2e:setup
@@ -42,3 +42,5 @@ checks out and cancels through My Account, the second session reloads availabili
 and completes its own checkout. Assertions check both saved bookings/orders and
 permit only one active booking. Boundary fixtures cross December/January and the
 Europe/Berlin spring clock change, with distinct nightly rates.
+
+The persistence runner also coordinates two separate native PHP requests for the last room, with distinct customer sessions and database connections and a fresh reader of saved bookings. It pauses the first request before booking persistence, lets the second reach contention, and requires one accepted hold and one rejection. The native checkout-processed stage and order cancellation, or dispatch of the fixture's due cart-expiry event, must release one place for the rejected customer's retry. These cases cover the shared Bookings/Accommodation backend below HTTP form validation; the existing sequential browser checkout and My Account cancellation remain complementary. Private barriers and fixture users, products, bookings and orders are cleaned after each case.
