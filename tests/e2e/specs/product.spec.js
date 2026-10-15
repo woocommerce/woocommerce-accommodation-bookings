@@ -177,13 +177,13 @@ test.describe( 'Product Tests', () => {
 		await fillBookingStartDate( page, getFutureDate( 1 ) );
 		await fillBookingEndDate(
 			page,
-			getFutureDate( parseInt( productDetails.maximumNight, 10 ) )
+			getFutureDate( parseInt( productDetails.maximumNight, 10 ) + 1 )
 		);
 		await expect(
 			page.locator( '.wc-bookings-booking-cost' )
 		).toContainText(
 			`Booking cost: $${ parseFloat(
-				( parseInt( productDetails.maximumNight, 10 ) - 1 ) *
+				parseInt( productDetails.maximumNight, 10 ) *
 					productDetails.baseCost
 			) }`
 		);

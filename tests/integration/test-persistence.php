@@ -531,4 +531,175 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		$this->assertSame( maybe_serialize( array( 'preserve' => 'option' ) ), $saved( 'book_ts_merchant_setting' ) );
 		$this->assertSame( 'preserve-pattern', $saved( 'xtransient_book_ts_keep' ) );
 	}
+
+	/**
+	 * Persisted adjacent stays produce exact maps for both assignment modes.
+	 *
+	 * @dataProvider resource_assignment_modes
+	 */
+	public function test_native_resource_calendar_maps( $assignment ) {
+		$year = (int) gmdate( 'Y' ) + 1;
+		$a    = new WC_Product_Booking_Resource();
+		$a->set_name( 'One-place room' );
+		$a->set_qty( 1 );
+		$a->save();
+		$b = new WC_Product_Booking_Resource();
+		$b->set_name( 'Two-place room' );
+		$b->set_qty( 2 );
+		$b->save();
+		$product = accommodation_test_room(
+			array(
+				'qty'                  => 3,
+				'has_resources'        => true,
+				'resource_ids'         => array( $a->get_id(), $b->get_id() ),
+				'resources_assignment' => $assignment,
+			)
+		);
+		$this->assertTrue( $product->is_resource_assignment_type( $assignment ) );
+		foreach ( array( array( $a->get_id(), 1, 3 ), array( $a->get_id(), 3, 5 ), array( $b->get_id(), 2, 4 ), array( $b->get_id(), 3, 6 ) ) as $stay ) {
+			$booking = get_wc_booking(
+				array(
+					'product_id'  => $product->get_id(),
+					'resource_id' => $stay[0],
+					'start_date'  => strtotime( "$year-01-{$stay[1]} 14:00" ),
+					'end_date'    => strtotime( "$year-01-{$stay[2]} 11:00" ),
+					'all_day'     => false,
+				)
+			);
+			$booking->create( 'confirmed' );
+		}
+		$maps = WC_Bookings_Controller::find_booked_day_blocks( $product, strtotime( "$year-01-01" ), strtotime( "$year-01-07" ) );
+		// A fills nights 1–4 with adjacent stays; B fills both places only on night 3.
+		// Automatic boundaries block only when all three places are occupied.
+		$expected = array(
+			'fully_booked_days'       => array(
+				"$year-1-2" => array( $a->get_id() => 1 ),
+				"$year-1-3" => array( $a->get_id() => 1 ),
+				"$year-1-4" => array( $a->get_id() => 1 ),
+			),
+			'fully_booked_start_days' => array(
+				"$year-1-1" => array( $a->get_id() => 1 ),
+				"$year-1-3" => array( $b->get_id() => 1 ),
+			),
+			'fully_booked_end_days'   => array(
+				"$year-1-5" => array( $a->get_id() => 1 ),
+				"$year-1-4" => array( $b->get_id() => 1 ),
+			),
+			'partially_booked_days'   => array(
+				"$year-1-2" => array( $b->get_id() => 1 ),
+				"$year-1-5" => array( $b->get_id() => 1 ),
+				"$year-1-6" => array( $b->get_id() => 1 ),
+			),
+		);
+		if ( 'automatic' === $assignment ) {
+			$expected = array(
+				'fully_booked_days'       => array(
+					"$year-1-2" => array( $a->get_id() => 1 ),
+					"$year-1-4" => array( $a->get_id() => 1 ),
+				),
+				'fully_booked_start_days' => array(
+					"$year-1-3" => array(
+						$a->get_id() => 1,
+						$b->get_id() => 1,
+					),
+				),
+				'fully_booked_end_days'   => array( "$year-1-4" => array( $b->get_id() => 1 ) ),
+				'partially_booked_days'   => array(
+					"$year-1-1" => array( $a->get_id() => 1 ),
+					"$year-1-2" => array( $b->get_id() => 1 ),
+					"$year-1-5" => array(
+						$a->get_id() => 1,
+						$b->get_id() => 1,
+					),
+					"$year-1-6" => array( $b->get_id() => 1 ),
+				),
+			);
+		}
+		foreach ( $expected as $name => $map ) {
+			$actual = $maps[ $name ] ?? array();
+			ksort( $map );
+			ksort( $actual );
+			foreach ( $map as &$resources ) {
+				ksort( $resources );
+			}
+			unset( $resources );
+			foreach ( $actual as &$resources ) {
+				ksort( $resources );
+			}
+			unset( $resources );
+			$this->assertSame( $map, $actual, $name );
+		}
+		$this->assertSame( array(), $maps['unavailable_days'] );
+		// On the adjacent handoff date only the arriving stay consumes A's one place.
+		$handoff = strtotime( "$year-01-03 14:00" );
+		$blocks  = version_compare( WC_BOOKINGS_VERSION, '3.0', '>=' ) ? array( $handoff => 0 ) : array( $handoff );
+		$this->assertSame(
+			array(
+				$handoff => array(
+					'booked'    => 1,
+					'available' => 0,
+					'resources' => array( $a->get_id() => 0 ),
+				),
+			),
+			$product->get_time_slots( $blocks, $a->get_id(), $handoff, strtotime( "$year-01-04 11:00" ), true )
+		);
+		// Checkout at 11:00 permits the next stay from 14:00; a full night cannot overlap.
+		foreach ( array( 'allowed', 'overlap' ) as $case ) {
+			$day  = 'allowed' === $case ? ( 'customer' === $assignment ? 5 : 4 ) : ( 'customer' === $assignment ? 4 : 3 );
+			$data = wc_bookings_get_posted_data(
+				array(
+					'wc_bookings_field_start_date_year'  => $year,
+					'wc_bookings_field_start_date_month' => 1,
+					'wc_bookings_field_start_date_day'   => $day,
+					'wc_bookings_field_duration'         => 1,
+					'wc_bookings_field_resource'         => 'customer' === $assignment ? $a->get_id() : 0,
+				),
+				$product
+			);
+			$cost = WC_Bookings_Cost_Calculation::calculate_booking_cost( $data, $product );
+			if ( 'allowed' === $case ) {
+				$this->assertNotWPError( $cost );
+				$this->assertSame( 100.0, (float) $cost );
+				$this->assertSame( 'customer' === $assignment ? $a->get_id() : $b->get_id(), $data['_resource_id'] );
+				$this->assertSame( strtotime( "$year-01-$day 14:00" ), $data['_start_date'] );
+				$this->assertSame( strtotime( "$year-01-" . ( $day + 1 ) . ' 11:00' ), $data['_end_date'] );
+			} else {
+				$this->assertWPError( $cost );
+				if ( 'customer' === $assignment ) {
+					// Older Bookings reports the preceding date, but rejects the same occupied night.
+					$this->assertStringStartsWith( 'There are a maximum of 0 places remaining on ', $cost->get_error_message() );
+				} else {
+					$this->assertSame( 'This block cannot be booked.', $cost->get_error_message() );
+				}
+			}
+		}
+	}
+
+	public function resource_assignment_modes() {
+		return array( array( 'customer' ), array( 'automatic' ) );
+	}
+
+	public function test_native_exact_maximum_nights_and_excess() {
+		$product = accommodation_test_room( array( 'max_duration' => 5 ) );
+		$year    = (int) gmdate( 'Y' ) + 1;
+		foreach ( array( 5, 6 ) as $nights ) {
+			$data = wc_bookings_get_posted_data(
+				array(
+					'wc_bookings_field_start_date_year'  => $year,
+					'wc_bookings_field_start_date_month' => 2,
+					'wc_bookings_field_start_date_day'   => 1,
+					'wc_bookings_field_duration'         => $nights,
+				),
+				$product
+			);
+			$cost = WC_Bookings_Cost_Calculation::calculate_booking_cost( $data, $product );
+			if ( 5 === $nights ) {
+				$this->assertNotWPError( $cost );
+				$this->assertSame( 500.0, (float) $cost );
+			} else {
+				$this->assertWPError( $cost );
+				$this->assertSame( 'The maximum duration is 5 blocks', $cost->get_error_message() );
+			}
+		}
+	}
 }
