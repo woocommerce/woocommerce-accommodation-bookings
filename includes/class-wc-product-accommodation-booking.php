@@ -448,7 +448,8 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 * @param string $type       The type, check_in or check_out.
 		 * @param int    $product_id The product ID.
 		 *
-		 * @return string The time, either from options or default or from the filtered value.
+		 * @return string|false|null The time, either from options or default or from the filtered value.
+		 *                           An empty string, false or null from the filter means no time.
 		 */
 		public static function get_check_times( $type, $product_id = 0 ) {
 			$option     = get_option( 'woocommerce_accommodation_bookings_times_settings' );
@@ -466,13 +467,22 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			/**
 			 * Filter the check-in/out times for a specific product.
 			 *
+			 * @since 1.1.40
+			 *
 			 * @param string $check_time The check-in/out time stored in the database.
 			 * @param string $type       The type, check_in or check_out.
 			 * @param int    $product_id The product ID.
 			 *
 			 * @return string The filtered/original time.
 			 */
-			return apply_filters( 'woocommerce_accommodation_booking_get_check_times', $check_time, $type, (int) $product_id );
+			$filtered_time = apply_filters( 'woocommerce_accommodation_booking_get_check_times', $check_time, $type, (int) $product_id );
+
+			// Bookings store the time as H:i; an empty time (also false or null, as before) means none is set.
+			if ( '' === $filtered_time || false === $filtered_time || null === $filtered_time || ( is_string( $filtered_time ) && preg_match( '/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/D', $filtered_time ) ) ) {
+				return $filtered_time;
+			}
+
+			return $check_time;
 		}
 
 		/**
