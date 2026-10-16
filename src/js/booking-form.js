@@ -136,7 +136,14 @@ import {
 				'aria-label': message,
 				'aria-expanded': 'false',
 				'aria-controls': tooltipId,
-			} ).append( $( INFO_ICON_SVG ) );
+			} )
+				.append( $( INFO_ICON_SVG ) )
+				// Bound on the icon itself: a handler delegated to `document`
+				// runs after jQuery UI's `selectDay` click on the cell.
+				.on( 'click mousedown', ( e ) => {
+					e.stopPropagation();
+					e.preventDefault();
+				} );
 			const $tooltip = $( '<div>', {
 				class: 'partial-availability-tooltip',
 				id: tooltipId,
@@ -177,16 +184,6 @@ import {
 			);
 		} );
 	};
-
-	// Prevent date selection when clicking the info icon button.
-	$( document ).on(
-		'click mousedown',
-		'.partial-availability-info',
-		function ( e ) {
-			e.stopPropagation();
-			e.preventDefault();
-		}
-	);
 
 	// WCAG 1.4.13: dismiss (Escape), hoverable tooltip; 4.1.2: aria-expanded.
 	$( document ).on(
