@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC Accommodation Bookings class
  *
  * @class   WC_Accommodation_Bookings_Plugin
- * @version 1.3.11
+ * @version x.x.x
  */
 class WC_Accommodation_Bookings_Plugin {
 
@@ -353,7 +353,11 @@ class WC_Accommodation_Bookings_Plugin {
 			return null;
 		}
 
-		foreach ( parse_blocks( $post->post_content ) as $block ) {
+		$blocks = parse_blocks( $post->post_content );
+		while ( $blocks ) {
+			$block = array_shift( $blocks );
+			// The block can be nested in a Group, Columns or any other block.
+			$blocks = array_merge( $block['innerBlocks'] ?? array(), $blocks );
 			if ( 'woocommerce/single-product' !== $block['blockName'] ) {
 				continue;
 			}
