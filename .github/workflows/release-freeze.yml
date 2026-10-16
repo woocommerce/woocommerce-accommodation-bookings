@@ -7,10 +7,9 @@ name: Release Freeze
 
 on:
   pull_request:
-    branches:
-      - trunk
     types:
       - opened
+      - edited
       - synchronize
       - reopened
       - ready_for_review
@@ -39,9 +38,15 @@ jobs:
               env:
                 # Interpolating the head ref into the script would let a
                 # crafted branch name run arbitrary code on the runner.
+                BASE_REF: ${{ github.event.pull_request.base.ref }}
                 HEAD_REF: ${{ github.event.pull_request.head.ref }}
                 HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
               run: |
+                if [[ "$BASE_REF" != "trunk" ]]; then
+                  echo "This PR does not target trunk - exempt from the freeze."
+                  exit 0
+                fi
+
                 if [[ "$HEAD_REPO" == "$GITHUB_REPOSITORY" && "$HEAD_REF" == release/* ]]; then
                   echo "This is the release PR itself - exempt from the freeze."
                   exit 0
