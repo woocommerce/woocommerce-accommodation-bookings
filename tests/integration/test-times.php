@@ -8,7 +8,7 @@
 /**
  * Follow a stay's times through a real site time zone, date formats and the calendar export.
  *
- * @version 1.3.14
+ * @version x.x.x
  */
 class Accommodation_Times_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.
@@ -38,6 +38,7 @@ class Accommodation_Times_Test extends WP_UnitTestCase {
 
 	/**
 	 * Berlin clocks go back on the second night, and one product has its own filtered times.
+	 * Unusable filtered times fall back to the saved ones; empty values mean no time, as before.
 	 *
 	 * @dataProvider check_times
 	 */
@@ -51,24 +52,32 @@ class Accommodation_Times_Test extends WP_UnitTestCase {
 		$suite_id  = $suite->get_id();
 		add_filter(
 			'woocommerce_accommodation_booking_get_check_times',
-			function ( $time, $type, $product_id ) use ( $suite_id ) {
+			function ( $time, $type, $product_id ) use ( $suite_id, $filtered ) {
 				if ( $suite_id !== $product_id ) {
 					return $time;
 				}
-				return 'in' === $type ? '16:45' : '09:20';
+				return $filtered[ $type ];
 			},
 			10,
 			3
 		);
 
-		$item = $this->add_stay_to_cart( $filtered ? $suite : $room, $check_in, 2 );
+		$item = $this->add_stay_to_cart( null === $filtered ? $room : $suite, $check_in, 2 );
 		// Two nights at 100, whatever the clocks do.
 		$this->assertSame( 200.0, (float) $item['booking']['_cost'] );
 
 		$shown = wp_list_pluck( apply_filters( 'woocommerce_get_item_data', array(), $item ), 'value', 'name' ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment -- WooCommerce core hook.
 		$this->assertSame( '2 nights', $shown['Duration'] );
-		$this->assertSame( $check_in->format( 'd.m.Y' ) . ' at ' . $check_in_time, $shown['Check-in'] );
-		$this->assertSame( $check_out->format( 'd.m.Y' ) . ' at ' . $check_out_time, $shown['Check-out'] );
+		if ( '' === $check_in_time ) {
+			// No time: the cart leaves the lines out, and the stay runs from midnight to midnight.
+			$this->assertArrayNotHasKey( 'Check-in', $shown );
+			$this->assertArrayNotHasKey( 'Check-out', $shown );
+			$check_in_time  = '00:00';
+			$check_out_time = '00:00';
+		} else {
+			$this->assertSame( $check_in->format( 'd.m.Y' ) . ' at ' . $check_in_time, $shown['Check-in'] );
+			$this->assertSame( $check_out->format( 'd.m.Y' ) . ' at ' . $check_out_time, $shown['Check-out'] );
+		}
 
 		$booking_id = $item['booking']['_booking_id'];
 		$clock_in   = str_replace( ':', '', $check_in_time ) . '00';
@@ -83,8 +92,63 @@ class Accommodation_Times_Test extends WP_UnitTestCase {
 
 	public function check_times() {
 		return array(
-			'site settings'           => array( false, '15:30', '10:15' ),
-			'times filtered per room' => array( true, '16:45', '09:20' ),
+			'site settings'           => array( null, '15:30', '10:15' ),
+			'times filtered per room' => array(
+				array(
+					'in'  => '16:45',
+					'out' => '09:20',
+				),
+				'16:45',
+				'09:20',
+			),
+			'unpadded hour'           => array(
+				array(
+					'in'  => '9:00',
+					'out' => '9:00',
+				),
+				'15:30',
+				'10:15',
+			),
+			'12-hour time'            => array(
+				array(
+					'in'  => '2pm',
+					'out' => '2pm',
+				),
+				'15:30',
+				'10:15',
+			),
+			'array'                   => array(
+				array(
+					'in'  => array(),
+					'out' => array(),
+				),
+				'15:30',
+				'10:15',
+			),
+			'empty string'            => array(
+				array(
+					'in'  => '',
+					'out' => '',
+				),
+				'',
+				'',
+			),
+			'false'                   => array(
+				array(
+					'in'  => false,
+					'out' => false,
+				),
+				'',
+				'',
+			),
+			'null'                    => array(
+				array(
+					'in'  => null,
+					'out' => null,
+				),
+				'',
+				'',
+			),
 		);
 	}
 
