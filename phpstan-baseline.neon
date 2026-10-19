@@ -7,30 +7,6 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
 
 		-
-			message: '#^Call to method admin_options\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Call to method get_option\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Call to method get_option_key\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:instance\(\) has invalid return type WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
 			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -321,6 +297,12 @@ parameters:
 		-
 			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) has invalid return type WC_Product_Booking_Resource\.$#'
 			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) should return WC_Product_Booking_Resource but returns array\|float\|int\|string\|WC_Product_Accommodation_Booking_Resource\|false\|null\.$#'
+			identifier: return.type
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
