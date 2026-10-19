@@ -83,7 +83,69 @@ test.describe( 'Partially booked days', () => {
 		}
 		await expect( month ).toHaveText( booked );
 		await expect( day( page, 12 ) ).toHaveClass( /fully_booked_end_days/ );
+		await expect( day( page, 10 ) ).toHaveClass( DISABLED );
+		await expect( day( page, 12 ) ).not.toHaveClass( DISABLED );
 	}
+
+	test( 'Both accommodation forms retain restrictions after month navigation', async ( {
+		page,
+	} ) => {
+		const second = JSON.parse(
+			wp(
+				'eval-file',
+				'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/partial-day-forms.php',
+				String( fixture.product ),
+				String( fixture.booking )
+			)
+				.split( 'ACCOM_RESULT:' )
+				.pop()
+		);
+		try {
+			await page.goto( `/?page_id=${ second.page }` );
+			const forms = page.locator( 'form.cart' );
+			await expect( forms ).toHaveCount( 2 );
+			for ( const form of await forms.all() ) {
+				const month = form.locator( '.ui-datepicker-title' );
+				const booked = new Date(
+					Date.UTC( fixture.year, fixture.month - 1, 1 )
+				).toLocaleDateString( 'en-US', {
+					month: 'long',
+					year: 'numeric',
+					timeZone: 'UTC',
+				} );
+				for (
+					let clicks = 0;
+					clicks < 3 &&
+					( await month.textContent() ).replace( /\s+/g, ' ' ) !==
+						booked;
+					clicks++
+				) {
+					const shown = await month.textContent();
+					await form.locator( '.ui-datepicker-next' ).click();
+					await expect( month ).not.toHaveText( shown );
+				}
+				await expect( day( form, 12 ) ).toHaveClass(
+					/fully_booked_end_days/
+				);
+				await expect( day( form, 10 ) ).toHaveClass( DISABLED );
+				await form.locator( '.ui-datepicker-next' ).click();
+				await form.locator( '.ui-datepicker-prev' ).click();
+				await expect( day( form, 10 ) ).toHaveClass( DISABLED );
+				await expect( day( form, 12 ) ).not.toHaveClass( DISABLED );
+				await day( form, 8 ).locator( 'a' ).click();
+				await expect( day( form, 12 ) ).toHaveClass( DISABLED );
+				await form.locator( '.ui-datepicker-next' ).click();
+				await form.locator( '.ui-datepicker-prev' ).click();
+				await expect( day( form, 10 ) ).not.toHaveClass( DISABLED );
+				await expect( day( form, 12 ) ).toHaveClass( DISABLED );
+			}
+		} finally {
+			wp(
+				'eval',
+				`(new WC_Booking(${ second.booking }))->delete(true); wp_delete_post(${ second.product },true); wp_delete_post(${ second.page },true);`
+			);
+		}
+	} );
 
 	/**
 	 * Each partial day carries exactly one info button, wired to its own tooltip.
@@ -167,9 +229,20 @@ test.describe( 'Partially booked days', () => {
 	} ) => {
 		await openBookedMonth( page );
 
+		// Cached month redraws must keep check-out-only days disabled for check-in.
+		await page.locator( '.ui-datepicker-next' ).click();
+		await page.locator( '.ui-datepicker-prev' ).click();
+		await expect( day( page, 10 ) ).toHaveClass( DISABLED );
+		await day( page, 10 ).locator( '> a' ).press( 'Enter' );
+		await expect( dateInput( page, 'day' ) ).toHaveValue( '' );
+
 		// Check in two nights before the existing stay.
 		await day( page, 8 ).locator( 'a' ).click();
 		await expect( title( page ) ).toHaveText( 'Select check-out' );
+		await expect( day( page, 12 ) ).toHaveClass( DISABLED );
+		await expect( day( page, 10 ) ).not.toHaveClass( DISABLED );
+		await page.locator( '.ui-datepicker-next' ).click();
+		await page.locator( '.ui-datepicker-prev' ).click();
 		await expect( day( page, 12 ) ).toHaveClass( DISABLED );
 		await expect( day( page, 10 ) ).not.toHaveClass( DISABLED );
 
