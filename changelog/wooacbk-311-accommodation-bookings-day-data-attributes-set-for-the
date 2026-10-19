@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Fixed the date that screen readers announce for days shown from the previous or next month.
