@@ -38,10 +38,10 @@ class WC_Accommodation_Booking {
 	 * all-day booking, whose date-only end is exclusive, but not a stay that ends at the
 	 * check-out time, so the original timestamp is exported instead.
 	 *
-	 * @param string     $value     Formatted value.
-	 * @param int        $timestamp Timestamp to format.
-	 * @param int        $old_ts    Original timestamp.
-	 * @param WC_Booking $booking   Booking object.
+	 * @param string          $value     Formatted value.
+	 * @param int             $timestamp Timestamp to format.
+	 * @param int             $old_ts    Original timestamp.
+	 * @param WC_Booking|null $booking   Booking object, or null when Bookings formats a date without one.
 	 *
 	 * @return string Formatted date for ICS.
 	 */

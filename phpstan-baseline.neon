@@ -127,12 +127,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking-order-manager.php
 
 		-
-			message: '#^Call to function is_a\(\) with WC_Booking and ''WC_Booking'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: includes/class-wc-accommodation-booking.php
-
-		-
 			message: '#^Call to function is_a\(\) with WC_Product\|false\|null and ''WC_Product…'' will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
