@@ -85,7 +85,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	<p class="form-field accommodation-booking-cancel-limit">
 		<label for="_wc_accommodation_booking_cancel_limit"><?php esc_html_e( 'Cancellation up till', 'woocommerce-accommodation-bookings' ); ?></label>
-		<input type="number" name="_wc_accommodation_booking_cancel_limit" id="_wc_accommodation_booking_cancel_limit" value="<?php echo esc_attr( $cancel_limit ); ?>" step="1" min="1" style="margin-right: 7px; width: 4em;">
+		<input type="number" name="_wc_accommodation_booking_cancel_limit" id="_wc_accommodation_booking_cancel_limit" value="<?php echo esc_attr( (string) $cancel_limit ); ?>" step="1" min="1" style="margin-right: 7px; width: 4em;">
 		<select name="_wc_accommodation_booking_cancel_limit_unit" id="_wc_accommodation_booking_cancel_limit_unit" class="short" style="width: auto; margin-right: 7px;">
 			<option value="month" <?php selected( $cancel_limit_unit, 'month' ); ?>><?php esc_html_e( 'Month(s)', 'woocommerce-accommodation-bookings' ); ?></option>
 			<option value="day" <?php selected( $cancel_limit_unit, 'day' ); ?>><?php esc_html_e( 'Day(s)', 'woocommerce-accommodation-bookings' ); ?></option>

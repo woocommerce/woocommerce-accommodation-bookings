@@ -31,38 +31,8 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
-			identifier: argument.type
-			count: 4
-			path: includes/admin/views/html-accommodation-booking-availability-fields.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/admin/views/html-accommodation-booking-availability-fields.php
-
-		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:has_restricted_days\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: includes/admin/views/html-accommodation-booking-availability.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/admin/views/html-accommodation-booking-availability.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<0, 6\> given\.$#'
-			identifier: argument.type
-			count: 4
-			path: includes/admin/views/html-accommodation-booking-availability.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
-			identifier: argument.type
 			count: 1
 			path: includes/admin/views/html-accommodation-booking-availability.php
 
@@ -71,30 +41,6 @@ parameters:
 			identifier: function.notFound
 			count: 2
 			path: includes/admin/views/html-accommodation-booking-data.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/admin/views/html-accommodation-booking-data.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, float given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/admin/views/html-accommodation-booking-rates-fields.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
-			identifier: argument.type
-			count: 4
-			path: includes/admin/views/html-accommodation-booking-rates-fields.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/admin/views/html-accommodation-booking-rates-fields.php
 
 		-
 			message: '#^Function wc_bookings_date_format not found\.$#'
