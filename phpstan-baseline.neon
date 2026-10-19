@@ -127,12 +127,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
-			message: '#^Parameter \#3 \$time of method WC_Accommodation_Booking_Date_Picker\:\:get_product_resource_available_blocks_on_time\(\) expects string, int\|false given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/class-wc-accommodation-booking-date-picker.php
-
-		-
 			message: '#^Parameter \$product of method WC_Accommodation_Booking_Date_Picker\:\:add_accommodation_posted_data\(\) has invalid type WC_Product_Booking\.$#'
 			identifier: class.notFound
 			count: 1

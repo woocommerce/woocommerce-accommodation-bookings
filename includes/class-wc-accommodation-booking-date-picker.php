@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Hooks into the Bookings Date Picker so we can customize it a bit.
  *
  * @class   WC_Accommodation_Booking_Date_Picker
- * @version 1.3.14
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Date_Picker {
 
@@ -259,7 +259,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	 *
 	 * @param \WC_Product_Booking $product  Product.
 	 * @param int                 $resource Resource ID.
-	 * @param string              $time     Timestamp.
+	 * @param int|false           $time     Timestamp from strtotime(), false when it fails.
 	 *
 	 * @return int|mixed
 	 */
