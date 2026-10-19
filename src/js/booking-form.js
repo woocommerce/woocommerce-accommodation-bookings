@@ -64,6 +64,26 @@ import {
 				attributes.class.push( 'fully_booked_end_days' );
 			}
 
+			// Re-evaluated on every redraw, including month navigation, which
+			// skips the refreshed hook. Same condition as that hook.
+			const next_date_type =
+				get_jquery_element( date_picker ).data( 'start_or_end_date' );
+			const is_check_in_selected =
+				!! $form.find( 'input.booking_date_day' ).val() &&
+				next_date_type === 'end';
+			if (
+				attributes.class.indexOf(
+					is_check_in_selected
+						? 'fully_booked_end_days'
+						: 'fully_booked_start_days'
+				) > -1
+			) {
+				attributes.class.push(
+					'ui-datepicker-unselectable',
+					'ui-state-disabled'
+				);
+			}
+
 			if (
 				attributes.class.indexOf( 'fully_booked_start_days' ) > -1 ||
 				attributes.class.indexOf( 'fully_booked_end_days' ) > -1
