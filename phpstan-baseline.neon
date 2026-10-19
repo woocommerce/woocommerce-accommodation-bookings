@@ -7,36 +7,6 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
 
 		-
-			message: '#^Call to method admin_options\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Call to method get_option\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Call to method get_option_key\(\) on an unknown class WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:instance\(\) has invalid return type WC_Bookings_Timezone_Settings\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
-			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:instance\(\) should return WC_Bookings_Timezone_Settings but returns WC_Accommodation_Booking_Admin_Product_Settings\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
-
-		-
 			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -159,24 +129,6 @@ parameters:
 		-
 			message: '#^Call to method is_all_day\(\) on an unknown class WC_Booking\.$#'
 			identifier: class.notFound
-			count: 1
-			path: includes/class-wc-accommodation-booking.php
-
-		-
-			message: '#^Method WC_Accommodation_Booking\:\:_get_updated_timestamp_time\(\) should return DateTime but returns string\.$#'
-			identifier: return.type
-			count: 2
-			path: includes/class-wc-accommodation-booking.php
-
-		-
-			message: '#^Method WC_Accommodation_Booking\:\:disable_overlapping_rates\(\) should return array but returns bool\.$#'
-			identifier: return.type
-			count: 1
-			path: includes/class-wc-accommodation-booking.php
-
-		-
-			message: '#^Method WC_Accommodation_Booking\:\:disable_overlapping_rates\(\) should return array but returns false\.$#'
-			identifier: return.type
 			count: 1
 			path: includes/class-wc-accommodation-booking.php
 

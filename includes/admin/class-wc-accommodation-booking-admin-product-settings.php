@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) )
  * the `woocommerce_bookings_settings_page` filter.
  *
  * @class   WC_Accommodation_Booking_Admin_Product_Settings
- * @version 1.3.13
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**
@@ -184,12 +184,12 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	}
 
 	/**
-	 * Returns WC_Bookings_Timezone_Settings singleton
+	 * Returns WC_Accommodation_Booking_Admin_Product_Settings singleton
 	 *
-	 * Ensures only one instance of WC_Bookings_Timezone_Settings is created.
+	 * Ensures only one instance of WC_Accommodation_Booking_Admin_Product_Settings is created.
 	 *
 	 * @since 1.13.0
-	 * @return WC_Bookings_Timezone_Settings - Main instance.
+	 * @return WC_Accommodation_Booking_Admin_Product_Settings Main instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$_instance ) ) {

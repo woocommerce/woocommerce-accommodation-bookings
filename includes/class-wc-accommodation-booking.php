@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds our new product type to the list of WooCommerce product types.
  *
  * @class   WC_Accommodation_Booking
- * @version 1.3.14
+ * @version x.x.x
  */
 class WC_Accommodation_Booking {
 
@@ -78,7 +78,7 @@ class WC_Accommodation_Booking {
 	 *
 	 * @param  bool               $enable_overlapping_rates
 	 * @param  WC_Product_Booking $product
-	 * @return array
+	 * @return bool
 	 */
 	public function disable_overlapping_rates( $enable_overlapping_rates, $product ) {
 		if ( ! is_a( $product, 'WC_Product_Accommodation_Booking' ) ) {
@@ -254,7 +254,7 @@ class WC_Accommodation_Booking {
 	 * @param string $datetime Date time without separator (YmdHis)
 	 * @param string $time     Time in `xx:yy` pm/am format
 	 *
-	 * @return Datetime without separator
+	 * @return string Datetime without separator
 	 */
 	protected function _get_updated_timestamp_time( $datetime, $time ) {
 		if ( empty( $time ) ) {
