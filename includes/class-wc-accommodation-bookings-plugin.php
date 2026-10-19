@@ -287,7 +287,7 @@ class WC_Accommodation_Bookings_Plugin {
 		wp_enqueue_style(
 			'wc-accommodation-bookings-styles',
 			WC_ACCOMMODATION_BOOKINGS_PLUGIN_URL . '/build/css/frontend.css',
-			null,
+			array(),
 			$style_data['version']
 		);
 

@@ -211,12 +211,6 @@ parameters:
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
 		-
-			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wc-accommodation-bookings-plugin.php
-
-		-
 			message: '#^Call to an undefined method WC_Product\:\:get_resource_base_costs\(\)\.$#'
 			identifier: method.notFound
 			count: 1
