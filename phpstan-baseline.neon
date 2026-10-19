@@ -19,8 +19,50 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
+			message: '#^Parameter \#1 \$var of function wc_clean expects array\|string, float\|false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Parameter \#1 \$var of function wc_clean expects array\|string, int\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 4
+			path: includes/admin/views/html-accommodation-booking-availability-fields.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/admin/views/html-accommodation-booking-availability-fields.php
+
+		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:has_restricted_days\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<0, 6\> given\.$#'
+			identifier: argument.type
+			count: 4
+			path: includes/admin/views/html-accommodation-booking-availability.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/admin/views/html-accommodation-booking-availability.php
 
@@ -29,6 +71,30 @@ parameters:
 			identifier: function.notFound
 			count: 2
 			path: includes/admin/views/html-accommodation-booking-data.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-data.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, float given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/admin/views/html-accommodation-booking-rates-fields.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 4
+			path: includes/admin/views/html-accommodation-booking-rates-fields.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/admin/views/html-accommodation-booking-rates-fields.php
 
 		-
 			message: '#^Function wc_bookings_date_format not found\.$#'
@@ -103,6 +169,24 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_check_in_and_out_times\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_product_resource_available_blocks_on_time\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \#3 \$time of method WC_Accommodation_Booking_Date_Picker\:\:get_product_resource_available_blocks_on_time\(\) expects string, int\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Parameter \$product of method WC_Accommodation_Booking_Date_Picker\:\:add_accommodation_posted_data\(\) has invalid type WC_Product_Booking\.$#'
 			identifier: class.notFound
 			count: 1
@@ -171,6 +255,18 @@ parameters:
 		-
 			message: '#^Function wc_booking_get_script_dependencies not found\.$#'
 			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function register_activation_hook expects callable\(bool\)\: void, array\{\$this\(WC_Accommodation_Bookings_Plugin\), ''check_dependencies''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_enqueue_style expects array\<string\>, null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
@@ -339,6 +435,18 @@ parameters:
 		-
 			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) should return WC_Product_Booking_Resource but returns array\|float\|int\|string\|WC_Product_Accommodation_Booking_Resource\|false\|null\.$#'
 			identifier: return.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Parameter \#1 \$product of function wc_get_price_excluding_tax expects WC_Product, \$this\(WC_Product_Accommodation_Booking\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Parameter \#1 \$product of function wc_get_price_including_tax expects WC_Product, \$this\(WC_Product_Accommodation_Booking\) given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
