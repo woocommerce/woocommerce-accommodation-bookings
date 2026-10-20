@@ -859,12 +859,6 @@ parameters:
 			path: includes/integrations/class-wc-accommodation-booking-addons.php
 
 		-
-			message: '#^Call to an undefined method object\:\:is_type\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: includes/integrations/class-wc-accommodation-booking-addons.php
-
-		-
 			message: '#^Cannot call method get_type\(\) on WC_Product\|false\.$#'
 			identifier: method.nonObject
 			count: 1

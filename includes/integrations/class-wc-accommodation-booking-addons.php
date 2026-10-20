@@ -23,7 +23,7 @@ class WC_Accommodation_Booking_Addons {
 	/**
 	 * Show grand total or not?
 	 * @param  bool $show_grand_total
-	 * @param  object $product
+	 * @param  WC_Product $product Product the add-ons total is shown for.
 	 * @return bool
 	 */
 	public function addons_show_grand_total( $show_grand_total, $product ) {
