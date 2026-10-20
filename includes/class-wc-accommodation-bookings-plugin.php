@@ -57,6 +57,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 * Declare compatibility with High-Performance Order Storage.
 	 *
 	 * @since 1.1.34
+	 * @return void
 	 */
 	public function declare_hpos_compatibility() {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
@@ -66,6 +67,8 @@ class WC_Accommodation_Bookings_Plugin {
 
 	/**
 	 * Run the plugin.
+	 *
+	 * @return void
 	 */
 	public function run() {
 		$this->_define_constants();
@@ -205,6 +208,7 @@ class WC_Accommodation_Bookings_Plugin {
 	 * WooCommerce fallback notice.
 	 *
 	 * @since 1.2.1
+	 * @return void
 	 */
 	public function missing_wc_notice() {
 		/* translators: %s WC download URL link. */
@@ -213,6 +217,8 @@ class WC_Accommodation_Bookings_Plugin {
 
 	/**
 	 * Load Classes
+	 *
+	 * @return void
 	 */
 	public function includes() {
 		include WC_ACCOMMODATION_BOOKINGS_INCLUDES_PATH . 'class-wc-product-accommodation-booking.php';
@@ -227,6 +233,8 @@ class WC_Accommodation_Bookings_Plugin {
 
 	/**
 	 * Include admin
+	 *
+	 * @return void
 	 */
 	public function admin_includes() {
 		// Return if WooCommerce class not found.
@@ -241,6 +249,8 @@ class WC_Accommodation_Bookings_Plugin {
 
 	/**
 	 * Include REST API and Admin functions' class.
+	 *
+	 * @return void
 	 */
 	public function rest_admin_includes() {
 		// Return if WooCommerce class not found.
@@ -254,6 +264,8 @@ class WC_Accommodation_Bookings_Plugin {
 
 	/**
 	 * Frontend booking form scripts
+	 *
+	 * @return void
 	 */
 	public function frontend_assets() {
 		$product = is_product() ? wc_get_product( get_the_ID() ) : $this->get_accommodation_product_from_block();
@@ -398,6 +410,8 @@ class WC_Accommodation_Bookings_Plugin {
 
 	/**
 	 * Installer
+	 *
+	 * @return void
 	 */
 	public function install() {
 		global $wpdb;

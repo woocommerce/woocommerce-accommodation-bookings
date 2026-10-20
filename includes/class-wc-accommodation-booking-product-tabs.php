@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * In the future, other accommodation specific tabs might show up here.
  *
  * @class   WC_Accommodation_Booking_Product_Tabs
- * @version 1.3.13
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Product_Tabs {
 
@@ -83,6 +83,8 @@ class WC_Accommodation_Booking_Product_Tabs {
 
 	/**
 	 * The actual content for our time tab.
+	 *
+	 * @return void
 	 */
 	public function add_time_tab_content() {
 		if ( ! $this->are_time_fields_filled_out() ) {

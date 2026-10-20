@@ -12,7 +12,7 @@
  * version for accommodations to work.
  *
  * @class   WC_Accommodation_Dependencies
- * @version 1.3.11
+ * @version x.x.x
  */
 class WC_Accommodation_Dependencies {
 
@@ -25,6 +25,8 @@ class WC_Accommodation_Dependencies {
 
 	/**
 	 * Load a list of our currently active WordPress plugins
+	 *
+	 * @return void
 	 */
 	public static function init() {
 		self::$active_plugins = (array) get_option( 'active_plugins', array() );
@@ -73,6 +75,7 @@ class WC_Accommodation_Dependencies {
 	 * Check dependencies.
 	 *
 	 * @throws Exception Show exception on dependencies failure.
+	 * @return void
 	 */
 	public static function check_dependencies() {
 		if ( ! self::$active_plugins ) {

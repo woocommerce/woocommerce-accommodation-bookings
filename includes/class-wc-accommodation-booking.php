@@ -212,6 +212,7 @@ class WC_Accommodation_Booking {
 	 * @since 1.0.6
 	 *
 	 * @param int $booking_id Booking ID
+	 * @return void
 	 */
 	public function update_start_end_time( $booking_id ) {
 		$product_id = get_post_meta( $booking_id, '_booking_product_id', true );

@@ -54,6 +54,8 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 
 	/**
 	 * Maybe migrate data from old format to new one.
+	 *
+	 * @return void
 	 */
 	public function maybe_migrate() {
 		$check_in  = get_option( 'woocommerce_accommodation_bookings_check_in' );

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) )
  * - We should display check-in/check-out times on the cart
  *
  * @class   WC_Accommodation_Booking_Cart_Manager
- * @version 1.1.40
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Cart_Manager {
 
@@ -22,6 +22,8 @@ class WC_Accommodation_Booking_Cart_Manager {
 
 	/**
 	 * Fire the woocommerce_booking_add_to_cart action
+	 *
+	 * @return void
 	 */
 	function add_to_cart() {
 		do_action( 'woocommerce_booking_add_to_cart' );

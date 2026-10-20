@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds some additional info (such as check-in/check-out time) to the order info line item
  *
  * @class   WC_Accommodation_Booking_Order_Manager
- * @version 1.1.40
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Order_Manager {
 
@@ -21,6 +21,8 @@ class WC_Accommodation_Booking_Order_Manager {
 
 	/**
 	 * Adds check-in/check-out info to the WooCommerce order line item area
+	 *
+	 * @return void
 	 */
 	public function add_checkinout_info_to_order_email( $item_id, $item, $order ) {
 		$product = wc_get_product( $item['product_id'] );

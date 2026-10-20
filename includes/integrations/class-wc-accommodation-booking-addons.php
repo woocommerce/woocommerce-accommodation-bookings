@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
  * Addons integration class.
  *
  * @class   WC_Accommodation_Booking_Addons
- * @version 1.3.14
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Addons {
 
@@ -40,6 +40,8 @@ class WC_Accommodation_Booking_Addons {
 	/**
 	 * Show same options as bookings integration now.
 	 * Only difference is the product type we are targeting.
+	 *
+	 * @return void
 	 */
 	public function addon_options( $post, $addon, $loop ) {
 		// Bookings already renders the shared multiplier fields for global add-ons.
