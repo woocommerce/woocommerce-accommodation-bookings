@@ -53,11 +53,11 @@ jobs:
       QIT_DISABLE_ONBOARDING: yes
       EXTENSION: ${{ github.event.repository.name }}
       SELECTED: ${{ inputs.test || 'default' }}
-      # Requested versions (empty keeps QIT's defaults); QIT has no `nightly`, only `rc`.
+      # Requested versions (empty WP/WC keeps QIT's defaults; PHP defaults to 8.4); QIT has no `nightly`, only `rc`.
       VERSION_ARGS: >-
         ${{ inputs.wp-version && format('--wordpress_version={0}', inputs.wp-version == 'nightly' && 'rc' || inputs.wp-version) || '' }}
         ${{ inputs.wc-version && format('--woocommerce_version={0}', inputs.wc-version == 'nightly' && 'rc' || inputs.wc-version) || '' }}
-        ${{ inputs.php-version && format('--php_version={0}', inputs.php-version) || '' }}
+        ${{ format('--php_version={0}', inputs.php-version || '8.4') }}
 
     steps:
       # No checkout: repository code and its Composer config never run alongside the partner secrets.
