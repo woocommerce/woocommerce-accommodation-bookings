@@ -40,6 +40,10 @@ module.exports = defineConfig( {
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [
 		[ 'list' ],
+		// On CI, the "Annotate retry-only passes" workflow step reads this report.
+		...( process.env.CI
+			? [ [ 'json', { outputFile: 'test-results/results.json' } ] ]
+			: [] ),
 		[
 			'html',
 			{
