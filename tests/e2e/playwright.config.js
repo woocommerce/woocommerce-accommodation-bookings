@@ -11,6 +11,9 @@ module.exports = defineConfig( {
 		? '**/{persistence,admin-save-preservation}.spec.js'
 		: '**/*.spec.js',
 
+	/* warnings.spec.js runs only in the `warnings` project, after every other spec. */
+	testIgnore: '**/warnings.spec.js',
+
 	/* Maximum time one test can run for. */
 	timeout: 90 * 1000,
 
@@ -73,7 +76,13 @@ module.exports = defineConfig( {
 	projects: [
 		{
 			name: 'chromium',
+			teardown: 'warnings',
 			use: { ...devices[ 'Desktop Chrome' ] },
+		},
+		{
+			name: 'warnings',
+			testMatch: '**/warnings.spec.js',
+			testIgnore: [],
 		},
 	],
 
