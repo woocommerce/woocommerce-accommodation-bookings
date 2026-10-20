@@ -517,12 +517,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking.php
 
 		-
-			message: '#^Parameter \#2 \$time of method WC_Accommodation_Booking\:\:_get_updated_timestamp_time\(\) expects string, string\|false\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/class-wc-accommodation-booking.php
-
-		-
 			message: '#^Parameter \$booking of method WC_Accommodation_Booking\:\:disable_ics_formatting_for_accommodation\(\) has invalid type WC_Booking\.$#'
 			identifier: class.notFound
 			count: 1

@@ -270,8 +270,8 @@ class WC_Accommodation_Booking {
 	/**
 	 * Update the time of a given datetime.
 	 *
-	 * @param string $datetime Date time without separator (YmdHis)
-	 * @param string $time     Time in `xx:yy` pm/am format
+	 * @param string            $datetime Date time without separator (YmdHis)
+	 * @param string|false|null $time     Time in `xx:yy` pm/am format, or empty for none.
 	 *
 	 * @return string Datetime without separator
 	 */
