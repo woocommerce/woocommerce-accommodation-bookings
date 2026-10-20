@@ -153,6 +153,47 @@ class Accommodation_Times_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The cart replaces Bookings' date row with the day the stay was booked, also on a translated store.
+	 *
+	 * @dataProvider booking_date_labels
+	 */
+	public function test_cart_shows_the_day_the_stay_was_booked( $label ) {
+		add_filter(
+			'gettext_woocommerce-bookings',
+			function ( $translation, $text ) use ( $label ) {
+				return 'Booking Date' === $text ? $label : $translation;
+			},
+			10,
+			2
+		);
+		$check_in = new DateTimeImmutable( 'first day of january ' . ( (int) gmdate( 'Y' ) + 1 ), new DateTimeZone( 'UTC' ) );
+		$item     = $this->add_stay_to_cart( accommodation_test_room(), $check_in, 2 );
+
+		// Booked three days ago, so the shown date is not today's.
+		$booked = new DateTimeImmutable( '-3 days', wp_timezone() );
+		global $wpdb;
+		$wpdb->update(
+			$wpdb->posts,
+			array(
+				'post_date'     => $booked->format( 'Y-m-d H:i:s' ),
+				'post_date_gmt' => $booked->setTimezone( new DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' ),
+			),
+			array( 'ID' => $item['booking']['_booking_id'] )
+		);
+		clean_post_cache( $item['booking']['_booking_id'] );
+
+		$shown = wp_list_pluck( apply_filters( 'woocommerce_get_item_data', array(), $item ), 'value', 'name' ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment -- WooCommerce core hook.
+		$this->assertSame( $booked->format( 'd.m.Y' ), $shown[ $label ] );
+	}
+
+	public function booking_date_labels() {
+		return array(
+			'English'    => array( 'Booking Date' ),
+			'translated' => array( 'Buchungsdatum' ),
+		);
+	}
+
+	/**
 	 * This plugin filters every calendar date Bookings exports, also those of other products.
 	 */
 	public function test_all_day_booking_of_another_product_keeps_the_bookings_calendar_dates() {

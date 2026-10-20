@@ -76,6 +76,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * Changes the end label to "Check-out"
 	 *
 	 * @param  string $label Label.
+	 * @return string
 	 */
 	public function end_label( $label ) {
 		return __( 'Check-out', 'woocommerce-accommodation-bookings' );
@@ -218,6 +219,7 @@ class WC_Accommodation_Booking_Date_Picker {
 	 * Calculates array that contains the start and the end time of all bookings for given product.
 	 *
 	 * @param \WC_Product_Booking $product Product.
+	 * @return array{in: array<int, int[]>, out: array<int, int[]>} Booking start (in) and end (out) timestamps, keyed by resource ID.
 	 */
 	private function get_check_in_and_out_times( $product ) {
 

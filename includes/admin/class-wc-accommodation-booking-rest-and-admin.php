@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Required functions for REST API and Admin functionality.
  *
  * @class   WC_Accommodation_Booking_REST_And_Admin
- * @version 1.3.13
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_REST_And_Admin {
 
@@ -46,6 +46,7 @@ class WC_Accommodation_Booking_REST_And_Admin {
 	 *
 	 * @version 1.0.11
 	 * @param   int $post_id Post ID.
+	 * @return void
 	 */
 	public function save_product_data( $post_id ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput

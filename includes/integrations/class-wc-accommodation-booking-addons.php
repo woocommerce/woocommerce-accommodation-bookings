@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
  * Addons integration class.
  *
  * @class   WC_Accommodation_Booking_Addons
- * @version 1.3.14
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Addons {
 
@@ -23,7 +23,7 @@ class WC_Accommodation_Booking_Addons {
 	/**
 	 * Show grand total or not?
 	 * @param  bool $show_grand_total
-	 * @param  object $product
+	 * @param  WC_Product $product Product the add-ons total is shown for.
 	 * @return bool
 	 */
 	public function addons_show_grand_total( $show_grand_total, $product ) {
@@ -40,6 +40,11 @@ class WC_Accommodation_Booking_Addons {
 	/**
 	 * Show same options as bookings integration now.
 	 * Only difference is the product type we are targeting.
+	 *
+	 * @param mixed      $post  Product post, or null for global add-ons.
+	 * @param mixed      $addon Add-on data.
+	 * @param int|string $loop  Add-on row index, or the '{loop}' placeholder for a new row.
+	 * @return void
 	 */
 	public function addon_options( $post, $addon, $loop ) {
 		// Bookings already renders the shared multiplier fields for global add-ons.
@@ -110,7 +115,12 @@ class WC_Accommodation_Booking_Addons {
 
 	/**
 	 * Change addon price based on settings
-	 * @return float
+	 *
+	 * @param mixed $cart_item_data Add-on cart item data.
+	 * @param mixed $addon          Add-on data.
+	 * @param int   $product_id     Product ID.
+	 * @param mixed $post_data      Posted data.
+	 * @return mixed
 	 */
 	public function addon_price( $cart_item_data, $addon, $product_id, $post_data ) {
 

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds some additional info (such as check-in/check-out time) to the order info line item
  *
  * @class   WC_Accommodation_Booking_Order_Manager
- * @version 1.1.40
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Order_Manager {
 
@@ -21,6 +21,11 @@ class WC_Accommodation_Booking_Order_Manager {
 
 	/**
 	 * Adds check-in/check-out info to the WooCommerce order line item area
+	 *
+	 * @param int           $item_id Order item ID.
+	 * @param WC_Order_Item $item    Order item.
+	 * @param WC_Order      $order   Order.
+	 * @return void
 	 */
 	public function add_checkinout_info_to_order_email( $item_id, $item, $order ) {
 		$product = wc_get_product( $item['product_id'] );
@@ -75,7 +80,7 @@ class WC_Accommodation_Booking_Order_Manager {
 	 *
 	 * @param  string $start_date
 	 * @param  int $duration
-	 * @return int | boolean
+	 * @return int|false
 	 */
 	private function get_end_date_timestamp( $start_date, $duration ) {
 		$datetime = DateTime::createFromFormat( get_option( 'date_format' ) . ' H:i:s', $start_date . ' 00:00:00' );
@@ -92,9 +97,9 @@ class WC_Accommodation_Booking_Order_Manager {
 	 *
 	 * Hooked into a filter that changes the status for bookings.
 	 *
-	 * @param $order_status
-	 * @param $order_id
-	 * @return string
+	 * @param mixed $order_status Order status, possibly changed by earlier callbacks.
+	 * @param int   $order_id     Order ID.
+	 * @return mixed 'completed' for a virtual accommodation order, otherwise the status as received.
 	 */
 	public function complete_order( $order_status, $order_id ) {
 		$order = wc_get_order( $order_id );

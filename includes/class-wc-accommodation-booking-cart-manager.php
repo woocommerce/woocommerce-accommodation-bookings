@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) )
  * - We should display check-in/check-out times on the cart
  *
  * @class   WC_Accommodation_Booking_Cart_Manager
- * @version 1.1.40
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Cart_Manager {
 
@@ -22,6 +22,8 @@ class WC_Accommodation_Booking_Cart_Manager {
 
 	/**
 	 * Fire the woocommerce_booking_add_to_cart action
+	 *
+	 * @return void
 	 */
 	function add_to_cart() {
 		do_action( 'woocommerce_booking_add_to_cart' );
@@ -56,11 +58,18 @@ class WC_Accommodation_Booking_Cart_Manager {
 				);
 			}
 
-			// This data was added by Woo Booking plugin, so we need to override.
-			foreach ( $other_data as $key => $data ) {
-				if ( 'Booking Date' === $data['name'] ) {
-					$other_data[ $key ]['value'] = date_i18n( wc_bookings_date_format(), get_post_datetime( $cart_item['booking']['_booking_id'] ) );
-					break;
+			// This data was added by Woo Booking plugin, so we need to override it with the date the booking was made.
+			// Match the row by Bookings' own (translated, filterable) label rather than its English text.
+			$booking_date_label = function_exists( 'get_wc_booking_data_label' ) ? get_wc_booking_data_label( 'date', $cart_item['data'] ) : 'Booking Date';
+			$booking_datetime   = empty( $cart_item['booking']['_booking_id'] ) ? false : get_post_datetime( $cart_item['booking']['_booking_id'] );
+
+			if ( $booking_datetime ) {
+				foreach ( $other_data as $key => $data ) {
+					if ( $booking_date_label === $data['name'] ) {
+						// date_i18n() expects a timestamp with the site's offset added.
+						$other_data[ $key ]['value'] = date_i18n( wc_bookings_date_format(), $booking_datetime->getTimestamp() + $booking_datetime->getOffset() );
+						break;
+					}
 				}
 			}
 		}

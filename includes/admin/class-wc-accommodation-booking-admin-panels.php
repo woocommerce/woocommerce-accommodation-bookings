@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
  * Sets up our "write" panels for accommodations products.
  *
  * @class   WC_Accommodation_Booking_Admin_Panels
- * @version 1.3.13
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Admin_Panels {
 
@@ -45,6 +45,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 	/**
 	 * Displays the main accommodation booking settings/data view
+	 *
+	 * @return void
 	 */
 	public function general_product_data() {
 		global $post;
@@ -54,6 +56,8 @@ class WC_Accommodation_Booking_Admin_Panels {
 
 	/**
 	 * Loads any CSS or JS necessary for the admin
+	 *
+	 * @return void
 	 */
 	public function admin_styles_and_scripts() {
 
@@ -68,6 +72,7 @@ class WC_Accommodation_Booking_Admin_Panels {
 	/**
 	 * Loads our panels related to accommodation bookings
 	 * @version  1.0.11
+	 * @return void
 	 */
 	public function panels() {
 		global $post, $bookable_product;
