@@ -49,9 +49,51 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
 
 		-
+			message: '#^Parameter \#1 \$nonce of function wp_verify_nonce expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Call to an undefined method object\:\:esc_like\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Call to an undefined method object\:\:prepare\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Call to an undefined method object\:\:query\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
 			message: '#^Call to function method_exists\(\) with ''WC_Bookings_Cache'' and ''delete_booking…'' will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Cannot access offset int\<0, max\> on array\<float\|false\>\|false\|null\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Cannot access offset int\<0, max\> on array\<int\|false\>\|false\|null\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Cannot access offset int\<0, max\> on array\<string\|false\>\|false\|null\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
@@ -85,6 +127,24 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
+			message: '#^Parameter \#1 \$input of function array_keys expects array, array\<int\|false\>\|false\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Parameter \#1 \$postarr of function wp_update_post expects array\{ID\?\: int, post_author\?\: int, post_date\?\: string, post_date_gmt\?\: string, post_content\?\: string, post_content_filtered\?\: string, post_title\?\: string, post_excerpt\?\: string, \.\.\.\}, array\{ID\: int, post_title\: string, post_excerpt\: string, menu_order\: int\|false\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Parameter \#1 \$str of function stripslashes expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
 			message: '#^Parameter \#1 \$var of function wc_clean expects array\|string, float\|false given\.$#'
 			identifier: argument.type
 			count: 4
@@ -109,6 +169,12 @@ parameters:
 			path: includes/admin/views/html-accommodation-booking-availability.php
 
 		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability.php
+
+		-
 			message: '#^Function wc_bookings_string_to_bool not found\.$#'
 			identifier: function.notFound
 			count: 2
@@ -121,6 +187,12 @@ parameters:
 			path: includes/admin/views/html-accommodation-booking-rates-fields.php
 
 		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-rates.php
+
+		-
 			message: '#^Function wc_bookings_date_format not found\.$#'
 			identifier: function.notFound
 			count: 1
@@ -129,6 +201,12 @@ parameters:
 		-
 			message: '#^Method WC_Accommodation_Booking_Cart_Manager\:\:get_item_data\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-cart-manager.php
+
+		-
+			message: '#^Parameter \#2 \$timestamp_with_offset of function date_i18n expects bool\|int, DateTimeImmutable\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/class-wc-accommodation-booking-cart-manager.php
 
@@ -271,6 +349,12 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Parameter \#1 \$post of function get_the_title expects int\|WP_Post, int\|string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_check_in_and_out_times\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
 			identifier: argument.type
 			count: 2
@@ -278,6 +362,24 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_product_resource_available_blocks_on_time\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \#1 \$time of function strtotime expects string, string\|false\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \#2 \$now of function strtotime expects int, int\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \#2 \$timestamp of function date expects int, int\|false given\.$#'
 			identifier: argument.type
 			count: 2
 			path: includes/class-wc-accommodation-booking-date-picker.php
@@ -305,6 +407,30 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Cannot call method get_items\(\) on WC_Order\|WC_Order_Refund\|false\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Cannot call method has_status\(\) on WC_Order\|WC_Order_Refund\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: includes/class-wc-accommodation-booking-product-tabs.php
+
+		-
+			message: '#^Cannot call method get_type\(\) on WC_Product\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: includes/class-wc-accommodation-booking-product-tabs.php
 
 		-
 			message: '#^Method WC_Accommodation_Booking_Product_Tabs\:\:add_time_tab\(\) has parameter \$tabs with no value type specified in iterable type array\.$#'
@@ -385,6 +511,18 @@ parameters:
 			path: includes/class-wc-accommodation-booking.php
 
 		-
+			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product\|false\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Parameter \#2 \$time of method WC_Accommodation_Booking\:\:_get_updated_timestamp_time\(\) expects string, string\|false\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking.php
+
+		-
 			message: '#^Parameter \$booking of method WC_Accommodation_Booking\:\:disable_ics_formatting_for_accommodation\(\) has invalid type WC_Booking\.$#'
 			identifier: class.notFound
 			count: 1
@@ -404,6 +542,24 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method WC_Product\:\:get_person_types\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Call to an undefined method object\:\:save\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Call to an undefined method object\:\:set_id\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Call to an undefined method object\:\:set_parent_id\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
@@ -429,6 +585,12 @@ parameters:
 		-
 			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:plugin_row_meta\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product\|false\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
@@ -697,7 +859,31 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
+			message: '#^Access to an undefined property object\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Call to an undefined method object\:\:is_type\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Cannot call method get_type\(\) on WC_Product\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
 			message: '#^Method WC_Accommodation_Booking_Addons\:\:disable_product_add_on_price_adjustment\(\) has parameter \$cart_item with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\|string given\.$#'
+			identifier: argument.type
+			count: 12
 			path: includes/integrations/class-wc-accommodation-booking-addons.php
