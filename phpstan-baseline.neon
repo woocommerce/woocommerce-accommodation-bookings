@@ -7,6 +7,84 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
 
 		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:add_tabs\(\) has parameter \$tabs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:add_tabs\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:admin_styles_and_scripts\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:general_product_data\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:panels\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:product_type_options\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Panels\:\:product_type_options\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:add_accommodation_settings\(\) has parameter \$tabs_metadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:add_accommodation_settings\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:generate_accommodation_time_html\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:generate_accommodation_time_html\(\) has parameter \$key with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:generate_accommodation_time_html\(\) has parameter \$value with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Admin_Product_Settings\:\:maybe_migrate\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-product-settings.php
+
+		-
 			message: '#^Call to function method_exists\(\) with ''WC_Bookings_Cache'' and ''delete_booking…'' will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -15,6 +93,36 @@ parameters:
 		-
 			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
 			identifier: method.nonObject
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_REST_And_Admin\:\:accommodation_bookings_debug_tools\(\) has parameter \$tools with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_REST_And_Admin\:\:accommodation_bookings_debug_tools\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_REST_And_Admin\:\:product_type_selector\(\) has parameter \$types with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_REST_And_Admin\:\:product_type_selector\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_REST_And_Admin\:\:save_product_data\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
@@ -31,8 +139,20 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
+			message: '#^PHPDoc tag @var for variable \$availability has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability-fields.php
+
+		-
 			message: '#^Call to an undefined method WC_Product_Accommodation_Booking\:\:has_restricted_days\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-availability.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$restricted_days has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: includes/admin/views/html-accommodation-booking-availability.php
 
@@ -43,8 +163,26 @@ parameters:
 			path: includes/admin/views/html-accommodation-booking-data.php
 
 		-
+			message: '#^PHPDoc tag @var for variable \$rate has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/admin/views/html-accommodation-booking-rates-fields.php
+
+		-
 			message: '#^Function wc_bookings_date_format not found\.$#'
 			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking-cart-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Cart_Manager\:\:add_to_cart\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-cart-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Cart_Manager\:\:get_item_data\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: includes/class-wc-accommodation-booking-cart-manager.php
 
@@ -115,6 +253,90 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:add_accommodation_posted_data\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:add_partially_booked_dates\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:add_partially_booked_dates\(\) has parameter \$booked_data_array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:end_label\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:find_booked_day_blocks\(\) has parameter \$booked_blocks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:find_booked_day_blocks\(\) has parameter \$result with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:find_booked_day_blocks\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:get_check_in_and_out_times\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:move_day_from_fully_to_partially_booked\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:move_day_from_fully_to_partially_booked\(\) has parameter \$booked_data_array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:prepare_fully_booked_start_and_end_days\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:prepare_fully_booked_start_and_end_days\(\) has parameter \$booked_data_array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:update_fully_booked_dates\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Date_Picker\:\:update_fully_booked_dates\(\) has parameter \$booked_data_array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_check_in_and_out_times\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
 			identifier: argument.type
 			count: 2
@@ -151,6 +373,66 @@ parameters:
 			path: includes/class-wc-accommodation-booking-order-manager.php
 
 		-
+			message: '#^Method WC_Accommodation_Booking_Order_Manager\:\:add_checkinout_info_to_order_email\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Order_Manager\:\:add_checkinout_info_to_order_email\(\) has parameter \$item with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Order_Manager\:\:add_checkinout_info_to_order_email\(\) has parameter \$item_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Order_Manager\:\:add_checkinout_info_to_order_email\(\) has parameter \$order with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Order_Manager\:\:complete_order\(\) has parameter \$order_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Order_Manager\:\:complete_order\(\) has parameter \$order_status with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Product_Tabs\:\:add_time_tab\(\) has parameter \$tabs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-product-tabs.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Product_Tabs\:\:add_time_tab\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking-product-tabs.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Product_Tabs\:\:add_time_tab_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking-product-tabs.php
+
+		-
+			message: '#^Property WC_Accommodation_Booking_Product_Tabs\:\:\$product_id has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: includes/class-wc-accommodation-booking-product-tabs.php
+
+		-
 			message: '#^Call to function is_a\(\) with WC_Product\|false\|null and ''WC_Product…'' will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -165,6 +447,114 @@ parameters:
 		-
 			message: '#^Call to method is_all_day\(\) on an unknown class WC_Booking\.$#'
 			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_accommodation_to_booking_product_terms\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_accommodation_to_booking_product_terms\(\) has parameter \$terms with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_accommodation_to_booking_products_args\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_accommodation_to_booking_products_args\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_checkin_time_to_booking_start_time\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_checkin_time_to_booking_start_time\(\) has parameter \$booking with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_checkin_time_to_booking_start_time\(\) has parameter \$date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_checkout_time_to_booking_end_time\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_checkout_time_to_booking_end_time\(\) has parameter \$booking with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_checkout_time_to_booking_end_time\(\) has parameter \$date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_product_type\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:add_product_type\(\) has parameter \$types with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:register_data_stores\(\) has parameter \$data_stores with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:register_data_stores\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:update_start_end_time\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:validate_rest_product_type\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:validate_rest_product_type\(\) has parameter \$is_product_valid with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking\:\:validate_rest_product_type\(\) has parameter \$product with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: includes/class-wc-accommodation-booking.php
 
@@ -199,10 +589,94 @@ parameters:
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
 		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:add_product_type_class_to_block\(\) has parameter \$block with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:admin_includes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:declare_hpos_compatibility\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:frontend_assets\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:includes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:install\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:missing_wc_notice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:plugin_row_meta\(\) has parameter \$links with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:plugin_row_meta\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:rest_admin_includes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Bookings_Plugin\:\:run\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
 			message: '#^Parameter \#2 \$callback of function register_activation_hook expects callable\(bool\)\: void, array\{\$this\(WC_Accommodation_Bookings_Plugin\), ''check_dependencies''\} given\.$#'
 			identifier: argument.type
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Method WC_Accommodation_Dependencies\:\:check_dependencies\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-dependencies.php
+
+		-
+			message: '#^Method WC_Accommodation_Dependencies\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/class-wc-accommodation-dependencies.php
+
+		-
+			message: '#^Property WC_Accommodation_Dependencies\:\:\$active_plugins type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-dependencies.php
 
 		-
 			message: '#^Call to an undefined method WC_Product\:\:get_resource_base_costs\(\)\.$#'
@@ -361,6 +835,42 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:__construct\(\) has parameter \$product with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_blocks_in_range\(\) has parameter \$booked with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_blocks_in_range\(\) has parameter \$end_date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_blocks_in_range\(\) has parameter \$intervals with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_blocks_in_range\(\) has parameter \$start_date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_blocks_in_range\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
 			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) has invalid return type WC_Product_Booking_Resource\.$#'
 			identifier: class.notFound
 			count: 1
@@ -369,6 +879,42 @@ parameters:
 		-
 			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) should return WC_Product_Booking_Resource but returns array\|float\|int\|string\|WC_Product_Accommodation_Booking_Resource\|false\|null\.$#'
 			identifier: return.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resources\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_time_slots\(\) has parameter \$blocks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_time_slots\(\) has parameter \$include_sold_out with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:get_time_slots\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:normalize_blocks_array\(\) has parameter \$blocks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Product_Accommodation_Booking\:\:normalize_blocks_array\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
@@ -407,3 +953,57 @@ parameters:
 			identifier: class.noParent
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_options\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_options\(\) has parameter \$addon with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_options\(\) has parameter \$loop with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_options\(\) has parameter \$post with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_price\(\) has parameter \$addon with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_price\(\) has parameter \$cart_item_data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_price\(\) has parameter \$post_data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:addon_price\(\) has parameter \$product_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
+
+		-
+			message: '#^Method WC_Accommodation_Booking_Addons\:\:disable_product_add_on_price_adjustment\(\) has parameter \$cart_item with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: includes/integrations/class-wc-accommodation-booking-addons.php
