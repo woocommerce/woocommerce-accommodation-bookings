@@ -7,9 +7,27 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
 
 		-
+			message: '#^Call to function method_exists\(\) with ''WC_Bookings_Cache'' and ''delete_booking…'' will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
 			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
 			identifier: method.nonObject
 			count: 1
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Parameter \#1 \$var of function wc_clean expects array\|string, float\|false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
+
+		-
+			message: '#^Parameter \#1 \$var of function wc_clean expects array\|string, int\|false given\.$#'
+			identifier: argument.type
+			count: 2
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
@@ -97,6 +115,18 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
+			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_check_in_and_out_times\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
+			message: '#^Parameter \#1 \$product of method WC_Accommodation_Booking_Date_Picker\:\:get_product_resource_available_blocks_on_time\(\) expects WC_Product_Booking, WC_Product_Accommodation_Booking given\.$#'
+			identifier: argument.type
+			count: 2
+			path: includes/class-wc-accommodation-booking-date-picker.php
+
+		-
 			message: '#^Parameter \$product of method WC_Accommodation_Booking_Date_Picker\:\:add_accommodation_posted_data\(\) has invalid type WC_Product_Booking\.$#'
 			identifier: class.notFound
 			count: 1
@@ -119,6 +149,12 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: includes/class-wc-accommodation-booking-order-manager.php
+
+		-
+			message: '#^Call to function is_a\(\) with WC_Product\|false\|null and ''WC_Product…'' will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
 
 		-
 			message: '#^Call to method get_product_id\(\) on an unknown class WC_Booking\.$#'
@@ -159,6 +195,12 @@ parameters:
 		-
 			message: '#^Function wc_booking_get_script_dependencies not found\.$#'
 			identifier: function.notFound
+			count: 1
+			path: includes/class-wc-accommodation-bookings-plugin.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function register_activation_hook expects callable\(bool\)\: void, array\{\$this\(WC_Accommodation_Bookings_Plugin\), ''check_dependencies''\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/class-wc-accommodation-bookings-plugin.php
 
@@ -259,6 +301,30 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
+			message: '#^Call to function is_string\(\) with non\-empty\-string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to function method_exists\(\) with ''WC_Bookings_Cache'' and ''get_product_cache'' will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to function method_exists\(\) with ''WC_Bookings_Cache'' and ''register_booking…'' will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Call to function method_exists\(\) with ''WC_Bookings_Cache'' and ''set_product_cache'' will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
 			message: '#^Call to method get_id\(\) on an unknown class WC_Product_Booking_Resource\.$#'
 			identifier: class.notFound
 			count: 2
@@ -303,6 +369,30 @@ parameters:
 		-
 			message: '#^Method WC_Product_Accommodation_Booking\:\:get_resource\(\) should return WC_Product_Booking_Resource but returns array\|float\|int\|string\|WC_Product_Accommodation_Booking_Resource\|false\|null\.$#'
 			identifier: return.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Parameter \#1 \$product of function wc_get_price_excluding_tax expects WC_Product, \$this\(WC_Product_Accommodation_Booking\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Parameter \#1 \$product of function wc_get_price_including_tax expects WC_Product, \$this\(WC_Product_Accommodation_Booking\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between false and non\-empty\-string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between null and non\-empty\-string will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 

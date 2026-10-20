@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 		<p class="form-field">
 			<label for="_wc_accommodation_booking_min_date"><?php esc_html_e( 'Bookings can be made starting', 'woocommerce-accommodation-bookings' ); ?></label>
-			<input type="number" name="_wc_accommodation_booking_min_date" id="_wc_accommodation_booking_min_date" value="<?php echo esc_attr( $min_date ); ?>" step="1" min="0" style="margin-right: 7px; width: 4em;">
+			<input type="number" name="_wc_accommodation_booking_min_date" id="_wc_accommodation_booking_min_date" value="<?php echo esc_attr( (string) $min_date ); ?>" step="1" min="0" style="margin-right: 7px; width: 4em;">
 			<select name="_wc_accommodation_booking_min_date_unit" id="_wc_accommodation_booking_min_date_unit" class="short" style="margin-right: 7px;">
 				<option value="month" <?php selected( $min_date_unit, 'month' ); ?>><?php esc_html_e( 'Month(s)', 'woocommerce-accommodation-bookings' ); ?></option>
 				<option value="week" <?php selected( $min_date_unit, 'week' ); ?>><?php esc_html_e( 'Week(s)', 'woocommerce-accommodation-bookings' ); ?></option>
@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 		<p class="form-field">
 			<label for="_wc_accommodation_booking_max_date"><?php esc_html_e( 'Bookings can only be made', 'woocommerce-accommodation-bookings' ); ?></label>
-			<input type="number" name="_wc_accommodation_booking_max_date" id="_wc_accommodation_booking_max_date" value="<?php echo esc_attr( $max_date ); ?>" step="1" min="1" style="margin-right: 7px; width: 4em;">
+			<input type="number" name="_wc_accommodation_booking_max_date" id="_wc_accommodation_booking_max_date" value="<?php echo esc_attr( (string) $max_date ); ?>" step="1" min="1" style="margin-right: 7px; width: 4em;">
 			<select name="_wc_accommodation_booking_max_date_unit" id="_wc_accommodation_booking_max_date_unit" class="short" style="margin-right: 7px;">
 				<option value="month" <?php selected( $max_date_unit, 'month' ); ?>><?php esc_html_e( 'Month(s)', 'woocommerce-accommodation-bookings' ); ?></option>
 				<option value="week" <?php selected( $max_date_unit, 'week' ); ?>><?php esc_html_e( 'Week(s)', 'woocommerce-accommodation-bookings' ); ?></option>
@@ -86,8 +86,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					for ( $i=0;  $i < 7;  $i++) {
 						?>
 							<td>
-								<label class="checkbox" for="_wc_accommodation_booking_restricted_days[<?php echo esc_attr( $i ); ?>]" style="width: auto;"><?php echo esc_html( $weekdays[ $i ] ); ?>&nbsp;</label>
-								<input type="checkbox" class="checkbox" name="_wc_accommodation_booking_restricted_days[<?php echo esc_attr( $i ); ?>]" id="_wc_accommodation_booking_restricted_days[<?php echo esc_attr( $i ); ?>]" value="<?php echo esc_attr( $i ); ?>" <?php checked( $restricted_days[ $i ], $i ); ?>>
+								<label class="checkbox" for="_wc_accommodation_booking_restricted_days[<?php echo esc_attr( (string) $i ); ?>]" style="width: auto;"><?php echo esc_html( $weekdays[ $i ] ); ?>&nbsp;</label>
+								<input type="checkbox" class="checkbox" name="_wc_accommodation_booking_restricted_days[<?php echo esc_attr( (string) $i ); ?>]" id="_wc_accommodation_booking_restricted_days[<?php echo esc_attr( (string) $i ); ?>]" value="<?php echo esc_attr( (string) $i ); ?>" <?php checked( $restricted_days[ $i ], $i ); ?>>
 							</td>
 						<?php
 					}

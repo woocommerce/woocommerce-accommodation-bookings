@@ -64,21 +64,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="select from_day_of_week">
 			<select name="wc_accommodation_booking_pricing_from_day_of_week[]">
 				<?php foreach ( $intervals['days'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $rate['from'] ) && $rate['from'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $rate['from'] ) && $rate['from'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select from_month">
 			<select name="wc_accommodation_booking_pricing_from_month[]">
 				<?php foreach ( $intervals['months'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $rate['from'] ) && $rate['from'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $rate['from'] ) && $rate['from'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select from_week">
 			<select name="wc_accommodation_booking_pricing_from_week[]">
 				<?php foreach ( $intervals['weeks'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $rate['from'] ) && $rate['from'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $rate['from'] ) && $rate['from'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
@@ -90,21 +90,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="select to_day_of_week">
 			<select name="wc_accommodation_booking_pricing_to_day_of_week[]">
 				<?php foreach ( $intervals['days'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $rate['to'] ) && $rate['to'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $rate['to'] ) && $rate['to'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select to_month">
 			<select name="wc_accommodation_booking_pricing_to_month[]">
 				<?php foreach ( $intervals['months'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $rate['to'] ) && $rate['to'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $rate['to'] ) && $rate['to'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select to_week">
 			<select name="wc_accommodation_booking_pricing_to_week[]">
 				<?php foreach ( $intervals['weeks'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $rate['to'] ) && $rate['to'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $rate['to'] ) && $rate['to'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
@@ -125,9 +125,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$base_cost = abs( floatval( get_post_meta( $post_id, '_wc_booking_base_cost', true ) ) );
 
 			if ( 'plus' == $rate['modifier'] ) {
-				echo esc_attr( $base_cost + $rate['cost'] );
+				echo esc_attr( (string) ( $base_cost + $rate['cost'] ) );
 			} else {
-				echo esc_attr( $base_cost - $rate['cost'] );
+				echo esc_attr( (string) ( $base_cost - $rate['cost'] ) );
 			}
 		}
 		?>" placeholder="0" />

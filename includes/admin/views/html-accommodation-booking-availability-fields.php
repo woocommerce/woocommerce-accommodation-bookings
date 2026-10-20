@@ -66,21 +66,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="select from_day_of_week">
 			<select name="wc_accommodation_booking_availability_from_day_of_week[]">
 				<?php foreach ( $intervals['days'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $availability['from'] ) && $availability['from'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $availability['from'] ) && $availability['from'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select from_month">
 			<select name="wc_accommodation_booking_availability_from_month[]">
 				<?php foreach ( $intervals['months'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $availability['from'] ) && $availability['from'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $availability['from'] ) && $availability['from'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select from_week">
 			<select name="wc_accommodation_booking_availability_from_week[]">
 				<?php foreach ( $intervals['weeks'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $availability['from'] ) && $availability['from'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $availability['from'] ) && $availability['from'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
@@ -92,21 +92,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="select to_day_of_week">
 			<select name="wc_accommodation_booking_availability_to_day_of_week[]">
 				<?php foreach ( $intervals['days'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $availability['to'] ) && $availability['to'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $availability['to'] ) && $availability['to'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select to_month">
 			<select name="wc_accommodation_booking_availability_to_month[]">
 				<?php foreach ( $intervals['months'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $availability['to'] ) && $availability['to'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $availability['to'] ) && $availability['to'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
 		<div class="select to_week">
 			<select name="wc_accommodation_booking_availability_to_week[]">
 				<?php foreach ( $intervals['weeks'] as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( isset( $availability['to'] ) && $availability['to'] == $key, true ) ?>><?php echo esc_html( $label ); ?></option>
+					<option value="<?php echo esc_attr( (string) $key ); ?>" <?php selected( isset( $availability['to'] ) && $availability['to'] == $key, true ); // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- Saved values are strings and the keys are ints. ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
