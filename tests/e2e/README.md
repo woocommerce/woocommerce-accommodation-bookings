@@ -20,6 +20,10 @@ replace an existing override. With an existing **dedicated test store**, enable
 `ACCOM_E2E` in wp-config, activate WooCommerce/Bookings/Accommodation and Storefront,
 copy `fixtures/local.php` into `wp-content/mu-plugins/accommodation-e2e.php`, and
 run the reset command.
+The `warnings` check, which runs last, also needs `WP_DEBUG` and `WP_DEBUG_LOG` set
+to `true`, `WP_DEBUG_DISPLAY` set to `false`, and
+`tests/e2e/mu-plugins/e2e-log-marker.php` copied into that site's
+`wp-content/mu-plugins/`.
 Whenever `fixtures/local.php` changes, copy it into the test store again before running.
 For a native local WordPress server, set
 `ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `ACCOM_E2E_URL` before reset/run.
