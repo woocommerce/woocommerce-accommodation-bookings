@@ -22,6 +22,9 @@ class WC_Accommodation_Booking_Order_Manager {
 	/**
 	 * Adds check-in/check-out info to the WooCommerce order line item area
 	 *
+	 * @param int           $item_id Order item ID.
+	 * @param WC_Order_Item $item    Order item.
+	 * @param WC_Order      $order   Order.
 	 * @return void
 	 */
 	public function add_checkinout_info_to_order_email( $item_id, $item, $order ) {
@@ -94,9 +97,9 @@ class WC_Accommodation_Booking_Order_Manager {
 	 *
 	 * Hooked into a filter that changes the status for bookings.
 	 *
-	 * @param $order_status
-	 * @param $order_id
-	 * @return string
+	 * @param mixed $order_status Order status, possibly changed by earlier callbacks.
+	 * @param int   $order_id     Order ID.
+	 * @return mixed 'completed' for a virtual accommodation order, otherwise the status as received.
 	 */
 	public function complete_order( $order_status, $order_id ) {
 		$order = wc_get_order( $order_id );

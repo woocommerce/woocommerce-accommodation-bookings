@@ -15,6 +15,8 @@ class WC_Accommodation_Booking_Product_Tabs {
 
 	/**
 	 * Product ID.
+	 *
+	 * @var int
 	 */
 	public $product_id = 0;
 

@@ -55,7 +55,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 *
 		 * WC_Product_Accommodation_Booking constructor.
 		 *
-		 * @param $product
+		 * @param int|WC_Product|object $product Product to init.
 		 */
 		public function __construct( $product ) {
 			$this->product_type = $this->get_type();
@@ -237,6 +237,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 * @param  integer $resource_id
 		 * @param  integer $from The starting date for the set of blocks
 		 * @param  integer $to
+		 * @param  bool    $include_sold_out Whether to include sold-out blocks.
 		 * @return array
 		 */
 		public function get_time_slots( $blocks, $resource_id = 0, $from = 0, $to = 0, $include_sold_out = false ) {
@@ -379,12 +380,12 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 * The WC_Product_Booking class does not account for 'nights' as a valid duration unit so it retrieves every minute of each day as a block,
 		 * severely slowing down the load time of the page.
 		 *
-		 * @param       $start_date
-		 * @param       $end_date
-		 * @param array      $intervals
-		 * @param int        $resource_id
-		 * @param array      $booked
-		 * @param bool       $get_past_times
+		 * @param int   $start_date     Range start timestamp.
+		 * @param int   $end_date       Range end timestamp.
+		 * @param array $intervals
+		 * @param int   $resource_id
+		 * @param array $booked
+		 * @param bool  $get_past_times
 		 *
 		 * @return array
 		 */

@@ -111,11 +111,22 @@ class WC_Accommodation_Booking {
 
 	/**
 	 * Hooks into woocommerce_bookings_product_type_rest_check and verifies that product is a correct bookings type
+	 *
+	 * @param mixed      $is_product_valid Whether the product is a valid bookings type so far.
+	 * @param WC_Product $product          Product.
+	 * @return bool
 	 */
 	public function validate_rest_product_type( $is_product_valid, $product ) {
 		return $is_product_valid || 'accommodation-booking' === $product->get_type();
 	}
 
+	/**
+	 * Shows the check-in time in the start date of an accommodation booking.
+	 *
+	 * @param mixed $date    Start date with time, as formatted by Bookings or earlier callbacks.
+	 * @param mixed $booking Booking (WC_Booking).
+	 * @return mixed
+	 */
 	public function add_checkin_time_to_booking_start_time( $date, $booking ) {
 		$product = wc_get_product( $booking->product_id );
 		if ( empty( $product ) || 'accommodation-booking' !== $product->get_type() ) {
@@ -128,6 +139,13 @@ class WC_Accommodation_Booking {
 		return date_i18n( $date_format, $booking->start ) . date_i18n( $time_format, $booking->start );
 	}
 
+	/**
+	 * Shows the check-out time in the end date of an accommodation booking.
+	 *
+	 * @param mixed $date    End date with time, as formatted by Bookings or earlier callbacks.
+	 * @param mixed $booking Booking (WC_Booking).
+	 * @return mixed
+	 */
 	public function add_checkout_time_to_booking_end_time( $date, $booking ) {
 		$product = wc_get_product( $booking->product_id );
 		if ( empty( $product ) || 'accommodation-booking' !== $product->get_type() ) {

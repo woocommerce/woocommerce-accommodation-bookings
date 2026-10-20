@@ -214,7 +214,10 @@ class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 
 	/**
 	 * Outputs a time selector input box
-	 * @param  array $value The "setting" info from init_form_fields.
+	 *
+	 * @param  string $key   Field key.
+	 * @param  array  $value The "setting" info from init_form_fields.
+	 * @return string|false Field HTML, or false when output buffering is not active.
 	 */
 	public function generate_accommodation_time_html( $key, $value ) {
 		$field_key    = $this->get_field_key( $key );
