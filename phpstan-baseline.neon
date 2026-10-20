@@ -109,12 +109,6 @@ parameters:
 			path: includes/admin/views/html-accommodation-booking-availability.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$restricted_days has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: includes/admin/views/html-accommodation-booking-availability.php
-
-		-
 			message: '#^Function wc_bookings_string_to_bool not found\.$#'
 			identifier: function.notFound
 			count: 2
