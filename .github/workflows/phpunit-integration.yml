@@ -32,6 +32,8 @@ jobs:
       matrix:
         php: ${{ fromJSON(inputs.php-version && format('["{0}"]', inputs.php-version) || '["8.4"]') }}
         versions: ["${{ inputs.wc-version || 'latest' }}"]
+        # Only this row collects coverage: the minimum row below is added as its own combination, without it.
+        coverage: [pcov]
         # Minimum-version rows pin their own versions, so they run only when no version is requested.
         include: ${{ fromJSON(inputs.wp-version == '' && inputs.wc-version == '' && inputs.php-version == '' && '[{"php":"minimum","versions":"minimum"}]' || '[]') }}
     env:
@@ -78,7 +80,9 @@ jobs:
         with:
           php-version: ${{ matrix.php == 'minimum' && env.PHP_MINIMUM || matrix.php }}
           extensions: mysqli
-          coverage: none
+          coverage: ${{ matrix.coverage || 'none' }}
+          # Without it, pcov only instruments src/, lib/ or app/ when one of them exists.
+          ini-values: pcov.directory=.
           tools: composer
 
       - name: Install Subversion
@@ -120,7 +124,7 @@ jobs:
 
       # --verbose lists each skipped test with its reason; skips don't fail the job.
       - name: Run integration tests
-        run: ./tests/bin/run-integration.sh "$RUNNER_TEMP/accommodation" --verbose --log-junit "$RUNNER_TEMP/phpunit-integration-results.xml"
+        run: ./tests/bin/run-integration.sh "$RUNNER_TEMP/accommodation" --verbose --log-junit "$RUNNER_TEMP/phpunit-integration-results.xml" ${{ matrix.coverage && '--coverage-clover coverage/clover.xml' || '' }}
 
       - name: Upload test results
         if: always()
