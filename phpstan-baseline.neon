@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Cannot access property \$id on WP_Screen\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: includes/admin/class-wc-accommodation-booking-admin-panels.php
+
+		-
 			message: '#^Instantiated class WC_Product_Booking not found\.$#'
 			identifier: class.notFound
 			count: 1
@@ -97,7 +103,7 @@ parameters:
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
 
 		-
-			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\.$#'
+			message: '#^Cannot call method get_base_cost\(\) on WC_Product\|false\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: includes/admin/class-wc-accommodation-booking-rest-and-admin.php
@@ -421,7 +427,7 @@ parameters:
 			path: includes/class-wc-accommodation-booking-product-tabs.php
 
 		-
-			message: '#^Cannot call method get_type\(\) on WC_Product\|false\.$#'
+			message: '#^Cannot call method get_type\(\) on WC_Product\|false\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: includes/class-wc-accommodation-booking-product-tabs.php
@@ -501,6 +507,12 @@ parameters:
 		-
 			message: '#^Method WC_Accommodation_Booking\:\:register_data_stores\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: includes/class-wc-accommodation-booking.php
+
+		-
+			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Booking\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: includes/class-wc-accommodation-booking.php
 
@@ -715,18 +727,6 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
-			message: '#^Call to method get_id\(\) on an unknown class WC_Product_Booking_Resource\.$#'
-			identifier: class.notFound
-			count: 2
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
-			message: '#^Call to method get_qty\(\) on an unknown class WC_Product_Booking_Resource\.$#'
-			identifier: class.notFound
-			count: 1
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
 			message: '#^Call to method has_qty\(\) on an unknown class WC_Product_Booking_Resource\.$#'
 			identifier: class.notFound
 			count: 1
@@ -741,6 +741,18 @@ parameters:
 		-
 			message: '#^Call to static method get_all_existing_bookings\(\) on an unknown class WC_Bookings_Controller\.$#'
 			identifier: class.notFound
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Cannot call method get_id\(\) on WC_Product_Booking_Resource\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
+			message: '#^Cannot call method get_qty\(\) on WC_Product_Booking_Resource\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
@@ -811,6 +823,12 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
+			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product_Booking_Resource\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/class-wc-product-accommodation-booking.php
+
+		-
 			message: '#^Parameter \#1 \$product of function wc_get_price_excluding_tax expects WC_Product, \$this\(WC_Product_Accommodation_Booking\) given\.$#'
 			identifier: argument.type
 			count: 1
@@ -853,7 +871,7 @@ parameters:
 			path: includes/integrations/class-wc-accommodation-booking-addons.php
 
 		-
-			message: '#^Cannot call method get_type\(\) on WC_Product\|false\.$#'
+			message: '#^Cannot call method get_type\(\) on WC_Product\|false\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: includes/integrations/class-wc-accommodation-booking-addons.php
