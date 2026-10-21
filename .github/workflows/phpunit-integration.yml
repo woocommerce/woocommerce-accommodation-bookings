@@ -32,6 +32,8 @@ jobs:
       matrix:
         php: ${{ fromJSON(inputs.php-version && format('["{0}"]', inputs.php-version) || '["8.4"]') }}
         versions: ["${{ inputs.wc-version || 'latest' }}"]
+        # Only this row collects coverage: the minimum row below is added as its own combination, without it.
+        coverage: [pcov]
         # Minimum-version rows pin their own versions, so they run only when no version is requested.
         include: ${{ fromJSON(inputs.wp-version == '' && inputs.wc-version == '' && inputs.php-version == '' && '[{"php":"minimum","versions":"minimum"}]' || '[]') }}
     env:
@@ -78,7 +80,9 @@ jobs:
         with:
           php-version: ${{ matrix.php == 'minimum' && env.PHP_MINIMUM || matrix.php }}
           extensions: mysqli
-          coverage: none
+          coverage: ${{ matrix.coverage || 'none' }}
+          # Without it, pcov only instruments src/, lib/ or app/ when one of them exists.
+          ini-values: pcov.directory=.
           tools: composer
 
       - name: Install Subversion
@@ -120,7 +124,7 @@ jobs:
 
       # --verbose lists each skipped test with its reason; skips don't fail the job.
       - name: Run integration tests
-        run: ./tests/bin/run-integration.sh "$RUNNER_TEMP/accommodation" --verbose --log-junit "$RUNNER_TEMP/phpunit-integration-results.xml"
+        run: ./tests/bin/run-integration.sh "$RUNNER_TEMP/accommodation" --verbose --log-junit "$RUNNER_TEMP/phpunit-integration-results.xml" ${{ matrix.coverage && '--coverage-clover coverage/clover.xml' || '' }}
 
       - name: Upload test results
         if: always()
@@ -129,3 +133,21 @@ jobs:
           name: phpunit-integration-results-php${{ matrix.php }}-${{ matrix.versions }}
           path: ${{ runner.temp }}/phpunit-integration-results.xml
           if-no-files-found: ignore
+
+      - name: Upload coverage report
+        if: always() && hashFiles('coverage/clover.xml') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-php
+          path: coverage/
+          retention-days: 90
+
+      - name: Coverage summary
+        if: always() && hashFiles('coverage/clover.xml') != ''
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import xml.etree.ElementTree as ET
+          m = ET.parse('coverage/clover.xml').getroot().find('project/metrics')
+          s, c = int(m.get('statements')), int(m.get('coveredstatements'))
+          print(f"PHP line coverage: {c}/{s} ({100 * c / s:.1f}%)" if s else "PHP line coverage: no statements")
+          PY

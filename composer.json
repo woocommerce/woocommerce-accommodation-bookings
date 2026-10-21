@@ -28,8 +28,8 @@
         ]
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test:isolated": "phpunit -c tests/isolated/phpunit.xml.dist",
+        "test": "vendor/bin/phpunit --fail-on-empty-test-suite",
+        "test:isolated": "phpunit -c tests/isolated/phpunit.xml.dist --fail-on-empty-test-suite",
         "lint:php": "bash bin/phplint.sh",
         "lint:phpcs": "phpcs",
         "lint:phpcs:baseline": "bash bin/phpcs.sh",
@@ -40,7 +40,7 @@
         ],
         "lint:phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
         "lint:phpstan:baseline:update": "@lint:phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
-        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml"
+        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite"
     },
     "config": {
         "platform": {
