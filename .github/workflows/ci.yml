@@ -36,6 +36,8 @@ jobs:
               - '**/*.php'
               - 'composer.json'
               - 'composer.lock'
+              - 'tools/php-stubs/composer.json'
+              - 'tools/php-stubs/composer.lock'
               - 'phpcs*.xml*'
               - 'phpcs.baseline'
               - 'phpstan*.neon*'
@@ -98,8 +100,11 @@ jobs:
   phpstan:
     name: PHPStan
     needs: changes
-    if: ${{ needs.changes.outputs.php == 'true' }}
+    # Fork pull requests get no secrets, so the private stubs cannot be installed there.
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.php == 'true' }}
     uses: ./.github/workflows/phpstan.yml
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
   php-compatibility:
     name: PHP compatibility
@@ -205,7 +210,7 @@ jobs:
           "changes": true,
           "spelling": true,
           "phpcs": ${{ needs.changes.outputs.php == 'true' }},
-          "phpstan": ${{ needs.changes.outputs.php == 'true' }},
+          "phpstan": ${{ github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.php == 'true' }},
           "php-compatibility": ${{ needs.changes.outputs.php == 'true' }},
           "css": ${{ needs.changes.outputs.frontend == 'true' }},
           "javascript": ${{ needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }},
@@ -219,6 +224,7 @@ jobs:
       # Checks that need a private download and are skipped for fork PRs; reviewers must run them from a branch here.
       CI_FORK_SKIPPED: >-
         {
+          "phpstan": ${{ github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.php == 'true' }},
           "php-integration": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.php == 'true' }},
           "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.product == 'true' }}
         }
@@ -238,7 +244,7 @@ jobs:
           }
           for (const [job, skipped] of Object.entries(JSON.parse(process.env.CI_FORK_SKIPPED))) {
             if (skipped) {
-              console.log(`::warning title=Skipped for fork PR::${job} needs the private WooCommerce Bookings download, which fork PRs cannot access. Run it from a branch in this repository before merging.`);
+              console.log(`::warning title=Skipped for fork PR::${job} needs a private download (WooCommerce Bookings or its stubs), which fork PRs cannot access. Run it from a branch in this repository before merging.`);
             }
           }
           if (process.env.CI_DRAFT === 'true') {

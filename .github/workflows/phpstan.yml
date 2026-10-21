@@ -2,6 +2,10 @@ name: PHPStan
 
 on:
   workflow_call:
+    secrets:
+      # Reads the private woocommerce/all-plugins repository for tools/php-stubs.
+      ORG_DOWNLOADS:
+        required: false
 
 permissions:
   contents: read
@@ -27,4 +31,10 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
       - run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Install integration stubs
+        env:
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.ORG_DOWNLOADS }}"}}'
+          # Outside the cached directory: the private stubs archive must never reach actions/cache.
+          COMPOSER_CACHE_DIR: ${{ runner.temp }}/php-stubs-cache
+        run: composer install --prefer-dist --no-scripts --no-progress --no-interaction --working-dir=tools/php-stubs
       - run: composer lint:phpstan
