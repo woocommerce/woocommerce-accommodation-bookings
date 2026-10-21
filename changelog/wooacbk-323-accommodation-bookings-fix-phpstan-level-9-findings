@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Corrected docblock types reported by PHPStan level 9.
