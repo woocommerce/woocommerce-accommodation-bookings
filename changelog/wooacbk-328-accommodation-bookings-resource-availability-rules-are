@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Fixed resource availability rules being ignored when counting available nights for products with resources.
