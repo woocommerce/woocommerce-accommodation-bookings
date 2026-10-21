@@ -189,7 +189,7 @@ class WC_Accommodation_Bookings_Plugin {
 					$message = esc_html__( 'Accommodation Bookings requires WooCommerce Bookings plugin activated.', 'woocommerce-accommodation-bookings' );
 					break;
 				case 'BOOKINGS_VERSION_TOO_OLD':
-					$message = esc_html__( 'Accommodation Bookings requires WooCommerce Bookings version 1.9+.', 'woocommerce-accommodation-bookings' );
+					$message = esc_html__( 'Accommodation Bookings requires WooCommerce Bookings version 3.10+.', 'woocommerce-accommodation-bookings' );
 					break;
 				case 'PHP_VERSION_TOO_OLD':
 					$message = esc_html__( 'Accommodation Bookings requires PHP version 7.4+.', 'woocommerce-accommodation-bookings' );
