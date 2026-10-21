@@ -73,7 +73,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 *
 		 * @param  int $id
 		 *
-		 * @return WC_Product_Booking_Resource object
+		 * @return WC_Product_Booking_Resource|false False when the resource is missing or not linked to the product.
 		 */
 		public function get_resource( $id ) {
 			$resource = parent::get_resource( $id );
