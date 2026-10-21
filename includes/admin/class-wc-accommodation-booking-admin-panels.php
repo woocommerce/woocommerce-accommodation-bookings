@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
  * Sets up our "write" panels for accommodations products.
  *
  * @class   WC_Accommodation_Booking_Admin_Panels
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Admin_Panels {
 
@@ -50,6 +50,11 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 */
 	public function general_product_data() {
 		global $post;
+		/**
+		 * The product post being edited.
+		 *
+		 * @var \WP_Post $post
+		 */
 		$post_id = $post->ID;
 		include( 'views/html-accommodation-booking-data.php' );
 	}
@@ -76,6 +81,11 @@ class WC_Accommodation_Booking_Admin_Panels {
 	 */
 	public function panels() {
 		global $post, $bookable_product;
+		/**
+		 * The product post being edited.
+		 *
+		 * @var \WP_Post $post
+		 */
 		$post_id = $post->ID;
 
 		/**

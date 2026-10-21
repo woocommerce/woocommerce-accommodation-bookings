@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC Accommodation Bookings class
  *
  * @class   WC_Accommodation_Bookings_Plugin
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Bookings_Plugin {
 
@@ -360,6 +360,11 @@ class WC_Accommodation_Bookings_Plugin {
 	 */
 	private function get_accommodation_product_from_block() {
 		global $post;
+		/**
+		 * The current post, if any.
+		 *
+		 * @var \WP_Post|null $post
+		 */
 
 		if ( ! $post || ! has_block( 'woocommerce/single-product', $post ) ) {
 			return null;

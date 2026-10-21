@@ -415,12 +415,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking-order-manager.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$ID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: includes/class-wc-accommodation-booking-product-tabs.php
-
-		-
 			message: '#^Cannot call method get_type\(\) on WC_Product\|false\|null\.$#'
 			identifier: method.nonObject
 			count: 1
