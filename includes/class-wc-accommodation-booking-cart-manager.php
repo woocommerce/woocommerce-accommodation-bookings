@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) )
  * - We should display check-in/check-out times on the cart
  *
  * @class   WC_Accommodation_Booking_Cart_Manager
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Cart_Manager {
 
@@ -34,7 +34,7 @@ class WC_Accommodation_Booking_Cart_Manager {
 	 *
 	 * @param mixed $other_data
 	 * @param mixed $cart_item
-	 * @return array
+	 * @return mixed The received item data, with the check-in/out rows added for accommodation bookings.
 	 */
 	public function get_item_data( $other_data, $cart_item ) {
 		if ( 'accommodation-booking' === $cart_item['data']->get_type() && ! empty( $other_data ) ) {

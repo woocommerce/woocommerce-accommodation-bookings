@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * In the future, other accommodation specific tabs might show up here.
  *
  * @class   WC_Accommodation_Booking_Product_Tabs
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Product_Tabs {
 
@@ -55,6 +55,11 @@ class WC_Accommodation_Booking_Product_Tabs {
 	 */
 	public function add_time_tab( $tabs = array() ) {
 		global $post;
+		/**
+		 * The current post, if any.
+		 *
+		 * @var \WP_Post|null $post
+		 */
 
 		if ( ! is_object( $post ) ) {
 			return $tabs;
