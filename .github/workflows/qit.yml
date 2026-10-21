@@ -53,11 +53,11 @@ jobs:
       QIT_DISABLE_ONBOARDING: yes
       EXTENSION: ${{ github.event.repository.name }}
       SELECTED: ${{ inputs.test || 'default' }}
-      # Requested versions (empty keeps QIT's defaults); QIT has no `nightly`, only `rc`.
+      # Requested versions (empty WP/WC keeps QIT's defaults; PHP defaults to 8.4); QIT has no `nightly`, only `rc`.
       VERSION_ARGS: >-
         ${{ inputs.wp-version && format('--wordpress_version={0}', inputs.wp-version == 'nightly' && 'rc' || inputs.wp-version) || '' }}
         ${{ inputs.wc-version && format('--woocommerce_version={0}', inputs.wc-version == 'nightly' && 'rc' || inputs.wc-version) || '' }}
-        ${{ inputs.php-version && format('--php_version={0}', inputs.php-version) || '' }}
+        ${{ format('--php_version={0}', inputs.php-version || '8.4') }}
 
     steps:
       # No checkout: repository code and its Composer config never run alongside the partner secrets.
@@ -128,10 +128,58 @@ jobs:
         shell: bash
         run: ./vendor/bin/qit run:phpstan "$EXTENSION" --zip="$EXTENSION.zip" --wait | tee phpstan-result.txt
 
+      # Keep each run's server-side record (named failed tests, resolved WP/WC/PHP);
+      # the hosted report expires after 7 days. Public repos drop the signed report URLs.
+      - name: Retain QIT run records
+        if: ${{ !cancelled() && steps.add-partner.outcome == 'success' }}
+        shell: bash
+        env:
+          PUBLIC_REPO: ${{ github.event.repository.private == false }}
+        run: |
+          for f in *-result.txt; do
+            check=${f%-result.txt}
+            id=$(grep -m1 -oE 'Test ID: [0-9]+|qit_results=[0-9]+' "$f" | grep -oE '[0-9]+$' | head -n1) || continue
+            # `qit get` exits nonzero for a failed run but still prints its record.
+            record=$("$GITHUB_WORKSPACE/vendor/bin/qit" get "$id" --json -n) || true
+            if [ "$PUBLIC_REPO" = 'true' ]; then
+              record=$(jq 'del(.test_results_manager_url, .test_result_aws_url)' <<< "$record") || record=''
+            fi
+            printf '%s\n' "$record" > "$check.record.json"
+          done
+          python3 - <<'PYTHON'
+          import glob
+          import json
+          import os
+
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              records = sorted(glob.glob(os.path.join(os.environ['GITHUB_WORKSPACE'], '*.record.json')))
+              if records:
+                  summary.write('\n| QIT record | ID | Status | WordPress | WooCommerce | PHP | Failed tests |\n| --- | --- | --- | --- | --- | --- | --- |\n')
+              for path in records:
+                  try:
+                      with open(path) as f:
+                          record = json.load(f)
+                      cells = [str(record[key]) for key in ('test_run_id', 'status', 'wordpress_version', 'woocommerce_version', 'php_version')]
+                  except Exception:
+                      # An unreadable record must not change the QIT verdict.
+                      record, cells = {}, ['record unavailable', '', '', '', '']
+                  try:
+                      ctrf = record.get('ctrf_json') or {}
+                      tests = ctrf['results']['tests'] if ctrf else []
+                      names = [t.get('suite', '') + ' › ' + t.get('name', '') for t in tests if t.get('status') == 'failed']
+                  except Exception:
+                      # A malformed CTRF report only blanks the failed-test column.
+                      names = ['failed-test list unavailable']
+                  failed_tests = '<br>'.join(names).replace('|', '\\|') or '-'
+                  summary.write('| ' + ' | '.join([os.path.basename(path)[:-len('.record.json')]] + cells + [failed_tests]) + ' |\n')
+          PYTHON
+
       - name: Upload results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: qit-results
-          path: '*-result.txt'
+          path: |
+            *-result.txt
+            *.record.json
           if-no-files-found: ignore
