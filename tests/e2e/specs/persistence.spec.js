@@ -135,17 +135,18 @@ for ( const [ boundary, role, mode ] of [
 			await customerLogin( page );
 		}
 		const stay = fixture.stays[ boundary ];
-		if ( boundary === 'dst' ) {
-			const offset = new Intl.DateTimeFormat( 'en-US', {
-				timeZone: 'Europe/Berlin',
-				timeZoneName: 'shortOffset',
-			} );
-			const zone = ( date ) =>
-				offset
-					.formatToParts( new Date( `${ date }T12:00:00Z` ) )
-					.find( ( part ) => part.type === 'timeZoneName' ).value;
-			expect( zone( stay.start ) ).not.toBe( zone( stay.end ) );
-		}
+		const offset = new Intl.DateTimeFormat( 'en-US', {
+			timeZone: 'Europe/Berlin',
+			timeZoneName: 'shortOffset',
+		} );
+		const zone = ( date ) =>
+			offset
+				.formatToParts( new Date( `${ date }T12:00:00Z` ) )
+				.find( ( part ) => part.type === 'timeZoneName' ).value;
+		// Only the DST stay crosses a change of the site's UTC offset.
+		expect( zone( stay.start ) !== zone( stay.end ) ).toBe(
+			boundary === 'dst'
+		);
 		await selectStay( page, stay );
 		await expect(
 			page.locator( '.wc-bookings-booking-cost' )

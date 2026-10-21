@@ -93,11 +93,24 @@ export default [
 	},
 	{
 		files: [ 'tests/e2e/**/*.js' ],
-		plugins: { playwright },
 		rules: {
 			'playwright/no-focused-test': 'error',
-			'playwright/valid-expect': 'error',
 			'playwright/missing-playwright-await': 'error',
+		},
+	},
+
+	// Every Playwright test asserts, and no assertion depends on a branch.
+	{
+		files: [ 'tests/e2e/**/*.js' ],
+		// Reuse the instance that shared presets register: ESLint rejects a second one.
+		plugins: playwright.configs[ 'flat/recommended' ].plugins,
+		rules: {
+			'playwright/expect-expect': [
+				'error',
+				{ assertFunctionNames: [ 'expectRejectedPersonBatch' ] },
+			],
+			'playwright/no-conditional-expect': 'error',
+			'playwright/valid-expect': 'error',
 		},
 	},
 	{
