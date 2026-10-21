@@ -17,5 +17,6 @@ npx wp-env run tests-cli wp theme activate storefront
 npx wp-env run tests-cli wp rewrite structure '/%postname%/'
 npx wp-env run tests-cli mkdir -p /var/www/html/wp-content/mu-plugins
 npx wp-env run tests-cli cp /var/www/html/wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/local.php /var/www/html/wp-content/mu-plugins/accommodation-e2e.php
+npx wp-env run tests-cli cp /var/www/html/wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/mu-plugins/e2e-log-marker.php /var/www/html/wp-content/mu-plugins/e2e-log-marker.php
 npm run test:e2e:reset
 PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium

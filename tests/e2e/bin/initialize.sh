@@ -27,3 +27,4 @@ wp-env run tests-cli wp plugin activate woocommerce-accommodation-bookings
 # Local regression fixtures capture mail and block external services.
 wp-env run tests-cli mkdir -p /var/www/html/wp-content/mu-plugins
 wp-env run tests-cli cp /var/www/html/wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/local.php /var/www/html/wp-content/mu-plugins/accommodation-e2e.php
+wp-env run tests-cli cp /var/www/html/wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/mu-plugins/e2e-log-marker.php /var/www/html/wp-content/mu-plugins/e2e-log-marker.php
