@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 	 * Mostly inherited from WC_Product_Booking (code reuse!) but overrides a few methods
 	 *
 	 * @class   WC_Product_Accommodation_Booking
-	 * @version 1.3.15
+	 * @version x.x.x
 	 */
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
@@ -264,7 +264,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 				$booking_resource = $resource_id ? $bookable_product->get_resource( $resource_id ) : null;
 				$available_slots  = array();
-				$has_qty          = ! is_null( $booking_resource ) ? $booking_resource->has_qty() : false;
+				$has_qty          = is_object( $booking_resource ) ? $booking_resource->has_qty() : false;
 				$has_resources    = $bookable_product->has_resources();
 
 				foreach ( $blocks as $block => $booked_slots ) {

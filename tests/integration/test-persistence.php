@@ -8,7 +8,7 @@
 /**
  * Exercise persisted pricing, migrations and order hooks.
  *
- * @version 1.3.15
+ * @version x.x.x
  */
 class Accommodation_Persistence_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.
@@ -746,5 +746,55 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 
 	public function block_formats() {
 		return array( array( false ), array( true ) );
+	}
+
+	/**
+	 * The Store API availability endpoint passes a resource id along for a room without resources
+	 * (and, before Bookings 3.10.0, for any room); one the room does not use yields the same slots
+	 * as no resource selection, as it does in Bookings itself.
+	 *
+	 * @dataProvider resource_setups
+	 */
+	public function test_time_slots_ignore_a_resource_that_is_not_assigned_to_the_room( $has_resources ) {
+		$other = new WC_Product_Booking_Resource();
+		$other->set_name( 'Room of another product' );
+		$other->set_qty( 1 );
+		$other->save();
+		$props     = array();
+		$resources = array( 0 => 1 );
+		if ( $has_resources ) {
+			$assigned = new WC_Product_Booking_Resource();
+			$assigned->set_name( 'Assigned room' );
+			$assigned->set_qty( 2 );
+			$assigned->save();
+			$props     = array(
+				'has_resources' => true,
+				'resource_ids'  => array( $assigned->get_id() ),
+			);
+			$resources = array( $assigned->get_id() => 2 );
+		}
+		$room  = accommodation_test_room( $props );
+		$year  = (int) gmdate( 'Y' ) + 1;
+		$night = strtotime( "$year-01-01 14:00" );
+		$from  = strtotime( "$year-01-01" );
+		$to    = strtotime( "$year-01-02" );
+
+		$this->assertFalse( $room->get_resource( $other->get_id() ) );
+		$expected = array(
+			$night => array(
+				'booked'    => 0,
+				'available' => array_sum( $resources ),
+				'resources' => $resources,
+			),
+		);
+		$this->assertSame( $expected, $room->get_time_slots( array( $night => 0 ), $other->get_id(), $from, $to, true ) );
+		$this->assertSame( $expected, $room->get_time_slots( array( $night => 0 ), 0, $from, $to, true ) );
+	}
+
+	public function resource_setups() {
+		return array(
+			'room without resources'         => array( false ),
+			'room with an assigned resource' => array( true ),
+		);
 	}
 }
