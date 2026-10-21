@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Loaded the accommodation booking form scripts and styles when the Single Product block is nested in another block.

@@ -1,4 +1,0 @@
-Significance: patch
-Type: tweak
-
-Key cached availability results from get_time_slots() by the requested blocks, so a different block selection in the same date range is no longer served stale slots.

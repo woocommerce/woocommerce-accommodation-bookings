@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Kept partial-day check-in and check-out restrictions when navigating between months.

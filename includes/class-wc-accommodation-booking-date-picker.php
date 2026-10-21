@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Hooks into the Bookings Date Picker so we can customize it a bit.
  *
  * @class   WC_Accommodation_Booking_Date_Picker
- * @version x.x.x
+ * @version 1.3.15
  */
 class WC_Accommodation_Booking_Date_Picker {
 
