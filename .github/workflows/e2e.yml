@@ -71,6 +71,24 @@ jobs:
       - name: Run E2E tests
         run: npm run test:e2e
 
+      - name: Annotate retry-only passes
+        if: always()
+        run: |
+          # A flaky test in the json report failed, then passed on retry.
+          [ -f tests/e2e/test-results/results.json ] || exit 0
+          node -e '
+            const walk = ( suite, titles ) => [
+              ...( suite.specs || [] ).map( ( spec ) => [ spec, [ ...titles, spec.title ] ] ),
+              ...( suite.suites || [] ).flatMap( ( child ) => walk( child, [ ...titles, child.title ] ) ),
+            ];
+            for ( const [ spec, titles ] of require( process.argv[ 1 ] ).suites.flatMap( ( file ) => walk( file, [] ) ) ) {
+              for ( const test of spec.tests.filter( ( t ) => t.status === "flaky" ) ) {
+                const message = spec.file + ":" + spec.line + " › " + titles.join( " › " ) + "\n" + ( test.results[ 0 ].error?.message ?? test.results[ 0 ].error?.value ?? "" );
+                console.log( "::warning title=Retry-only pass::" + message.replace( /\u001b\[[0-9;]*m/g, "" ).replace( /%/g, "%25" ).replace( /\r?\n/g, "%0A" ) );
+              }
+            }
+          ' "$PWD/tests/e2e/test-results/results.json"
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
