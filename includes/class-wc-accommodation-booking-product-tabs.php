@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * In the future, other accommodation specific tabs might show up here.
  *
  * @class   WC_Accommodation_Booking_Product_Tabs
- * @version x.x.x
+ * @version 1.3.15
  */
 class WC_Accommodation_Booking_Product_Tabs {
 

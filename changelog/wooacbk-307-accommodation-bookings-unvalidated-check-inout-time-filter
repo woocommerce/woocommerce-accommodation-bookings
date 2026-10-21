@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Kept the saved check-in/out time when a filter returns an invalid time, instead of saving a 1970 date or causing a fatal error.

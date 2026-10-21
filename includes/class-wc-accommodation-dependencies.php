@@ -12,7 +12,7 @@
  * version for accommodations to work.
  *
  * @class   WC_Accommodation_Dependencies
- * @version x.x.x
+ * @version 1.3.15
  */
 class WC_Accommodation_Dependencies {
 

@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Stopped the info icon on check-in-only and check-out-only days from selecting that date when clicked.

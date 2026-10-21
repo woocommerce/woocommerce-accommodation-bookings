@@ -8,7 +8,7 @@
 /**
  * Follow a stay's times through a real site time zone, date formats and the calendar export.
  *
- * @version x.x.x
+ * @version 1.3.15
  */
 class Accommodation_Times_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.

@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Showed the date a stay was booked in the cart's Booking Date row, instead of today's date or, on translated stores, the check-in date.

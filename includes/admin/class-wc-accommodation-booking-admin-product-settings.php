@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) )
  * the `woocommerce_bookings_settings_page` filter.
  *
  * @class   WC_Accommodation_Booking_Admin_Product_Settings
- * @version x.x.x
+ * @version 1.3.15
  */
 class WC_Accommodation_Booking_Admin_Product_Settings extends WC_Settings_API {
 	/**

@@ -6,7 +6,7 @@ Requires PHP: 7.4
 WC requires at least: 11.1
 WC tested up to: 11.2
 Tested up to: 7.1
-Stable tag: 1.3.14
+Stable tag: 1.3.15
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,21 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.15 - 2026-10-21 =
+* Fix - Kept the saved check-in/out time when a filter returns an invalid time, instead of saving a 1970 date or causing a fatal error.
+* Fix - Loaded the accommodation booking form scripts and styles when the Single Product block is nested in another block.
+* Fix - Kept partial-day check-in and check-out restrictions when navigating between months.
+* Fix - Stopped the info icon on check-in-only and check-out-only days from selecting that date when clicked.
+* Fix - Fixed the date that screen readers announce for days shown from the previous or next month.
+* Fix - Showed the date a stay was booked in the cart's Booking Date row, instead of today's date or, on translated stores, the check-in date.
+* Tweak - Key cached availability results from get_time_slots() by the requested blocks, so a different block selection in the same date range is no longer served stale slots.
+* Dev - Added regression coverage for critical merchant flows.
+* Dev - Raised the PHPStan analysis level to 3.
+* Dev - Raised the PHPStan analysis level to 4.
+* Dev - Raised the PHPStan analysis level to 5.
+* Dev - Raised the PHPStan analysis level to 6.
+* Dev - Raised the PHPStan analysis level to 7.
 
 = 1.3.14 - 2026-10-14 =
 * Fix - Stopped hiding available accommodation dates when several resources have bookings.
