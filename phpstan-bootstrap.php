@@ -16,4 +16,3 @@ define( 'WC_ACCOMMODATION_BOOKINGS_MAIN_FILE', __DIR__ . '/woocommerce-accommoda
 
 // Defined by WooCommerce Bookings.
 define( 'WC_BOOKINGS_PLUGIN_URL', 'https://example.org/wp-content/plugins/woocommerce-bookings' );
-define( 'WC_BOOKINGS_VERSION', '0.0.0' );
