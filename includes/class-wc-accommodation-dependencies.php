@@ -12,7 +12,7 @@
  * version for accommodations to work.
  *
  * @class   WC_Accommodation_Dependencies
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Dependencies {
 
@@ -86,7 +86,7 @@ class WC_Accommodation_Dependencies {
 			throw new Exception( 'BOOKINGS_NOT_ACTIVATED' );
 		}
 
-		if ( ! self::is_bookings_above_or_equal_to_version( '1.9.0' ) ) {
+		if ( ! self::is_bookings_above_or_equal_to_version( '3.10.0' ) ) {
 			throw new Exception( 'BOOKINGS_VERSION_TOO_OLD' );
 		}
 
