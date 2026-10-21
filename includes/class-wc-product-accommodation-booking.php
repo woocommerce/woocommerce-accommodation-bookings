@@ -271,6 +271,10 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 				foreach ( $blocks as $block => $booked_slots ) {
 					$check_in  = self::get_check_times( 'in', $product_id );
 					$check_out = self::get_check_times( 'out', $product_id );
+					// An empty time means none is set, and strtotime( '' ) is false. Match the booking form:
+					// a stay starts at midnight and, without a check-out time, ends at the check-in time.
+					$check_in  = empty( $check_in ) ? 'midnight' : $check_in;
+					$check_out = empty( $check_out ) ? $check_in : $check_out;
 					// Blocks for accommodation products are initially calculated as days but the actual time blocks are shifted by check in and checkout times.
 					$block_start_time = strtotime( "{$check_in}", $block );
 					$block_end_time   = strtotime( "{$check_out}", strtotime( '+1 days', $block ) );

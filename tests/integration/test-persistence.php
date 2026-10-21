@@ -895,4 +895,91 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 1, $room->get_time_slots( $blocks, 0, $from, $to, true )[ $night ]['available'] );
 	}
+
+	/**
+	 * With no check-in or check-out time set, a stay is counted on the nights the booking form
+	 * gives it, and a later night stays free: strtotime( '' ) used to put the night at no time.
+	 *
+	 * @dataProvider empty_check_times
+	 */
+	public function test_time_slots_count_a_stay_when_a_check_time_is_empty( $check_in, $check_out ) {
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => $check_in,
+				'check_out' => $check_out,
+			)
+		);
+		$room  = accommodation_test_room();
+		$year  = (int) gmdate( 'Y' ) + 1;
+		$first = strtotime( "$year-01-01" );
+		$later = strtotime( "$year-01-03" );
+		// The dates the booking form gives a one-night stay.
+		$start   = strtotime( "$year-01-01 $check_in" );
+		$booking = get_wc_booking(
+			array(
+				'product_id' => $room->get_id(),
+				'start_date' => $start,
+				'end_date'   => strtotime( "+1 day $check_out", $start ),
+				'all_day'    => false,
+			)
+		);
+		$booking->create( 'confirmed' );
+
+		$slots = $room->get_time_slots(
+			array(
+				$first => 0,
+				$later => 0,
+			),
+			0,
+			$first,
+			strtotime( "$year-01-04" ),
+			true
+		);
+		$this->assertSame( array( 1, 0 ), array( $slots[ $first ]['booked'], $slots[ $first ]['available'] ) );
+		$this->assertSame( array( 0, 1 ), array( $slots[ $later ]['booked'], $slots[ $later ]['available'] ) );
+	}
+
+	/**
+	 * Without a check-out time, a night ends at the next check-in time, as the stays the booking
+	 * form creates do. A stay booked under an earlier, morning check-in time still takes the night.
+	 */
+	public function test_night_without_check_out_time_ends_at_the_check_in_time() {
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => '10:00',
+				'check_out' => '10:00',
+			)
+		);
+		$room    = accommodation_test_room();
+		$year    = (int) gmdate( 'Y' ) + 1;
+		$night   = strtotime( "$year-01-01" );
+		$booking = get_wc_booking(
+			array(
+				'product_id' => $room->get_id(),
+				'start_date' => strtotime( "$year-01-02 10:00" ),
+				'end_date'   => strtotime( "$year-01-03 10:00" ),
+				'all_day'    => false,
+			)
+		);
+		$booking->create( 'confirmed' );
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => '14:00',
+				'check_out' => '',
+			)
+		);
+
+		$this->assertSame( 0, $room->get_time_slots( array( $night => 0 ), 0, $night, strtotime( "$year-01-03" ), true )[ $night ]['available'] );
+	}
+
+	public function empty_check_times() {
+		return array(
+			'no check-out time' => array( '14:00', '' ),
+			'no check-in time'  => array( '', '11:00' ),
+			'no times'          => array( '', '' ),
+		);
+	}
 }

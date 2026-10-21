@@ -361,12 +361,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking-date-picker.php
 
 		-
-			message: '#^Parameter \#1 \$time of function strtotime expects string, string\|false\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: includes/class-wc-accommodation-booking-date-picker.php
-
-		-
 			message: '#^Parameter \#2 \$now of function strtotime expects int, int\|false given\.$#'
 			identifier: argument.type
 			count: 1

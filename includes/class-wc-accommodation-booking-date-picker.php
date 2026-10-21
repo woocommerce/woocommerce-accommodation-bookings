@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Hooks into the Bookings Date Picker so we can customize it a bit.
  *
  * @class   WC_Accommodation_Booking_Date_Picker
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Date_Picker {
 
@@ -123,6 +123,7 @@ class WC_Accommodation_Booking_Date_Picker {
 					}
 
 					$check_in_time = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
+					$check_in_time = empty( $check_in_time ) ? 'midnight' : $check_in_time;
 					if ( 'in' === $which ) {
 						$check_time = strtotime( '-1 day ' . $check_in_time, $time );
 					} else {
@@ -165,6 +166,7 @@ class WC_Accommodation_Booking_Date_Picker {
 					$day = date( 'Y-n-j', $time );
 
 					$check_in_time = WC_Product_Accommodation_Booking::get_check_times( 'in', $product->get_id() );
+					$check_in_time = empty( $check_in_time ) ? 'midnight' : $check_in_time;
 					if ( 'in' === $which ) {
 						$check_time = strtotime( $check_in_time, $time );
 					} else {
