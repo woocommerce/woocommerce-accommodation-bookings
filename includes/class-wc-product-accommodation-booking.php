@@ -274,6 +274,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 					$block_start_time = strtotime( "{$check_in}", $block );
 					$block_end_time   = strtotime( "{$check_out}", strtotime( '+1 days', $block ) );
 					$resources        = array();
+					$excluded         = array();
 
 					// Figure out how much qty have, either based on combined resource quantity,
 					// single resource, or just product.
@@ -282,7 +283,8 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 						foreach ( $bookable_product->get_resources() as $resource ) {
 
-							if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $block, $resource->get_id() ) ) {
+							if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $resource->get_id() ) ) {
+								$excluded[ $resource->get_id() ] = true;
 								continue;
 							}
 
@@ -307,6 +309,11 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 					$qty_booked_in_block = 0;
 
 					foreach ( $existing_bookings as $existing_booking ) {
+						// A booking on a resource left out above holds none of the counted places.
+						if ( isset( $excluded[ $existing_booking->get_resource_id() ] ) ) {
+							continue;
+						}
+
 						if ( $existing_booking->is_intersecting_block( $block_start_time, $block_end_time ) ) {
 							$qty_to_add = $bookable_product->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
 							if ( $has_resources ) {

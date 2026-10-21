@@ -797,4 +797,76 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 			'room with an assigned resource' => array( true ),
 		);
 	}
+
+	/**
+	 * A resource blocked for the night leaves the room's count, and a stay already booked on it
+	 * does not take the place of the resource that is still free.
+	 *
+	 * @dataProvider blocked_resource_bookings
+	 */
+	public function test_time_slots_leave_out_a_resource_its_rules_block( $booked_before_blocking ) {
+		$year    = (int) gmdate( 'Y' ) + 1;
+		$friday  = new DateTimeImmutable( "first friday of january $year" );
+		$night   = strtotime( $friday->format( 'Y-m-d' ) . ' 14:00' );
+		$blocked = new WC_Product_Booking_Resource();
+		$blocked->set_name( 'Closed on Fridays' );
+		$blocked->set_qty( 1 );
+		$blocked->save();
+		$free = new WC_Product_Booking_Resource();
+		$free->set_name( 'Open every night' );
+		$free->set_qty( 1 );
+		$free->save();
+		$room = accommodation_test_room(
+			array(
+				'qty'                  => 2,
+				'has_resources'        => true,
+				'resource_ids'         => array( $blocked->get_id(), $free->get_id() ),
+				'resources_assignment' => 'automatic',
+			)
+		);
+		if ( $booked_before_blocking ) {
+			$booking = get_wc_booking(
+				array(
+					'product_id'  => $room->get_id(),
+					'resource_id' => $blocked->get_id(),
+					'start_date'  => $night,
+					'end_date'    => strtotime( $friday->modify( '+1 day' )->format( 'Y-m-d' ) . ' 11:00' ),
+					'all_day'     => false,
+				)
+			);
+			$booking->create( 'confirmed' );
+		}
+		$blocked->set_availability(
+			array(
+				array(
+					'type'     => 'days',
+					'from'     => 5,
+					'to'       => 5,
+					'bookable' => 'no',
+					'priority' => 10,
+				),
+			)
+		);
+		$blocked->save();
+		WC_Bookings_Cache::delete_booking_slots_transient( $room->get_id() );
+
+		$this->assertSame(
+			array(
+				$night => array(
+					'booked'    => 0,
+					'available' => 1,
+					'resources' => array( $free->get_id() => 1 ),
+				),
+			),
+			$room->get_time_slots( array( $night => 0 ), 0, strtotime( $friday->format( 'Y-m-d' ) ), strtotime( $friday->modify( '+1 day' )->format( 'Y-m-d' ) ), true )
+		);
+	}
+
+	public function blocked_resource_bookings() {
+		return array(
+			'no stays'                               => array( false ),
+			'stay booked before the resource closed' => array( true ),
+		);
+	}
+
 }
