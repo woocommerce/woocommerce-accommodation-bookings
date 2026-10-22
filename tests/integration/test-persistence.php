@@ -869,4 +869,30 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Slots cached before an update are not reused: the release may have fixed how they are counted.
+	 */
+	public function test_time_slots_cached_by_an_earlier_release_are_recalculated() {
+		$room   = accommodation_test_room();
+		$year   = (int) gmdate( 'Y' ) + 1;
+		$night  = strtotime( "$year-01-01 14:00" );
+		$from   = strtotime( "$year-01-01" );
+		$to     = strtotime( "$year-01-02" );
+		$blocks = array( $night => 0 );
+		// The key earlier releases used, holding a count that is now wrong.
+		$stale_key = 'book_ts_' . md5( http_build_query( array( $room->get_id(), 0, $from, $to, wp_json_encode( array_keys( $blocks ) ) ) ) );
+		set_transient(
+			$stale_key,
+			array(
+				$night => array(
+					'booked'    => 0,
+					'available' => 5,
+					'resources' => array( 0 => 5 ),
+				),
+			),
+			YEAR_IN_SECONDS
+		);
+
+		$this->assertSame( 1, $room->get_time_slots( $blocks, 0, $from, $to, true )[ $night ]['available'] );
+	}
 }

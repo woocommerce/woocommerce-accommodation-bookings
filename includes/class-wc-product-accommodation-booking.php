@@ -244,9 +244,10 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			$bookable_product = $this;
 
 			// Equivalent v2/v3 selections share a cache; empty selections also need their own key.
+			// The plugin version keeps slots cached by an earlier release, whose calculation may have changed, out of use.
 			$blocks          = $this->normalize_blocks_array( $blocks );
 			$product_id      = $bookable_product->get_id();
-			$transient_name  = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to, wp_json_encode( array_keys( $blocks ) ) ) ) );
+			$transient_name  = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to, wp_json_encode( array_keys( $blocks ) ), WC_ACCOMMODATION_BOOKINGS_VERSION ) ) );
 			$product_cache   = class_exists( 'WC_Bookings_Cache' ) && method_exists( 'WC_Bookings_Cache', 'get_product_cache' ) && method_exists( 'WC_Bookings_Cache', 'set_product_cache' );
 			$available_slots = $product_cache ? WC_Bookings_Cache::get_product_cache( $transient_name, $product_id ) : get_transient( $transient_name );
 
