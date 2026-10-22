@@ -37,3 +37,5 @@ woocommerce-accommodation-bookings.zip
 /tests/e2e/test-results
 /tools/php-quality/vendor/
 /tools/php-stubs/vendor/
+# Not committed: the PHPStan job installs the newest generated stubs every run.
+/tools/php-stubs/composer.lock

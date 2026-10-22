@@ -37,7 +37,6 @@ jobs:
               - 'composer.json'
               - 'composer.lock'
               - 'tools/php-stubs/composer.json'
-              - 'tools/php-stubs/composer.lock'
               - 'phpcs*.xml*'
               - 'phpcs.baseline'
               - 'phpstan*.neon*'
