@@ -379,12 +379,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking.php
 
 		-
-			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Booking\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wc-accommodation-booking.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product\|false\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -550,12 +544,6 @@ parameters:
 			message: '#^Parameter \#1 \$block_start_time of method WC_Product_Booking\:\:check_availability_rules_against_time\(\) expects int\|string, int\|false given\.$#'
 			identifier: argument.type
 			count: 2
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
-			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product_Booking_Resource\|false\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
