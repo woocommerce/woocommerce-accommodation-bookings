@@ -593,9 +593,3 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: includes/integrations/class-wc-accommodation-booking-addons.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\|string given\.$#'
-			identifier: argument.type
-			count: 12
-			path: includes/integrations/class-wc-accommodation-booking-addons.php
