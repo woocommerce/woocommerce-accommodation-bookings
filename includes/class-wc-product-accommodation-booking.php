@@ -73,7 +73,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 		 *
 		 * @param  int $id
 		 *
-		 * @return WC_Product_Booking_Resource object
+		 * @return WC_Product_Booking_Resource|false False when the resource is missing or not linked to the product.
 		 */
 		public function get_resource( $id ) {
 			$resource = parent::get_resource( $id );
@@ -244,9 +244,10 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 			$bookable_product = $this;
 
 			// Equivalent v2/v3 selections share a cache; empty selections also need their own key.
+			// The plugin version keeps slots cached by an earlier release, whose calculation may have changed, out of use.
 			$blocks          = $this->normalize_blocks_array( $blocks );
 			$product_id      = $bookable_product->get_id();
-			$transient_name  = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to, wp_json_encode( array_keys( $blocks ) ) ) ) );
+			$transient_name  = 'book_ts_' . md5( http_build_query( array( $product_id, $resource_id, $from, $to, wp_json_encode( array_keys( $blocks ) ), WC_ACCOMMODATION_BOOKINGS_VERSION ) ) );
 			$product_cache   = class_exists( 'WC_Bookings_Cache' ) && method_exists( 'WC_Bookings_Cache', 'get_product_cache' ) && method_exists( 'WC_Bookings_Cache', 'set_product_cache' );
 			$available_slots = $product_cache ? WC_Bookings_Cache::get_product_cache( $transient_name, $product_id ) : get_transient( $transient_name );
 
@@ -270,10 +271,15 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 				foreach ( $blocks as $block => $booked_slots ) {
 					$check_in  = self::get_check_times( 'in', $product_id );
 					$check_out = self::get_check_times( 'out', $product_id );
+					// An empty time means none is set, and strtotime( '' ) is false. Match the booking form:
+					// a stay starts at midnight and, without a check-out time, ends at the check-in time.
+					$check_in  = empty( $check_in ) ? 'midnight' : $check_in;
+					$check_out = empty( $check_out ) ? $check_in : $check_out;
 					// Blocks for accommodation products are initially calculated as days but the actual time blocks are shifted by check in and checkout times.
 					$block_start_time = strtotime( "{$check_in}", $block );
 					$block_end_time   = strtotime( "{$check_out}", strtotime( '+1 days', $block ) );
 					$resources        = array();
+					$excluded         = array();
 
 					// Figure out how much qty have, either based on combined resource quantity,
 					// single resource, or just product.
@@ -282,7 +288,8 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 						foreach ( $bookable_product->get_resources() as $resource ) {
 
-							if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $block, $resource->get_id() ) ) {
+							if ( ! $bookable_product->check_availability_rules_against_time( $block_start_time, $block_end_time, $resource->get_id() ) ) {
+								$excluded[ $resource->get_id() ] = true;
 								continue;
 							}
 
@@ -307,6 +314,11 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 					$qty_booked_in_block = 0;
 
 					foreach ( $existing_bookings as $existing_booking ) {
+						// A booking on a resource left out above holds none of the counted places.
+						if ( isset( $excluded[ $existing_booking->get_resource_id() ] ) ) {
+							continue;
+						}
+
 						if ( $existing_booking->is_intersecting_block( $block_start_time, $block_end_time ) ) {
 							$qty_to_add = $bookable_product->has_person_qty_multiplier() ? max( 1, array_sum( $existing_booking->get_persons() ) ) : 1;
 							if ( $has_resources ) {

@@ -797,4 +797,189 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 			'room with an assigned resource' => array( true ),
 		);
 	}
+
+	/**
+	 * A resource blocked for the night leaves the room's count, and a stay already booked on it
+	 * does not take the place of the resource that is still free.
+	 *
+	 * @dataProvider blocked_resource_bookings
+	 */
+	public function test_time_slots_leave_out_a_resource_its_rules_block( $booked_before_blocking ) {
+		$year    = (int) gmdate( 'Y' ) + 1;
+		$friday  = new DateTimeImmutable( "first friday of january $year" );
+		$night   = strtotime( $friday->format( 'Y-m-d' ) . ' 14:00' );
+		$blocked = new WC_Product_Booking_Resource();
+		$blocked->set_name( 'Closed on Fridays' );
+		$blocked->set_qty( 1 );
+		$blocked->save();
+		$free = new WC_Product_Booking_Resource();
+		$free->set_name( 'Open every night' );
+		$free->set_qty( 1 );
+		$free->save();
+		$room = accommodation_test_room(
+			array(
+				'qty'                  => 2,
+				'has_resources'        => true,
+				'resource_ids'         => array( $blocked->get_id(), $free->get_id() ),
+				'resources_assignment' => 'automatic',
+			)
+		);
+		if ( $booked_before_blocking ) {
+			$booking = get_wc_booking(
+				array(
+					'product_id'  => $room->get_id(),
+					'resource_id' => $blocked->get_id(),
+					'start_date'  => $night,
+					'end_date'    => strtotime( $friday->modify( '+1 day' )->format( 'Y-m-d' ) . ' 11:00' ),
+					'all_day'     => false,
+				)
+			);
+			$booking->create( 'confirmed' );
+		}
+		$blocked->set_availability(
+			array(
+				array(
+					'type'     => 'days',
+					'from'     => 5,
+					'to'       => 5,
+					'bookable' => 'no',
+					'priority' => 10,
+				),
+			)
+		);
+		$blocked->save();
+		WC_Bookings_Cache::delete_booking_slots_transient( $room->get_id() );
+
+		$this->assertSame(
+			array(
+				$night => array(
+					'booked'    => 0,
+					'available' => 1,
+					'resources' => array( $free->get_id() => 1 ),
+				),
+			),
+			$room->get_time_slots( array( $night => 0 ), 0, strtotime( $friday->format( 'Y-m-d' ) ), strtotime( $friday->modify( '+1 day' )->format( 'Y-m-d' ) ), true )
+		);
+	}
+
+	public function blocked_resource_bookings() {
+		return array(
+			'no stays'                               => array( false ),
+			'stay booked before the resource closed' => array( true ),
+		);
+	}
+
+	/**
+	 * Slots cached before an update are not reused: the release may have fixed how they are counted.
+	 */
+	public function test_time_slots_cached_by_an_earlier_release_are_recalculated() {
+		$room   = accommodation_test_room();
+		$year   = (int) gmdate( 'Y' ) + 1;
+		$night  = strtotime( "$year-01-01 14:00" );
+		$from   = strtotime( "$year-01-01" );
+		$to     = strtotime( "$year-01-02" );
+		$blocks = array( $night => 0 );
+		// The key earlier releases used, holding a count that is now wrong.
+		$stale_key = 'book_ts_' . md5( http_build_query( array( $room->get_id(), 0, $from, $to, wp_json_encode( array_keys( $blocks ) ) ) ) );
+		set_transient(
+			$stale_key,
+			array(
+				$night => array(
+					'booked'    => 0,
+					'available' => 5,
+					'resources' => array( 0 => 5 ),
+				),
+			),
+			YEAR_IN_SECONDS
+		);
+
+		$this->assertSame( 1, $room->get_time_slots( $blocks, 0, $from, $to, true )[ $night ]['available'] );
+	}
+
+	/**
+	 * With no check-in or check-out time set, a stay is counted on the nights the booking form
+	 * gives it, and a later night stays free: strtotime( '' ) used to put the night at no time.
+	 *
+	 * @dataProvider empty_check_times
+	 */
+	public function test_time_slots_count_a_stay_when_a_check_time_is_empty( $check_in, $check_out ) {
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => $check_in,
+				'check_out' => $check_out,
+			)
+		);
+		$room  = accommodation_test_room();
+		$year  = (int) gmdate( 'Y' ) + 1;
+		$first = strtotime( "$year-01-01" );
+		$later = strtotime( "$year-01-03" );
+		// The dates the booking form gives a one-night stay.
+		$start   = strtotime( "$year-01-01 $check_in" );
+		$booking = get_wc_booking(
+			array(
+				'product_id' => $room->get_id(),
+				'start_date' => $start,
+				'end_date'   => strtotime( "+1 day $check_out", $start ),
+				'all_day'    => false,
+			)
+		);
+		$booking->create( 'confirmed' );
+
+		$slots = $room->get_time_slots(
+			array(
+				$first => 0,
+				$later => 0,
+			),
+			0,
+			$first,
+			strtotime( "$year-01-04" ),
+			true
+		);
+		$this->assertSame( array( 1, 0 ), array( $slots[ $first ]['booked'], $slots[ $first ]['available'] ) );
+		$this->assertSame( array( 0, 1 ), array( $slots[ $later ]['booked'], $slots[ $later ]['available'] ) );
+	}
+
+	/**
+	 * Without a check-out time, a night ends at the next check-in time, as the stays the booking
+	 * form creates do. A stay booked under an earlier, morning check-in time still takes the night.
+	 */
+	public function test_night_without_check_out_time_ends_at_the_check_in_time() {
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => '10:00',
+				'check_out' => '10:00',
+			)
+		);
+		$room    = accommodation_test_room();
+		$year    = (int) gmdate( 'Y' ) + 1;
+		$night   = strtotime( "$year-01-01" );
+		$booking = get_wc_booking(
+			array(
+				'product_id' => $room->get_id(),
+				'start_date' => strtotime( "$year-01-02 10:00" ),
+				'end_date'   => strtotime( "$year-01-03 10:00" ),
+				'all_day'    => false,
+			)
+		);
+		$booking->create( 'confirmed' );
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => '14:00',
+				'check_out' => '',
+			)
+		);
+
+		$this->assertSame( 0, $room->get_time_slots( array( $night => 0 ), 0, $night, strtotime( "$year-01-03" ), true )[ $night ]['available'] );
+	}
+
+	public function empty_check_times() {
+		return array(
+			'no check-out time' => array( '14:00', '' ),
+			'no check-in time'  => array( '', '11:00' ),
+			'no times'          => array( '', '' ),
+		);
+	}
 }

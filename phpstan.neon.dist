@@ -1,5 +1,8 @@
 includes:
     - vendor/szepeviktor/phpstan-wordpress/extension.neon
+    # Stubs of integrated plugins, from woocommerce/php-stubs (composer install --working-dir=tools/php-stubs).
+    # Minimum version from WC_Accommodation_Dependencies: move the pin together with its minimum.
+    - tools/php-stubs/vendor/woocommerce/php-stubs/stubs/woocommerce-bookings/3.10.0.neon
     - phpstan-baseline.neon
 
 parameters:

@@ -46,6 +46,15 @@ npm run phpcompat     # Builds/checks release ZIP; run composer install afterwar
 
 CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:phpcs` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.
 
+PHPStan (`composer lint:phpstan`) also needs the stubs of the plugins Accommodation Bookings integrates with. They come from `woocommerce/php-stubs`, a private package on the `stubs` branch of `woocommerce/all-plugins`, installed separately so the root `composer install` needs no credentials:
+
+```bash
+composer config --global github-oauth.github.com "$(gh auth token)"   # once
+composer install --working-dir=tools/php-stubs
+```
+
+`phpstan.neon.dist` includes one `.neon` per plugin. WooCommerce Bookings is pinned to the minimum in `WC_Accommodation_Dependencies`: when you raise it, move its pin too. `composer update --working-dir=tools/php-stubs` picks up newly generated stubs. Fork pull requests cannot read the package, so CI skips PHPStan for them: run it from a branch in this repository before merging.
+
 ### Unit tests
 
 ```bash
