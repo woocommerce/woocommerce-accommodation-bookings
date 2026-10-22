@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Kept the PHPStan integration stubs up to date without manual changes.

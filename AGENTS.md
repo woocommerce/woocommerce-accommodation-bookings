@@ -53,7 +53,7 @@ composer config --global github-oauth.github.com "$(gh auth token)"   # once
 composer install --working-dir=tools/php-stubs
 ```
 
-`phpstan.neon.dist` includes one `.neon` per plugin. WooCommerce Bookings is pinned to the minimum in `WC_Accommodation_Dependencies`: when you raise it, move its pin too. `composer update --working-dir=tools/php-stubs` picks up newly generated stubs. Fork pull requests cannot read the package, so CI skips PHPStan for them: run it from a branch in this repository before merging.
+`phpstan.neon.dist` includes one `.neon` per plugin. WooCommerce Bookings is pinned to the minimum in `WC_Accommodation_Dependencies`: when you raise it, move its pin too. The PHPStan job runs `php tools/php-stubs/vendor/woocommerce/php-stubs/check-pins.php`, which fails until they match (the `# minimum:` comment above the pin says where to read it). `tools/php-stubs/composer.lock` is not committed, so CI always installs the newest generated stubs; locally, `composer update --working-dir=tools/php-stubs` picks them up. Fork pull requests cannot read the package, so CI skips PHPStan for them: run it from a branch in this repository before merging.
 
 ### Unit tests
 

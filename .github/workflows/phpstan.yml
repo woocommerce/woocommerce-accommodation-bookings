@@ -37,4 +37,6 @@ jobs:
           # Outside the cached directory: the private stubs archive must never reach actions/cache.
           COMPOSER_CACHE_DIR: ${{ runner.temp }}/php-stubs-cache
         run: composer install --prefer-dist --no-scripts --no-progress --no-interaction --working-dir=tools/php-stubs
+      - name: Check stub pins against the declared minimums
+        run: php tools/php-stubs/vendor/woocommerce/php-stubs/check-pins.php
       - run: composer lint:phpstan
