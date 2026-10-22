@@ -283,7 +283,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 
 					// Figure out how much qty have, either based on combined resource quantity,
 					// single resource, or just product.
-					if ( $has_resources && ( ! is_a( $booking_resource, 'WC_Product_Booking_Resource' ) || ! $has_qty ) ) {
+					if ( $has_resources && ( ! $booking_resource instanceof WC_Product_Booking_Resource || ! $has_qty ) ) {
 						$available_qty = 0;
 
 						foreach ( $bookable_product->get_resources() as $resource ) {

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds our new product type to the list of WooCommerce product types.
  *
  * @class   WC_Accommodation_Booking
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking {
 
@@ -46,7 +46,7 @@ class WC_Accommodation_Booking {
 	 * @return string Formatted date for ICS.
 	 */
 	public function disable_ics_formatting_for_accommodation( $value, $timestamp, $old_ts, $booking ) {
-		if ( ! is_a( $booking, 'WC_Booking' ) ) {
+		if ( ! $booking instanceof WC_Booking ) {
 			return $value;
 		}
 

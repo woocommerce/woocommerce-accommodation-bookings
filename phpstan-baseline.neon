@@ -379,12 +379,6 @@ parameters:
 			path: includes/class-wc-accommodation-booking.php
 
 		-
-			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Booking\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wc-accommodation-booking.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product\|false\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -553,12 +547,6 @@ parameters:
 			path: includes/class-wc-product-accommodation-booking.php
 
 		-
-			message: '#^Parameter \#1 \$object_or_string of function is_a expects object, WC_Product_Booking_Resource\|false\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/class-wc-product-accommodation-booking.php
-
-		-
 			message: '#^Parameter \#1 \$price of function wc_price expects float, float\|string given\.$#'
 			identifier: argument.type
 			count: 2
@@ -604,10 +592,4 @@ parameters:
 			message: '#^Method WC_Accommodation_Booking_Addons\:\:disable_product_add_on_price_adjustment\(\) has parameter \$cart_item with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: includes/integrations/class-wc-accommodation-booking-addons.php
-
-		-
-			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\|string given\.$#'
-			identifier: argument.type
-			count: 12
 			path: includes/integrations/class-wc-accommodation-booking-addons.php

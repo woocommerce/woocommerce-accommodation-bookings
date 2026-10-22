@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
  * Addons integration class.
  *
  * @class   WC_Accommodation_Booking_Addons
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_Addons {
 
@@ -68,12 +68,12 @@ class WC_Accommodation_Booking_Addons {
 			?>
 			<tr class="<?php echo esc_attr( $css_classes ); ?>">
 				<td class="addon_wc_booking_person_qty_multiplier addon_required" width="50%">
-					<label for="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( $loop ); ?>"><?php esc_html_e( 'Bookings: Multiply cost by person count', 'woocommerce-accommodation-bookings' ); ?></label>
-					<input type="checkbox" id="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( $loop ); ?>" name="addon_wc_booking_person_qty_multiplier[<?php echo esc_attr( $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_person_qty_multiplier'] ), true ); ?> />
+					<label for="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>"><?php esc_html_e( 'Bookings: Multiply cost by person count', 'woocommerce-accommodation-bookings' ); ?></label>
+					<input type="checkbox" id="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>" name="addon_wc_booking_person_qty_multiplier[<?php echo esc_attr( (string) $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_person_qty_multiplier'] ), true ); ?> />
 				</td>
 				<td class="addon_wc_booking_block_qty_multiplier addon_required" width="50%">
-					<label for="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( $loop ); ?>"><?php esc_html_e( 'Bookings: Multiply cost by block count', 'woocommerce-accommodation-bookings' ); ?></label>
-					<input type="checkbox" id="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( $loop ); ?>" name="addon_wc_booking_block_qty_multiplier[<?php echo esc_attr( $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_block_qty_multiplier'] ) || ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ), true ); ?> />
+					<label for="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>"><?php esc_html_e( 'Bookings: Multiply cost by block count', 'woocommerce-accommodation-bookings' ); ?></label>
+					<input type="checkbox" id="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>" name="addon_wc_booking_block_qty_multiplier[<?php echo esc_attr( (string) $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_block_qty_multiplier'] ) || ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ), true ); ?> />
 				</td>
 			</tr>
 			<?php
@@ -81,15 +81,15 @@ class WC_Accommodation_Booking_Addons {
 			?>
 			<div class="<?php echo esc_attr( $css_classes ); ?>">
 				<div class="addon_wc_booking_person_qty_multiplier">
-					<label for="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( $loop ); ?>">
-						<input type="checkbox" id="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( $loop ); ?>" name="addon_wc_booking_person_qty_multiplier[<?php echo esc_attr( $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_person_qty_multiplier'] ), true ); ?> /> <?php esc_html_e( 'Bookings: Multiply cost by person count', 'woocommerce-accommodation-bookings' ); ?>
+					<label for="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>">
+						<input type="checkbox" id="addon_wc_booking_accommodation_person_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>" name="addon_wc_booking_person_qty_multiplier[<?php echo esc_attr( (string) $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_person_qty_multiplier'] ), true ); ?> /> <?php esc_html_e( 'Bookings: Multiply cost by person count', 'woocommerce-accommodation-bookings' ); ?>
 						<?php echo wc_help_tip( __( 'Only applies to options which use quantity based prices.', 'woocommerce-accommodation-bookings' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</label>
 				</div>
 
 				<div class="addon_wc_booking_block_qty_multiplier">
-					<label for="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( $loop ); ?>">
-						<input type="checkbox" id="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( $loop ); ?>" name="addon_wc_booking_block_qty_multiplier[<?php echo esc_attr( $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_block_qty_multiplier'] ) || ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ), true ); ?> /> <?php esc_html_e( 'Bookings: Multiply cost number of nights', 'woocommerce-accommodation-bookings' ); ?>
+					<label for="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>">
+						<input type="checkbox" id="addon_wc_booking_accommodation_block_qty_multiplier_<?php echo esc_attr( (string) $loop ); ?>" name="addon_wc_booking_block_qty_multiplier[<?php echo esc_attr( (string) $loop ); ?>]" <?php checked( ! empty( $addon['wc_booking_block_qty_multiplier'] ) || ! empty( $addon['wc_accommodation_booking_block_qty_multiplier'] ), true ); ?> /> <?php esc_html_e( 'Bookings: Multiply cost number of nights', 'woocommerce-accommodation-bookings' ); ?>
 						<?php echo wc_help_tip( __( 'Only applies to options which use quantity based prices.', 'woocommerce-accommodation-bookings' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</label>
 				</div>
