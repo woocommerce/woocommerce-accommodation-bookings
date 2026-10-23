@@ -8,7 +8,7 @@ Generally, only the latest version of the extension has continued support. In so
 
 ## Reporting a Vulnerability
 
-[WooCommerce Accommodation Bookings](https://woocommerce.com/products/woocommerce-accommodation-bookings/) is an open-source plugin for WooCommerce. Our HackerOne program covers the plugin software.
+[WooCommerce Accommodation Bookings](https://woocommerce.com/products/woocommerce-accommodation-bookings/) is an open-source plugin for WooCommerce. Consult the HackerOne program’s current scope and eligibility rules before testing.
 
 **For responsible disclosure of security issues and to be eligible for our bug bounty program, please submit your report via the [HackerOne](https://hackerone.com/automattic) portal.**
 
