@@ -102,8 +102,6 @@ jobs:
     # Fork pull requests get no secrets, so the private stubs cannot be installed there.
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.php == 'true' }}
     uses: ./.github/workflows/phpstan.yml
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
   php-compatibility:
     name: PHP compatibility

@@ -1,15 +1,9 @@
 {
 	"name": "woocommerce/accommodation-bookings-php-stubs",
-	"description": "Stubs of the plugins Accommodation Bookings integrates with, for PHPStan only. Installed only in the PHPStan job: the private woocommerce/all-plugins repository needs a token.",
+	"description": "Stubs of the plugins Accommodation Bookings integrates with, for PHPStan only.",
 	"license": "GPL-3.0-or-later",
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/woocommerce/all-plugins"
-		}
-	],
 	"require-dev": {
-		"woocommerce/php-stubs": "dev-stubs"
+		"woocommerce/php-stubs": "dev-trunk"
 	},
 	"config": {
 		"platform": {
