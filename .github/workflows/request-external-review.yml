@@ -1,0 +1,74 @@
+name: Request team review for external PRs
+
+on:
+  pull_request_target:
+    types: [opened, ready_for_review, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  request-review:
+    name: Request review
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # This workflow runs against the base branch and must never check out or
+      # execute code from the pull request head.
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ secrets.SWW_TEAM_REVIEW_TOKEN }}
+          script: |
+            const org  = 'woocommerce';
+            const team = 'somewherewarm';
+            const pr   = context.payload.pull_request;
+            const user = pr.user.login;
+
+            // woo-eng-bot opens the release pull requests. GitHub reports it as a
+            // regular user, so the Bot type check alone does not catch it.
+            if ( pr.user.type === 'Bot' || user === 'woo-eng-bot' ) {
+              core.info( `${ user } is a bot, skipping.` );
+              return;
+            }
+
+            let isMember = false;
+
+            try {
+              const { data } = await github.rest.teams.getMembershipForUserInOrg( {
+                org,
+                team_slug: team,
+                username: user,
+              } );
+              isMember = 'active' === data.state;
+            } catch ( error ) {
+              // A non-member returns 404. Anything else means the membership
+              // lookup itself failed, so fail loudly rather than mistaking the
+              // author for an outsider.
+              if ( 404 !== error.status ) {
+                throw error;
+              }
+            }
+
+            if ( isMember ) {
+              core.info( `${ user } is on @${ org }/${ team }, skipping.` );
+              return;
+            }
+
+            const { data: requested } = await github.rest.pulls.listRequestedReviewers( {
+              ...context.repo,
+              pull_number: pr.number,
+            } );
+
+            if ( requested.teams.some( ( t ) => t.slug === team ) ) {
+              core.info( `@${ org }/${ team } is already requested, skipping.` );
+              return;
+            }
+
+            await github.rest.pulls.requestReviewers( {
+              ...context.repo,
+              pull_number: pr.number,
+              team_reviewers: [ team ],
+            } );
+
+            core.info( `Requested a review from @${ org }/${ team } for external author ${ user }.` );
