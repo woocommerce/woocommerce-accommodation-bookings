@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC Accommodation Bookings class
  *
  * @class   WC_Accommodation_Bookings_Plugin
- * @version x.x.x
+ * @version 1.3.16
  */
 class WC_Accommodation_Bookings_Plugin {
 

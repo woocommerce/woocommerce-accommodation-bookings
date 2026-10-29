@@ -6,7 +6,7 @@ Requires PHP: 7.4
 WC requires at least: 11.1
 WC tested up to: 11.2
 Tested up to: 7.1
-Stable tag: 1.3.15
+Stable tag: 1.3.16
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,21 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.3.16 - 2026-10-29 =
+* Fix - Fixed a fatal error when availability is requested for a resource that is not assigned to the accommodation product.
+* Fix - Fixed resource availability rules being ignored when counting available nights for products with resources.
+* Fix - Fixed availability being calculated for 1970 when a check-in or check-out time is empty.
+* Tweak - Require WooCommerce Bookings 3.10.0 or later.
+* Dev - Add the canonical GPL-3.0 license text.
+* Dev - Add the Automattic security policy and public security contact.
+* Dev - Raised the PHPStan analysis level to 8.
+* Dev - Corrected docblock types reported by PHPStan level 9.
+* Dev - Corrected docblock types reported by PHPStan level 10.
+* Dev - Checked integrations in PHPStan against generated stubs from woocommerce/php-stubs.
+* Dev - Resolved PHPStan baseline entries without changing behavior.
+* Dev - Kept the PHPStan integration stubs up to date without manual changes.
+* Dev - Updated QIT CLI to 1.3.3.
 
 = 1.3.15 - 2026-10-21 =
 * Fix - Kept the saved check-in/out time when a filter returns an invalid time, instead of saving a 1970 date or causing a fatal error.

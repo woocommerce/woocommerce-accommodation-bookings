@@ -1,4 +1,0 @@
-Significance: patch
-Type: dev
-
-Checked integrations in PHPStan against generated stubs from woocommerce/php-stubs.

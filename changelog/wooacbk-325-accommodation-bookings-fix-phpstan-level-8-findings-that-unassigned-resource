@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Fixed a fatal error when availability is requested for a resource that is not assigned to the accommodation product.
