@@ -34,7 +34,7 @@ jobs:
         env:
           # Must be a PAT: PRs and pushes made with the default GITHUB_TOKEN
           # do not trigger other workflows (smoke test CI would never run).
-          GH_TOKEN: ${{ secrets.RELEASE_CI_TOKEN }}
+          GH_TOKEN: ${{ secrets.SWW_REVIEW_RELEASE_TOKEN }}
           VERSION: ${{ inputs.version }}
           WP_VERSION: ${{ inputs.wp_version }}
           WC_VERSION: ${{ inputs.wc_version }}
@@ -45,7 +45,7 @@ jobs:
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                 ref: trunk
-                token: ${{ secrets.RELEASE_CI_TOKEN }}
+                token: ${{ secrets.SWW_REVIEW_RELEASE_TOKEN }}
 
             - name: Validate inputs
               run: |
