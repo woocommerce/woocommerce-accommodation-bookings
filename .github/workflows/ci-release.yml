@@ -55,7 +55,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           # head_commit only exists on push events; for pull_request use the merge commit.
           GH_RELEASE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
-          RELEASE_CI_TOKEN: ${{ secrets.RELEASE_CI_TOKEN }}
+          RELEASE_CI_TOKEN: ${{ secrets.SWW_REVIEW_RELEASE_TOKEN }}
           RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}
           RELEASE_ARCHIVE: ${{ github.event.repository.name }}.zip
 
