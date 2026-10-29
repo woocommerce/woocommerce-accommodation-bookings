@@ -25,9 +25,9 @@ jobs:
             const pr   = context.payload.pull_request;
             const user = pr.user.login;
 
-            // woo-eng-bot opens the release pull requests. GitHub reports it as a
+            // botwoo opens the release pull requests. GitHub reports it as a
             // regular user, so the Bot type check alone does not catch it.
-            if ( pr.user.type === 'Bot' || user === 'woo-eng-bot' ) {
+            if ( pr.user.type === 'Bot' || user === 'botwoo' ) {
               core.info( `${ user } is a bot, skipping.` );
               return;
             }
