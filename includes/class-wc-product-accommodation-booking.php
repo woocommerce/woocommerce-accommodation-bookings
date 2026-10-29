@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 	 * Mostly inherited from WC_Product_Booking (code reuse!) but overrides a few methods
 	 *
 	 * @class   WC_Product_Accommodation_Booking
-	 * @version x.x.x
+	 * @version 1.3.16
 	 */
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 

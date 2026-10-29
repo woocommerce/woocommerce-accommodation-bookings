@@ -1,4 +1,0 @@
-Significance: patch
-Type: dev
-
-Resolved PHPStan baseline entries without changing behavior.

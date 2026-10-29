@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Adds our new product type to the list of WooCommerce product types.
  *
  * @class   WC_Accommodation_Booking
- * @version x.x.x
+ * @version 1.3.16
  */
 class WC_Accommodation_Booking {
 

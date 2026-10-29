@@ -8,7 +8,7 @@
 /**
  * Exercise persisted pricing, migrations and order hooks.
  *
- * @version x.x.x
+ * @version 1.3.16
  */
 class Accommodation_Persistence_Test extends WP_UnitTestCase {
 	// phpcs:disable Squiz.Commenting.FunctionComment -- PHPUnit method names describe the contract under test.

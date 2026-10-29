@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
  * Addons integration class.
  *
  * @class   WC_Accommodation_Booking_Addons
- * @version x.x.x
+ * @version 1.3.16
  */
 class WC_Accommodation_Booking_Addons {
 

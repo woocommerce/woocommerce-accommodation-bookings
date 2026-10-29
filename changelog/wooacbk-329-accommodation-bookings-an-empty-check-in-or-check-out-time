@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Fixed availability being calculated for 1970 when a check-in or check-out time is empty.

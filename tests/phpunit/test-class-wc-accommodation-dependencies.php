@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Accommodation Bookings must refuse to load on a Bookings release older than its minimum.
  *
- * @version x.x.x
+ * @version 1.3.16
  */
 class TestAccommodationDependencies extends TestCase {
 

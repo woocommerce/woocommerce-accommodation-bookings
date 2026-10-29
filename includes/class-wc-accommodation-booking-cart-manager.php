@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) )
  * - We should display check-in/check-out times on the cart
  *
  * @class   WC_Accommodation_Booking_Cart_Manager
- * @version x.x.x
+ * @version 1.3.16
  */
 class WC_Accommodation_Booking_Cart_Manager {
 
