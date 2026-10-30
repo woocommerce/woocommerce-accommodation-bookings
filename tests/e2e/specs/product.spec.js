@@ -435,8 +435,9 @@ test.describe( 'Product Tests', () => {
 		// await expect(addToCardButton).toHaveClass(/disabled/);
 
 		await visitProductPage( page, product );
-		await fillBookingStartDate( page, getFutureDate( 1, 1 ), false );
-		await fillBookingEndDate( page, getFutureDate( 2, 1 ), false );
+		// Allow for month-end clamping and a site date ahead of the runner.
+		await fillBookingStartDate( page, getFutureDate( 33 ), false );
+		await fillBookingEndDate( page, getFutureDate( 34 ), false );
 		await expect(
 			page.locator( '.wc-bookings-booking-cost .booking-error' )
 		).not.toContainText( 'Booking cost:' );
