@@ -10,7 +10,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 	 * Mostly inherited from WC_Product_Booking (code reuse!) but overrides a few methods
 	 *
 	 * @class   WC_Product_Accommodation_Booking
-	 * @version 1.3.16
+	 * @version x.x.x
 	 */
 	class WC_Product_Accommodation_Booking extends WC_Product_Booking {
 
@@ -334,7 +334,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 								}
 							} else {
 								$qty_booked_in_block += $qty_to_add;
-								$resources[0]         = ( isset( $resources[0] ) ? $resources[0] : 0 ) - $qty_to_add;
+								$resources[0]        -= $qty_to_add;
 							}
 						}
 					}
