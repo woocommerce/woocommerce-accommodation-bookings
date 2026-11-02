@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Avoided database packet errors when caching large booking availability results.

@@ -349,7 +349,7 @@ if ( ! class_exists( 'WC_Product_Accommodation_Booking' ) && class_exists( 'WC_P
 				if ( $product_cache ) {
 					WC_Bookings_Cache::set_product_cache( $transient_name, $available_slots, YEAR_IN_SECONDS, $product_id );
 				} else {
-					set_transient( $transient_name, $available_slots, YEAR_IN_SECONDS );
+					WC_Bookings_Cache::set( $transient_name, $available_slots, YEAR_IN_SECONDS );
 				}
 			}
 
