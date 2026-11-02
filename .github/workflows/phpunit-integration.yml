@@ -76,7 +76,7 @@ jobs:
           [[ "$WC_MINIMUM" =~ ^[0-9]+\.[0-9]+$ ]] && WC_MINIMUM="$WC_MINIMUM.0"
           { echo "WP_MINIMUM=$WP_MINIMUM"; echo "WC_MINIMUM=$WC_MINIMUM"; echo "PHP_MINIMUM=$PHP_MINIMUM"; } >> "$GITHUB_ENV"
 
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
           php-version: ${{ matrix.php == 'minimum' && env.PHP_MINIMUM || matrix.php }}
           extensions: mysqli
@@ -128,7 +128,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: phpunit-integration-results-php${{ matrix.php }}-${{ matrix.versions }}
           path: ${{ runner.temp }}/phpunit-integration-results.xml
@@ -136,7 +136,7 @@ jobs:
 
       - name: Upload coverage report
         if: always() && hashFiles('coverage/clover.xml') != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-php
           path: coverage/
