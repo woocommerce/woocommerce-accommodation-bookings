@@ -6,8 +6,8 @@ applyTo: "**/*.php"
 
 ## DocBlock versioning tags
 
-- Every class, trait, and interface DocBlock has exactly one `@version` tag with the release that last changed the file.
-- When a PR modifies a file that declares a class, trait, or interface, set that DocBlock's `@version` to `x.x.x`. The `check-version.yml` workflow fails the PR otherwise.
-- Do not replace `x.x.x` with a guessed version. The release bump replaces every `x.x.x` with the version being released.
-- Flag a modified class, trait, or interface whose `@version` is not `x.x.x`. Do not flag `x.x.x` itself as a placeholder.
-- Ignore `@since` tags and method-level `@version` tags. Do not comment on missing, incorrect, or placeholder `@since` tags.
+- When modifying a PHP file that declares a class, trait, or interface, set its declaration’s DocBlock `@version` to `x.x.x`. Keep exactly one such tag.
+- `x.x.x` is intentional: release tooling replaces it with the released version. Do not substitute a guessed version or report the placeholder as unfinished work.
+- Report a missing or incorrect class, trait, or interface `@version` when it violates this workflow. Check the repository’s version-validation script and CI configuration.
+- Review `@since` and method-level `@version` tags for errors introduced or made misleading by the PR. Leave unrelated historical tag cleanup outside the review.
+- Follow the repository’s separate versioning conventions for template files.
