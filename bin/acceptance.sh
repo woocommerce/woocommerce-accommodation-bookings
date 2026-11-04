@@ -121,7 +121,7 @@ usage() {
 	echo -e "  ${CYAN}E2E_FILTER${NC}=@<tag> npm run env:test:e2e:run:ui"
 	echo
 	echo -e "${BOLD}GETTING STARTED${NC}"
-	echo -e "  ${GREY}1. Build the plugin${NC}             npm install && npm run build"
+	echo -e "  ${GREY}1. Build the plugin${NC}             see AGENTS.md"
 	echo -e "  ${GREY}2. Install the browser${NC}          npx playwright install chromium"
 	echo -e "  ${GREY}3. Provision the site (once)${NC}    npm run env:test:e2e:setup"
 	echo -e "  ${GREY}4. Run everything, headed${NC}       ${CYAN}npm run env:test:e2e:run:ui${NC}"
