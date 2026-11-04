@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 echo "Initializing WooCommerce Accommodation Bookings E2E"
 
