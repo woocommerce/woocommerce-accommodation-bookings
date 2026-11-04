@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# Seed the wp-env development site (localhost:$WP_ENV_PORT) with a browsable store:
-# store address, an admin and a customer with addresses, payment, shipping, tax,
-# and WooCommerce's sample products, then runs seed_dev_plugin.sh for the plugin's own data.
+# Seeds the wp-env development site (localhost:$WP_ENV_PORT) with a browsable store: store
+# address, admin and customer addresses, payment, shipping, tax and WooCommerce's sample
+# products, then runs seed_dev_plugin.sh for the plugin's data.
 #
-# Runs inside the `cli` container. Use `npm run env:dev:seed`, or `npm run env:dev:reset`
-# to wipe the development site and seed it again.
+# Runs inside the `cli` container via `npm run env:dev:seed`; `npm run env:dev:reset` wipes
+# the site and seeds again.
 #
 set -euo pipefail
 trap 'echo "Seeding failed; run npm run env:dev:reset to start over." >&2' ERR

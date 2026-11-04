@@ -3,8 +3,8 @@
 # Starts the wp-env tests site (.wp-env.test.json). The development site is `npm run env:start`.
 # Extra arguments go to `wp-env start`.
 #
-# The tests site bind-mounts tests/_output/debug.log, which is git-ignored,
-# and Docker turns a missing mount source into a directory, so make sure it is a file first.
+# The tests site bind-mounts the git-ignored tests/_output/debug.log; Docker turns a missing
+# mount source into a directory, so create the file first.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

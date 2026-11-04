@@ -37,9 +37,9 @@ The payment-status matrix also runs on Bookings 2.2.8, where Bookings' completio
 
 For an existing isolated WordPress test installation, set `WP_TESTS_DIR`, `WC_DIR`,
 `BOOKINGS_DIR` and `ADDONS_DIR` to its actual paths and run
-`vendor/bin/phpunit -c phpunit-integration.xml`. The wp-env tests site
-(`npm run env:test:e2e:setup`, see AGENTS.md) remains available for browser checks;
-it loads the same fixture factory through `npm run test:e2e:reset`.
+`vendor/bin/phpunit -c phpunit-integration.xml`. For browser checks, the wp-env tests
+site (`npm run env:test:e2e:setup`; see AGENTS.md) loads the same fixture factory through
+`npm run test:e2e:reset`.
 
 Historical pricing is the Accommodation 1.1.2 `_wc_booking_pricing` shape with
 `override_block` and `_wc_booking_base_cost`; 1.1.3 converts each override to a

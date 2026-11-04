@@ -63,15 +63,15 @@ composer test:isolated   # tests/isolated: changelog formatter round-trip, no Wo
 
 `phpunit.xml` loads `tests/phpunit/bootstrap.php`, which boots WP_Mock, defines a stub `WC_VERSION`, and loads `WC_Accommodation_Booking`. This is an isolated suite, not a full WordPress/WooCommerce/Bookings integration environment. Use it for supported isolated cases and Playwright or manual integration checks for behavior involving Bookings products, dates, availability, cart, or orders.
 
-Both suites run on the host, so there is no `env:test:unit`. The integration suite also runs on the host, against its own WordPress install and database (`tests/integration/README.md`), not on wp-env.
+These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host, not on wp-env, so there is no `env:test:unit`.
 
 ### wp-env
 
-wp-env (requires Docker) runs two separate sites, each from its own config: the **development** site (`.wp-env.json`) at `http://localhost:$WP_ENV_PORT/` for manual testing, and the **tests** site (`.wp-env.test.json`) at `http://localhost:$WP_ENV_TESTS_PORT/` for E2E (defaults when unset: 8888 and 8889). Every `env:*` and `env:test:*` script follows these variables. In a git worktree, export other ports before any `env:*` command (see [Worktrees](#worktrees)). `ACCOM_E2E`, `wp-cli.yml` and the E2E mu-plugins are on the tests site only.
+wp-env (requires Docker) runs two sites, each from its own config: the **development** site (`.wp-env.json`, `http://localhost:$WP_ENV_PORT/`, default 8888) for manual testing, and the **tests** site (`.wp-env.test.json`, `http://localhost:$WP_ENV_TESTS_PORT/`, default 8889) for E2E. Every `env:*` script follows these variables; in a git worktree, export other ports before any `env:*` command (see [Worktrees](#worktrees)). `ACCOM_E2E`, `wp-cli.yml` and the E2E mu-plugins are on the tests site only.
 
-A `.wp-env.override.json` left by older e2e runs now merges into the Dev site; delete it if you didn't write it.
+A `.wp-env.override.json` left by an older e2e run merges into the development site; delete it if you didn't write it.
 
-To run a raw wp-env command against the tests site, use `npm run wp-env:test -- <command>` (for example `npm run wp-env:test -- run cli wp plugin list`). It passes `--config .wp-env.test.json` and the tests port. Plain `./node_modules/.bin/wp-env` targets the development site.
+`npm run wp-env:test -- <command>` runs a raw wp-env command against the tests site (`--config .wp-env.test.json` plus the tests port), for example `npm run wp-env:test -- run cli wp plugin list`. Plain `./node_modules/.bin/wp-env` targets the development site.
 
 ```bash
 npm run env:start          # Start the development site
@@ -82,11 +82,11 @@ npm run env:test:stop      # Stop its containers (preserves data)
 npm run env:test:destroy   # Remove its containers and data
 ```
 
-WooCommerce Bookings is a private download. `npm run env:test:e2e:setup` fetches the latest `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself, for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`, and state the version tested.
+`npm run env:test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `npm run env:test:start` and `npm run env:test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
 
 ### Development Site
 
-Requires a running wp-env (`npm run env:start`).
+Requires a running development site (`npm run env:start`).
 
 ```bash
 npm run env:dev:seed   # Seed a browsable store (runs once)
@@ -94,11 +94,11 @@ npm run env:dev:reset   # Wipe the development site and seed it again
 ```
 
 - Logins: `admin` / `password`, `customer` / `password`.
-- Seeds store settings, payment (Dummy), shipping, tax and WooCommerce sample products. When `woocommerce-bookings.zip` is in the checkout root, it also installs Bookings and adds one accommodation product, "Sea View Room"; without it the site still starts and seeds, without that product.
+- Seeds store settings, Dummy payments, shipping, tax and WooCommerce sample products. When `woocommerce-bookings.zip` is in the checkout root, it also installs Bookings and adds one accommodation product, "Sea View Room"; without it, the seed skips both.
 
 ### E2E Tests
 
-The Playwright suite runs against the wp-env **tests** site (admin `admin` / `password`, customer `customer` / `password`). Build the plugin (`npm run build:dev`) and install the browser (`./node_modules/.bin/playwright install chromium`) first.
+The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`npm run build:dev`) and install the browser (`./node_modules/.bin/playwright install chromium`).
 
 ```bash
 npm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
@@ -110,16 +110,15 @@ npm run env:test:e2e                              # Full pipeline, as CI (setup,
 npm run env:test:e2e:help                         # All subcommands, E2E_* knobs and examples
 ```
 
-- `bin/acceptance.sh` reads the tests site port from wp-env and exports `ACCOM_E2E_URL`, which `tests/e2e/config/index.js` reads; arguments after `run` go to `playwright test` (for example `npm run env:test:e2e:run -- --debug`).
+- `bin/acceptance.sh` exports the tests site's URL as `ACCOM_E2E_URL` for `tests/e2e/config/index.js`; arguments after `run` go to `playwright test` (for example `npm run env:test:e2e:run -- --debug`).
 - The tests site is seeded by `npm run env:test:e2e:seed` (`tests/e2e/bin/initialize.sh`: Bookings and Bookings Availability from their ZIPs, users, pages, store settings and the E2E mu-plugins). It fails until `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` are in the checkout root.
 - The regression journeys (`npm run test:e2e:reset`, then `npm run test:e2e:regression`) are described in `tests/e2e/README.md`.
 - Extend the existing Playwright specs in `tests/e2e/specs/` and report which scenarios ran. A foundational or focused run is not full-suite coverage; identify behavior that still needs manual verification.
 
 ### Worktrees
 
-Each concurrently running worktree needs a unique port pair; otherwise wp-env containers
-collide with the main checkout or another worktree. Export them once per shell, before any
-`env:*` command:
+Each concurrently running worktree needs a unique port pair, or its wp-env containers collide
+with the main checkout or another worktree. Export them once per shell, before any `env:*` command:
 
 ```bash
 export WP_ENV_PORT=8890 WP_ENV_TESTS_PORT=8891
@@ -127,9 +126,11 @@ npm run env:start
 npm run env:test:start
 ```
 
-The site URLs follow the ports. E2E targets the running tests site
-(`bin/acceptance.sh` reads its port from wp-env and exports it as `ACCOM_E2E_URL`), so worktrees can run E2E side by side.
-Re-export the ports in any new shell: `env:test:e2e:run` and `env:test:e2e:reset` find the running port by themselves, but `env:test:start` and `env:test:e2e:setup` without them move the tests site to port 8889. Destroy both sites before removing the worktree (the semicolon is deliberate: a site that was never started exits 1):
+Site URLs follow the ports. `bin/acceptance.sh` reads the tests site's port from wp-env and exports it
+as `ACCOM_E2E_URL`, so worktrees can run E2E side by side. Re-export the ports in every new shell:
+`env:test:e2e:run` and `env:test:e2e:reset` find the running port by themselves, but `env:test:start` and
+`env:test:e2e:setup` without them move the tests site to port 8889. Destroy both sites before removing
+the worktree (the semicolon is deliberate: a site that was never started exits 1):
 
 ```bash
 npm run env:destroy -- --force; npm run env:test:destroy -- --force    # with the same ports exported
