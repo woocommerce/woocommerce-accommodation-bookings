@@ -1,4 +1,4 @@
 Significance: patch
 Type: fix
 
-Prevent a fatal error on the Rates tab for accommodation products with older rates that have no cost.
+Fixed a fatal error on the product edit screen when a booking pricing rule has an empty or non-numeric cost.

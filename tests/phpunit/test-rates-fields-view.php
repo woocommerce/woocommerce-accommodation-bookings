@@ -8,22 +8,17 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Legacy modifier rates must render without a fatal error.
+ * Pricing rules with a modifier must render without a fatal error.
+ *
+ * @version x.x.x
  */
 class TestAccommodationRatesFieldsView extends TestCase {
 
 	/**
-	 * Legacy modifier rows render the base cost adjusted by the stored cost, even when that cost is not numeric.
-	 *
-	 * @dataProvider legacy_modifier_rates
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 *
-	 * @param string $modifier Stored modifier.
-	 * @param mixed  $cost     Stored cost.
-	 * @param string $expected Expected block cost field value.
+	 * Set up WP_Mock and the WordPress functions the view calls.
 	 */
-	public function test_legacy_modifier_rate_renders_block_cost( $modifier, $cost, $expected ) {
+	public function setUp(): void {
+		parent::setUp();
 		WP_Mock::setUp();
 		if ( ! defined( 'ABSPATH' ) ) {
 			define( 'ABSPATH', __DIR__ . '/' );
@@ -34,7 +29,26 @@ class TestAccommodationRatesFieldsView extends TestCase {
 		WP_Mock::userFunction( 'esc_html_e', array( 'return' => null ) );
 		WP_Mock::userFunction( 'selected', array( 'return' => '' ) );
 		WP_Mock::userFunction( 'get_post_meta', array( 'return' => '100' ) );
+	}
 
+	/**
+	 * Tear down WP_Mock.
+	 */
+	public function tearDown(): void {
+		WP_Mock::tearDown();
+		parent::tearDown();
+	}
+
+	/**
+	 * Modifier rows render the base cost adjusted by the stored cost, even when that cost is not numeric.
+	 *
+	 * @dataProvider modifier_rates
+	 *
+	 * @param string $modifier Stored modifier.
+	 * @param mixed  $cost     Stored cost.
+	 * @param string $expected Expected block cost field value.
+	 */
+	public function test_modifier_rate_renders_block_cost( $modifier, $cost, $expected ) {
 		$rate    = array(
 			'type'     => 'custom',
 			'modifier' => $modifier,
@@ -46,24 +60,27 @@ class TestAccommodationRatesFieldsView extends TestCase {
 		include __DIR__ . '/../../includes/admin/views/html-accommodation-booking-rates-fields.php';
 		$html = ob_get_clean();
 
-		$this->assertMatchesRegularExpression(
-			'/name="wc_accommodation_booking_pricing_block_cost\[\]" value="\s*' . preg_quote( $expected, '/' ) . '"/',
+		$this->assertStringContainsString(
+			'name="wc_accommodation_booking_pricing_block_cost[]" value="' . $expected . '"',
 			$html
 		);
-		WP_Mock::tearDown();
 	}
 
 	/**
-	 * Stored modifier and cost pairs, including the non-numeric costs older rates can hold.
+	 * Stored modifier and cost pairs, including the non-numeric costs a blank block cost leaves behind.
 	 *
 	 * @return array
 	 */
-	public function legacy_modifier_rates() {
+	public function modifier_rates() {
 		return array(
-			'minus empty cost'   => array( 'minus', '', '100' ),
-			'plus empty cost'    => array( 'plus', '', '100' ),
-			'minus numeric cost' => array( 'minus', '20', '80' ),
-			'plus numeric cost'  => array( 'plus', '20.5', '120.5' ),
+			'minus empty cost'         => array( 'minus', '', '100' ),
+			'plus empty cost'          => array( 'plus', '', '100' ),
+			'minus blank cost'         => array( 'minus', ' ', '100' ),
+			'minus non-numeric cost'   => array( 'minus', 'abc', '100' ),
+			'minus comma decimal cost' => array( 'minus', '10,5', '90' ),
+			'minus numeric cost'       => array( 'minus', '20', '80' ),
+			'plus numeric cost'        => array( 'plus', '20.5', '120.5' ),
+			'minus null cost'          => array( 'minus', null, '' ),
 		);
 	}
 }
