@@ -106,7 +106,7 @@ jobs:
         env:
           ACCOM_TEST_DOWNLOADS: ${{ runner.temp }}/downloads
         run: |
-          sudo /etc/init.d/mysql start
+          sudo systemctl start mysql.service
           ./tests/bin/setup-integration.sh "$RUNNER_TEMP/accommodation" "$WP_VERSION" "$WC_VERSION" "$BOOKINGS_VERSION" "$ADDONS_VERSION"
 
       - name: Verify installed versions
