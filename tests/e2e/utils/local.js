@@ -7,10 +7,12 @@ function wp( ...args ) {
 		args[ 1 ] = path.join( native, args[ 1 ] );
 	}
 	return execFileSync(
-		native ? 'wp' : 'npx',
+		native
+			? 'wp'
+			: path.resolve( __dirname, '../../../node_modules/.bin/wp-env' ),
 		native
 			? [ `--path=${ native }`, ...args ]
-			: [ 'wp-env', 'run', 'tests-cli', 'wp', ...args ],
+			: [ 'run', 'tests-cli', 'wp', ...args ],
 		{
 			cwd: path.resolve( __dirname, '../../..' ),
 			encoding: 'utf8',
