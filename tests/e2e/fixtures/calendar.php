@@ -6,7 +6,7 @@
  */
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI || ! defined( 'ACCOM_E2E' ) || ! ACCOM_E2E ) {
-	exit;
+	throw new RuntimeException( 'The calendar fixture requires an ACCOM_E2E test store and WP-CLI.' );
 }
 
 $fixture_key = 'wc_accommodation_e2e_calendar_fixture';

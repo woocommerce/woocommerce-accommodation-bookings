@@ -343,27 +343,98 @@ test.describe( 'Product Tests', () => {
 		).toBeVisible();
 	} );
 
-	test( 'Availability > Bookings Can Be Made Starting - Month/Week/Day - into the future Setting - @foundational', async ( {
+	for ( const { unit, value, before, after, boundary } of [
+		{ unit: 'day', value: '4', before: 1, after: 6, boundary: 4 },
+		{ unit: 'week', value: '1', before: 1, after: 9, boundary: 7 },
+		{ unit: 'month', value: '1', before: 1, after: 33, boundary: 33 },
+	] ) {
+		test( `Minimum advance booking in ${ unit }s rejects early stays and accepts later stays - @foundational`, async ( {
+			page,
+		} ) => {
+			const product = await createProduct( adminPage, {
+				title: `Accommodation minimum advance ${ unit }`,
+				baseCost: '10.00',
+				availabilityStart: value,
+				availabilityStartUnit: unit,
+			} );
+			await visitProductPage( page, product );
+			await fillBookingStartDate( page, getFutureDate( before ), false );
+			await fillBookingEndDate(
+				page,
+				getFutureDate( before + 2 ),
+				false
+			);
+			await expect(
+				page.locator( '.wc-bookings-booking-cost .booking-error' )
+			).toBeVisible();
+			await expect(
+				page.locator( '.single_add_to_cart_button' )
+			).toHaveClass( /disabled/ );
+
+			await visitProductPage( page, product );
+			await fillBookingStartDate(
+				page,
+				getFutureDate( boundary ),
+				false
+			);
+			await fillBookingEndDate(
+				page,
+				getFutureDate( boundary + 2 ),
+				false
+			);
+			await expect(
+				page.locator( '.wc-bookings-booking-cost' )
+			).toContainText( 'Booking cost:' );
+			await expect(
+				page.locator( '.single_add_to_cart_button' )
+			).not.toHaveClass( /disabled/ );
+		} );
+
+		test( `Maximum advance booking in ${ unit }s rejects late stays and accepts earlier stays - @foundational`, async ( {
+			page,
+		} ) => {
+			const product = await createProduct( adminPage, {
+				title: `Accommodation maximum advance ${ unit }`,
+				baseCost: '10.00',
+				availabilityEnd: value,
+				availabilityEndUnit: unit,
+			} );
+			await visitProductPage( page, product );
+			await fillBookingStartDate( page, getFutureDate( after ), false );
+			await fillBookingEndDate( page, getFutureDate( after + 2 ), false );
+			await expect(
+				page.locator( '.wc-bookings-booking-cost .booking-error' )
+			).toBeVisible();
+			await expect(
+				page.locator( '.single_add_to_cart_button' )
+			).toHaveClass( /disabled/ );
+
+			await visitProductPage( page, product );
+			await fillBookingStartDate( page, getFutureDate( before ), false );
+			await fillBookingEndDate(
+				page,
+				getFutureDate( before + 2 ),
+				false
+			);
+			await expect(
+				page.locator( '.wc-bookings-booking-cost' )
+			).toContainText( 'Booking cost:' );
+			await expect(
+				page.locator( '.single_add_to_cart_button' )
+			).not.toHaveClass( /disabled/ );
+		} );
+	}
+
+	test( 'A stay crossing the minimum advance boundary is rejected - @foundational', async ( {
 		page,
 	} ) => {
-		const productData = {
-			title: 'Accommodation product #4',
+		const product = await createProduct( adminPage, {
+			title: 'Accommodation minimum crossing boundary',
 			baseCost: '10.00',
 			availabilityStart: '4',
 			availabilityStartUnit: 'day',
-		};
-		const product = await createProduct( adminPage, productData );
-
+		} );
 		await visitProductPage( page, product );
-		await unBlockUI( page );
-
-		const addToCardButton = await page.locator(
-			'.single_add_to_cart_button'
-		);
-
-		// The date picker opens on the first bookable day's month, which is not
-		// today's month in the last days of a month, so check the first
-		// selectable day instead of today's cell.
 		const firstBookableDay = page
 			.locator( '.ui-datepicker-calendar td[data-handler="selectDay"]' )
 			.first();
@@ -376,81 +447,37 @@ test.describe( 'Product Tests', () => {
 			'data-month',
 			String( minDate.month() )
 		);
-		// The link text is the day number followed by a screen-reader label.
 		await expect( firstBookableDay.locator( 'a' ) ).toHaveText(
 			new RegExp( `^${ minDate.date() }(?!\\d)` )
 		);
-
-		// TODO: UNCOMMENT THIS. (commented due to bug)
-		// Verify Booking can't be made before 4 days into the future
-		// await fillBookingStartDate(page, getFutureDate(1));
-		// await fillBookingEndDate(page, getFutureDate(4));
-		// await expect(
-		// 	page.locator('.wc-bookings-booking-cost .booking-error')
-		// ).not.toContainText('Booking cost:');
-		// await expect(addToCardButton).toHaveClass(/disabled/);
-
-		await visitProductPage( page, product );
 		await fillBookingStartDate( page, getFutureDate( 1 ), false );
-		await fillBookingEndDate( page, getFutureDate( 3 ), false );
+		await fillBookingEndDate( page, getFutureDate( 4 ), false );
 		await expect(
 			page.locator( '.wc-bookings-booking-cost .booking-error' )
-		).not.toContainText( 'Booking cost:' );
-		await expect( addToCardButton ).toHaveClass( /disabled/ );
-
-		await visitProductPage( page, product );
-		await fillBookingStartDate( page, getFutureDate( 4 ), false );
-		await fillBookingEndDate( page, getFutureDate( 6 ), false );
+		).toBeVisible();
 		await expect(
-			page.locator( '.wc-bookings-booking-cost' )
-		).toContainText( 'Booking cost:' );
-		await expect( addToCardButton ).not.toHaveClass( /disabled/ );
+			page.locator( '.single_add_to_cart_button' )
+		).toHaveClass( /disabled/ );
 	} );
 
-	test( 'Availability > Booking Can Be Booked Till Setting - @foundational', async ( {
+	test( 'A stay may check out beyond the maximum advance window when check-in is within it - @foundational', async ( {
 		page,
 	} ) => {
-		const productData = {
-			title: 'Accommodation product #5',
+		const product = await createProduct( adminPage, {
+			title: 'Accommodation maximum crossing boundary',
 			baseCost: '10.00',
-			availabilityEnd: '1',
-			availabilityEndUnit: 'month',
-		};
-		const product = await createProduct( adminPage, productData );
-
+			availabilityEnd: '4',
+			availabilityEndUnit: 'day',
+		} );
 		await visitProductPage( page, product );
-		await unBlockUI( page );
-
-		const addToCardButton = await page.locator(
-			'.single_add_to_cart_button'
-		);
-
-		// TODO: UNCOMMENT THIS. (commented due to bug)
-		// Verify Booking can't be made after 1 month into the future
-		// await fillBookingStartDate(page, getFutureDate(-1, 1));
-		// await fillBookingEndDate(page, getFutureDate(1, 1));
-		// await expect(
-		// 	page.locator('.wc-bookings-booking-cost .booking-error')
-		// ).not.toContainText('Booking cost:');
-		// await expect(addToCardButton).toHaveClass(/disabled/);
-
-		await visitProductPage( page, product );
-		// Allow for month-end clamping and a site date ahead of the runner.
-		await fillBookingStartDate( page, getFutureDate( 33 ), false );
-		await fillBookingEndDate( page, getFutureDate( 34 ), false );
-		await expect(
-			page.locator( '.wc-bookings-booking-cost .booking-error' )
-		).not.toContainText( 'Booking cost:' );
-		await expect( addToCardButton ).toHaveClass( /disabled/ );
-
-		// Booking can be made till 1 month into the future
-		await visitProductPage( page, product );
-		await fillBookingStartDate( page, getFutureDate( 1 ), false );
-		await fillBookingEndDate( page, getFutureDate( 2 ), false );
+		await fillBookingStartDate( page, getFutureDate( 3 ), false );
+		await fillBookingEndDate( page, getFutureDate( 5 ), false );
 		await expect(
 			page.locator( '.wc-bookings-booking-cost' )
 		).toContainText( 'Booking cost:' );
-		await expect( addToCardButton ).not.toHaveClass( /disabled/ );
+		await expect(
+			page.locator( '.single_add_to_cart_button' )
+		).not.toHaveClass( /disabled/ );
 	} );
 
 	test( 'Verify Rate Setting should work as expected - @foundational', async ( {
