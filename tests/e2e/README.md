@@ -5,18 +5,20 @@ independent customer sessions. The new journeys use classic and block checkout;
 no customer is given administrator credentials. Their room factory comes from
 `tests/integration/fixtures.php`.
 
-Install Node 24, locked npm/Composer dependencies, Docker and a licensed Bookings
-release (tested with 3.10.0). Extract Bookings outside this repository, then run:
+Install Node 24, locked npm/Composer dependencies, Docker and access to the private
+Bookings releases (tested with 3.10.0). Then run, from the checkout root:
 
 ```bash
-BOOKINGS_DIR=/absolute/path/to/woocommerce-bookings npm run test:e2e:setup
-ACCOM_E2E_URL=http://localhost:9021 npm run test:e2e:regression
-ACCOM_E2E_URL=http://localhost:9021 npm run test:e2e:regression -- --grep 'independent customers'
+npm run env:test:e2e:setup    # Once: download the Bookings plugins, start, reset and seed the wp-env tests site
 npm run test:e2e:reset
+npm run test:e2e:regression
+npm run test:e2e:regression -- --grep 'independent customers'
 ```
 
-Setup uses the existing wp-env runner on private ports 9020/9021 and refuses to
-replace an existing override. With an existing **dedicated test store**, enable
+Setup runs on the wp-env tests site (`.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`,
+default 8889); `bin/acceptance.sh` finds the port by itself, so worktrees on other ports
+need no `ACCOM_E2E_URL`. Later, `npm run env:test:start` and `npm run env:test:e2e:seed`
+bring a stopped site back. With an existing **dedicated test store**, enable
 `ACCOM_E2E` in wp-config, activate WooCommerce/Bookings/Accommodation and Storefront,
 copy `fixtures/local.php` into `wp-content/mu-plugins/accommodation-e2e.php`, and
 run the reset command.
@@ -26,7 +28,9 @@ to `true`, `WP_DEBUG_DISPLAY` set to `false`, and
 `wp-content/mu-plugins/`.
 Whenever `fixtures/local.php` changes, copy it into the test store again before running.
 For a native local WordPress server, set
-`ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `ACCOM_E2E_URL` before reset/run.
+`ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `ACCOM_E2E_URL` before reset, and
+run Playwright directly (`ACCOM_E2E_REGRESSION=1 ./node_modules/.bin/playwright test --config tests/e2e/playwright.config.js`):
+`test:e2e:regression` runs against the wp-env tests site.
 This switches only the WP-CLI transport; the browser and plugin paths are the same.
 
 Every new test resets records owned by these fixtures: their products, resources,
@@ -35,7 +39,7 @@ Use a separate database and WordPress directory from the PHPUnit suite. No live
 payments, emails, calendars or external HTTP services are used; email bodies are
 captured at WordPress's mail boundary and checked against saved booking dates.
 
-The full existing suite is `npm run test:e2e`; it also needs its existing email-log
+The full existing suite is `npm run env:test:e2e:run`; it also needs its existing email-log
 plugin and admin/customer setup described in `bin/initialize.sh`. The focused
 regression command keeps the same Playwright config but omits that suite's admin
 login/API-key setup. Existing order and confirmation-email journeys remain intact.

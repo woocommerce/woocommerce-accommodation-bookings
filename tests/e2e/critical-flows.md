@@ -34,7 +34,7 @@ The maximum advance window limits check-in. A customer whose stay begins within 
 
 ## Running the suite
 
-Use the existing E2E setup and `npm run test:e2e`. Setup now installs Bookings Availability as well as Bookings. A focused run is `npm run test:e2e -- --grep 'advance|Calendar block' --retries=0`. No production feature flag is required. Fixtures require the existing `ACCOM_E2E` test-store constant and must run only on a dedicated test site.
+Use the existing E2E setup and `npm run env:test:e2e:run`. Setup now installs Bookings Availability as well as Bookings. A focused run is `E2E_FILTER='advance|Calendar block' npm run env:test:e2e:run -- --retries=0`. No production feature flag is required. Fixtures require the existing `ACCOM_E2E` test-store constant and must run only on a dedicated test site.
 
 The Calendar fixture creates its own product, seven-night booking and page, and deletes them in reverse order in `finally`. It does not change other products or availability settings. The existing independent fixture tests, persistence journeys and PHP-warning teardown remain part of the full suite.
 

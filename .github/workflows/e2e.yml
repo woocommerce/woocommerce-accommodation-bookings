@@ -69,10 +69,13 @@ jobs:
           mv "$RUNNER_TEMP/woocommerce-bookings-availability.zip" .
 
       - name: Setup WP environment
-        run: npm run env:start
+        run: npm run env:test:start
+
+      - name: Seed the tests site
+        run: npm run env:test:e2e:seed
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: npm run env:test:e2e:run
 
       - name: Annotate retry-only passes
         if: always()

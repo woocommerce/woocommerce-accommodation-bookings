@@ -7,7 +7,7 @@ const { test, expect } = require( '@playwright/test' );
  * Internal dependencies
  */
 const { unBlockUI } = require( '../utils' );
-const { wp } = require( '../utils/local' );
+const { pluginDir, wp } = require( '../utils/local' );
 
 const CHECK_IN = 'Select check-in';
 const STAY_SELECTED = 'Selected! Re-select to change your check-in date.';
@@ -19,7 +19,7 @@ test.describe( 'Single Product blocks', () => {
 		fixture = JSON.parse(
 			wp(
 				'eval-file',
-				'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/single-product-blocks.php'
+				`${ pluginDir }/tests/e2e/fixtures/single-product-blocks.php`
 			)
 				.split( 'ACCOM_RESULT:' )
 				.pop()
