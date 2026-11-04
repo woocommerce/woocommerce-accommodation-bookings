@@ -13,11 +13,18 @@ on:
 jobs:
   e2e:
     name: E2E Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 25
 
     steps:
       # Runs before checkout so no pull-request code or dependency can observe the token.
+      - name: Verify Ubuntu 26.04 runner
+        shell: bash
+        run: |
+          . /etc/os-release
+          printf "Runner OS: %s %s\n" "$ID" "$VERSION_ID"
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
       - name: Download WooCommerce Bookings
         run: |
           if [[ -z "$GH_TOKEN" ]]; then
@@ -43,7 +50,7 @@ jobs:
           path: |
             vendor
             ~/.composer/cache
-          key: composer-${{ hashFiles('composer.lock') }}
+          key: ubuntu-26.04-composer-${{ hashFiles('composer.lock') }}
 
       - name: Node cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -51,7 +58,7 @@ jobs:
           path: |
             node_modules
             ~/.npm
-          key: node-${{ hashFiles('package-lock.json') }}
+          key: ubuntu-26.04-node-${{ hashFiles('package-lock.json') }}
 
       - name: Node install
         run: npm ci

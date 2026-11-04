@@ -25,7 +25,7 @@ permissions:
 jobs:
   integration:
     name: PHP integration tests (PHP ${{ matrix.php }}, ${{ matrix.versions }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -44,6 +44,13 @@ jobs:
       ACCOM_TEST_DB_HOST: 127.0.0.1:3306
     steps:
       # Runs before checkout so no pull-request code or dependency can observe the token.
+      - name: Verify Ubuntu 26.04 runner
+        shell: bash
+        run: |
+          . /etc/os-release
+          printf "Runner OS: %s %s\n" "$ID" "$VERSION_ID"
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
       - name: Download WooCommerce Bookings and Product Add-Ons
         env:
           GH_TOKEN: ${{ secrets.ORG_DOWNLOADS }}

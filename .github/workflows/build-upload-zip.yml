@@ -9,11 +9,18 @@ permissions:
 jobs:
   build_project:
         name: Build and upload
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         timeout-minutes: 5
 
         steps:
 
+            - name: Verify Ubuntu 26.04 runner
+              shell: bash
+              run: |
+                . /etc/os-release
+                printf "Runner OS: %s %s\n" "$ID" "$VERSION_ID"
+                test "$ID" = ubuntu
+                test "$VERSION_ID" = 26.04
             - name: Checkout repository
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -30,7 +37,7 @@ jobs:
                   cache-name: cache-node-modules-v20260518
               with:
                   path: node_modules
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+                  key: ubuntu-26.04-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
             - name: Install Node dependencies
               if: steps.cache-node-modules.outputs.cache-hit != 'true'

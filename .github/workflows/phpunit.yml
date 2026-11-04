@@ -9,7 +9,7 @@ permissions:
 jobs:
   phpunit:
     name: PHP unit tests (PHP ${{ matrix.php }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     strategy:
       fail-fast: false
@@ -18,6 +18,13 @@ jobs:
         # tested one ("PHP tested up to").
         php: ['7.4', '8.4']
     steps:
+      - name: Verify Ubuntu 26.04 runner
+        shell: bash
+        run: |
+          . /etc/os-release
+          printf "Runner OS: %s %s\n" "$ID" "$VERSION_ID"
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
