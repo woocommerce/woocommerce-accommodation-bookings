@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Updated CI setup for Ubuntu 26.04 runners.
