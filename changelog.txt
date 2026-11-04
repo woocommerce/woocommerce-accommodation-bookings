@@ -1,5 +1,8 @@
 *** Changelog ***
 
+= 1.3.17 - 2026-11-04 =
+* Fix - Avoided database packet errors when caching large booking availability results.
+
 = 1.3.16 - 2026-10-29 =
 * Fix - Fixed a fatal error when availability is requested for a resource that is not assigned to the accommodation product.
 * Fix - Fixed resource availability rules being ignored when counting available nights for products with resources.

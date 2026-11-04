@@ -1,3 +1,0 @@
-Significance: patch
-Type: dev
-Comment: Request a team review on pull requests from external authors; CI only, nothing ships to merchants.
