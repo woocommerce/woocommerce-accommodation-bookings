@@ -7,7 +7,7 @@ const { test, expect } = require( '@playwright/test' );
  * Internal dependencies
  */
 const { visitProductPage } = require( '../utils' );
-const { wp } = require( '../utils/local' );
+const { pluginDir, wp } = require( '../utils/local' );
 
 const CHECK_OUT_ONLY = 'Available for check-out only.';
 const CHECK_IN_ONLY = 'Available for check-in only.';
@@ -22,7 +22,7 @@ test.describe( 'Partially booked days', () => {
 		fixture = JSON.parse(
 			wp(
 				'eval-file',
-				'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/partial-days.php'
+				`${ pluginDir }/tests/e2e/fixtures/partial-days.php`
 			)
 				.split( 'ACCOM_RESULT:' )
 				.pop()
@@ -93,7 +93,7 @@ test.describe( 'Partially booked days', () => {
 		const second = JSON.parse(
 			wp(
 				'eval-file',
-				'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/partial-day-forms.php',
+				`${ pluginDir }/tests/e2e/fixtures/partial-day-forms.php`,
 				String( fixture.product ),
 				String( fixture.booking )
 			)

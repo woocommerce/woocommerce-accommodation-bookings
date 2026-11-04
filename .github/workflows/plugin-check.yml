@@ -45,6 +45,7 @@ jobs:
           .gitattributes
           .nvmrc
           .wp-env.json
+          .wp-env.test.json
           .stylelintrc.json
           .markdownlintignore
           .npmpackagejsonlintrc.json
