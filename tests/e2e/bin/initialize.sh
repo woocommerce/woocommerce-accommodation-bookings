@@ -33,9 +33,9 @@ for plugin in woocommerce-bookings woocommerce-bookings-availability; do
         exit 1
     fi
 done
-npm run --silent wp-env:test -- run cli wp plugin install --activate "./${plugin_dir}/woocommerce-bookings.zip"
+npm run --silent wp-env:test -- run cli wp plugin install --force --activate "./${plugin_dir}/woocommerce-bookings.zip"
 npm run --silent wp-env:test -- run cli wp plugin activate "${PWD##*/}"
-npm run --silent wp-env:test -- run cli wp plugin install --activate "./${plugin_dir}/woocommerce-bookings-availability.zip"
+npm run --silent wp-env:test -- run cli wp plugin install --force --activate "./${plugin_dir}/woocommerce-bookings-availability.zip"
 
 # Local regression fixtures capture mail and block external services.
 npm run --silent wp-env:test -- run cli mkdir -p /var/www/html/wp-content/mu-plugins

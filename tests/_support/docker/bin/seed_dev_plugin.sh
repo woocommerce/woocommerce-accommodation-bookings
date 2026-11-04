@@ -13,7 +13,7 @@ if [ ! -f "${plugin_dir}/woocommerce-bookings.zip" ]; then
 	exit 0
 fi
 echo "Installing WooCommerce Bookings..."
-wp plugin install --activate "${plugin_dir}/woocommerce-bookings.zip"
+wp plugin install --force --activate "${plugin_dir}/woocommerce-bookings.zip"
 
 echo "Adding an accommodation product..."
 # The room factory the integration and E2E fixtures use: nightly price 100, one room.
