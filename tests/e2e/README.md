@@ -15,10 +15,10 @@ npm run test:e2e:regression
 npm run test:e2e:regression -- --grep 'independent customers'
 ```
 
-Setup runs on the wp-env tests site (`.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`,
-default 8889); `bin/acceptance.sh` finds the port by itself, so worktrees on other ports
-need no `ACCOM_E2E_URL`. Later, `npm run env:test:start` and `npm run env:test:e2e:seed`
-bring a stopped site back. With an existing **dedicated test store**, enable
+Setup uses the wp-env tests site (`.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`,
+default 8889). `bin/acceptance.sh` finds its port, so worktrees on other ports need no
+`ACCOM_E2E_URL`. `npm run env:test:start` and `npm run env:test:e2e:seed` bring a stopped
+site back. With an existing **dedicated test store**, enable
 `ACCOM_E2E` in wp-config, activate WooCommerce/Bookings/Accommodation and Storefront,
 copy `fixtures/local.php` into `wp-content/mu-plugins/accommodation-e2e.php`, and
 run the reset command.
@@ -29,8 +29,8 @@ to `true`, `WP_DEBUG_DISPLAY` set to `false`, and
 Whenever `fixtures/local.php` changes, copy it into the test store again before running.
 For a native local WordPress server, set
 `ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `ACCOM_E2E_URL` before reset, and
-run Playwright directly (`ACCOM_E2E_REGRESSION=1 npx playwright test --config tests/e2e/playwright.config.js`):
-`test:e2e:regression` runs against the wp-env tests site.
+run Playwright directly (`ACCOM_E2E_REGRESSION=1 npx playwright test --config tests/e2e/playwright.config.js`),
+since `test:e2e:regression` targets the wp-env tests site.
 This switches only the WP-CLI transport; the browser and plugin paths are the same.
 
 Every new test resets records owned by these fixtures: their products, resources,
