@@ -8,9 +8,16 @@ permissions:
 
 jobs:
   phpstan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     steps:
+      - name: Verify Ubuntu 26.04 runner
+        shell: bash
+        run: |
+          . /etc/os-release
+          printf "Runner OS: %s %s\n" "$ID" "$VERSION_ID"
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
@@ -24,8 +31,8 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ubuntu-26.04-${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ubuntu-26.04-${{ runner.os }}-composer-
       - run: composer install --prefer-dist --no-progress --no-interaction
       - name: Install integration stubs
         run: composer install --prefer-dist --no-scripts --no-progress --no-interaction --working-dir=tools/php-stubs
