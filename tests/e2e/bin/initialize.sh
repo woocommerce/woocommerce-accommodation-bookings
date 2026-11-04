@@ -31,7 +31,7 @@ if [ ! -f "./woocommerce-bookings.zip" ]; then
     echo "https://github.com/woocommerce/woocommerce-bookings/releases"
     exit 1
 fi
-npm run --silent wp-env:test -- run cli wp plugin install --activate "./${plugin_dir}/woocommerce-bookings.zip"
+npm run --silent wp-env:test -- run cli wp plugin install --force --activate "./${plugin_dir}/woocommerce-bookings.zip"
 npm run --silent wp-env:test -- run cli wp plugin activate "${PWD##*/}"
 
 # Local regression fixtures capture mail and block external services.
