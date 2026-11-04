@@ -13,7 +13,7 @@ rmdir tests/_output/debug.log 2>/dev/null || true
 touch tests/_output/debug.log
 
 # Installs that mounted a directory keep one at the mount point, and a file can't mount onto it.
-install_path=$(npm run --silent wp-env:test -- status --json 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).installPath' 2>/dev/null || true)
+install_path=$(npm run --silent wp-env:test -- status --json 2>/dev/null | sed -n 's/.*"installPath": *"\([^"]*\)".*/\1/p' || true)
 if [ -n "$install_path" ]; then
 	rmdir "${install_path}/WordPress/wp-content/debug.log" 2>/dev/null || true
 fi
