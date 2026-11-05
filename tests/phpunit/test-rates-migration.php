@@ -131,30 +131,35 @@ class TestAccommodationRatesMigration extends TestCase {
 				array( 'override_block' => '' ),
 				array( 'override_block' => '70' ),
 				$current,
+				'x',
 			)
 		);
 
 		$this->assertSame( array( 'plus', 'plus', 'minus' ), array_column( $rows, 'modifier' ) );
 		$this->assertSame( array( 0, 20, 15 ), array_column( $rows, 'cost' ) );
 		$this->assertSame( $current, $rows[2] );
+		$this->assertSame( 'x', $rows[3] );
 	}
 
 	/**
-	 * Old block costs. Blank ones never changed the price, so they become rules that change nothing.
+	 * Old block costs. Bookings skipped empty ones, so they become rules that change nothing; any other value replaced the block cost.
 	 *
 	 * @return array
 	 */
 	public function override_blocks() {
 		return array(
-			'higher'      => array( '80', 'plus', 30 ),
-			'lower'       => array( '20', 'minus', 30 ),
-			'equal'       => array( '50', 'minus', 0 ),
-			'decimal'     => array( '80.5', 'plus', 30 ),
-			'int'         => array( 80, 'plus', 30 ),
-			'null'        => array( null, 'plus', 0 ),
-			'empty'       => array( '', 'plus', 0 ),
-			'blank'       => array( ' ', 'plus', 0 ),
-			'non-numeric' => array( 'abc', 'minus', 50 ),
+			'higher'       => array( '80', 'plus', 30 ),
+			'lower'        => array( '20', 'minus', 30 ),
+			'equal'        => array( '50', 'minus', 0 ),
+			'decimal'      => array( '80.5', 'plus', 30 ),
+			'int'          => array( 80, 'plus', 30 ),
+			'zero decimal' => array( '0.00', 'minus', 50 ),
+			'blank'        => array( ' ', 'minus', 50 ),
+			'null'         => array( null, 'plus', 0 ),
+			'empty'        => array( '', 'plus', 0 ),
+			'zero string'  => array( '0', 'plus', 0 ),
+			'zero int'     => array( 0, 'plus', 0 ),
+			'non-numeric'  => array( 'abc', 'minus', 50 ),
 		);
 	}
 }
