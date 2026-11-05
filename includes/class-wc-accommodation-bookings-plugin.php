@@ -449,7 +449,7 @@ class WC_Accommodation_Bookings_Plugin {
 				// Convert from the old to the new structure.
 				foreach ( $pricing as &$pricing_row ) {
 					$pricing_row['base_cost'] = $pricing_row['cost'] = 0; //phpcs:ignore
-					$new_cost                 = $pricing_row['override_block'];
+					$new_cost                 = floatval( $pricing_row['override_block'] );
 					unset( $pricing_row['override_block'] );
 					$pricing_row['base_modifier'] = $pricing_row['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus'; //phpcs:ignore
 					$pricing_row['cost']          = absint( $new_cost - $original_base_cost );
