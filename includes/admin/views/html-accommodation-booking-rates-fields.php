@@ -125,9 +125,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$base_cost = abs( floatval( get_post_meta( $post_id, '_wc_booking_base_cost', true ) ) );
 
 			if ( 'plus' == $rate['modifier'] ) {
-				echo esc_attr( (string) ( $base_cost + $rate['cost'] ) );
+				echo esc_attr( (string) ( $base_cost + floatval( $rate['cost'] ) ) );
 			} else {
-				echo esc_attr( (string) ( $base_cost - $rate['cost'] ) );
+				echo esc_attr( (string) ( $base_cost - floatval( $rate['cost'] ) ) );
 			}
 		}
 		?>" placeholder="0" />
