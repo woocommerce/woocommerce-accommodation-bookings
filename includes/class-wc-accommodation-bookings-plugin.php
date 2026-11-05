@@ -456,8 +456,8 @@ class WC_Accommodation_Bookings_Plugin {
 					$new_cost                 = $pricing_row['override_block'];
 					unset( $pricing_row['override_block'] );
 
-					// A blank block cost never changed the price, so it becomes a rule that changes nothing.
-					if ( '' === trim( (string) $new_cost ) ) {
+					// Bookings skipped a rule with an empty block cost, so it becomes a rule that changes nothing.
+					if ( empty( $new_cost ) ) {
 						$pricing_row['base_modifier'] = $pricing_row['modifier'] = 'plus'; //phpcs:ignore
 						continue;
 					}
