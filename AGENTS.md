@@ -74,7 +74,7 @@ gh release download --repo woocommerce/woocommerce-bookings --pattern 'woocommer
 Use the Bookings version needed for the task and state the version tested. The existing `env:install-plugins` script reads `ORG_DOWNLOADS`, falling back to the GitHub CLI login.
 
 ```bash
-npx playwright install chromium
+./node_modules/.bin/playwright install chromium
 npm run env:start              # Starts wp-env and runs postenv:start fixtures
 npm run test:e2e-foundational   # Existing @foundational scenarios
 npm run test:e2e -- --grep 'scenario title'
