@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="accommodation_bookings_rates" class="panel woocommerce_options_panel bookings_extension">
 	<div class="options_group">
+		<p class="form-field"><span class="description"><?php esc_html_e( 'Accommodation bookings support fixed costs per person or person type. Pricing tiers based on the number of persons are not supported.', 'woocommerce-accommodation-bookings' ); ?></span></p>
 		<?php woocommerce_wp_text_input( array( 'id' => '_wc_accommodation_booking_base_cost', 'label' => __( 'Standard room rate', 'woocommerce-accommodation-bookings' ), 'description' => __( 'Standard cost for booking the room.', 'woocommerce-accommodation-bookings' ), 'value' => get_post_meta( $post_id, '_wc_booking_base_cost', true ), 'type' => 'number', 'desc_tip' => true, 'custom_attributes' => array(
 			'min'   => '',
 			'step' 	=> '0.01'
