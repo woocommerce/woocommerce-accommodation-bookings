@@ -37,3 +37,6 @@ download_latest_release() {
 
 # Install WooCommerce Bookings
 download_latest_release "woocommerce" "woocommerce-bookings"
+
+# Calendar block integration dependency.
+download_latest_release "woocommerce" "woocommerce-bookings-availability"

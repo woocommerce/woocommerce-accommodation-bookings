@@ -65,10 +65,11 @@ composer test:isolated   # tests/isolated: changelog formatter round-trip, no Wo
 
 ### End-to-end tests and worktrees
 
-Docker is required. Before the first `env:start`, put the Bookings release ZIP in the worktree root: `tests/e2e/bin/initialize.sh` installs `woocommerce-bookings.zip` from the mapped plugin directory. With authorized access, use the global CLI:
+Docker is required. Before the first `env:start`, put the Bookings and Bookings Availability release ZIPs in the worktree root: `tests/e2e/bin/initialize.sh` installs `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` from the mapped plugin directory. With authorized access, use the global CLI:
 
 ```bash
 gh release download --repo woocommerce/woocommerce-bookings --pattern 'woocommerce-bookings.zip' --dir .
+gh release download --repo woocommerce/woocommerce-bookings-availability --pattern 'woocommerce-bookings-availability.zip' --dir .
 ```
 
 Use the Bookings version needed for the task and state the version tested. The existing `env:install-plugins` script reads `ORG_DOWNLOADS`, falling back to the GitHub CLI login.
