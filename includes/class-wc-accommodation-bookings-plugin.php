@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC Accommodation Bookings class
  *
  * @class   WC_Accommodation_Bookings_Plugin
- * @version 1.3.16
+ * @version x.x.x
  */
 class WC_Accommodation_Bookings_Plugin {
 
@@ -448,9 +448,22 @@ class WC_Accommodation_Bookings_Plugin {
 
 				// Convert from the old to the new structure.
 				foreach ( $pricing as &$pricing_row ) {
+					if ( ! is_array( $pricing_row ) || ! array_key_exists( 'override_block', $pricing_row ) ) {
+						continue;
+					}
+
 					$pricing_row['base_cost'] = $pricing_row['cost'] = 0; //phpcs:ignore
-					$new_cost                 = floatval( $pricing_row['override_block'] );
+					$new_cost                 = $pricing_row['override_block'];
 					unset( $pricing_row['override_block'] );
+
+					// A blank block cost never changed the price, so it becomes a rule that changes nothing.
+					if ( '' === trim( (string) $new_cost ) ) {
+						$pricing_row['base_modifier'] = $pricing_row['modifier'] = 'plus'; //phpcs:ignore
+						continue;
+					}
+
+					$new_cost = floatval( $new_cost );
+
 					$pricing_row['base_modifier'] = $pricing_row['modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus'; //phpcs:ignore
 					$pricing_row['cost']          = absint( $new_cost - $original_base_cost );
 				}
