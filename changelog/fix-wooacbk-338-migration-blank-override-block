@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Fixed a fatal error in the 1.1.3 rates upgrade when an old pricing rule has an empty block cost.
