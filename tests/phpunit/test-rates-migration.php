@@ -24,7 +24,7 @@ class TestAccommodationRatesMigration extends TestCase {
 	private $saved = array();
 
 	/**
-	 * Set up WP_Mock.
+	 * Set up WP_Mock and reset the saved meta.
 	 */
 	public function setUp(): void {
 		parent::setUp();
@@ -33,7 +33,7 @@ class TestAccommodationRatesMigration extends TestCase {
 	}
 
 	/**
-	 * Tear down WP_Mock.
+	 * Tear down WP_Mock and the mocked $wpdb.
 	 */
 	public function tearDown(): void {
 		WP_Mock::tearDown();
@@ -114,10 +114,33 @@ class TestAccommodationRatesMigration extends TestCase {
 		$this->assertArrayNotHasKey( 'override_block', $rows[0] );
 		$this->assertSame( $modifier, $rows[0]['modifier'] );
 		$this->assertSame( $cost, $rows[0]['cost'] );
+		$this->assertSame( $modifier, $rows[0]['base_modifier'] );
+		$this->assertSame( 0, $rows[0]['base_cost'] );
 	}
 
 	/**
-	 * Old block costs, including the empty string a blank field stored.
+	 * Every old row of a product converts, and rows already in the new format are left alone.
+	 */
+	public function test_all_rows_convert() {
+		$current = array(
+			'modifier' => 'minus',
+			'cost'     => 15,
+		);
+		$rows    = $this->migrate(
+			array(
+				array( 'override_block' => '' ),
+				array( 'override_block' => '70' ),
+				$current,
+			)
+		);
+
+		$this->assertSame( array( 'plus', 'plus', 'minus' ), array_column( $rows, 'modifier' ) );
+		$this->assertSame( array( 0, 20, 15 ), array_column( $rows, 'cost' ) );
+		$this->assertSame( $current, $rows[2] );
+	}
+
+	/**
+	 * Old block costs. Blank ones never changed the price, so they become rules that change nothing.
 	 *
 	 * @return array
 	 */
@@ -125,8 +148,12 @@ class TestAccommodationRatesMigration extends TestCase {
 		return array(
 			'higher'      => array( '80', 'plus', 30 ),
 			'lower'       => array( '20', 'minus', 30 ),
-			'empty'       => array( '', 'minus', 50 ),
-			'blank'       => array( ' ', 'minus', 50 ),
+			'equal'       => array( '50', 'minus', 0 ),
+			'decimal'     => array( '80.5', 'plus', 30 ),
+			'int'         => array( 80, 'plus', 30 ),
+			'null'        => array( null, 'plus', 0 ),
+			'empty'       => array( '', 'plus', 0 ),
+			'blank'       => array( ' ', 'plus', 0 ),
 			'non-numeric' => array( 'abc', 'minus', 50 ),
 		);
 	}
