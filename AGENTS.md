@@ -71,7 +71,7 @@ wp-env (requires Docker) runs two sites, each from its own config: the **develop
 
 A `.wp-env.override.json` left by an older e2e run merges into the development site; delete it if you didn't write it.
 
-`npm run wp-env:test -- <command>` runs a raw wp-env command against the tests site (`--config .wp-env.test.json` plus the tests port), for example `npm run wp-env:test -- run cli wp plugin list`. Plain `npx wp-env` targets the development site.
+`npm run wp-env:test -- <command>` runs a raw wp-env command against the tests site (`--config .wp-env.test.json` plus the tests port), for example `npm run wp-env:test -- run cli wp plugin list`. Plain `./node_modules/.bin/wp-env` targets the development site.
 
 ```bash
 npm run env:start          # Start the development site
@@ -82,7 +82,7 @@ npm run env:test:stop      # Stop its containers (preserves data)
 npm run env:test:destroy   # Remove its containers and data
 ```
 
-`npm run env:test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `npm run env:test:start` and `npm run env:test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
+`npm run env:test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `npm run env:test:start` and `npm run env:test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
 
 ### Development Site
 
@@ -98,10 +98,10 @@ npm run env:dev:reset   # Wipe the development site and seed it again
 
 ### E2E Tests
 
-The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`npm run build:dev`) and install the browser (`npx playwright install chromium`).
+The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`npm run build:dev`) and install the browser (`./node_modules/.bin/playwright install chromium`).
 
 ```bash
-npm run env:test:e2e:setup                        # Once: download Bookings, start, reset and seed the tests site (leaves it up)
+npm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
 E2E_TARGET=product npm run env:test:e2e:run       # Inner loop: spec files matching a path or name
 E2E_FILTER=@foundational npm run env:test:e2e:run # Tests whose title or tag matches (--grep)
 npm run env:test:e2e:run:ui                       # Same, with the browser visible
@@ -111,7 +111,7 @@ npm run env:test:e2e:help                         # All subcommands, E2E_* knobs
 ```
 
 - `bin/acceptance.sh` exports the tests site's URL as `ACCOM_E2E_URL` for `tests/e2e/config/index.js`; arguments after `run` go to `playwright test` (for example `npm run env:test:e2e:run -- --debug`).
-- The tests site is seeded by `npm run env:test:e2e:seed` (`tests/e2e/bin/initialize.sh`: Bookings from the ZIP, users, pages, store settings and the E2E mu-plugins). It fails until `woocommerce-bookings.zip` is in the checkout root.
+- The tests site is seeded by `npm run env:test:e2e:seed` (`tests/e2e/bin/initialize.sh`: Bookings and Bookings Availability from their ZIPs, users, pages, store settings and the E2E mu-plugins). It fails until `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` are in the checkout root.
 - The regression journeys (`npm run test:e2e:reset`, then `npm run test:e2e:regression`) are described in `tests/e2e/README.md`.
 - Extend the existing Playwright specs in `tests/e2e/specs/` and report which scenarios ran. A foundational or focused run is not full-suite coverage; identify behavior that still needs manual verification.
 

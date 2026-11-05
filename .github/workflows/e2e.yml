@@ -18,13 +18,14 @@ jobs:
 
     steps:
       # Runs before checkout so no pull-request code or dependency can observe the token.
-      - name: Download WooCommerce Bookings
+      - name: Download booking dependencies
         run: |
           if [[ -z "$GH_TOKEN" ]]; then
-            echo "::error::The ORG_DOWNLOADS secret isn't available to this run (fork and Dependabot PRs don't receive it), so WooCommerce Bookings can't be downloaded."
+            echo "::error::The ORG_DOWNLOADS secret isn't available to this run (fork and Dependabot PRs don't receive it), so the booking dependencies cannot be downloaded."
             exit 1
           fi
           gh release download --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$RUNNER_TEMP"
+          gh release download --repo woocommerce/woocommerce-bookings-availability --pattern woocommerce-bookings-availability.zip --dir "$RUNNER_TEMP"
         env:
           GH_TOKEN: ${{ secrets.ORG_DOWNLOADS }}
 
@@ -60,10 +61,12 @@ jobs:
         run: npm run prebuild && npm run build:webpack && npm run archive
 
       - name: Install Playwright Browsers
-        run: npx playwright install chromium
+        run: ./node_modules/.bin/playwright install chromium
 
-      - name: Stage WooCommerce Bookings
-        run: mv "$RUNNER_TEMP/woocommerce-bookings.zip" .
+      - name: Stage booking dependencies
+        run: |
+          mv "$RUNNER_TEMP/woocommerce-bookings.zip" .
+          mv "$RUNNER_TEMP/woocommerce-bookings-availability.zip" .
 
       - name: Setup WP environment
         run: npm run env:test:start

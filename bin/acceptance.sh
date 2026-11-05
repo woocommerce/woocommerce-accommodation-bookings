@@ -28,7 +28,7 @@
 # worktrees on other ports work without extra setup.
 #
 # Before running this script you need a built plugin and Playwright's browser
-# (`npx playwright install chromium`).
+# (`./node_modules/.bin/playwright install chromium`).
 set -uo pipefail
 
 # REPO SETTINGS: the only lines that differ between repos.
@@ -122,7 +122,7 @@ usage() {
 	echo
 	echo -e "${BOLD}GETTING STARTED${NC}"
 	echo -e "  ${GREY}1. Build the plugin${NC}             see AGENTS.md"
-	echo -e "  ${GREY}2. Install the browser${NC}          npx playwright install chromium"
+	echo -e "  ${GREY}2. Install the browser${NC}          ./node_modules/.bin/playwright install chromium"
 	echo -e "  ${GREY}3. Provision the site (once)${NC}    npm run env:test:e2e:setup"
 	echo -e "  ${GREY}4. Run everything, headed${NC}       ${CYAN}npm run env:test:e2e:run:ui${NC}"
 	echo -e "  ${GREY}   ...the site stays up, so re-run step 4 anytime; refresh the DB with npm run env:test:e2e:reset.${NC}"
@@ -151,8 +151,8 @@ phase_run() {
 	[ -n "${E2E_FILTER:-}" ] && args+=( --grep "$E2E_FILTER" )
 	[ -n "${E2E_SHOW_UI:-}" ] && args+=( --headed )
 	args+=( "$@" )
-	echo -e "${GREEN}- npx playwright ${args[*]}${NC}"
-	npx playwright "${args[@]}"
+	echo -e "${GREEN}- playwright ${args[*]}${NC}"
+	./node_modules/.bin/playwright "${args[@]}"
 }
 
 phase_stop() {

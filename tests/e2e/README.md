@@ -9,7 +9,7 @@ Install Node 24, locked npm/Composer dependencies, Docker and access to the priv
 Bookings releases (tested with 3.10.0). Then run, from the checkout root:
 
 ```bash
-npm run env:test:e2e:setup    # Once: download Bookings, start, reset and seed the wp-env tests site
+npm run env:test:e2e:setup    # Once: download the Bookings plugins, start, reset and seed the wp-env tests site
 npm run test:e2e:reset
 npm run test:e2e:regression
 npm run test:e2e:regression -- --grep 'independent customers'
@@ -29,7 +29,7 @@ to `true`, `WP_DEBUG_DISPLAY` set to `false`, and
 Whenever `fixtures/local.php` changes, copy it into the test store again before running.
 For a native local WordPress server, set
 `ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `ACCOM_E2E_URL` before reset, and
-run Playwright directly (`ACCOM_E2E_REGRESSION=1 npx playwright test --config tests/e2e/playwright.config.js`),
+run Playwright directly (`ACCOM_E2E_REGRESSION=1 ./node_modules/.bin/playwright test --config tests/e2e/playwright.config.js`),
 since `test:e2e:regression` targets the wp-env tests site.
 This switches only the WP-CLI transport; the browser and plugin paths are the same.
 

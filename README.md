@@ -44,7 +44,7 @@ npm run build:zip      # Same build, with the zip moved to deploy/ (used by the 
 # Tests
 npm run env:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
 npm run env:dev:seed                              # Seed it with a browsable store
-npm run env:test:e2e:setup                        # Download Bookings, start and seed the wp-env tests site
+npm run env:test:e2e:setup                        # Download the Bookings plugins, start and seed the wp-env tests site
 npm run env:test:e2e                              # Full Playwright E2E pipeline: set up, run, stop
 E2E_FILTER=@foundational npm run env:test:e2e:run # Run @foundational-tagged tests on a set-up tests site
 npm run test:e2e-debug                            # Run E2E tests in debug mode

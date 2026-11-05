@@ -25,15 +25,18 @@ npm run --silent wp-env:test -- run cli wp option update woocommerce_coming_soon
 
 npm run --silent wp-env:test -- run cli wp user create customer customer@bookingstestsuite.com --user_pass=password --role=customer
 
-# Install and activate WooCommerce Bookings
-if [ ! -f "./woocommerce-bookings.zip" ]; then
-    echo "Error: woocommerce-bookings.zip not found in the checkout root."
-    echo "Run 'npm run env:test:e2e:setup' to download it, or download the zip manually from:"
-    echo "https://github.com/woocommerce/woocommerce-bookings/releases"
-    exit 1
-fi
+# Install and activate WooCommerce Bookings and Bookings Availability
+for plugin in woocommerce-bookings woocommerce-bookings-availability; do
+    if [ ! -f "./${plugin}.zip" ]; then
+        echo "Error: ${plugin}.zip not found in the checkout root."
+        echo "Run 'npm run env:test:e2e:setup' to download it, or download the zip manually from:"
+        echo "https://github.com/woocommerce/${plugin}/releases"
+        exit 1
+    fi
+done
 npm run --silent wp-env:test -- run cli wp plugin install --force --activate "./${plugin_dir}/woocommerce-bookings.zip"
 npm run --silent wp-env:test -- run cli wp plugin activate "${PWD##*/}"
+npm run --silent wp-env:test -- run cli wp plugin install --force --activate "./${plugin_dir}/woocommerce-bookings-availability.zip"
 
 # Local regression fixtures capture mail and block external services.
 npm run --silent wp-env:test -- run cli mkdir -p /var/www/html/wp-content/mu-plugins

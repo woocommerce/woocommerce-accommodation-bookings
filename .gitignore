@@ -35,6 +35,7 @@ build
 
 woocommerce-accommodation-bookings.zip
 woocommerce-bookings.zip
+woocommerce-bookings-availability.zip
 
 .phpunit.result.cache
 /coverage/
