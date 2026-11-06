@@ -129,7 +129,7 @@ class WC_Accommodation_Bookings_Plugin {
 
 		$rest_request = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( wp_unslash( $_SERVER['REQUEST_URI'] ), 'wp-json/wc-bookings' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		if ( is_admin() || $rest_request ) {
+		if ( is_admin() || $rest_request || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			add_action( 'init', array( $this, 'rest_admin_includes' ) );
 		}
 

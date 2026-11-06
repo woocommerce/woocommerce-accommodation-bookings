@@ -21,9 +21,11 @@ class WC_Accommodation_Booking_REST_And_Admin {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
-
-		add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_data' ), 25 );
+		// The default CLI context only needs the status tool.
+		if ( is_admin() || ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
+			add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_data' ), 25 );
+		}
 
 		// Add debug tool for clearing stale booking transients.
 		add_filter( 'woocommerce_debug_tools', array( $this, 'accommodation_bookings_debug_tools' ) );
