@@ -1,0 +1,4 @@
+Significance: patch
+Type: add
+
+Made the stale booking transient cleanup tool available through WP-CLI.
