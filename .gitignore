@@ -9,6 +9,9 @@ Thumbs.db
 .settings*
 .vscode
 .wp-env.override.json
+.wp-env.test.override.json
+/tests/_output/*
+!/tests/_output/.gitkeep
 sftp-config.json
 /deploy/
 /wc-apidocs/
@@ -31,6 +34,8 @@ dist
 build
 
 woocommerce-accommodation-bookings.zip
+woocommerce-bookings.zip
+woocommerce-bookings-availability.zip
 
 .phpunit.result.cache
 /coverage/

@@ -384,7 +384,7 @@ export async function placeOrder( page, isBlock = false ) {
  */
 export async function runWpCliCommand( command ) {
 	const { stderr } = await execAsync(
-		`npm --silent run env run tests-cli -- ${ command }`
+		`npm --silent run wp-env:test -- run cli ${ command }`
 	);
 
 	if ( ! stderr ) {

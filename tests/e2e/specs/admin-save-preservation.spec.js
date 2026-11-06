@@ -1,9 +1,8 @@
 const { test, expect } = require( '@playwright/test' );
-const { wp } = require( '../utils/local' );
+const { pluginDir, wp } = require( '../utils/local' );
 
 let owned;
-const script =
-	'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/admin-save.php';
+const script = `${ pluginDir }/tests/e2e/fixtures/admin-save.php`;
 function fixture( action, key = '' ) {
 	return JSON.parse(
 		wp( 'eval-file', script, action, key ).split( 'ACCOM_ADMIN:' ).pop()

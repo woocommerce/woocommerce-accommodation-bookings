@@ -1,14 +1,17 @@
 /**
  * External dependencies
  */
+const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
 
 /**
  * Internal dependencies
  */
 const { wp } = require( '../utils/local' );
-const fixture =
-	'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/calendar.php';
+// wp-env mounts the checkout under its folder name, so this also works in worktrees.
+const fixture = `wp-content/plugins/${ path.basename(
+	path.resolve( __dirname, '../../..' )
+) }/tests/e2e/fixtures/calendar.php`;
 
 test( 'Booked accommodation nights are unavailable in the Calendar block - @foundational', async ( {
 	page,
