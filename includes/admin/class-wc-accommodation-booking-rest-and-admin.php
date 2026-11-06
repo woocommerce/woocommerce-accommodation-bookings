@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Required functions for REST API and Admin functionality.
  *
  * @class   WC_Accommodation_Booking_REST_And_Admin
- * @version 1.3.15
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_REST_And_Admin {
 
