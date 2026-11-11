@@ -6,7 +6,7 @@ Requires PHP: 7.4
 WC requires at least: 11.1
 WC tested up to: 11.2
 Tested up to: 7.1
-Stable tag: 1.3.17
+Stable tag: 1.4.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,13 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.4.0 - 2026-11-11 =
+* Add - Made the stale booking transient cleanup tool available through WP-CLI.
+* Fix - Fixed a fatal error on the product edit screen when a booking pricing rule has an empty or non-numeric cost.
+* Fix - Fixed a fatal error when updating from versions before 1.1.3 if a pricing rule has an empty or non-numeric block cost. Rules with an empty block cost no longer make those nights free.
+* Tweak - Clarify that accommodation person costs do not support pricing tiers based on party size.
+* Dev - Updated CI setup for Ubuntu 26.04 runners.
 
 = 1.3.17 - 2026-11-04 =
 * Fix - Avoided database packet errors when caching large booking availability results.

@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Pricing rules with a modifier must render without a fatal error.
  *
- * @version x.x.x
+ * @version 1.4.0
  */
 class TestAccommodationRatesFieldsView extends TestCase {
 
