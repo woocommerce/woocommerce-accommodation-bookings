@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Fixed a fatal error on the product edit screen when a booking pricing rule has an empty or non-numeric cost.

@@ -1,4 +1,0 @@
-Significance: patch
-Type: fix
-
-Fixed a fatal error when updating from versions before 1.1.3 if a pricing rule has an empty or non-numeric block cost. Rules with an empty block cost no longer make those nights free.

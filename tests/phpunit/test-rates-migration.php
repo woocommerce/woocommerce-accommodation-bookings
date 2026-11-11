@@ -12,7 +12,7 @@ require_once __DIR__ . '/../../includes/class-wc-accommodation-bookings-plugin.p
 /**
  * Old override_block rates must convert without a fatal error.
  *
- * @version x.x.x
+ * @version 1.4.0
  */
 class TestAccommodationRatesMigration extends TestCase {
 
