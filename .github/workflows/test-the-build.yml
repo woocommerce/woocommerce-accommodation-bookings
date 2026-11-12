@@ -1,0 +1,158 @@
+name: Test the build
+
+# Posts a "Test the build" comment on every pull request, drafts included, with a link that
+# opens the build in WordPress Playground.
+#
+# WordPress Playground runs in the visitor's browser and can only fetch public URLs. Its
+# artifact proxy serves this workflow's artifacts for the pull request and finds the
+# workflow by the name above, which the link reads from GITHUB_WORKFLOW.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Runs the pull request's code (npm and Composer installs, webpack) with a read-only
+  # token and no secrets.
+  build:
+    name: Build
+    uses: ./.github/workflows/generate-zip.yml
+
+  # Holds the token that can comment, so it runs no code from the pull request: it
+  # repackages the build and copies the preview files.
+  publish:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      PLUGIN_SLUG: woocommerce-accommodation-bookings
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - name: Checkout the Playground preview files
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: tests/playground
+          persist-credentials: false
+
+      - name: Download the build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: woocommerce-accommodation-bookings
+          path: ${{ runner.temp }}/build
+
+      # One artifact holds the plugin ZIP and the preview files, so a Playground link can
+      # never pair files from two runs. The artifact proxy also refuses artifacts under
+      # 3000 bytes, which the preview files alone would be.
+      - name: Package the Playground preview
+        run: |
+          test -f "$RUNNER_TEMP/build/$PLUGIN_SLUG/$PLUGIN_SLUG.php"
+          mkdir -p "$RUNNER_TEMP/preview/playground"
+          ( cd "$RUNNER_TEMP/build" && zip -q -r "$RUNNER_TEMP/preview/$PLUGIN_SLUG.zip" "$PLUGIN_SLUG" )
+          cp tests/playground/preview.php tests/playground/setup.php "$RUNNER_TEMP/preview/playground/"
+
+      # The link downloads the artifact on every click, so it is kept for longer than a
+      # build artifact. The run ID in the name ties a link to the build of one run.
+      - name: Upload the Playground preview
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playground-preview-${{ github.run_id }}
+          path: ${{ runner.temp }}/preview
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
+
+      # A link is playground.wordpress.net/# followed by the Blueprint as URI-encoded JSON.
+      # An artifact is a ZIP of what was uploaded, so the Blueprint unzips it first. It never
+      # asks for, or holds, a credential.
+      - name: Build the WordPress Playground link
+        id: playground
+        run: |
+          ARTIFACT_URL=$( jq -rn \
+            --arg org "$GITHUB_REPOSITORY_OWNER" \
+            --arg repo "${GITHUB_REPOSITORY#*/}" \
+            --arg workflow "$GITHUB_WORKFLOW" \
+            --arg pr "$PR_NUMBER" \
+            --arg artifact "playground-preview-$GITHUB_RUN_ID" \
+            '"https://playground.wordpress.net/plugin-proxy.php?org=\($org|@uri)&repo=\($repo|@uri)&workflow=\($workflow|@uri)&pr=\($pr|@uri)&artifact=\($artifact|@uri)"' )
+
+          BLUEPRINT=$( jq -cn --arg artifact_url "$ARTIFACT_URL" --arg slug "$PLUGIN_SLUG" '
+            {
+              "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+              landingPage: "/wp-admin/plugin-install.php?tab=upload",
+              preferredVersions: { php: "8.3", wp: "latest" },
+              features: { networking: true },
+              steps: [
+                { step: "login", username: "admin" },
+                { step: "installPlugin", pluginData: { resource: "wordpress.org/plugins", slug: "woocommerce" }, options: { activate: true } },
+                { step: "unzip", zipFile: { resource: "url", url: $artifact_url, caption: "Downloading the build of this pull request" }, extractToPath: "/tmp/pr" },
+                { step: "installPlugin", pluginData: { resource: "vfs", path: "/tmp/pr/\($slug).zip" }, options: { activate: true } },
+                { step: "mkdir", path: "/wordpress/wp-content/mu-plugins" },
+                { step: "cp", fromPath: "/tmp/pr/playground/preview.php", toPath: "/wordpress/wp-content/mu-plugins/accommodation-bookings-preview.php" },
+                { step: "runPHP", code: "<?php require \"/wordpress/wp-load.php\"; require \"/tmp/pr/playground/setup.php\";" }
+              ]
+            }' )
+
+          echo "url=https://playground.wordpress.net/#$( jq -rn --argjson blueprint "$BLUEPRINT" '$blueprint|tojson|@uri' )" >> "$GITHUB_OUTPUT"
+
+      - name: Write the comment
+        env:
+          PLAYGROUND_URL: ${{ steps.playground.outputs.url }}
+        run: |
+          BODY="$RUNNER_TEMP/comment.md"
+          README_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/$PR_HEAD_SHA/tests/playground/README.md"
+
+          {
+            echo "<!-- test-the-build -->"
+            echo "### Test the build"
+            echo
+            echo "WooCommerce Accommodation Bookings is an add-on: it does nothing until WooCommerce Bookings 3.10 or newer is active. WooCommerce Bookings is a paid extension, so the preview below does not install it for you. Have your own copy at hand."
+            echo
+            echo "#### WordPress Playground - runs in your browser"
+            echo
+            echo "- :test_tube: [Open this build in WordPress Playground](${PLAYGROUND_URL}): a fresh store with WooCommerce set up and this build active. It opens on the plugin upload screen."
+            echo "- To test the add-on there, upload your copy of \`woocommerce-bookings.zip\` on that screen and activate it. The preview then adds a \"Sample room\" that you can edit in the admin and book in the store. The site runs in your browser, so the file is not sent to a server."
+            echo "- With a checkout of this branch you can start the same preview with WooCommerce Bookings already installed: see [tests/playground]($README_URL)."
+            echo
+            echo ":information_source: Without WooCommerce Bookings the preview only shows that the build installs and activates, and the notice that asks for WooCommerce Bookings. A site in a browser tab runs no scheduled tasks, so booking reminders and the expiry of bookings left in the cart do not happen. The link stops working 14 days after the last build."
+            echo
+            echo "---"
+            echo
+            echo "Build info:"
+            echo
+            echo "- Latest commit: ${PR_HEAD_SHA}"
+            echo "- Build time: $( date -u "+%Y-%m-%d %H:%M:%S UTC" )"
+            echo
+            echo "_Note: the build is updated when a new commit is pushed to this PR._"
+          } > "$BODY"
+
+          cat "$BODY" >> "$GITHUB_STEP_SUMMARY"
+
+      # The token of a fork pull request cannot comment. The text is in the run summary.
+      - name: Add or update the comment on the pull request
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          COMMENT_ID=$( gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select( .user.login == "github-actions[bot]" and ( .body | startswith( "<!-- test-the-build -->" ) ) ) | .id' | head -n 1 )
+
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F "body=@$RUNNER_TEMP/comment.md" --silent
+            echo "Updated comment $COMMENT_ID."
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -F "body=@$RUNNER_TEMP/comment.md" --silent
+            echo "Created the comment."
+          fi
