@@ -23,7 +23,10 @@ npm run --silent wp-env:test -- run cli wp option update woocommerce_default_cou
 npm run --silent wp-env:test -- run cli wp wc payment_gateway update cod --enabled=true --user=1
 npm run --silent wp-env:test -- run cli wp option update woocommerce_coming_soon "no"
 
-npm run --silent wp-env:test -- run cli wp user create customer customer@bookingstestsuite.com --user_pass=password --role=customer
+# Re-seeding a site that kept its database finds the customer already there.
+if ! npm run --silent wp-env:test -- run cli wp user get customer --field=ID >/dev/null 2>&1; then
+    npm run --silent wp-env:test -- run cli wp user create customer customer@bookingstestsuite.com --user_pass=password --role=customer
+fi
 
 # Install and activate WooCommerce Bookings and Bookings Availability
 for plugin in woocommerce-bookings woocommerce-bookings-availability; do

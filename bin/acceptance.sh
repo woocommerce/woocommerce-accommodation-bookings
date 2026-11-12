@@ -141,6 +141,11 @@ phase_setup() {
 phase_provision() {
 	echo -e "${GREEN}- Resetting the database...${NC}"
 	npm run --silent wp-env:test -- reset >/dev/null || die "resetting the tests site failed; is it running?"
+	# The tests site bind-mounts tests/_output/debug.log, which outlives the site. Empty it in place
+	# so the warnings check only sees diagnostics from this run.
+	if [ -f tests/_output/debug.log ]; then
+		: >tests/_output/debug.log
+	fi
 	echo -e "${GREEN}- Seeding the tests site...${NC}"
 	npm run --silent env:test:e2e:seed || die "seeding the tests site failed (npm run env:test:e2e:seed)."
 }
@@ -179,12 +184,11 @@ case "${1:-}" in
 	"")
 		unset E2E_TARGET E2E_FILTER E2E_SHOW_UI
 		require_cmds npm node
+		# Stop the tests site however the pipeline ends, including a failed setup or seed.
+		trap phase_stop EXIT
 		phase_setup
 		phase_provision
 		phase_run
-		status=$?
-		phase_stop
-		exit "$status"
 		;;
 	help | -h | --help)
 		usage
