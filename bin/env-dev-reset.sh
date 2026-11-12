@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Wipes the development site (.wp-env.json) and seeds it again. Run it as `npm run env:dev:reset`.
+#
+# `wp-env reset` re-applies the configured port, so in a shell without WP_ENV_PORT exported it
+# would move a worktree's site back to the default port. Keep the port the site is running on.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+if [ -z "${WP_ENV_PORT:-}" ]; then
+	port=$(wp-env status --json 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).ports?.development || ""' 2>/dev/null || true)
+	if [ -n "$port" ]; then
+		export WP_ENV_PORT="$port"
+	fi
+fi
+
+wp-env reset
+npm run env:dev:seed

@@ -30,6 +30,8 @@ jest-puppeteer.config.js export-ignore
 assets export-ignore
 .wp-env.json export-ignore
 .wp-env.override.json export-ignore
+.wp-env.test.json export-ignore
+.wp-env.test.override.json export-ignore
 .prettierrc.js export-ignore
 AGENTS.md export-ignore
 CLAUDE.md export-ignore

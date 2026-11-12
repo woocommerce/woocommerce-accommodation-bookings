@@ -6,9 +6,8 @@ const { test, expect } = require( '@playwright/test' );
 /**
  * Internal dependencies
  */
-const { wp } = require( '../utils/local' );
-const fixture =
-	'wp-content/plugins/woocommerce-accommodation-bookings/tests/e2e/fixtures/calendar.php';
+const { pluginDir, wp } = require( '../utils/local' );
+const fixture = `${ pluginDir }/tests/e2e/fixtures/calendar.php`;
 
 test( 'Booked accommodation nights are unavailable in the Calendar block - @foundational', async ( {
 	page,
