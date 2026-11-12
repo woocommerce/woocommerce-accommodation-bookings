@@ -18,6 +18,7 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 | `tests/phpunit/` | Isolated PHPUnit/WP_Mock tests. |
 | `tests/isolated/` | Composer-only PHPUnit tests (the changelog formatter); no WordPress or WP_Mock. |
 | `tests/e2e/` | Playwright specs, fixtures, and configuration. |
+| `tests/playground/` | WordPress Playground preview behind the "Test the build" pull request comment. Its README covers the local run and where to turn on in-progress features. |
 | `changelog/`, `tools/changelogger/` | Pending change files and the Jetpack Changelogger formatter that compiles them into `changelog.txt`. |
 
 ## Commands
