@@ -6,7 +6,7 @@ Guide for coding agents: repository contracts, daily development, and validation
 
 An accommodation product extends WooCommerce Bookings with nightly stays and check-in/out times. WooCommerce and WooCommerce Bookings must both be available; the dependency check lives in `includes/class-wc-accommodation-dependencies.php`.
 
-The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Check the header when those floors change. Use `nvm use` for the Node version pinned in `.nvmrc`; `package.json` records Node/npm engine requirements. Keep syntax compatible with the supported PHP floor.
+The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Check the header when those floors change. Use `nvm use` for the Node version pinned in `.nvmrc`; `package.json` records the Node requirement and the pinned pnpm version. Keep syntax compatible with the supported PHP floor.
 
 | Path | Purpose |
 | --- | --- |
@@ -27,22 +27,22 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 
 ```bash
 nvm use
-npm ci
+pnpm install --frozen-lockfile
 composer install
-npm run build:dev       # Composer dependencies, webpack, and translations
-npm run start:webpack   # Watch source assets
-npm run lint:js         # Authored JavaScript and formatting (same as CI)
-npm run lint:js-fix     # Fix lint and WordPress formatting findings
-npm run lint:style
+pnpm run build:dev       # Composer dependencies, webpack, and translations
+pnpm run start:webpack   # Watch source assets
+pnpm run lint:js         # Authored JavaScript and formatting (same as CI)
+pnpm run lint:js-fix     # Fix lint and WordPress formatting findings
+pnpm run lint:style
 ```
 
-`webpack.config.js` maps `src/js/booking-form.js`, `src/js/writepanel.js`, and `src/css/frontend.scss` to `build/`. Edit these sources and rebuild; do not hand-edit generated assets. `npm run build` also packages a ZIP: its prebuild replaces `vendor`, and prearchive removes it. Run `composer install` again before PHP checks after packaging.
+`webpack.config.js` maps `src/js/booking-form.js`, `src/js/writepanel.js`, and `src/css/frontend.scss` to `build/`. Edit these sources and rebuild; do not hand-edit generated assets. `pnpm run build` also packages a ZIP: its prebuild replaces `vendor`, and prearchive removes it. Run `composer install` again before PHP checks after packaging.
 
 ### PHP checks
 
 ```bash
 vendor/bin/phpcs       # Coding standards from phpcs.xml.dist
-npm run phpcompat     # Builds/checks release ZIP; run composer install afterward
+pnpm run phpcompat     # Builds/checks release ZIP; run composer install afterward
 ```
 
 CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:phpcs` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.
@@ -72,26 +72,26 @@ wp-env (requires Docker) runs two sites, each from its own config: the **develop
 
 A `.wp-env.override.json` left by an older e2e run merges into the development site; delete it if you didn't write it.
 
-`npm run wp-env:test -- <command>` runs a raw wp-env command against the tests site (`--config .wp-env.test.json` plus the tests port), for example `npm run wp-env:test -- run cli wp plugin list`. Plain `./node_modules/.bin/wp-env` targets the development site.
+`pnpm run wp-env:test <command>` runs a raw wp-env command against the tests site (`--config .wp-env.test.json` plus the tests port), for example `pnpm run wp-env:test run cli wp plugin list`. Plain `./node_modules/.bin/wp-env` targets the development site.
 
 ```bash
-npm run env:start          # Start the development site
-npm run env:stop           # Stop its containers (preserves data)
-npm run env:destroy        # Remove its containers and data
-npm run env:test:start     # Start the tests site (E2E)
-npm run env:test:stop      # Stop its containers (preserves data)
-npm run env:test:destroy   # Remove its containers and data
+pnpm run env:start          # Start the development site
+pnpm run env:stop           # Stop its containers (preserves data)
+pnpm run env:destroy        # Remove its containers and data
+pnpm run env:test:start     # Start the tests site (E2E)
+pnpm run env:test:stop      # Stop its containers (preserves data)
+pnpm run env:test:destroy   # Remove its containers and data
 ```
 
-`npm run env:test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `npm run env:test:start` and `npm run env:test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
+`pnpm run env:test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `pnpm run env:test:start` and `pnpm run env:test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
 
 ### Development Site
 
-Requires a running development site (`npm run env:start`).
+Requires a running development site (`pnpm run env:start`).
 
 ```bash
-npm run env:dev:seed   # Seed a browsable store (runs once)
-npm run env:dev:reset   # Wipe the development site and seed it again
+pnpm run env:dev:seed   # Seed a browsable store (runs once)
+pnpm run env:dev:reset   # Wipe the development site and seed it again
 ```
 
 - Logins: `admin` / `password`, `customer` / `password`.
@@ -99,21 +99,21 @@ npm run env:dev:reset   # Wipe the development site and seed it again
 
 ### E2E Tests
 
-The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`npm run build:dev`) and install the browser (`./node_modules/.bin/playwright install chromium`).
+The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`pnpm run build:dev`) and install the browser (`./node_modules/.bin/playwright install chromium`).
 
 ```bash
-npm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
-E2E_TARGET=product npm run env:test:e2e:run       # Inner loop: spec files matching a path or name
-E2E_FILTER=@foundational npm run env:test:e2e:run # Tests whose title or tag matches (--grep)
-npm run env:test:e2e:run:ui                       # Same, with the browser visible
-npm run env:test:e2e:reset                        # Reset and re-seed just the DB
-npm run env:test:e2e                              # Full pipeline, as CI (setup, whole suite, stop)
-npm run env:test:e2e:help                         # All subcommands, E2E_* knobs and examples
+pnpm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
+E2E_TARGET=product pnpm run env:test:e2e:run       # Inner loop: spec files matching a path or name
+E2E_FILTER=@foundational pnpm run env:test:e2e:run # Tests whose title or tag matches (--grep)
+pnpm run env:test:e2e:run:ui                       # Same, with the browser visible
+pnpm run env:test:e2e:reset                        # Reset and re-seed just the DB
+pnpm run env:test:e2e                              # Full pipeline, as CI (setup, whole suite, stop)
+pnpm run env:test:e2e:help                         # All subcommands, E2E_* knobs and examples
 ```
 
-- `bin/acceptance.sh` exports the tests site's URL as `ACCOM_E2E_URL` for `tests/e2e/config/index.js`; arguments after `run` go to `playwright test` (for example `npm run env:test:e2e:run -- --debug`).
-- The tests site is seeded by `npm run env:test:e2e:seed` (`tests/e2e/bin/initialize.sh`: Bookings and Bookings Availability from their ZIPs, users, pages, store settings and the E2E mu-plugins). It fails until `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` are in the checkout root.
-- The regression journeys (`npm run test:e2e:reset`, then `npm run test:e2e:regression`) are described in `tests/e2e/README.md`.
+- `bin/acceptance.sh` exports the tests site's URL as `ACCOM_E2E_URL` for `tests/e2e/config/index.js`; arguments after `run` go to `playwright test` (for example `pnpm run env:test:e2e:run --debug`).
+- The tests site is seeded by `pnpm run env:test:e2e:seed` (`tests/e2e/bin/initialize.sh`: Bookings and Bookings Availability from their ZIPs, users, pages, store settings and the E2E mu-plugins). It fails until `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` are in the checkout root.
+- The regression journeys (`pnpm run test:e2e:reset`, then `pnpm run test:e2e:regression`) are described in `tests/e2e/README.md`.
 - Extend the existing Playwright specs in `tests/e2e/specs/` and report which scenarios ran. A foundational or focused run is not full-suite coverage; identify behavior that still needs manual verification.
 
 ### Worktrees
@@ -123,8 +123,8 @@ with the main checkout or another worktree. Export them once per shell, before a
 
 ```bash
 export WP_ENV_PORT=8890 WP_ENV_TESTS_PORT=8891
-npm run env:start
-npm run env:test:start
+pnpm run env:start
+pnpm run env:test:start
 ```
 
 Site URLs follow the ports. `bin/acceptance.sh` reads the tests site's port from wp-env and exports it
@@ -134,7 +134,7 @@ as `ACCOM_E2E_URL`, so worktrees can run E2E side by side. Re-export the ports i
 the worktree (the semicolon is deliberate: a site that was never started exits 1):
 
 ```bash
-npm run env:destroy -- --force; npm run env:test:destroy -- --force    # with the same ports exported
+pnpm run env:destroy --force; pnpm run env:test:destroy --force    # with the same ports exported
 ```
 
 ### Changelog
@@ -144,9 +144,9 @@ into `changelog/` instead, and [Jetpack Changelogger](https://github.com/Automat
 compiles them into `changelog.txt` at release time.
 
 ```bash
-npm run changelog add          # Interactive: significance, type, and the entry
-npm run changelog validate     # Check every change file under changelog/
-npm run changelog:check        # What CI runs: this branch has a valid change file
+pnpm run changelog add          # Interactive: significance, type, and the entry
+pnpm run changelog validate     # Check every change file under changelog/
+pnpm run changelog:check        # What CI runs: this branch has a valid change file
 ```
 
 `changelog:check` also counts a change file that is only staged or still untracked, and says
@@ -258,7 +258,7 @@ Build on existing extension points such as `WC_Data`, `WC_Data_Store_WP`, `WC_Se
 ## Contribution and tooling notes
 
 - Follow the parent SWW instructions for Git/Linear work and the repository's `.github/PULL_REQUEST_TEMPLATE.md`. Use the global authenticated `gh` CLI for GitHub operations; commit, push, and draft-PR creation each need their own authorization.
-- **Always add a changelog file.** Run `npm run changelog add` and commit the file it creates under `changelog/`, one per PR. Never edit `changelog.txt` directly - it is compiled from the change files at release time. See [Changelog](#changelog).
+- **Always add a changelog file.** Run `pnpm run changelog add` and commit the file it creates under `changelog/`, one per PR. Never edit `changelog.txt` directly - it is compiled from the change files at release time. See [Changelog](#changelog).
 - The template has no auto-assign-milestone checkbox. Report that missing control instead of inventing a checked box. The release workflows require and roll over the release milestone, but pull requests are not assigned to it automatically.
 - QIT runs twice a week: four tests on the stable versions in Cron CI on Mondays, and the full set on the pre-release versions in Cron QIT on Wednesdays. QIT PHPStan stays off because the repo's own PHPStan (level 8) is the gate.
 - Releases are started via the `Start Release` GitHub Actions workflow (Actions UI, or locally with `bin/release_start.sh [X.Y.Z] [--wp A.B] [--wc C.D]`, which dispatches it). It bumps versions, compiles `changelog/` into `changelog.txt` and copies the release's entries into the `readme.txt` changelog on a `release/X.Y.Z` branch, then opens a release PR against `trunk`. Merging the release PR triggers `.github/workflows/ci-release.yml`, which builds the ZIP, tags the release, deploys that ZIP to WordPress.org through `woocommerce/woo-product-deploy` (`config.wp_org_slug` in `package.json` names the plugin slug), and rolls the milestone over. Building a ZIP does not authorize starting a release.

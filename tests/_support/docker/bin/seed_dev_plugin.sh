@@ -9,7 +9,7 @@ set -euo pipefail
 plugin_dir="$(wp plugin path)/$(dirname "$(wp plugin list --field=file | grep '/woocommerce-accommodation-bookings\.php$')")"
 
 if [ ! -f "${plugin_dir}/woocommerce-bookings.zip" ]; then
-	echo "woocommerce-bookings.zip not found: no accommodation product added. Run npm run env:test:e2e:setup to download it, then npm run env:dev:reset."
+	echo "woocommerce-bookings.zip not found: no accommodation product added. Run pnpm run env:test:e2e:setup to download it, then pnpm run env:dev:reset."
 	exit 0
 fi
 echo "Installing WooCommerce Bookings..."

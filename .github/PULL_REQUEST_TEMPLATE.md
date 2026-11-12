@@ -25,11 +25,11 @@ Closes # .
 
 ### Changelog entry
 
-* [ ] Have you added a change file with `npm run changelog add`?
+* [ ] Have you added a change file with `pnpm run changelog add`?
 
 <!--
 Changelog entries are change files under `changelog/`. Run
-`npm run changelog add`, answer the prompts (significance, type, and a one-line entry),
+`pnpm run changelog add`, answer the prompts (significance, type, and a one-line entry),
 and commit the file it creates. Do not edit `changelog.txt` by hand - it is compiled
 from the change files at release time.
 

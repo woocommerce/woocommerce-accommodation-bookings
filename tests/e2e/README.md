@@ -5,19 +5,19 @@ independent customer sessions. The new journeys use classic and block checkout;
 no customer is given administrator credentials. Their room factory comes from
 `tests/integration/fixtures.php`.
 
-Install Node 24, locked npm/Composer dependencies, Docker and access to the private
+Install Node 24, locked pnpm/Composer dependencies, Docker and access to the private
 Bookings releases (tested with 3.10.0). Then run, from the checkout root:
 
 ```bash
-npm run env:test:e2e:setup    # Once: download the Bookings plugins, start, reset and seed the wp-env tests site
-npm run test:e2e:reset
-npm run test:e2e:regression
-npm run test:e2e:regression -- --grep 'independent customers'
+pnpm run env:test:e2e:setup    # Once: download the Bookings plugins, start, reset and seed the wp-env tests site
+pnpm run test:e2e:reset
+pnpm run test:e2e:regression
+pnpm run test:e2e:regression --grep 'independent customers'
 ```
 
 Setup uses the wp-env tests site (`.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`,
 default 8889). `bin/acceptance.sh` finds its port, so worktrees on other ports need no
-`ACCOM_E2E_URL`. `npm run env:test:start` and `npm run env:test:e2e:seed` bring a stopped
+`ACCOM_E2E_URL`. `pnpm run env:test:start` and `pnpm run env:test:e2e:seed` bring a stopped
 site back. With an existing **dedicated test store**, enable
 `ACCOM_E2E` in wp-config, activate WooCommerce/Bookings/Accommodation and Storefront,
 copy `fixtures/local.php` into `wp-content/mu-plugins/accommodation-e2e.php`, and
@@ -39,7 +39,7 @@ Use a separate database and WordPress directory from the PHPUnit suite. No live
 payments, emails, calendars or external HTTP services are used; email bodies are
 captured at WordPress's mail boundary and checked against saved booking dates.
 
-The full existing suite is `npm run env:test:e2e:run`; it also needs its existing email-log
+The full existing suite is `pnpm run env:test:e2e:run`; it also needs its existing email-log
 plugin and admin/customer setup described in `bin/initialize.sh`. The focused
 regression command keeps the same Playwright config but omits that suite's admin
 login/API-key setup. Existing order and confirmation-email journeys remain intact.

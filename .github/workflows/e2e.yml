@@ -34,9 +34,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: '.nvmrc'
+          cache: 'pnpm'
 
       - name: Composer cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -46,19 +50,11 @@ jobs:
             ~/.composer/cache
           key: composer-${{ hashFiles('composer.lock') }}
 
-      - name: Node cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            node_modules
-            ~/.npm
-          key: node-${{ hashFiles('package-lock.json') }}
-
       - name: Node install
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run prebuild && npm run build:webpack && npm run archive
+        run: pnpm run prebuild && pnpm run build:webpack && pnpm run archive
 
       - name: Install Playwright Browsers
         run: ./node_modules/.bin/playwright install chromium
@@ -69,13 +65,13 @@ jobs:
           mv "$RUNNER_TEMP/woocommerce-bookings-availability.zip" .
 
       - name: Setup WP environment
-        run: npm run env:test:start
+        run: pnpm run env:test:start
 
       - name: Seed the tests site
-        run: npm run env:test:e2e:seed
+        run: pnpm run env:test:e2e:seed
 
       - name: Run E2E tests
-        run: npm run env:test:e2e:run
+        run: pnpm run env:test:e2e:run
 
       - name: Annotate retry-only passes
         if: always()

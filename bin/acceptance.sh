@@ -11,7 +11,7 @@
 #   (no subcommand)  Full pipeline: setup + run the whole suite headless + stop
 #                    the tests site (also on failure).
 #   setup            Start the tests site, reset its database and seed it
-#                    (npm run env:test:e2e:seed). Leaves a ready-to-`run` site.
+#                    (pnpm run env:test:e2e:seed). Leaves a ready-to-`run` site.
 #   run              Run Playwright against the running tests site (fails fast
 #                    if it is down). Extra arguments go to `playwright test`.
 #   reset            Reset just the database and seed it again.
@@ -36,7 +36,7 @@ set -uo pipefail
 # - E2E_CONFIG:    the Playwright config file.
 # - E2E_SETUP_CMD: run by `setup` before starting the tests site, for example to
 #                  fetch private plugins it mounts; empty when there is nothing to do.
-# The seed itself is the repo's `npm run env:test:e2e:seed`.
+# The seed itself is the repo's `pnpm run env:test:e2e:seed`.
 E2E_URL_VAR=ACCOM_E2E_URL
 E2E_CONFIG=tests/e2e/playwright.config.js
 E2E_SETUP_CMD='bash ./tests/e2e/bin/install-plugins.sh'
@@ -74,7 +74,7 @@ require_cmds() {
 # from the port wp-env is actually running on. Returns 1 when the site is down.
 resolve_e2e_url() {
 	local port
-	port=$(npm run --silent wp-env:test -- status --json 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).ports?.development || ""' 2>/dev/null)
+	port=$(pnpm --silent run wp-env:test status --json 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).ports?.development || ""' 2>/dev/null)
 	[ -n "$port" ] || return 1
 	export WP_ENV_TESTS_PORT="$port"
 	export "$E2E_URL_VAR=http://localhost:$port"
@@ -83,7 +83,7 @@ resolve_e2e_url() {
 
 require_wpenv() {
 	if ! resolve_e2e_url; then
-		die "the tests site is not running; run 'npm run env:test:e2e:setup' first."
+		die "the tests site is not running; run 'pnpm run env:test:e2e:setup' first."
 	fi
 }
 
@@ -93,7 +93,7 @@ usage() {
 	echo
 	echo -e "${BOLD}USAGE${NC}"
 	echo -e "  bash ./bin/acceptance.sh [ setup | run [playwright args] | reset | help ]"
-	echo -e "  npm run env:test:e2e[ :setup | :run | :run:ui | :reset | :help ]"
+	echo -e "  pnpm run env:test:e2e[ :setup | :run | :run:ui | :reset | :help ]"
 	echo -e "  ${GREY}   plus wp-env lifecycle: env:test:start | env:test:stop | env:test:destroy${NC}"
 	echo
 	echo -e "${BOLD}SUBCOMMANDS${NC}"
@@ -111,21 +111,21 @@ usage() {
 	echo
 	echo -e "${BOLD}EXAMPLES${NC}"
 	echo -e "  ${GREY}# Full run, as CI${NC}"
-	echo -e "  npm run env:test:e2e"
+	echo -e "  pnpm run env:test:e2e"
 	echo
 	echo -e "  ${GREY}# Iterate: set up once, then run one spec file repeatedly${NC}"
-	echo -e "  npm run env:test:e2e:setup"
-	echo -e "  ${CYAN}E2E_TARGET${NC}=<file> npm run env:test:e2e:run"
+	echo -e "  pnpm run env:test:e2e:setup"
+	echo -e "  ${CYAN}E2E_TARGET${NC}=<file> pnpm run env:test:e2e:run"
 	echo
 	echo -e "  ${GREY}# Tagged tests, browser visible${NC}"
-	echo -e "  ${CYAN}E2E_FILTER${NC}=@<tag> npm run env:test:e2e:run:ui"
+	echo -e "  ${CYAN}E2E_FILTER${NC}=@<tag> pnpm run env:test:e2e:run:ui"
 	echo
 	echo -e "${BOLD}GETTING STARTED${NC}"
 	echo -e "  ${GREY}1. Build the plugin${NC}             see AGENTS.md"
 	echo -e "  ${GREY}2. Install the browser${NC}          ./node_modules/.bin/playwright install chromium"
-	echo -e "  ${GREY}3. Provision the site (once)${NC}    npm run env:test:e2e:setup"
-	echo -e "  ${GREY}4. Run everything, headed${NC}       ${CYAN}npm run env:test:e2e:run:ui${NC}"
-	echo -e "  ${GREY}   ...the site stays up, so re-run step 4 anytime; refresh the DB with npm run env:test:e2e:reset.${NC}"
+	echo -e "  ${GREY}3. Provision the site (once)${NC}    pnpm run env:test:e2e:setup"
+	echo -e "  ${GREY}4. Run everything, headed${NC}       ${CYAN}pnpm run env:test:e2e:run:ui${NC}"
+	echo -e "  ${GREY}   ...the site stays up, so re-run step 4 anytime; refresh the DB with pnpm run env:test:e2e:reset.${NC}"
 }
 
 phase_setup() {
@@ -140,14 +140,14 @@ phase_setup() {
 
 phase_provision() {
 	echo -e "${GREEN}- Resetting the database...${NC}"
-	npm run --silent wp-env:test -- reset >/dev/null || die "resetting the tests site failed; is it running?"
+	pnpm --silent run wp-env:test reset >/dev/null || die "resetting the tests site failed; is it running?"
 	# The tests site bind-mounts tests/_output/debug.log, which outlives the site. Empty it in place
 	# so the warnings check only sees diagnostics from this run.
 	if [ -f tests/_output/debug.log ]; then
 		: >tests/_output/debug.log
 	fi
 	echo -e "${GREEN}- Seeding the tests site...${NC}"
-	npm run --silent env:test:e2e:seed || die "seeding the tests site failed (npm run env:test:e2e:seed)."
+	pnpm --silent run env:test:e2e:seed || die "seeding the tests site failed (pnpm run env:test:e2e:seed)."
 }
 
 phase_run() {
@@ -161,29 +161,29 @@ phase_run() {
 }
 
 phase_stop() {
-	npm run --silent wp-env:test -- stop
+	pnpm --silent run wp-env:test stop
 }
 
 case "${1:-}" in
 	setup)
-		require_cmds npm node
+		require_cmds pnpm node
 		phase_setup
 		phase_provision
 		;;
 	reset)
-		require_cmds npm node
+		require_cmds pnpm node
 		require_wpenv
 		phase_provision
 		;;
 	run)
 		shift
-		require_cmds npm node
+		require_cmds pnpm node
 		require_wpenv
 		phase_run "$@"
 		;;
 	"")
 		unset E2E_TARGET E2E_FILTER E2E_SHOW_UI
-		require_cmds npm node
+		require_cmds pnpm node
 		# Stop the tests site however the pipeline ends, including a failed setup or seed.
 		trap phase_stop EXIT
 		phase_setup

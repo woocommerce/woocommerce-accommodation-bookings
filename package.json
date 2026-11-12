@@ -2,6 +2,7 @@
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
   "version": "1.4.0",
+  "packageManager": "pnpm@10.33.0",
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "author": "WooCommerce",
   "license": "GPL-3.0-or-later",
@@ -15,8 +16,7 @@
     "url": "https://woocommerce.com/my-account/create-a-ticket/"
   },
   "engines": {
-    "node": "^24.15.0",
-    "npm": "~11"
+    "node": "^24.15.0"
   },
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings"
@@ -39,36 +39,24 @@
     "prettier": "npm:wp-prettier@^3.9.6",
     "webpack-remove-empty-scripts": "^1.0.4"
   },
-  "overrides": {
-    "serialize-javascript": "^7.1.3",
-    "markdownlint-cli": {
-      ".": "0.49.1",
-      "js-yaml": "5.4.2"
-    },
-    "qs": "6.16.1",
-    "uuid@8": "11.1.1",
-    "postcss-selector-parser": "7.1.6",
-    "smol-toml": "1.9.0",
-    "katex": "0.18.2"
-  },
   "scripts": {
     "prebuild": "rm -rf ./vendor && composer install",
-    "build": "npm run build:webpack && npm run makepot && npm run archive",
-    "build:zip": "npm run build && mkdir -p deploy && mv $npm_package_name.zip deploy/",
+    "build": "pnpm run build:webpack && pnpm run makepot && pnpm run archive",
+    "build:zip": "pnpm run build && mkdir -p deploy && mv $npm_package_name.zip deploy/",
     "build:webpack": "wp-scripts build",
     "start:webpack": "wp-scripts start",
-    "build:dev": "composer install && npm run build:webpack && npm run makepot",
+    "build:dev": "composer install && pnpm run build:webpack && pnpm run makepot",
     "prearchive": "rm -rf ./vendor",
     "archive": "composer archive --file=$npm_package_name --format=zip",
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
     "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --exclude=tests,src",
     "phpcompat": "bash bin/phpcompat.sh",
-    "audit:npm": "npm audit --package-lock-only --audit-level=high --include=dev",
+    "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",
     "lint:js": "wp-scripts lint-js --max-warnings 0",
-    "lint:js-fix": "npm run lint:js -- --fix",
+    "lint:js-fix": "pnpm run lint:js --fix",
     "lint:style": "wp-scripts lint-style src/css/frontend.scss --max-warnings 0",
-    "lint:style-fix": "npm run lint:style -- --fix",
+    "lint:style-fix": "pnpm run lint:style --fix",
     "lint:md:docs": "wp-scripts lint-md-docs --dot",
     "changelog": "composer install --quiet && composer exec -- changelogger",
     "changelog:check": "bash bin/check_changelog.sh",
@@ -87,15 +75,15 @@
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy",
     "env:test:start": "bash ./bin/env-start.sh",
-    "env:test:stop": "npm run wp-env:test -- stop",
-    "env:test:destroy": "npm run wp-env:test -- destroy",
+    "env:test:stop": "pnpm run wp-env:test stop",
+    "env:test:destroy": "pnpm run wp-env:test destroy",
     "wp-env": "wp-env",
     "wp-env:test": "WP_ENV_PORT=${WP_ENV_TESTS_PORT:-8889} wp-env --config .wp-env.test.json",
-    "test:e2e-local": "export $(cat ./tests/e2e/config/.env | xargs) && npm run env:test:e2e:run",
-    "test:e2e-debug": "npm run env:test:e2e:run -- --debug",
+    "test:e2e-local": "export $(cat ./tests/e2e/config/.env | xargs) && pnpm run env:test:e2e:run",
+    "test:e2e-debug": "pnpm run env:test:e2e:run --debug",
     "test:e2e-codegen": "playwright codegen",
     "test:e2e-report": "playwright show-report tests/e2e/test-results/playwright-report",
-    "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 npm run env:test:e2e:run --",
+    "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 pnpm run env:test:e2e:run",
     "test:e2e:reset": "node -e \"require('./tests/e2e/utils/local').seed()\""
   }
 }
