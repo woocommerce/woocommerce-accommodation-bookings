@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Runs the pull request's code (npm and Composer installs, webpack) with a read-only
+  # Runs the pull request's code (pnpm and Composer installs, webpack) with a read-only
   # token and no secrets.
   build:
     name: Build
