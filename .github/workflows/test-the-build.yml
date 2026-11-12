@@ -1,0 +1,269 @@
+name: Test the build
+
+# Posts a "Test the build" comment on every pull request, drafts included, with three ways
+# to try the build: Jetpack Beta, Jurassic Ninja and WordPress Playground.
+#
+# WordPress Playground runs in the visitor's browser and can only fetch public URLs. Its
+# artifact proxy serves this workflow's artifacts for the pull request and finds the
+# workflow by the name above, which the link reads from GITHUB_WORKFLOW.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Runs the pull request's code (npm and Composer installs, webpack) with a read-only
+  # token and no secrets.
+  build:
+    name: Build
+    uses: ./.github/workflows/generate-zip.yml
+
+  # Holds the token that can comment and the Jetpack Beta Builder secret, so it runs no
+  # code from the pull request: it repackages the build and copies the preview files.
+  publish:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      PLUGIN_SLUG: woocommerce-accommodation-bookings
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - name: Checkout the Playground preview files
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: tests/playground
+          persist-credentials: false
+
+      - name: Download the build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: woocommerce-accommodation-bookings
+          path: ${{ runner.temp }}/build
+
+      # One artifact holds the plugin ZIP and the preview files, so a Playground link can
+      # never pair files from two runs. The artifact proxy also refuses artifacts under
+      # 3000 bytes, which the preview files alone would be.
+      - name: Package the Playground preview
+        run: |
+          test -f "$RUNNER_TEMP/build/$PLUGIN_SLUG/$PLUGIN_SLUG.php"
+          mkdir -p "$RUNNER_TEMP/preview/playground"
+          ( cd "$RUNNER_TEMP/build" && zip -q -r "$RUNNER_TEMP/preview/$PLUGIN_SLUG.zip" "$PLUGIN_SLUG" )
+          cp tests/playground/preview.php tests/playground/setup.php "$RUNNER_TEMP/preview/playground/"
+
+      # The link downloads the artifact on every click, so it is kept for longer than a
+      # build artifact. The run ID in the name ties a link to the build of one run.
+      - name: Upload the Playground preview
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playground-preview-${{ github.run_id }}
+          path: ${{ runner.temp }}/preview
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
+
+      # Jetpack Beta and Jurassic Ninja both install pull request builds through the Jetpack
+      # Beta Builder. It only accepts builds of a plugin that is registered with it, sent with
+      # that plugin's webhook secret. Without the secret the next three steps are skipped and
+      # the comment says that the two options are not available. Fork pull requests never get
+      # the secret.
+      - name: Check for the Jetpack Beta Builder secret
+        id: beta
+        env:
+          SECRET: ${{ secrets.JETPACK_BETA_BUILDER_SECRET }}
+        run: |
+          if [ -n "$SECRET" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "No JETPACK_BETA_BUILDER_SECRET secret: the build was not sent to the Jetpack Beta Builder."
+          fi
+
+      # The Jetpack Beta Builder expects the folder <slug>-dev inside <slug>-dev.zip, so the
+      # build installs next to the released plugin, and reads the version from readme.txt.
+      - name: Package the build for the Jetpack Beta Builder
+        id: beta-build
+        if: steps.beta.outputs.configured == 'true'
+        run: |
+          DEV_DIR="$RUNNER_TEMP/beta/$PLUGIN_SLUG-dev"
+          mkdir -p "$RUNNER_TEMP/beta"
+          cp -R "$RUNNER_TEMP/build/$PLUGIN_SLUG" "$DEV_DIR"
+
+          CURRENT_VERSION=$( sed -n 's/^ \* Version: *//p' "$DEV_DIR/$PLUGIN_SLUG.php" | head -n 1 )
+          if [[ ! "$CURRENT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Could not read the plugin version from the build."
+            exit 1
+          fi
+          NEXT_VERSION=$( echo "$CURRENT_VERSION" | awk -F. '{ print $1 "." $2 "." ( $3 + 1 ) }' )
+          DEV_VERSION="${NEXT_VERSION}-dev_PR-${PR_NUMBER}_commit-${PR_HEAD_SHA:0:7}"
+
+          sed -i "s/^ \* Version: .*$/ * Version: ${DEV_VERSION}/" "$DEV_DIR/$PLUGIN_SLUG.php"
+          sed -i "s/define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '[^']*' )/define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '${DEV_VERSION}' )/" "$DEV_DIR/$PLUGIN_SLUG.php"
+          sed -i "s/^Stable tag: .*$/Stable tag: ${DEV_VERSION}/" "$DEV_DIR/readme.txt"
+
+          # Fail when a replacement did not happen, instead of sending a mislabeled build.
+          grep -qF " * Version: ${DEV_VERSION}" "$DEV_DIR/$PLUGIN_SLUG.php"
+          grep -qF "'WC_ACCOMMODATION_BOOKINGS_VERSION', '${DEV_VERSION}'" "$DEV_DIR/$PLUGIN_SLUG.php"
+          grep -qF "Stable tag: ${DEV_VERSION}" "$DEV_DIR/readme.txt"
+
+          ( cd "$RUNNER_TEMP/beta" && zip -q -r "$PLUGIN_SLUG-dev.zip" "$PLUGIN_SLUG-dev" && rm -rf "$PLUGIN_SLUG-dev" )
+
+          PLUGIN_DATA=$( jq -cn --arg slug "$PLUGIN_SLUG" --arg version "$DEV_VERSION" '{ ($slug): { version: $version } }' )
+          echo "plugin-data=$PLUGIN_DATA" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the build for the Jetpack Beta Builder
+        if: steps.beta.outputs.configured == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: plugins # The name the Jetpack Beta Builder looks for.
+          path: ${{ runner.temp }}/beta
+          if-no-files-found: error
+          overwrite: true
+          # The Jetpack Beta Builder copies it right away.
+          retention-days: 1
+
+      # A build the Jetpack Beta Builder refuses must not fail the job: the Playground link
+      # still works, and the comment says that the other two options are not available.
+      - name: Send the build to the Jetpack Beta Builder
+        id: beta-webhook
+        if: steps.beta.outputs.configured == 'true'
+        continue-on-error: true
+        env:
+          SECRET: ${{ secrets.JETPACK_BETA_BUILDER_SECRET }}
+          PLUGIN_DATA: ${{ steps.beta-build.outputs.plugin-data }}
+        run: |
+          # GITHUB_REF is refs/pull/<n>/merge here, so the branch is sent by name: it is what
+          # Jetpack Beta and the Jurassic Ninja link look the build up by.
+          curl --fail --silent --show-error --location \
+            --url "https://betadownload.jetpack.me/gh-action.php?run_id=$GITHUB_RUN_ID&pr=$PR_NUMBER&commit=$GITHUB_SHA" \
+            --form-string "repo=$GITHUB_REPOSITORY" \
+            --form-string "branch=$PR_HEAD_REF" \
+            --form-string "plugins=$PLUGIN_DATA" \
+            --form-string "secret=$SECRET"
+
+      # A link is playground.wordpress.net/# followed by the Blueprint as URI-encoded JSON.
+      # An artifact is a ZIP of what was uploaded, so the Blueprint unzips it first. It never
+      # asks for, or holds, a credential.
+      - name: Build the WordPress Playground link
+        id: playground
+        run: |
+          ARTIFACT_URL=$( jq -rn \
+            --arg org "$GITHUB_REPOSITORY_OWNER" \
+            --arg repo "${GITHUB_REPOSITORY#*/}" \
+            --arg workflow "$GITHUB_WORKFLOW" \
+            --arg pr "$PR_NUMBER" \
+            --arg artifact "playground-preview-$GITHUB_RUN_ID" \
+            '"https://playground.wordpress.net/plugin-proxy.php?org=\($org|@uri)&repo=\($repo|@uri)&workflow=\($workflow|@uri)&pr=\($pr|@uri)&artifact=\($artifact|@uri)"' )
+
+          BLUEPRINT=$( jq -cn --arg artifact_url "$ARTIFACT_URL" --arg slug "$PLUGIN_SLUG" '
+            {
+              "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+              landingPage: "/wp-admin/plugin-install.php?tab=upload",
+              preferredVersions: { php: "8.3", wp: "latest" },
+              features: { networking: true },
+              steps: [
+                { step: "login", username: "admin" },
+                { step: "installPlugin", pluginData: { resource: "wordpress.org/plugins", slug: "woocommerce" }, options: { activate: true } },
+                { step: "unzip", zipFile: { resource: "url", url: $artifact_url, caption: "Downloading the build of this pull request" }, extractToPath: "/tmp/pr" },
+                { step: "installPlugin", pluginData: { resource: "vfs", path: "/tmp/pr/\($slug).zip" }, options: { activate: true } },
+                { step: "mkdir", path: "/wordpress/wp-content/mu-plugins" },
+                { step: "cp", fromPath: "/tmp/pr/playground/preview.php", toPath: "/wordpress/wp-content/mu-plugins/accommodation-bookings-preview.php" },
+                { step: "runPHP", code: "<?php require \"/wordpress/wp-load.php\"; require \"/tmp/pr/playground/setup.php\";" }
+              ]
+            }' )
+
+          echo "url=https://playground.wordpress.net/#$( jq -rn --argjson blueprint "$BLUEPRINT" '$blueprint|tojson|@uri' )" >> "$GITHUB_OUTPUT"
+
+      # All three options are always listed, in the same order. One that cannot work for
+      # this build keeps its heading and says what it needs, without a link.
+      - name: Write the comment
+        env:
+          BETA_CONFIGURED: ${{ steps.beta.outputs.configured }}
+          BETA_WEBHOOK: ${{ steps.beta-webhook.outcome }}
+          PLAYGROUND_URL: ${{ steps.playground.outputs.url }}
+        run: |
+          BODY="$RUNNER_TEMP/comment.md"
+          # Jurassic Ninja reads the branch from the query string. Slashes stay as they are.
+          JN_BRANCH=$( jq -rn --arg branch "$PR_HEAD_REF" '$branch|@uri|gsub("%2F"; "/")' )
+          README_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/$PR_HEAD_SHA/tests/playground/README.md"
+
+          {
+            echo "<!-- test-the-build -->"
+            echo "### Test the build"
+            echo
+            echo "WooCommerce Accommodation Bookings is an add-on: it does nothing until WooCommerce Bookings 3.10 or newer is active. WooCommerce Bookings is a paid extension, so none of the options below installs it for you. Have your own copy at hand."
+            echo
+            echo "#### Option 1. Jetpack Beta"
+            echo
+            if [ "$BETA_CONFIGURED" = "true" ] && [ "$BETA_WEBHOOK" = "success" ]; then
+              echo "- Install and activate [Jetpack Beta](https://jetpack.com/beta/#download-and-install)."
+              echo "- Use this build by searching for PR number \`${PR_NUMBER}\` or branch name \`${PR_HEAD_REF}\` in your-test.site/wp-admin/admin.php?page=jetpack-beta&plugin=${PLUGIN_SLUG}"
+              echo
+              echo ":information_source: Jetpack Beta installs this add-on only. The site also needs WooCommerce and WooCommerce Bookings. Use a test site: the build runs on the products and bookings that site already has."
+            elif [ "$BETA_CONFIGURED" = "true" ]; then
+              echo ":construction: Not available for this build. The Jetpack Beta Builder did not accept it; the \"Send the build to the Jetpack Beta Builder\" step of the [workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) says why."
+            else
+              echo ":construction: Not available yet. This build was not sent to the Jetpack Beta Builder, because the workflow run has no \`JETPACK_BETA_BUILDER_SECRET\` secret. To make this option work, register the plugin with the Jetpack Beta Builder and save its webhook secret under that name in this repository's Actions secrets. Pull requests from forks never get the secret."
+            fi
+            echo
+            echo "#### Option 2. Jurassic Ninja - available for logged-in A12s"
+            echo
+            if [ "$BETA_CONFIGURED" = "true" ] && [ "$BETA_WEBHOOK" = "success" ]; then
+              echo ":warning: Log in at [jurassic.ninja](https://jurassic.ninja/) first. Without a login, the link below takes you to the Jurassic Ninja homepage and no site is created."
+              echo
+              echo ":rocket: [Launch a JN site with this branch and sample products](https://jurassic.ninja/create/?jetpack-beta&nojetpack&woocommerce&woocommerce-import-sample-data&branches.${PLUGIN_SLUG}=${JN_BRANCH}) :rocket:"
+              echo
+              echo ":information_source: The new site has WooCommerce and this build, but not WooCommerce Bookings. Upload your copy under Plugins > Add Plugin > Upload Plugin, then create an accommodation product."
+            else
+              echo ":construction: Not available yet. Jurassic Ninja installs the build of a pull request through Jetpack Beta, so it needs the same setup as Option 1."
+            fi
+            echo
+            echo "#### Option 3. WordPress Playground - runs in your browser"
+            echo
+            echo "- :test_tube: [Open this build in WordPress Playground](${PLAYGROUND_URL}): a fresh store with WooCommerce set up and this build active. It opens on the plugin upload screen."
+            echo "- To test the add-on there, upload your copy of \`woocommerce-bookings.zip\` on that screen and activate it. The preview then adds a \"Sample room\" that you can edit in the admin and book in the store. The site runs in your browser, so the file is not sent to a server."
+            echo "- With a checkout of this branch you can start the same preview with WooCommerce Bookings already installed: see [tests/playground]($README_URL)."
+            echo
+            echo ":information_source: Without WooCommerce Bookings the preview only shows that the build installs and activates, and the notice that asks for WooCommerce Bookings. A site in a browser tab runs no scheduled tasks, so booking reminders and the expiry of bookings left in the cart do not happen. The link stops working 14 days after the last build."
+            echo
+            echo "---"
+            echo
+            echo "Build info:"
+            echo
+            echo "- Latest commit: ${PR_HEAD_SHA}"
+            echo "- Build time: $( date -u "+%Y-%m-%d %H:%M:%S UTC" )"
+            echo
+            echo "_Note: the build is updated when a new commit is pushed to this PR._"
+          } > "$BODY"
+
+          cat "$BODY" >> "$GITHUB_STEP_SUMMARY"
+
+      # The token of a fork pull request cannot comment. The text is in the run summary.
+      - name: Add or update the comment on the pull request
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          COMMENT_ID=$( gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select( .user.login == "github-actions[bot]" and ( .body | startswith( "<!-- test-the-build -->" ) ) ) | .id' | head -n 1 )
+
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -F "body=@$RUNNER_TEMP/comment.md" --silent
+            echo "Updated comment $COMMENT_ID."
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -F "body=@$RUNNER_TEMP/comment.md" --silent
+            echo "Created the comment."
+          fi
