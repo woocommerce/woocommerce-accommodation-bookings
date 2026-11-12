@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Add a "Test the build" comment to pull requests, with a WordPress Playground preview of the build.
