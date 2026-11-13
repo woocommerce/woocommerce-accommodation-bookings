@@ -54,7 +54,7 @@
     "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",
     "lint:js": "wp-scripts lint-js --max-warnings 0",
-    "lint:js-fix": "pnpm run lint:js --fix",
+    "lint:js-fix": "pnpm run lint:js:fix",
     "lint:style": "wp-scripts lint-style src/css/frontend.scss --max-warnings 0",
     "lint:style-fix": "pnpm run lint:style --fix",
     "lint:md:docs": "wp-scripts lint-md-docs --dot",
@@ -84,6 +84,14 @@
     "test:e2e-codegen": "playwright codegen",
     "test:e2e-report": "playwright show-report tests/e2e/test-results/playwright-report",
     "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 pnpm run env:test:e2e:run",
-    "test:e2e:reset": "node -e \"require('./tests/e2e/utils/local').seed()\""
+    "test:e2e:reset": "node -e \"require('./tests/e2e/utils/local').seed()\"",
+    "lint:php:syntax": "composer run lint:php:syntax --",
+    "lint:php": "composer run lint:php --",
+    "lint:php:fix": "composer run lint:php:fix --",
+    "phpstan": "composer run phpstan --",
+    "watch:build": "pnpm run start:webpack",
+    "test:php": "composer run test:php --",
+    "test:isolated": "composer run test:isolated --",
+    "lint:js:fix": "pnpm run lint:js --fix"
   }
 }

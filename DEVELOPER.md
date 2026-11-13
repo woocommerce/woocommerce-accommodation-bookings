@@ -25,7 +25,7 @@ is disabled. The action's result artifact contains all remaining findings.
 
 ## PHPStan
 
-After `composer install`, run `composer lint:phpstan`. CI runs the same command
+After `composer install`, run `composer phpstan`. CI runs the same command
 on PHP, Composer and PHPStan configuration changes using PHP 8.4. PHPStan checks
 owned production PHP at level 8 against the plugin's minimum PHP version.
 WordPress and WooCommerce stubs supply core symbols. Vendor code, generated files,

@@ -64,8 +64,8 @@ Install PHP 7.4 or newer and Composer, then run these commands from a fresh chec
 
 ```bash
 composer install
-composer test
-composer test -- --filter testTimestampKeepsTheDate
+composer test:php
+composer test:php -- --filter testTimestampKeepsTheDate
 ```
 
 This suite uses PHPUnit and WP_Mock. It does not need Docker, a database, WordPress,
@@ -77,7 +77,7 @@ To collect local line and branch coverage, install a PHP-compatible Xdebug drive
 and enable its coverage mode:
 
 ```bash
-XDEBUG_MODE=coverage composer test -- --path-coverage --coverage-html coverage/unit --coverage-text
+XDEBUG_MODE=coverage composer test:php -- --path-coverage --coverage-html coverage/unit --coverage-text
 ```
 
 PCOV can collect line coverage with `php -d pcov.enabled=1 vendor/bin/phpunit

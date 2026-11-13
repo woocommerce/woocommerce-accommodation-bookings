@@ -32,7 +32,7 @@ jobs:
       - name: Install locked dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
       - name: Run isolated PHP unit tests
-        run: composer test -- --log-junit "$RUNNER_TEMP/phpunit-results.xml"
+        run: composer test:php -- --log-junit "$RUNNER_TEMP/phpunit-results.xml"
       - name: Run isolated PHP tests
         run: composer test:isolated
       - name: Upload test results
