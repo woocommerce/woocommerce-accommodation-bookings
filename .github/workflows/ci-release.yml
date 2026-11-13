@@ -16,6 +16,7 @@ permissions:
 
 jobs:
 
+    # Release jobs check out a branch SHA without saving dependency caches in trunk.
     check-versions:
         name: Check versions
         runs-on: ubuntu-latest
@@ -81,17 +82,24 @@ jobs:
                 } >> "$GITHUB_OUTPUT"
                 echo "Publishing \`$RELEASE_BRANCH\` at \`$sha\`." >> "$GITHUB_STEP_SUMMARY"
 
+            - name: Checkout version checking tools
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                persist-credentials: false
+
             - name: Checkout release commit
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                 ref: ${{ steps.candidate.outputs.commit }}
+                path: release-candidate
                 persist-credentials: false
 
             - name: Check versions
+              working-directory: release-candidate
               env:
                 RELEASE_VERSION: ${{ steps.candidate.outputs.version }}
               run: |
-                bash ./bin/check_versions.sh
+                bash ../bin/check_versions.sh
                 jq -e --arg version "$RELEASE_VERSION" '.version == $version' package.json > /dev/null
 
     build_project:
