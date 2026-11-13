@@ -6,6 +6,9 @@ on:
     - develop
 
   workflow_call:
+    inputs:
+      release-artifact:
+        type: string
 
 permissions:
   contents: read
@@ -13,14 +16,36 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
     - name: Checkout
+      if: inputs.release-artifact == ''
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Download the release archive
+      if: inputs.release-artifact != ''
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+      with:
+        name: ${{ inputs.release-artifact }}
+        path: release-package
+
+    - name: Unpack the release archive
+      if: inputs.release-artifact != ''
+      id: archive
+      run: |
+        unzip -q "release-package/${GITHUB_REPOSITORY#*/}.zip" -d release-build
+        shopt -s dotglob nullglob
+        entries=(release-build/*)
+        if [[ ${#entries[@]} != 1 || ! -d "${entries[0]}" ]]; then
+          echo "::error::The release ZIP must contain one plugin directory."
+          exit 1
+        fi
+        echo "plugin_dir=${entries[0]}" >> "$GITHUB_OUTPUT"
 
     - name: Run plugin check
       uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
       with:
+        build-dir: ${{ steps.archive.outputs.plugin_dir || './' }}
         # Keep results in annotations and artifacts.
         repo-token: ''
         # Enforce warnings; ignore only reviewed codes below.

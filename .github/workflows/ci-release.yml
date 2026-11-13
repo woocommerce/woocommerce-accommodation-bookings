@@ -101,9 +101,23 @@ jobs:
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
 
+    check-release-archive:
+        name: Check release archive
+        needs: build_project
+        uses: ./.github/workflows/plugin-check.yml
+        with:
+          release-artifact: acceptance-test-zip
+
+    php-tests:
+        name: PHP
+        needs: check-versions
+        uses: ./.github/workflows/phpunit.yml
+        with:
+          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+
     release:
         name: Release
-        needs: [ build_project, check-versions ]
+        needs: [ check-release-archive, php-tests, build_project, check-versions ]
         runs-on: ubuntu-latest
         timeout-minutes: 5
         permissions:
