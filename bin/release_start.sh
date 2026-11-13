@@ -117,5 +117,5 @@ fi
 PR_URL=$(gh pr list --head "release/${VERSION}" --json url --jq '.[0].url')
 echo
 success "Release PR: ${PR_URL:-created (see gh pr list)}"
-echo "Next steps: review the PR and the changelog vs milestone comment, wait for CI, then merge to ship."
-echo "Trunk is under code freeze until the release PR is merged or closed."
+echo "Review the release PR and wait for its checks, then run:"
+echo "  gh workflow run ci-release.yml --ref trunk -f branch=release/${VERSION}"

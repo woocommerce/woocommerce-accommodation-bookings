@@ -89,7 +89,7 @@ scope. Coverage is optional and does not change the normal test command.
 
 ## Deployment
 
-Releases are started with the `Start Release` workflow and shipped by merging the release PR it creates.
+Run `Start Release` to prepare the release and `Publish release` to ship it.
 
 Before starting a release, make sure that:
 
@@ -106,13 +106,17 @@ Run it with no arguments to be prompted for the version and the WP/WC "tested up
 
 On a `release/X.Y.Z` branch, the workflow bumps the version and tested-up-to headers, compiles the change files under `changelog/` into `changelog.txt` and deletes the ones it consumed, copies the release's entries into the `readme.txt` changelog, then opens a pull request against `trunk`. It also posts a comment on the PR comparing the changelog entries with the issues in the milestone - review that comment to make sure nothing is missing.
 
-While the release PR is open, `trunk` is under code freeze: the required `Check release freeze` check fails on all other pull requests, and flips back automatically once the release PR is merged or closed.
+A smoke test workflow runs on the release branch ([ci-release-smoke-test.yml](https://github.com/woocommerce/woocommerce-accommodation-bookings/blob/trunk/.github/workflows/ci-release-smoke-test.yml)). Review the release PR and wait for its required checks. Normal PRs can continue to merge into `trunk`. Assign changes merged after the branch cut to the next milestone that Start Release opens.
 
-A smoke test workflow runs on the release branch ([ci-release-smoke-test.yml](https://github.com/woocommerce/woocommerce-accommodation-bookings/blob/trunk/.github/workflows/ci-release-smoke-test.yml)), and the release PR goes through the regular PR CI and review like any other PR.
+Run [Publish release](https://github.com/woocommerce/woocommerce-accommodation-bookings/actions/workflows/ci-release.yml) from `trunk` with the release branch name, or run:
 
-Merging the release PR into `trunk` triggers the release workflow ([ci-release.yml](https://github.com/woocommerce/woocommerce-accommodation-bookings/blob/trunk/.github/workflows/ci-release.yml)), which builds the zip, creates the GitHub release and tag, and deploys that zip to WordPress.org. `config.wp_org_slug` in `package.json` names the WordPress.org plugin slug it is deployed to. Progress is posted in the `#team-somewherewarm-releases` Slack channel.
+```bash
+gh workflow run ci-release.yml --ref trunk -f branch=release/X.Y.Z
+```
 
-After a successful release, the workflow closes the released milestone and creates one for the next patch version (rename it if the next release will be a minor/major). What's left for you: post-release tasks like documentation and stakeholder notifications.
+The workflow tests, builds, and tags the branch head. It deploys the tested ZIP to WordPress.org, then merges the release PR. GitHub deletes the release branch after merging. The workflow also closes the shipped milestone and reports progress in `#team-somewherewarm-releases`.
+
+If the deployment fails or GitHub blocks the merge, resolve the cause and re-run only the failed jobs. If the PR head changed or there is a conflict, finish the merge through the PR after checking the deployed tag and preserving new changelog fragments. If a release needs source changes after its version was tagged, coordinate recovery before starting another run. Keep the released tag and ZIP intact for any version that reached the store.
 
 ## AI code reviews
 
