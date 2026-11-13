@@ -23,8 +23,11 @@ jobs:
             - name: Install Node dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Install PHP dependencies
+              run: composer install --prefer-dist --no-progress --no-interaction
+
             - name: Generate ZIP file
-              run: pnpm run prebuild && pnpm run build:webpack && pnpm run archive && rm -rf ./woocommerce-accommodation-bookings && unzip woocommerce-accommodation-bookings.zip -d ./woocommerce-accommodation-bookings
+              run: pnpm run build:webpack && pnpm run archive && rm -rf ./woocommerce-accommodation-bookings && unzip woocommerce-accommodation-bookings.zip -d ./woocommerce-accommodation-bookings
 
             - name: Use the Upload Artifact GitHub Action
               uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

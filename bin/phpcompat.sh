@@ -10,11 +10,11 @@ fi
 
 package_name="$(node -p "require('./package.json').name")"
 if [ "$#" -eq 0 ]; then
-    pnpm run build
+    pnpm run build:zip
 fi
-archive="${1:-$ROOTDIR/$package_name.zip}"
+archive="${1:-$ROOTDIR/deploy/$package_name.zip}"
 
-# Keep the checker outside root vendor, which the release build removes.
+# Keep the compatibility checker separate from development dependencies.
 composer --working-dir=tools/php-quality install --no-interaction --prefer-dist --no-progress
 production_dir="$(mktemp -d)"
 trap 'rm -rf "$production_dir"' EXIT

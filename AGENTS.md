@@ -31,14 +31,14 @@ Use the [SWW command contract](https://linear.app/a8c/document/sww-developer-com
 nvm use
 pnpm install --frozen-lockfile
 composer install
-pnpm run build:dev       # Composer dependencies, webpack, and translations
+pnpm run build       # Build assets and translations
 pnpm run start:webpack   # Watch source assets
 pnpm run lint:js         # Authored JavaScript and formatting (same as CI)
 pnpm run lint:js-fix     # Fix lint and WordPress formatting findings
 pnpm run lint:style
 ```
 
-`webpack.config.js` maps `src/js/booking-form.js`, `src/js/writepanel.js`, and `src/css/frontend.scss` to `build/`. Edit these sources and rebuild; do not hand-edit generated assets. `pnpm run build` also packages a ZIP: its prebuild replaces `vendor`, and prearchive removes it. Run `composer install` again before PHP checks after packaging.
+`webpack.config.js` maps `src/js/booking-form.js`, `src/js/writepanel.js`, and `src/css/frontend.scss` to `build/`. Edit these sources and rebuild; do not hand-edit generated assets. Run `composer install` before building or extracting translations.
 
 ### PHP checks
 
@@ -101,7 +101,7 @@ pnpm run env:dev:reset   # Wipe the development site and seed it again
 
 ### E2E Tests
 
-The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`pnpm run build:dev`) and install the browser (`./node_modules/.bin/playwright install chromium`).
+The Playwright suite runs against the tests site; logins `admin` / `password`, `customer` / `password`. First build the plugin (`pnpm run build`) and install the browser (`./node_modules/.bin/playwright install chromium`).
 
 ```bash
 pnpm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)

@@ -53,8 +53,11 @@ jobs:
       - name: Node install
         run: pnpm install --frozen-lockfile
 
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
       - name: Build
-        run: pnpm run prebuild && pnpm run build:webpack && pnpm run archive
+        run: pnpm run build:webpack
 
       - name: Install Playwright Browsers
         run: ./node_modules/.bin/playwright install chromium

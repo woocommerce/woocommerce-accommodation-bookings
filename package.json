@@ -40,13 +40,11 @@
     "webpack-remove-empty-scripts": "^1.0.4"
   },
   "scripts": {
-    "prebuild": "rm -rf ./vendor && composer install",
-    "build": "pnpm run build:webpack && pnpm run makepot && pnpm run archive",
-    "build:zip": "pnpm run build && mkdir -p deploy && mv $npm_package_name.zip deploy/",
+    "build": "pnpm run build:webpack && pnpm run makepot",
+    "build:zip": "pnpm run build && pnpm run archive && mkdir -p deploy && mv $npm_package_name.zip deploy/",
     "build:webpack": "wp-scripts build",
     "start:webpack": "wp-scripts start",
-    "build:dev": "composer install && pnpm run build:webpack && pnpm run makepot",
-    "prearchive": "rm -rf ./vendor",
+    "build:dev": "pnpm run build",
     "archive": "composer archive --file=$npm_package_name --format=zip",
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
     "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --exclude=tests,src",
