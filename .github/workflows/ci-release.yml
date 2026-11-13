@@ -295,7 +295,7 @@ jobs:
                 channel: '#team-somewherewarm-releases'
 
     handle-cancelled:
-        if: ${{ cancelled() }}
+        if: ${{ cancelled() && needs.check-versions.outputs.release_version != '' }}
         needs: [ deploy, merge-release, check-versions ]
         name: Handle cancellation
         runs-on: ubuntu-latest
@@ -312,7 +312,7 @@ jobs:
                 channel: '#team-somewherewarm-releases'
 
     handle-error:
-        if: ${{ failure() }}
+        if: ${{ failure() && needs.check-versions.outputs.release_version != '' }}
         needs: [ deploy, merge-release, check-versions ]
         name: Handle failure
         runs-on: ubuntu-latest
