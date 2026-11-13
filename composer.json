@@ -28,19 +28,23 @@
         ]
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --fail-on-empty-test-suite",
+        "test": "@test:php",
         "test:isolated": "phpunit -c tests/isolated/phpunit.xml.dist --fail-on-empty-test-suite",
-        "lint:php": "bash bin/phplint.sh",
-        "lint:phpcs": "phpcs",
+        "lint:php": "phpcs",
+        "lint:phpcs": "@lint:php",
         "lint:phpcs:baseline": "bash bin/phpcs.sh",
         "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
         "check:php": [
-            "@lint:php",
+            "@lint:php:syntax",
             "@lint:phpcs:baseline"
         ],
-        "lint:phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
-        "lint:phpstan:baseline:update": "@lint:phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
-        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite"
+        "lint:phpstan": "@phpstan",
+        "lint:phpstan:baseline:update": "@phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
+        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite",
+        "lint:php:syntax": "bash bin/phplint.sh",
+        "lint:php:fix": "phpcbf",
+        "phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
+        "test:php": "vendor/bin/phpunit --fail-on-empty-test-suite"
     },
     "config": {
         "platform": {
