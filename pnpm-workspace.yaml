@@ -13,3 +13,10 @@ overrides:
   "postcss-selector-parser": "7.1.6"
   "smol-toml": "1.9.0"
   "katex": "0.18.2"
+
+# Let new releases age 24 hours before installing (same as the WooCommerce monorepo).
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - "@automattic/*"
+  - "@woocommerce/*"
+  - "@wordpress/*"
