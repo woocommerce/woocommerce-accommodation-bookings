@@ -25,6 +25,9 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: start-release
+
 jobs:
 
     start-release:
@@ -64,6 +67,13 @@ jobs:
 
             - name: Pre-flight checks
               run: |
+                OPEN_RELEASE_PRS=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&base=trunk&per_page=100" \
+                  --jq '.[] | select(.head.repo.full_name == .base.repo.full_name and (.head.ref | startswith("release/"))) | .number')
+                if [[ -n "$OPEN_RELEASE_PRS" ]]; then
+                  echo "::error::Finish or close the existing release PR before cutting another release."
+                  exit 1
+                fi
+
                 if git ls-remote --exit-code --heads origin "release/${VERSION}" > /dev/null 2>&1; then
                   echo "::error::Branch release/${VERSION} already exists."
                   exit 1
@@ -80,7 +90,7 @@ jobs:
             - name: Find GitHub milestone
               id: milestone
               run: |
-                MILESTONE_NUMBER=$(gh api "repos/${{ github.repository }}/milestones?per_page=100" --jq ".[] | select(.title == \"${VERSION}\") | .number")
+                MILESTONE_NUMBER=$(gh api --paginate "repos/${{ github.repository }}/milestones?state=open&per_page=100" --jq ".[] | select(.title == \"${VERSION}\") | .number")
                 if [[ -z "$MILESTONE_NUMBER" ]]; then
                   echo "::error::No open milestone titled '${VERSION}' found. Create one at https://github.com/${{ github.repository }}/milestones/new first."
                   exit 1
@@ -126,12 +136,21 @@ jobs:
             - name: Sync readme.txt changelog
               run: bash bin/sync_readme_changelog.sh "$VERSION"
 
+            - name: Open the next release milestone
+              run: |
+                NEXT_VERSION=$(awk -F. '{print $1"."$2"."($3+1)}' <<< "$VERSION")
+                OPEN_MILESTONES=$(gh api --paginate "repos/$GITHUB_REPOSITORY/milestones?state=open&per_page=100" --jq '.[].title')
+                if ! grep -Fxq "$NEXT_VERSION" <<< "$OPEN_MILESTONES"; then
+                  gh api --method POST "repos/$GITHUB_REPOSITORY/milestones" -f "title=$NEXT_VERSION" > /dev/null
+                fi
+                echo "Use milestone \`$NEXT_VERSION\` for changes merged after the branch cut." >> "$GITHUB_STEP_SUMMARY"
+
             - name: Commit and push release branch
               run: |
                 git config user.name "github-actions[bot]"
                 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
                 git checkout -b "release/${VERSION}"
-                git add -A
+                git add -u
                 git commit -m "Bump version to ${VERSION}"
                 git push origin "release/${VERSION}"
 
@@ -174,5 +193,4 @@ jobs:
                 echo "Next steps:" >> $GITHUB_STEP_SUMMARY
                 echo "- Wait for the smoke test CI to pass on the release branch." >> $GITHUB_STEP_SUMMARY
                 echo "- Review the changelog vs milestone comparison comment." >> $GITHUB_STEP_SUMMARY
-                echo "- Merging the PR into trunk starts the release CI (tag, zip, deploy)." >> $GITHUB_STEP_SUMMARY
-                echo "- Trunk is under code freeze until the release PR is merged or closed." >> $GITHUB_STEP_SUMMARY
+                echo "- After review, run **Publish release** from trunk with \`release/$VERSION\` as input." >> "$GITHUB_STEP_SUMMARY"

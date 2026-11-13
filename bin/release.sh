@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
+set -o pipefail
+
 # HELPERS.
-BLUE='\033[0;32m'
-COLOR='\033[0;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
@@ -56,33 +56,39 @@ fi
 # Parse the changelog for the releasing version.
 CHANGES=$(parse_changelog "$PACKAGE_VERSION" | sed 's/"/\\"/g')
 
-# Create a GitHub release, or reuse the one an earlier attempt created for this commit,
-# so a re-run after a failed asset upload can finish the release.
-if EXISTING_TARGET=$(gh release view "${PACKAGE_VERSION}" --json targetCommitish --jq .targetCommitish 2> /dev/null); then
-    if [ "$EXISTING_TARGET" != "$GH_RELEASE_COMMIT" ]; then
-        echo -e "${RED}Error: Release ${PACKAGE_VERSION} already exists for another commit (${EXISTING_TARGET}). Exiting...${NC}"
-        exit 1
-    fi
-    echo -e "${BLUE}GitHub release v${PACKAGE_VERSION} already exists for this commit. Reusing it...${NC}"
-else
-    echo -e "${BLUE}Creating a GitHub release for v${PACKAGE_VERSION}...${NC}"
-    if ! gh release create "${PACKAGE_VERSION}" --title "v${PACKAGE_VERSION}" --notes "${CHANGES}" --target "$GH_RELEASE_COMMIT"; then
-        echo -e "${RED}Error: Failed to create GitHub release. Exiting...${NC}"
-        exit 1
-    fi
+archive="${PACKAGE_BASE}.zip"
+if [[ ! -s "$archive" ]]; then
+    echo "Release archive $archive is missing or empty."
+    exit 1
 fi
+checksum=$(sha256sum "$archive") || exit 1
 
-# Check if the zip file exists before uploading
-if [ -f "${PACKAGE_BASE}.zip" ]; then
-    echo -e "${BLUE}Uploading ${PACKAGE_BASE}.zip as a release asset...${NC}"
-    if ! gh release upload --clobber "${PACKAGE_VERSION}" "${PACKAGE_BASE}.zip"; then
-        echo -e "${RED}Error: Failed to upload release asset. Exiting...${NC}"
-        exit 1
-    fi
-else
-    echo -e "${RED}Error: ${PACKAGE_BASE}.zip not found. Skipping asset upload.${NC}"
+# Verify the tag itself. targetCommitish does not constrain an existing tag.
+tag_path="refs/tags/${PACKAGE_VERSION}"
+tag=$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/tags/$PACKAGE_VERSION" |
+    jq -r --arg ref "$tag_path" '.[] | select(.ref == $ref) | .ref') || exit 1
+if [[ -z "$tag" ]]; then
+    gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f "ref=$tag_path" -f "sha=$GH_RELEASE_COMMIT" > /dev/null || exit 1
+fi
+target=$(gh api "repos/$GITHUB_REPOSITORY/commits/refs%2Ftags%2F$PACKAGE_VERSION" --jq .sha) || exit 1
+if [[ "$target" != "$GH_RELEASE_COMMIT" ]]; then
+    echo "Release tag $PACKAGE_VERSION points to $target, expected $GH_RELEASE_COMMIT."
     exit 1
 fi
 
-echo -e "\n${COLOR}Release successful!${NC}"
-exit 0
+if release=$(gh release view "$PACKAGE_VERSION" --json assets,isDraft 2>/dev/null); then
+    digest=$(jq -r --arg name "$archive" '.assets[] | select(.name == $name) | .digest // "unknown"' <<< "$release")
+    if [[ -z "$digest" ]]; then
+        gh release upload "$PACKAGE_VERSION" "$archive" || exit 1
+    elif [[ "$digest" != "sha256:${checksum%% *}" ]]; then
+        echo "The existing release ZIP differs. Re-run the failed jobs to reuse the tested artifact."
+        exit 1
+    fi
+    if jq -e '.isDraft == true' <<< "$release" > /dev/null; then
+        gh release edit "$PACKAGE_VERSION" --draft=false || exit 1
+    fi
+else
+    gh release create "$PACKAGE_VERSION" "$archive" --title "v$PACKAGE_VERSION" --notes "$CHANGES" --verify-tag || exit 1
+fi
+
+echo "GitHub release $PACKAGE_VERSION is ready."
