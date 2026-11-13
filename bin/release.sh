@@ -76,13 +76,16 @@ if [[ "$target" != "$GH_RELEASE_COMMIT" ]]; then
     exit 1
 fi
 
-if release=$(gh release view "$PACKAGE_VERSION" --json assets 2>/dev/null); then
+if release=$(gh release view "$PACKAGE_VERSION" --json assets,isDraft 2>/dev/null); then
     digest=$(jq -r --arg name "$archive" '.assets[] | select(.name == $name) | .digest // "unknown"' <<< "$release")
     if [[ -z "$digest" ]]; then
         gh release upload "$PACKAGE_VERSION" "$archive" || exit 1
     elif [[ "$digest" != "sha256:${checksum%% *}" ]]; then
         echo "The existing release ZIP differs. Re-run the failed jobs to reuse the tested artifact."
         exit 1
+    fi
+    if jq -e '.isDraft == true' <<< "$release" > /dev/null; then
+        gh release edit "$PACKAGE_VERSION" --draft=false || exit 1
     fi
 else
     gh release create "$PACKAGE_VERSION" "$archive" --title "v$PACKAGE_VERSION" --notes "$CHANGES" --verify-tag || exit 1
