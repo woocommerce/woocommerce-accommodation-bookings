@@ -23,6 +23,8 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 
 ## Commands
 
+Use the [SWW command contract](https://linear.app/a8c/document/sww-developer-command-and-build-lifecycle-contract-dfe7a270b983). Run `pnpm run lint:php` for PHPCS, `pnpm run phpstan` for static analysis and `pnpm run test:php` for the host PHP suite. Run `pnpm run lint:php:syntax` for syntax checks.
+
 ### Setup and assets
 
 ```bash
@@ -47,7 +49,7 @@ pnpm run phpcompat     # Builds/checks release ZIP; run composer install afterwa
 
 CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:phpcs` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.
 
-PHPStan (`composer lint:phpstan`) also needs the stubs of the plugins Accommodation Bookings integrates with. They come from the public `woocommerce/php-stubs` package, installed separately:
+PHPStan (`composer phpstan`) also needs the stubs of the plugins Accommodation Bookings integrates with. They come from the public `woocommerce/php-stubs` package, installed separately:
 
 ```bash
 composer install --working-dir=tools/php-stubs
@@ -58,7 +60,7 @@ composer install --working-dir=tools/php-stubs
 ### Unit tests
 
 ```bash
-composer test
+composer test:php
 composer test:isolated   # tests/isolated: changelog formatter round-trip, no WordPress
 ```
 
