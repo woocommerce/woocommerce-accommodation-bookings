@@ -22,38 +22,40 @@ Docker is required to run the end-to-end test suite via `@wordpress/env`.
 
 ### Quick start
 
+Install the pnpm version pinned in `package.json`. With Corepack, run `corepack enable pnpm` after selecting the project’s Node version.
+
 ```bash
 nvm use
-npm install
-npm run build:dev
+pnpm install
+pnpm run build:dev
 ```
 
-## npm scripts
+## pnpm scripts
 
 ```bash
 # Development build
-npm run build:dev      # Install composer deps, build JS/CSS, generate language files
+pnpm run build:dev      # Install composer deps, build JS/CSS, generate language files
 
 # Watch mode
-npm run start:webpack  # Rebuild JS/CSS on file changes
+pnpm run start:webpack  # Rebuild JS/CSS on file changes
 
 # Production build
-npm run build          # Production build + language files + zip
-npm run build:zip      # Same build, with the zip moved to deploy/ (used by the release CI)
+pnpm run build          # Production build + language files + zip
+pnpm run build:zip      # Same build, with the zip moved to deploy/ (used by the release CI)
 
 # Tests
-npm run env:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
-npm run env:dev:seed                              # Seed it with a browsable store
-npm run env:test:e2e:setup                        # Download the Bookings plugins, start and seed the wp-env tests site
-npm run env:test:e2e                              # Full Playwright E2E pipeline: set up, run, stop
-E2E_FILTER=@foundational npm run env:test:e2e:run # Run @foundational-tagged tests on a set-up tests site
-npm run test:e2e-debug                            # Run E2E tests in debug mode
-npm run env:test:e2e:help                         # All E2E subcommands and knobs
+pnpm run env:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
+pnpm run env:dev:seed                              # Seed it with a browsable store
+pnpm run env:test:e2e:setup                        # Download the Bookings plugins, start and seed the wp-env tests site
+pnpm run env:test:e2e                              # Full Playwright E2E pipeline: set up, run, stop
+E2E_FILTER=@foundational pnpm run env:test:e2e:run # Run @foundational-tagged tests on a set-up tests site
+pnpm run test:e2e-debug                            # Run E2E tests in debug mode
+pnpm run env:test:e2e:help                         # All E2E subcommands and knobs
 
 # Quality
-npm run phpcompat      # Builds/checks release ZIP; run composer install afterward
-npm run lint:js        # Authored JavaScript and formatting (same as CI)
-npm run lint:style     # Stylelint on CSS/SCSS
+pnpm run phpcompat      # Builds/checks release ZIP; run composer install afterward
+pnpm run lint:js        # Authored JavaScript and formatting (same as CI)
+pnpm run lint:style     # Stylelint on CSS/SCSS
 ```
 
 ## PHP unit tests

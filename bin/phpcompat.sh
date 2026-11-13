@@ -4,13 +4,13 @@ set -euo pipefail
 ROOTDIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOTDIR"
 if [ "$#" -gt 1 ]; then
-    echo "Usage: npm run phpcompat -- [production.zip]" >&2
+    echo "Usage: pnpm run phpcompat [production.zip]" >&2
     exit 1
 fi
 
 package_name="$(node -p "require('./package.json').name")"
 if [ "$#" -eq 0 ]; then
-    npm run build
+    pnpm run build
 fi
 archive="${1:-$ROOTDIR/$package_name.zip}"
 

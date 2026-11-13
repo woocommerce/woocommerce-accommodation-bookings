@@ -23,8 +23,7 @@ credential in a Blueprint.
 
 ## Run a preview locally, with WooCommerce Bookings installed
 
-You need Node.js 20.18 or newer, a built checkout (`npm run build:dev`) and a copy of
-`woocommerce-bookings.zip`. With access to the repository:
+Use the Node.js version in `.nvmrc` and build the checkout with `pnpm run build:dev`. You also need a copy of `woocommerce-bookings.zip`. Download it with GitHub CLI if you have access to the repository.
 
 ```bash
 gh release download --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$HOME/Downloads"

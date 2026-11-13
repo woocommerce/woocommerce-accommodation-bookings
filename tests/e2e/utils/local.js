@@ -11,19 +11,10 @@ function wp( ...args ) {
 		args[ 1 ] = path.join( native, args[ 1 ] );
 	}
 	return execFileSync(
-		native ? 'wp' : 'npm',
+		native ? 'wp' : 'pnpm',
 		native
 			? [ `--path=${ native }`, ...args ]
-			: [
-					'run',
-					'--silent',
-					'wp-env:test',
-					'--',
-					'run',
-					'cli',
-					'wp',
-					...args,
-				],
+			: [ '--silent', 'run', 'wp-env:test', 'run', 'cli', 'wp', ...args ],
 		{
 			cwd: path.resolve( __dirname, '../../..' ),
 			encoding: 'utf8',

@@ -4,14 +4,14 @@
 # address, admin and customer addresses, payment, shipping, tax and WooCommerce's sample
 # products, then runs seed_dev_plugin.sh for the plugin's data.
 #
-# Runs inside the `cli` container via `npm run env:dev:seed`; `npm run env:dev:reset` wipes
+# Runs inside the `cli` container via `pnpm run env:dev:seed`; `pnpm run env:dev:reset` wipes
 # the site and seeds again.
 #
 set -euo pipefail
-trap 'echo "Seeding failed; run npm run env:dev:reset to start over." >&2' ERR
+trap 'echo "Seeding failed; run pnpm run env:dev:reset to start over." >&2' ERR
 
 if [ "$(wp option get wp_env_dev_seeded 2>/dev/null || true)" = "yes" ]; then
-	echo "Development site is already seeded. Run 'npm run env:dev:reset' to start over."
+	echo "Development site is already seeded. Run 'pnpm run env:dev:reset' to start over."
 	exit 0
 fi
 

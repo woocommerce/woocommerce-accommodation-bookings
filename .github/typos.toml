@@ -1,5 +1,5 @@
 [files]
-extend-exclude = ["languages/", "*.min.js", "*.min.css", "package-lock.json", "composer.lock", "phpstan-baseline.neon", "changelog.txt", "phpcs.baseline", "phpcs*.baseline", "vendor/", "node_modules/", "build/", "assets/dist/"]
+extend-exclude = ["languages/", "*.min.js", "*.min.css", "pnpm-lock.yaml", "composer.lock", "phpstan-baseline.neon", "changelog.txt", "phpcs.baseline", "phpcs*.baseline", "vendor/", "node_modules/", "build/", "assets/dist/"]
 
 [default.extend-words]
 # Automattic is the correct spelling of the company name (Automattic Inc.).

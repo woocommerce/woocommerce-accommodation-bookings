@@ -142,7 +142,7 @@ if [ ${#CHANGE_FILES[@]} -eq 0 ]; then
     if [ "$CHECK_ALL" -eq 1 ]; then
         fail "No change files under ${CHANGES_DIR}/. Nothing to compile."
     else
-        fail "No changelog file found. Run 'npm run changelog add' and commit the file it creates under ${CHANGES_DIR}/, or label the pull request 'no changelog' if this change needs no entry."
+        fail "No changelog file found. Run 'pnpm run changelog add' and commit the file it creates under ${CHANGES_DIR}/, or label the pull request 'no changelog' if this change needs no entry."
     fi
 
     exit 1

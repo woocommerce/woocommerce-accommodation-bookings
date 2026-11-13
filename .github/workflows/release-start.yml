@@ -88,11 +88,6 @@ jobs:
                 echo "number=$MILESTONE_NUMBER" >> $GITHUB_OUTPUT
                 echo "url=https://github.com/${{ github.repository }}/milestone/${MILESTONE_NUMBER}?closed=1" >> $GITHUB_OUTPUT
 
-            - name: Setup node
-              uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-              with:
-                node-version-file: .nvmrc
-
             - name: Set up PHP
               uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
               with:
@@ -107,9 +102,6 @@ jobs:
                 [[ -n "$WC_VERSION" ]] && ARGS+=( --wc "$WC_VERSION" )
                 echo "Running: bash ./bin/update_version.sh ${ARGS[*]}"
                 bash ./bin/update_version.sh "${ARGS[@]}"
-
-                # Sync the version field in package-lock.json without a full install.
-                npm install --package-lock-only --ignore-scripts
 
             - name: Compile changelog
               run: |
