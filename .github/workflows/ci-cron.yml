@@ -57,7 +57,9 @@ jobs:
         name: QIT tests
         needs: [php-tests, integration-tests]
         uses: ./.github/workflows/qit.yml
-        secrets: inherit
+        secrets:
+          ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+          ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
         with:
           test: 'stable'
 

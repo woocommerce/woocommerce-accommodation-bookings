@@ -48,7 +48,9 @@ jobs:
       wp-version: ${{ inputs.wp-version == 'latest' && 'stable' || inputs.wp-version }}
       wc-version: ${{ inputs.wc-version == 'latest' && 'stable' || inputs.wc-version }}
       php-version: ${{ inputs.php-version }}
-    secrets: inherit
+    secrets:
+      ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+      ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
 
   # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: empty keeps the default versions, anything else replaces them.
   php-integration:
