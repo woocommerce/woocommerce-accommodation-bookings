@@ -66,7 +66,7 @@ composer test:isolated   # tests/isolated: changelog formatter round-trip, no Wo
 
 `phpunit.xml` loads `tests/phpunit/bootstrap.php`, which boots WP_Mock, defines a stub `WC_VERSION`, and loads `WC_Accommodation_Booking`. This is an isolated suite, not a full WordPress/WooCommerce/Bookings integration environment. Use it for supported isolated cases and Playwright or manual integration checks for behavior involving Bookings products, dates, availability, cart, or orders.
 
-These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host by default, so there is no `env:test:unit`.
+These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host by default, and you can run the database-free unit suite in the tests site with `pnpm run test:php:env`.
 
 ### wp-env
 
@@ -107,7 +107,8 @@ The Playwright suite runs against the tests site; logins `admin` / `password`, `
 pnpm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
 E2E_TARGET=product pnpm run test:e2e       # Inner loop: spec files matching a path or name
 E2E_FILTER=@foundational pnpm run test:e2e # Tests whose title or tag matches (--grep)
-pnpm run test:e2e:ui                       # Same, with the browser visible
+E2E_SHOW_UI=1 pnpm run test:e2e     # Run with a visible browser and exit
+pnpm run test:e2e:ui             # Open Playwright UI mode
 pnpm run env:test:e2e:reset                        # Reset and re-seed just the DB
 pnpm run test:e2e:with-env                              # Full pipeline, as CI (setup, whole suite, stop)
 pnpm run env:test:e2e:help                         # All subcommands, E2E_* knobs and examples
@@ -131,7 +132,7 @@ pnpm run env:test:start
 
 Site URLs follow the ports. `bin/acceptance.sh` reads the tests site's port from wp-env and exports it
 as `ACCOM_E2E_URL`, so worktrees can run E2E side by side. Re-export the ports in every new shell:
-`env:test:e2e:run` and `env:test:e2e:reset` find the running port by themselves, but `env:test:start` and
+`test:e2e` and `env:test:e2e:reset` find the running port by themselves, but `env:test:start` and
 `env:test:e2e:setup` without them move the tests site to port 8889. Destroy both sites before removing
 the worktree (the semicolon is deliberate: a site that was never started exits 1):
 
