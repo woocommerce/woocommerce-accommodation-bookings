@@ -23,7 +23,7 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 
 ## Commands
 
-Script names follow WooCommerce core (`plugins/woocommerce/package.json`), and pnpm and Composer use the same names. Arguments after the script name reach the underlying tool. Run `pnpm run lint:php` for the full PHPCS report, `pnpm run lint:php:fix` to fix what PHPCS can, `pnpm run lint:php:syntax` for syntax checks, `pnpm run phpstan` for static analysis and `pnpm run test:php` for every PHPUnit suite that pull request CI runs. `pnpm run test:php:env` runs PHPUnit in the running tests site. `pnpm run build` builds assets from installed dependencies, and `pnpm run build:zip` packages the current checkout as `deploy/<plugin-slug>.zip`. See [Compatibility aliases](#compatibility-aliases) for the older names. Install the tools in the [prerequisites](README.md#prerequisites) first.
+Script names follow WooCommerce core (`plugins/woocommerce/package.json`), and pnpm and Composer use the same names. Arguments after the script name reach the underlying tool. Run `pnpm run lint:php` for the full PHPCS report, `pnpm run lint:php:fix` to fix what PHPCS can, `pnpm run lint:php:syntax` for syntax checks, `pnpm run phpstan` for static analysis and `pnpm run test:php` for every PHPUnit suite that pull request CI runs. `pnpm run test:php:env` runs PHPUnit in the running tests site. `pnpm run build` builds assets from installed dependencies, and `pnpm run build:zip` packages the current checkout as `deploy/<plugin-slug>.zip`. Install the tools in the [prerequisites](README.md#prerequisites) first.
 
 ### Setup and assets
 
@@ -86,7 +86,7 @@ pnpm run env:test:stop      # Stop its containers (preserves data)
 pnpm run env:test:destroy   # Remove its containers and data
 ```
 
-`pnpm run test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `pnpm run env:test:start` and `pnpm run env:test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
+`pnpm run test:e2e:setup` downloads the latest private `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` into the checkout root with `ORG_DOWNLOADS`, falling back to the GitHub CLI login (`gh auth token`). To test another Bookings version, put its release ZIP there yourself (for example `gh release download <tag> --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir .`), then run `pnpm run env:test:start` and `pnpm run test:e2e:reset`, since `setup` downloads the latest again. State the version tested.
 
 ### Development Site
 
@@ -110,7 +110,7 @@ E2E_TARGET=product pnpm run test:e2e                        # Inner loop: spec f
 E2E_FILTER=@foundational pnpm run test:e2e                  # Tests whose title or tag matches (--grep)
 E2E_SHOW_UI=1 pnpm run test:e2e                             # Run with a visible browser and exit
 pnpm run test:e2e:ui                                        # Open Playwright UI mode
-pnpm run env:test:e2e:reset                                 # Reset and re-seed just the DB
+pnpm run test:e2e:reset                                 # Reset and re-seed just the DB
 pnpm run test:e2e:with-env                                  # Full pipeline, as CI (setup, whole suite, stop)
 bash ./bin/acceptance.sh help                                # All subcommands, E2E_* knobs and examples
 pnpm run test:e2e:report                                    # Open the last HTML report
@@ -134,7 +134,7 @@ pnpm run env:test:start
 
 Site URLs follow the ports. `bin/acceptance.sh` reads the tests site's port from wp-env and exports it
 as `ACCOM_E2E_URL`, so worktrees can run E2E side by side. Re-export the ports in every new shell:
-`test:e2e` and `env:test:e2e:reset` find the running port by themselves, but `env:test:start` and
+`test:e2e` and `test:e2e:reset` find the running port by themselves, but `env:test:start` and
 `test:e2e:setup` without them move the tests site to port 8889. Destroy both sites before removing
 the worktree (the semicolon is deliberate: a site that was never started exits 1):
 
@@ -180,28 +180,6 @@ Release branches and Dependabot pull requests are skipped entirely.
 
 The formatter that preserves the `changelog.txt` format lives in `tools/changelogger/`, and is
 configured under `extra.changelogger` in `composer.json`.
-
-## Compatibility aliases
-
-Older command names stay as aliases that run the new command. Docs, hooks and workflows in this repository use the new names.
-
-| Alias | Runs | Known callers | Remove when |
-| --- | --- | --- | --- |
-| `pnpm run build:dev` | `pnpm run build` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run start:webpack` | `pnpm run watch:build` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run lint:js-fix` | `pnpm run lint:js:fix` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run env:test:e2e` | `pnpm run test:e2e:with-env` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run env:test:e2e:setup` | `pnpm run test:e2e:setup` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run env:test:e2e:run` | `pnpm run test:e2e` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run env:test:e2e:run:ui` | `pnpm run test:e2e:ui` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run test:e2e-debug` | `pnpm run test:e2e:debug` | None | No workflow, hook or doc in this repository calls it |
-| `pnpm run test:e2e-report` | `pnpm run test:e2e:report` | None | No workflow, hook or doc in this repository calls it |
-| `composer test` | `composer test:php` | None | No workflow, hook or doc in this repository calls it |
-| `composer lint:phpcs` | `composer lint:php` | None | No workflow, hook or doc in this repository calls it |
-| `composer lint:phpstan` | `composer phpstan` | None | No workflow, hook or doc in this repository calls it |
-| `composer test:isolated` | `composer test:php:isolated` | None | No workflow, hook or doc in this repository calls it |
-
-`env:start`, `env:stop`, `env:restart` and `env:destroy` are WooCommerce core's short forms of the `env:dev:*` commands, not compatibility aliases.
 
 ## Repository compatibility contracts
 

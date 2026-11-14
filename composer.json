@@ -21,13 +21,10 @@
         ]
     },
     "scripts": {
-        "test": "@test:php",
-        "test:isolated": "@test:php:isolated",
         "lint:php": [
             "Composer\\Config::disableProcessTimeout",
             "phpcs"
         ],
-        "lint:phpcs": "@lint:php",
         "lint:phpcs:baseline": "bash bin/phpcs.sh",
         "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
         "check:php": [
@@ -35,7 +32,6 @@
             "@lint:php:syntax",
             "@lint:phpcs:baseline"
         ],
-        "lint:phpstan": "@phpstan",
         "lint:phpstan:baseline:update": "@phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
         "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite",
         "lint:php:syntax": [
