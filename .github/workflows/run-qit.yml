@@ -34,16 +34,25 @@ on:
       php-version:
         type: string
         default: ''
+      # A caller that already built the production candidate passes it; otherwise this workflow builds one.
+      artifact-id:
+        type: string
+        default: ''
+      sha256:
+        type: string
+        default: ''
 
 permissions:
   contents: read
 
 jobs:
   build:
-    uses: ./.github/workflows/generate-zip.yml
+    if: ${{ inputs.artifact-id == '' }}
+    uses: ./.github/workflows/build-upload-zip.yml
 
   test:
     needs: build
+    if: ${{ !cancelled() && (needs.build.result == 'success' || (needs.build.result == 'skipped' && inputs.artifact-id != '')) }}
     name: run
     runs-on: ubuntu-latest
     timeout-minutes: 55
@@ -51,7 +60,9 @@ jobs:
     env:
       NO_COLOR: 1
       QIT_DISABLE_ONBOARDING: yes
-      EXTENSION: ${{ github.event.repository.name }}
+      EXTENSION: woocommerce-accommodation-bookings
+      ARTIFACT_ID: ${{ inputs.artifact-id || needs.build.outputs.artifact-id }}
+      ZIP_SHA256: ${{ inputs.sha256 || needs.build.outputs.sha256 }}
       SELECTED: ${{ inputs.test || 'default' }}
       # Requested versions (empty WP/WC keeps QIT's defaults; PHP defaults to 8.4); QIT has no `nightly`, only `rc`.
       VERSION_ARGS: >-
@@ -61,13 +72,20 @@ jobs:
 
     steps:
       # No checkout: repository code and its Composer config never run alongside the partner secrets.
-      - name: Download build
+      - name: Require a candidate artifact ID
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::A single production candidate artifact ID is required."
+            exit 1
+          fi
+
+      - name: Download the production ZIP
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: ${{ github.event.repository.name }}
+          artifact-ids: ${{ env.ARTIFACT_ID }}
 
-      - name: Build plugin zip
-        run: zip -r "$EXTENSION.zip" "$EXTENSION"
+      - name: Verify the production ZIP
+        run: printf '%s  %s\n' "$ZIP_SHA256" "$EXTENSION.zip" | sha256sum --check -
 
       - name: Set PHP version
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0

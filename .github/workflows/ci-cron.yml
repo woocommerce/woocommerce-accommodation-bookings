@@ -34,20 +34,33 @@ jobs:
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
+    production-package:
+        name: Package
+        uses: ./.github/workflows/build-upload-zip.yml
+
     e2e-tests:
         name: E2E tests
-        needs: [php-tests, integration-tests]
-        uses: ./.github/workflows/e2e.yml
+        needs: [php-tests, integration-tests, production-package]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-e2e.yml
+        with:
+          artifact-id: ${{ needs.production-package.outputs.artifact-id }}
+          source-sha: ${{ needs.production-package.outputs.source-sha }}
+          sha256: ${{ needs.production-package.outputs.sha256 }}
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
     qit-tests:
         name: QIT tests
-        needs: [php-tests, integration-tests]
-        uses: ./.github/workflows/qit.yml
+        needs: [php-tests, integration-tests, production-package]
+        uses: ./.github/workflows/run-qit.yml
         secrets: inherit
         with:
           test: 'stable'
+          artifact-id: ${{ needs.production-package.outputs.artifact-id }}
+          sha256: ${{ needs.production-package.outputs.sha256 }}
 
     audit:
         name: Dependency advisories

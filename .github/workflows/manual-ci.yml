@@ -41,7 +41,7 @@ permissions:
 jobs:
   qit-tests:
     name: QIT
-    uses: ./.github/workflows/qit.yml
+    uses: ./.github/workflows/run-qit.yml
     with:
       test: ${{ fromJSON('{"WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)":"prerelease","Weekly default set":"default","Activation":"activation","WooCommerce API":"api","WooCommerce E2E":"e2e","Security":"security","Malware":"malware","PHP Compatibility":"phpcompat","PHPStan":"phpstan","Validation":"validation"}')[inputs.qit-tests] }}
       # `latest` is QIT's `stable`; every other value (including empty) is passed on unchanged.

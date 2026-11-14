@@ -1,0 +1,132 @@
+name: E2E test
+
+on:
+  workflow_call:
+    inputs:
+      checkout-ref:
+        type: string
+      artifact-id:
+        type: string
+        required: true
+      source-sha:
+        type: string
+        required: true
+      sha256:
+        type: string
+        required: true
+    secrets:
+      ORG_DOWNLOADS:
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  e2e:
+    name: E2E Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      # Runs before checkout so no pull-request code or dependency can observe the token.
+      - name: Download booking dependencies
+        run: |
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::The ORG_DOWNLOADS secret isn't available to this run (fork and Dependabot PRs don't receive it), so the booking dependencies cannot be downloaded."
+            exit 1
+          fi
+          gh release download --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$RUNNER_TEMP"
+          gh release download --repo woocommerce/woocommerce-bookings-availability --pattern woocommerce-bookings-availability.zip --dir "$RUNNER_TEMP"
+        env:
+          GH_TOKEN: ${{ secrets.ORG_DOWNLOADS }}
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
+          package-manager-cache: ${{ inputs.checkout-ref == '' }}
+
+      - name: Node install
+        run: pnpm install --frozen-lockfile
+
+      - name: Require a candidate artifact ID
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::A single production candidate artifact ID is required."
+            exit 1
+          fi
+
+      - name: Download the production ZIP
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: deploy
+
+      - name: Verify and unpack the production ZIP
+        env:
+          SOURCE_SHA: ${{ inputs.source-sha }}
+          SHA256: ${{ inputs.sha256 }}
+        run: |
+          test "$SOURCE_SHA" = "$(git rev-parse HEAD)"
+          printf '%s  %s\n' "$SHA256" deploy/woocommerce-accommodation-bookings.zip | sha256sum --check -
+          unzip -q deploy/woocommerce-accommodation-bookings.zip -d deploy
+
+      - name: Read the Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | awk '{ print $2 }')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        if: inputs.checkout-ref == ''
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.version }}
+
+      - name: Install Chromium
+        run: pnpm run test:e2e:install --with-deps
+
+      - name: Stage booking dependencies
+        run: |
+          mv "$RUNNER_TEMP/woocommerce-bookings.zip" .
+          mv "$RUNNER_TEMP/woocommerce-bookings-availability.zip" .
+
+      # The ZIP holds no tests, so the fixtures stay mounted from the checkout (.wp-env.test.json).
+      - name: Configure wp-env overrides
+        run: |
+          jq -e '.plugins | index(".")' .wp-env.test.json > /dev/null
+          jq '.plugins |= map(if . == "." then "./deploy/woocommerce-accommodation-bookings" else . end)
+              | .mappings["wp-content/e2e-packages/woocommerce-bookings.zip"] = "./woocommerce-bookings.zip"
+              | .mappings["wp-content/e2e-packages/woocommerce-bookings-availability.zip"] = "./woocommerce-bookings-availability.zip"' \
+            .wp-env.test.json > .wp-env.test.override.json
+          echo "SWW_E2E_PACKAGE=1" >> "$GITHUB_ENV"
+
+      - name: Setup WP environment
+        run: pnpm run env:test:start
+
+      - name: Seed the tests site
+        run: pnpm run env:test:e2e:seed
+
+      - name: Run E2E Tests
+        run: pnpm run test:e2e
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: playwright-report
+          # Keep the Playwright login state (storageState files) out of the artifact.
+          path: |
+            tests/e2e/test-results/
+            !tests/e2e/test-results/storage*
+          retention-days: 2

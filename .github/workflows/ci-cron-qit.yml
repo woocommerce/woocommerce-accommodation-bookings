@@ -12,7 +12,7 @@ jobs:
 
     qit-tests:
         name: QIT
-        uses: ./.github/workflows/qit.yml
+        uses: ./.github/workflows/run-qit.yml
         secrets: inherit
         with:
           test: 'default'
