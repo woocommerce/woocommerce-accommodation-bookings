@@ -20,3 +20,15 @@ minimumReleaseAgeExclude:
   - "@automattic/*"
   - "@woocommerce/*"
   - "@wordpress/*"
+
+# Permit the native watchers used by wp-env. Require a decision for every other dependency build.
+strictDepBuilds: true
+allowBuilds:
+  "@parcel/watcher": true
+  "fs-ext-extra-prebuilt": true
+  "core-js": false
+  "core-js-pure": false
+  "unrs-resolver": false
+
+# The locked dependency graph uses registry packages throughout.
+blockExoticSubdeps: true
