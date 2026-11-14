@@ -56,10 +56,9 @@ validate_core_version() {
     fi
 }
 
-# Function to get main plugin file from directory name
+# The main plugin file is named after the plugin slug, not after the repository directory.
 get_main_plugin_file() {
-    local dir_name=$(basename "$PWD")
-    echo "${dir_name}.php"
+    echo "woocommerce-accommodation-bookings.php"
 }
 
 update_wp_tested_up_to() {
@@ -133,11 +132,11 @@ update_version_in_files() {
     fi
 }
 
-# Function to find and replace x.x.x patterns in all files
+# Function to update release placeholders in source docblocks
 replace_version_patterns() {
     local new_version=$1
 
-    print_status "Replacing x.x.x patterns in all files..."
+    print_status "Replacing @since and @version placeholders..."
 
     # Get only git-tracked files that contain x.x.x pattern
     git ls-files | grep -E '\.(php|js|json|txt|css|scss)$' | while read -r file; do
@@ -147,13 +146,13 @@ replace_version_patterns() {
         fi
 
         # Check if file contains x.x.x pattern
-        if grep -q "x\.x\.x" "$file"; then
-            sedi "s/x\.x\.x/$new_version/g" "$file"
+        if grep -Eq '@(since|version)[[:space:]]+x\.x\.x' "$file"; then
+            sedi -E "s/(@(since|version)[[:space:]]+)x\.x\.x/\\1$new_version/g" "$file"
             print_status "Updated $file"
         fi
     done
 
-    print_success "x.x.x patterns replaced in all files"
+    print_success "Release placeholders updated"
 }
 
 # Function to get current version from package.json
@@ -220,6 +219,10 @@ parse_args() {
 main() {
     # Get main plugin file for display
     local main_plugin_file=$(get_main_plugin_file)
+    if [[ ! -f "$main_plugin_file" ]]; then
+        print_error "Missing main plugin file: $main_plugin_file"
+        exit 1
+    fi
     print_status "SomewhereWarm Version Update Script - $main_plugin_file"
     echo
 
