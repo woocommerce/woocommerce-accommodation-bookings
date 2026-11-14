@@ -6,9 +6,9 @@
 # below differs between repos, so copy the rest unchanged.
 #
 # USAGE
-#   bash ./bin/acceptance.sh [ setup | run [playwright args] | reset | help ]
+#   bash ./bin/acceptance.sh [ with-env [playwright args] | setup | run [playwright args] | reset | help ]
 #
-#   (no subcommand)  Full pipeline: setup + run the whole suite headless + stop
+#   with-env         Full pipeline: setup + run the whole suite headless + stop
 #                    the tests site (also on failure).
 #   setup            Start the tests site, reset its database and seed it
 #                    (pnpm run env:test:e2e:seed). Leaves a ready-to-`run` site.
@@ -28,7 +28,7 @@
 # worktrees on other ports work without extra setup.
 #
 # Before running this script you need a built plugin and Playwright's browser
-# (`./node_modules/.bin/playwright install chromium`).
+# (`pnpm run test:e2e:install`).
 set -uo pipefail
 
 # REPO SETTINGS: the only lines that differ between repos.
@@ -83,7 +83,7 @@ resolve_e2e_url() {
 
 require_wpenv() {
 	if ! resolve_e2e_url; then
-		die "the tests site is not running; run 'pnpm run env:test:e2e:setup' first."
+		die "the tests site is not running; run 'pnpm run test:e2e:setup' first."
 	fi
 }
 
@@ -92,12 +92,12 @@ usage() {
 	echo -e "${GREY}Runs the suite against the wp-env tests site (.wp-env.test.json).${NC}"
 	echo
 	echo -e "${BOLD}USAGE${NC}"
-	echo -e "  bash ./bin/acceptance.sh [ setup | run [playwright args] | reset | help ]"
-	echo -e "  pnpm run env:test:e2e[ :setup | :run | :run:ui | :reset | :help ]"
+	echo -e "  bash ./bin/acceptance.sh [ with-env [playwright args] | setup | run [playwright args] | reset | help ]"
+	echo -e "  pnpm run test:e2e[ :with-env | :setup | :ui ]"
 	echo -e "  ${GREY}   plus wp-env lifecycle: env:test:start | env:test:stop | env:test:destroy${NC}"
 	echo
 	echo -e "${BOLD}SUBCOMMANDS${NC}"
-	echo -e "  ${GREEN}(none)${NC}   Full pipeline: setup + whole suite headless, then stop the tests site."
+	echo -e "  ${GREEN}with-env${NC} Full pipeline: setup + whole suite headless, then stop the tests site."
 	echo -e "  ${GREEN}setup${NC}    Start the tests site, reset and seed it. Ready to run."
 	echo -e "  ${GREEN}run${NC}      Playwright against a set-up site (fails fast if it is down)."
 	echo -e "  ${GREEN}reset${NC}    Reset just the DB and seed it again."
@@ -111,20 +111,20 @@ usage() {
 	echo
 	echo -e "${BOLD}EXAMPLES${NC}"
 	echo -e "  ${GREY}# Full run, as CI${NC}"
-	echo -e "  pnpm run env:test:e2e"
+	echo -e "  pnpm run test:e2e:with-env"
 	echo
 	echo -e "  ${GREY}# Iterate: set up once, then run one spec file repeatedly${NC}"
-	echo -e "  pnpm run env:test:e2e:setup"
-	echo -e "  ${CYAN}E2E_TARGET${NC}=<file> pnpm run env:test:e2e:run"
+	echo -e "  pnpm run test:e2e:setup"
+	echo -e "  ${CYAN}E2E_TARGET${NC}=<file> pnpm run test:e2e"
 	echo
 	echo -e "  ${GREY}# Tagged tests, browser visible${NC}"
-	echo -e "  ${CYAN}E2E_FILTER${NC}=@<tag> pnpm run env:test:e2e:run:ui"
+	echo -e "  ${CYAN}E2E_FILTER${NC}=@<tag> ${CYAN}E2E_SHOW_UI${NC}=1 pnpm run test:e2e"
 	echo
 	echo -e "${BOLD}GETTING STARTED${NC}"
 	echo -e "  ${GREY}1. Build the plugin${NC}             see AGENTS.md"
-	echo -e "  ${GREY}2. Install the browser${NC}          ./node_modules/.bin/playwright install chromium"
-	echo -e "  ${GREY}3. Provision the site (once)${NC}    pnpm run env:test:e2e:setup"
-	echo -e "  ${GREY}4. Run everything, headed${NC}       ${CYAN}pnpm run env:test:e2e:run:ui${NC}"
+	echo -e "  ${GREY}2. Install the browser${NC}          pnpm run test:e2e:install"
+	echo -e "  ${GREY}3. Provision the site (once)${NC}    pnpm run test:e2e:setup"
+	echo -e "  ${GREY}4. Run everything, headed${NC}       ${CYAN}E2E_SHOW_UI=1 pnpm run test:e2e${NC}"
 	echo -e "  ${GREY}   ...the site stays up, so re-run step 4 anytime; refresh the DB with pnpm run env:test:e2e:reset.${NC}"
 }
 
@@ -181,14 +181,22 @@ case "${1:-}" in
 		require_wpenv
 		phase_run "$@"
 		;;
-	"")
+	with-env|"")
+		shift || true
 		unset E2E_TARGET E2E_FILTER E2E_SHOW_UI
 		require_cmds pnpm node
+		state=$(pnpm --silent run wp-env:test status --json | node -p 'JSON.parse(require("node:fs").readFileSync(0, "utf8")).status') ||
+			die "could not determine whether the test site is running."
+		case "$state" in
+			running) die "the test site is already running. Use pnpm run test:e2e." ;;
+			stopped|uninitialized) ;;
+			*) die "could not determine whether the test site is running." ;;
+		esac
 		# Stop the tests site however the pipeline ends, including a failed setup or seed.
 		trap phase_stop EXIT
 		phase_setup
 		phase_provision
-		phase_run
+		phase_run "$@"
 		;;
 	help | -h | --help)
 		usage

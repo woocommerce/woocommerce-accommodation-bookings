@@ -57,7 +57,7 @@ jobs:
         run: pnpm run prebuild && pnpm run build:webpack && pnpm run archive
 
       - name: Install Playwright Browsers
-        run: ./node_modules/.bin/playwright install chromium
+        run: pnpm run test:e2e:install
 
       - name: Stage booking dependencies
         run: |
@@ -71,7 +71,7 @@ jobs:
         run: pnpm run env:test:e2e:seed
 
       - name: Run E2E tests
-        run: pnpm run env:test:e2e:run
+        run: pnpm run test:e2e
 
       - name: Annotate retry-only passes
         if: always()

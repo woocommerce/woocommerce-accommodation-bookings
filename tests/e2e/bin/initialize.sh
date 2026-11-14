@@ -32,7 +32,7 @@ fi
 for plugin in woocommerce-bookings woocommerce-bookings-availability; do
     if [ ! -f "./${plugin}.zip" ]; then
         echo "Error: ${plugin}.zip not found in the checkout root."
-        echo "Run 'pnpm run env:test:e2e:setup' to download it, or download the zip manually from:"
+        echo "Run 'pnpm run test:e2e:setup' to download it, or download the zip manually from:"
         echo "https://github.com/woocommerce/${plugin}/releases"
         exit 1
     fi
