@@ -184,11 +184,18 @@ case "${1:-}" in
 	"")
 		unset E2E_TARGET E2E_FILTER E2E_SHOW_UI
 		require_cmds pnpm node
+		state=$(pnpm --silent run wp-env:test status --json | node -p 'JSON.parse(require("node:fs").readFileSync(0, "utf8")).status') ||
+			die "could not determine whether the test site is running."
+		case "$state" in
+			running) die "the test site is already running. Use pnpm run test:e2e." ;;
+			stopped|uninitialized) ;;
+			*) die "could not determine whether the test site is running." ;;
+		esac
 		# Stop the tests site however the pipeline ends, including a failed setup or seed.
 		trap phase_stop EXIT
 		phase_setup
 		phase_provision
-		phase_run
+		phase_run "$@"
 		;;
 	help | -h | --help)
 		usage
