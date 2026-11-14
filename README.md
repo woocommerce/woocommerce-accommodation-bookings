@@ -45,7 +45,7 @@ pnpm run build          # Build assets and translations
 pnpm run build:zip      # Build the production ZIP
 
 # Tests
-pnpm run env:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
+pnpm run env:dev:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
 pnpm run env:dev:seed                              # Seed it with a browsable store
 pnpm run env:test:e2e:setup                        # Download the Bookings plugins, start and seed the wp-env tests site
 pnpm run env:test:e2e                              # Full Playwright E2E pipeline: set up, run, stop

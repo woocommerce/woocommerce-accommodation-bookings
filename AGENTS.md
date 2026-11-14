@@ -77,9 +77,9 @@ A `.wp-env.override.json` left by an older e2e run merges into the development s
 `pnpm run wp-env:test <command>` runs a raw wp-env command against the tests site (`--config .wp-env.test.json` plus the tests port), for example `pnpm run wp-env:test run cli wp plugin list`. Plain `./node_modules/.bin/wp-env` targets the development site.
 
 ```bash
-pnpm run env:start          # Start the development site
-pnpm run env:stop           # Stop its containers (preserves data)
-pnpm run env:destroy        # Remove its containers and data
+pnpm run env:dev:start          # Start the development site
+pnpm run env:dev:stop           # Stop its containers (preserves data)
+pnpm run env:dev:destroy        # Remove its containers and data
 pnpm run env:test:start     # Start the tests site (E2E)
 pnpm run env:test:stop      # Stop its containers (preserves data)
 pnpm run env:test:destroy   # Remove its containers and data
@@ -89,7 +89,7 @@ pnpm run env:test:destroy   # Remove its containers and data
 
 ### Development Site
 
-Requires a running development site (`pnpm run env:start`).
+Requires a running development site (`pnpm run env:dev:start`).
 
 ```bash
 pnpm run env:dev:seed   # Seed a browsable store (runs once)
@@ -125,7 +125,7 @@ with the main checkout or another worktree. Export them once per shell, before a
 
 ```bash
 export WP_ENV_PORT=8890 WP_ENV_TESTS_PORT=8891
-pnpm run env:start
+pnpm run env:dev:start
 pnpm run env:test:start
 ```
 
@@ -136,7 +136,7 @@ as `ACCOM_E2E_URL`, so worktrees can run E2E side by side. Re-export the ports i
 the worktree (the semicolon is deliberate: a site that was never started exits 1):
 
 ```bash
-pnpm run env:destroy --force; pnpm run env:test:destroy --force    # with the same ports exported
+pnpm run env:dev:destroy --force; pnpm run env:test:destroy --force    # with the same ports exported
 ```
 
 ### Changelog
