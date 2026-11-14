@@ -186,7 +186,7 @@ configured under `extra.changelogger` in `composer.json`.
 
 ## Shared tooling
 
-The workflows in `.github/workflows/` (except `ai-code-review.yml`), `bin/woo-config.sh`, `bin/woo-config.schema.json`, `bin/build-zip.sh`, `bin/e2e.sh`, `bin/install.sh` and the version and release scripts in `bin/` are identical in every SomewhereWarm and WooCommerce extension repository. Change them in every repository at once. A repository differs only in:
+The workflows in `.github/workflows/`, `bin/woo-config.sh`, `bin/woo-config.schema.json`, `bin/build-zip.sh`, `bin/e2e.sh`, `bin/install.sh` and the version and release scripts in `bin/` are identical in every SomewhereWarm and WooCommerce extension repository. Change them in every repository at once. A repository differs only in:
 
 - `package.json` `config.woo`. `bin/woo-config.schema.json` documents every key, `bash bin/woo-config.sh` validates the object against it and prints it with every default applied, and the shared files read it only through that script. It holds the plugin slug (default: the `package.json` name), the capabilities (`js`, `jsTests`, `buildTests`, `e2e`, `phpunit`, `isolated`, `integration`, `qit`, `pluginCheck`), the ZIP settings, the version strings in `versionPatterns`, the Plugin Check settings, the PHPUnit legs, the private plugins and the release target.
 - The data files the shared files read: `exclude.lst`, `.github/paths-filter.yml`, `.github/product-filter.yml`, `.wp-env*.json`, the PHPCS and PHPStan configs, and the tests.
