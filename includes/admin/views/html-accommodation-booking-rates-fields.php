@@ -117,20 +117,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</td>
 	<td>
-		<input type="number" step="0.01" name="wc_accommodation_booking_pricing_block_cost[]" value="<?php
-		// Handle legacy
+		<?php
+		$nightly_cost = '';
+		$rate_active  = ! empty( $rate['override_block'] ) || ! empty( $rate['cost'] ) || ! empty( $rate['base_cost'] );
+		// Handle legacy.
 		if ( ! empty( $rate['override_block'] ) ) {
-			echo esc_attr( $rate['override_block'] );
-		} else if ( ! empty( $rate['modifier'] ) && isset( $rate['cost'] ) ) {
-			$base_cost = abs( floatval( get_post_meta( $post_id, '_wc_booking_base_cost', true ) ) );
-
-			if ( 'plus' == $rate['modifier'] ) {
-				echo esc_attr( (string) ( $base_cost + floatval( $rate['cost'] ) ) );
-			} else {
-				echo esc_attr( (string) ( $base_cost - floatval( $rate['cost'] ) ) );
+			$nightly_cost = $rate['override_block'];
+		} elseif ( isset( $rate['cost'] ) ) {
+			$nightly_cost = abs( floatval( get_post_meta( $post_id, '_wc_booking_block_cost', true ) ) );
+			// Show the nightly rate Bookings charges for this range. It skips a rule that has no amounts.
+			if ( $rate_active ) {
+				$nightly_cost = WC_Bookings_Cost_Calculation::apply_cost( $nightly_cost, $rate['modifier'] ?? '', $rate['cost'] );
 			}
 		}
-		?>" placeholder="0" />
+		?>
+		<input type="number" step="any" name="wc_accommodation_booking_pricing_block_cost[]" value="<?php echo esc_attr( (string) $nightly_cost ); ?>" placeholder="0" />
+		<input type="hidden" name="wc_accommodation_booking_pricing_is_active[]" value="<?php echo $rate_active ? '1' : '0'; ?>" />
 		<?php do_action( 'woocommerce_accommodation_bookings_after_booking_pricing_override_block_cost', $rate, $post_id ); ?>
 	</td>
 	<td class="remove">&nbsp;</td>

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Required functions for REST API and Admin functionality.
  *
  * @class   WC_Accommodation_Booking_REST_And_Admin
- * @version 1.4.0
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_REST_And_Admin {
 
@@ -246,6 +246,10 @@ class WC_Accommodation_Booking_REST_And_Admin {
 			$pricing[ $i ]['base_modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus';
 			$pricing[ $i ]['modifier']      = $pricing[ $i ]['base_modifier'];
 			$pricing[ $i ]['cost']          = abs( $new_cost - $original_base_cost );
+			if ( 0.0 === $pricing[ $i ]['cost'] && '1' === ( $_POST['wc_accommodation_booking_pricing_is_active'][ $i ] ?? '' ) ) {
+				// Bookings skips empty amounts. Keep an active zero adjustment ahead of later matching rules.
+				$pricing[ $i ]['cost'] = '0.00';
+			}
 
 			switch ( $pricing[ $i ]['type'] ) {
 				case 'custom':
