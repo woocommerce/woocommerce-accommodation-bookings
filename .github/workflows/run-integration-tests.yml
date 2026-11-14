@@ -1,0 +1,45 @@
+name: PHP Integration Tests
+
+# The suite that loads other plugins (config.sww.integration.legs and the private plugins whose
+# `suites` list `integration`). It shares the PHPUnit runner with the unit suite.
+on:
+  workflow_call:
+    inputs:
+      checkout-ref:
+        type: string
+      wc-version:
+        type: string
+        default: ''
+      wp-version:
+        type: string
+        default: ''
+      php-version:
+        type: string
+        default: ''
+      trusted-plugins:
+        type: boolean
+        default: false
+      scheduled:
+        type: boolean
+        default: false
+    secrets:
+      ORG_DOWNLOADS:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  integration-tests:
+    name: Integration
+    uses: ./.github/workflows/run-unit-tests.yml
+    with:
+      checkout-ref: ${{ inputs.checkout-ref }}
+      suite: integration
+      wc-version: ${{ inputs.wc-version }}
+      wp-version: ${{ inputs.wp-version }}
+      php-version: ${{ inputs.php-version }}
+      trusted-plugins: ${{ inputs.trusted-plugins }}
+      scheduled: ${{ inputs.scheduled }}
+    secrets:
+      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}

@@ -1,0 +1,105 @@
+name: Linting
+
+on:
+  workflow_call:
+    inputs:
+      checkout-ref:
+        type: string
+      frontend:
+        description: Run the JavaScript, CSS and package checks.
+        type: boolean
+        default: true
+      docs:
+        description: Run the Markdown check.
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+
+  js-linting-check:
+    name: JavaScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: read
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
+          package-manager-cache: ${{ inputs.checkout-ref == '' }}
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # The repository's JavaScript gate: licenses, package metadata, styles, scripts and types.
+      - name: Run JavaScript checks
+        if: ${{ inputs.frontend }}
+        run: pnpm run check:js
+
+      - name: Lint Markdown documentation
+        if: ${{ inputs.docs }}
+        run: pnpm run lint:md:docs
+
+      - name: Save code linting report JSON
+        if: ${{ !cancelled() && inputs.frontend }}
+        run: pnpm run lint:js:report
+        continue-on-error: true
+
+      - name: Upload ESLint report
+        if: ${{ !cancelled() && inputs.frontend }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: eslint_report.json
+          path: eslint_report.json
+
+      # Fork and Dependabot tokens cannot create check runs.
+      - name: Annotate code linting results
+        if: ${{ !cancelled() && inputs.frontend && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')) }}
+        uses: ataylorme/eslint-annotate-action@5a8d8ab89a57679e90c32750e0f382e9d8570750 # 4.0.0
+        with:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          report-json: 'eslint_report.json'
+
+      - name: Read plugin metadata
+        id: config
+        run: bash bin/sww-config.sh --github-output
+
+      - name: Run JavaScript unit tests
+        if: ${{ inputs.frontend && fromJSON(steps.config.outputs.json).capabilities.jsTests }}
+        run: pnpm run test:js
+
+      - name: Upload JavaScript coverage report
+        if: ${{ !cancelled() && inputs.frontend && hashFiles('coverage/clover.xml') != '' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: coverage-js
+          path: coverage/
+          retention-days: 90
+
+      - name: JavaScript coverage summary
+        if: ${{ !cancelled() && inputs.frontend && hashFiles('coverage/clover.xml') != '' }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import xml.etree.ElementTree as ET
+          m = ET.parse('coverage/clover.xml').getroot().find('project/metrics')
+          s, c = int(m.get('statements')), int(m.get('coveredstatements'))
+          print(f"JS line coverage: {c}/{s} ({100 * c / s:.1f}%)" if s else "JS line coverage: no statements")
+          PY

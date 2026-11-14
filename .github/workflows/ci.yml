@@ -1,267 +1,321 @@
-name: CI
+name: Pull Request CI
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
-
-permissions:
-  contents: read
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - converted_to_draft
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  # Detect which kinds of files changed so each check runs only when its
-  # inputs change. A workflow change counts as every kind of change, so CI
-  # edits exercise the whole pipeline.
-  changes:
-    name: Detect changes
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      pull-requests: read
-    outputs:
-      php: ${{ steps.categories.outputs.php == 'true' || steps.categories.outputs.workflows == 'true' }}
-      frontend: ${{ steps.categories.outputs.frontend == 'true' || steps.categories.outputs.workflows == 'true' }}
-      docs: ${{ steps.categories.outputs.docs == 'true' || steps.categories.outputs.workflows == 'true' }}
-      product: ${{ steps.product.outputs.product == 'true' || steps.categories.outputs.workflows == 'true' }}
-      workflows: ${{ steps.categories.outputs.workflows }}
-    steps:
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: categories
-        with:
-          filters: |
-            php:
-              - '**/*.php'
-              - 'composer.json'
-              - 'composer.lock'
-              - 'tools/php-stubs/composer.json'
-              - 'phpcs*.xml*'
-              - 'phpcs.baseline'
-              - 'phpstan*.neon*'
-              - 'phpunit.xml*'
-              - 'phpunit-integration.xml'
-              - 'tests/bin/*.sh'
-              - 'bin/php*.sh'
-              - 'tools/php-quality/**'
-              - 'tests/isolated/**'
-            frontend:
-              - '**/*.{js,jsx,ts,tsx,mjs,cjs,scss,css}'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-              - '.nvmrc'
-              - '.stylelintrc.json'
-              - '.npmpackagejsonlintrc.json'
-            docs:
-              - '**/*.md'
-              - '.markdownlint*'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-            workflows:
-              - '.github/**'
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: product
-        with:
-          # A file must satisfy EVERY pattern below to count as a product
-          # change. Without this the action ORs them ('some', the default),
-          # so '**' matches on its own and every '!' negation is dead code.
-          predicate-quantifier: 'every'
-          filters: |
-            product:
-              # Anything that can affect the build or browser behavior:
-              # everything except unit and integration tests, docs, and
-              # tooling config.
-              - '**'
-              - '!tests/phpunit/**'
-              - '!tests/isolated/**'
-              - '!tests/integration/**'
-              - '!tests/bin/**'
-              - '!phpunit.xml'
-              - '!phpunit-integration.xml'
-              - '!**/*.md'
-              - '!.markdownlintignore'
-              - '!changelog.txt'
-              - '!changelog/**'
-              - '!readme.txt'
-              - '!.coderabbit.yaml'
 
-  spelling:
-    name: Spelling
-    uses: ./.github/workflows/spell-check.yml
+    # Detect which kinds of files changed so each check runs only when its
+    # inputs change. A workflow change counts as every kind of change, so CI
+    # edits exercise the whole pipeline. The patterns are the repository's
+    # .github/paths-filter.yml and .github/product-filter.yml.
+    changes:
+      name: Detect changes
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      permissions:
+        contents: read
+        pull-requests: read
+      outputs:
+        php: ${{ steps.categories.outputs.php == 'true' || steps.categories.outputs.workflows == 'true' }}
+        frontend: ${{ steps.categories.outputs.frontend == 'true' || steps.categories.outputs.workflows == 'true' }}
+        docs: ${{ steps.categories.outputs.docs == 'true' || steps.categories.outputs.workflows == 'true' }}
+        product: ${{ steps.product.outputs.product == 'true' || steps.categories.outputs.workflows == 'true' }}
+        workflows: ${{ steps.categories.outputs.workflows }}
+      steps:
+        - name: Checkout the filters
+          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+          with:
+            persist-credentials: false
+            sparse-checkout: .github
+        # Note: paths-filter uses picomatch, so markdown is matched with
+        # '**/*.md', not GitHub's native '**.md'.
+        - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+          id: categories
+          with:
+            filters: .github/paths-filter.yml
+        - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+          id: product
+          with:
+            # A file must satisfy EVERY pattern to count as a product change.
+            # Without this the action ORs them ('some', the default), so '**'
+            # matches on its own and every '!' negation is dead code.
+            predicate-quantifier: 'every'
+            filters: .github/product-filter.yml
 
-  phpcs:
-    name: PHPCS
-    needs: changes
-    if: ${{ needs.changes.outputs.php == 'true' }}
-    uses: ./.github/workflows/phpcs.yml
+    # The plugin's capabilities and settings: package.json config.sww with defaults.
+    config:
+      name: Read plugin metadata
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      outputs:
+        json: ${{ steps.config.outputs.json }}
+      steps:
+        - name: Checkout package metadata
+          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+          with:
+            persist-credentials: false
+            sparse-checkout: |
+              package.json
+              bin/sww-config.sh
+            sparse-checkout-cone-mode: false
+        - name: Read config.sww
+          id: config
+          run: bash bin/sww-config.sh --github-output
 
-  phpstan:
-    name: PHPStan
-    needs: changes
-    if: ${{ needs.changes.outputs.php == 'true' }}
-    uses: ./.github/workflows/phpstan.yml
+    extract-values:
+      name: Parse Commit Message
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      outputs:
+        WC_VERSION: ${{ steps.extract-commit-values.outputs.WC_VERSION }}
+        WP_VERSION: ${{ steps.extract-commit-values.outputs.WP_VERSION }}
+        PHP_VERSION: ${{ steps.extract-commit-values.outputs.PHP_VERSION }}
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+          with:
+            ref: ${{ github.event.pull_request.head.sha }}
+            persist-credentials: false
+        # Empty values keep each suite's default versions.
+        - name: Extract values from commit message
+          id: extract-commit-values
+          run: |
+            commit_message=$(git show -s --format=%s)
+            echo "$commit_message"
+            wc_version=$(node ./bin/parse-commit-message-args.js "$commit_message" "wc-version" "__default__")
+            wp_version=$(node ./bin/parse-commit-message-args.js "$commit_message" "wp-version" "__default__")
+            php_version=$(node ./bin/parse-commit-message-args.js "$commit_message" "php-version" "__default__")
+            [ "$wc_version" = "__default__" ] && wc_version=""
+            [ "$wp_version" = "__default__" ] && wp_version=""
+            [ "$php_version" = "__default__" ] && php_version=""
+            {
+              echo "WC_VERSION=$wc_version"
+              echo "WP_VERSION=$wp_version"
+              echo "PHP_VERSION=$php_version"
+            } | tee -a "$GITHUB_OUTPUT"
 
-  php-compatibility:
-    name: PHP compatibility
-    needs: changes
-    if: ${{ needs.changes.outputs.php == 'true' }}
-    uses: ./.github/workflows/php-compat.yml
+    spelling:
+      name: Spelling
+      uses: ./.github/workflows/spell-check.yml
 
-  css:
-    name: CSS
-    needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' }}
-    uses: ./.github/workflows/css-lint.yml
+    setup:
+      name: Setup environments
+      needs: changes
+      if: ${{ needs.changes.outputs.php == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }}
+      uses: ./.github/workflows/setup-env.yml
 
-  javascript:
-    name: JavaScript and Markdown
-    needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }}
-    uses: ./.github/workflows/js-lint.yml
-    with:
-      frontend: ${{ needs.changes.outputs.frontend == 'true' }}
-      docs: ${{ needs.changes.outputs.docs == 'true' }}
+    php-lint:
+      name: PHP
+      needs: [changes, setup]
+      if: ${{ needs.changes.outputs.php == 'true' }}
+      uses: ./.github/workflows/php-lint.yml
 
-  actionlint:
-    name: Workflow lint
-    needs: changes
-    if: ${{ needs.changes.outputs.workflows == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    phpstan:
+      name: PHPStan
+      needs: changes
+      if: ${{ needs.changes.outputs.php == 'true' }}
+      uses: ./.github/workflows/phpstan.yml
+      secrets:
+        ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
-      - name: Install actionlint 1.7.12
-        working-directory: ${{ runner.temp }}
-        run: |
-          curl --fail --silent --show-error --location --output actionlint.tar.gz \
-            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
-          echo '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint.tar.gz' | sha256sum --check
-          tar -xzf actionlint.tar.gz actionlint
+    js-lint:
+      name: JS Linting
+      needs: [changes, config, setup]
+      if: ${{ fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }}
+      permissions:
+        contents: read
+        checks: write
+        pull-requests: read
+      uses: ./.github/workflows/run-linting.yml
+      with:
+        frontend: ${{ needs.changes.outputs.frontend == 'true' }}
+        docs: ${{ needs.changes.outputs.docs == 'true' }}
 
-      # Embedded shell and Python snippets are not linted.
-      - name: Lint workflows
-        run: '"$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes='
+    actionlint:
+      name: Workflow lint
+      needs: changes
+      if: ${{ needs.changes.outputs.workflows == 'true' }}
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      permissions:
+        contents: read
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+          with:
+            persist-credentials: false
 
-  # The jobs below run only for ready-for-review PRs.
+        - name: Install actionlint 1.7.12
+          working-directory: ${{ runner.temp }}
+          run: |
+            curl --fail --silent --show-error --location --output actionlint.tar.gz \
+              https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+            echo '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint.tar.gz' | sha256sum --check
+            tar -xzf actionlint.tar.gz actionlint
 
-  php-unit:
-    name: PHP unit tests
-    needs: changes
-    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }}
-    uses: ./.github/workflows/phpunit.yml
+        # Embedded shell and Python snippets are not linted.
+        - name: Lint workflows
+          run: '"$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes='
 
-  # Needs the licensed Bookings and Product Add-Ons downloads, so fork PRs skip
-  # it like E2E below.
-  php-integration:
-    name: PHP integration tests
-    needs: changes
-    if: ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.php == 'true' }}
-    uses: ./.github/workflows/phpunit-integration.yml
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+    # The jobs below run only for ready-for-review PRs.
 
-  plugin-check:
-    name: Plugin Check
-    needs: [changes, package]
-    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
-    permissions:
-      contents: read
-      actions: read
-    uses: ./.github/workflows/run-plugin-check.yml
-    with:
-      artifact-id: ${{ needs.package.outputs.artifact-id }}
-      source-sha: ${{ needs.package.outputs.source-sha }}
-      expected-source-sha: ${{ github.sha }}
-      sha256: ${{ needs.package.outputs.sha256 }}
+    plugin-check:
+      name: Plugin Check
+      needs: [changes, config, build_project]
+      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && fromJSON(needs.config.outputs.json).capabilities.pluginCheck }}
+      permissions:
+        contents: read
+        actions: read
+      uses: ./.github/workflows/run-plugin-check.yml
+      with:
+        artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+        source-sha: ${{ needs.build_project.outputs.source-sha }}
+        expected-source-sha: ${{ github.sha }}
+        sha256: ${{ needs.build_project.outputs.sha256 }}
 
-  # Builds the production ZIP with the release command and keeps it as an artifact for review and manual testing.
-  package:
-    name: Package
-    needs: changes
-    if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
-    uses: ./.github/workflows/build-upload-zip.yml
+    php-tests:
+      name: PHP
+      needs: [changes, config, extract-values]
+      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.phpunit }}
+      uses: ./.github/workflows/run-unit-tests.yml
+      with:
+        wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
+        wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
+        php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
 
-  # The tests need WooCommerce Bookings, a private download. Fork PRs never
-  # receive the secret, so E2E is skipped for them. Dependabot PRs still run it
-  # and need ORG_DOWNLOADS as a Dependabot secret.
-  e2e:
-    name: E2E
-    needs: [changes, package]
-    if: ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
-    permissions:
-      contents: read
-      actions: read
-    uses: ./.github/workflows/run-e2e.yml
-    with:
-      artifact-id: ${{ needs.package.outputs.artifact-id }}
-      source-sha: ${{ needs.package.outputs.source-sha }}
-      sha256: ${{ needs.package.outputs.sha256 }}
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+    # config.sww.pullRequests.privatePlugins: the suite needs private plugins in every run, so
+    # same-repository pull requests download them (Dependabot needs ORG_DOWNLOADS as a Dependabot
+    # secret) and fork pull requests, which never receive secrets, skip it with a warning below.
+    integration-tests:
+      name: PHP integration
+      needs: [changes, config, extract-values]
+      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name == github.repository }}
+      uses: ./.github/workflows/run-integration-tests.yml
+      with:
+        wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
+        wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
+        php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
+        trusted-plugins: true
+      secrets:
+        ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
-  # The single status that branch protection requires. It fails when any
-  # applicable check failed, was cancelled, is missing or was skipped
-  # unexpectedly, and always fails on drafts so a draft-era result can never
-  # satisfy branch protection once the PR is ready for review.
-  required:
-    name: Required checks
-    if: ${{ always() }}
-    needs: [changes, spelling, phpcs, phpstan, php-compatibility, css, javascript, actionlint, php-unit, php-integration, plugin-check, package, e2e]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions: {}
-    env:
-      CI_DRAFT: ${{ github.event.pull_request.draft }}
-      CI_RESULTS: ${{ toJSON(needs) }}
-      CI_EXPECTED: >-
-        {
-          "changes": true,
-          "spelling": true,
-          "phpcs": ${{ needs.changes.outputs.php == 'true' }},
-          "phpstan": ${{ needs.changes.outputs.php == 'true' }},
-          "php-compatibility": ${{ needs.changes.outputs.php == 'true' }},
-          "css": ${{ needs.changes.outputs.frontend == 'true' }},
-          "javascript": ${{ needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }},
-          "actionlint": ${{ needs.changes.outputs.workflows == 'true' }},
-          "php-unit": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' }},
-          "php-integration": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.php == 'true' }},
-          "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
-          "package": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
-          "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
-        }
-      # Checks that need a private download and are skipped for fork PRs; reviewers must run them from a branch here.
-      CI_FORK_SKIPPED: >-
-        {
-          "php-integration": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.php == 'true' }},
-          "e2e": ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository && needs.changes.outputs.product == 'true' }}
-        }
-    steps:
-      - name: Check required results
-        run: |
-          node <<'NODE'
-          const results = JSON.parse(process.env.CI_RESULTS);
-          const expected = JSON.parse(process.env.CI_EXPECTED);
-          let failed = false;
-          for (const job of new Set([...Object.keys(expected), ...Object.keys(results)])) {
-            const result = results[job]?.result;
-            const passed = Object.hasOwn(expected, job) &&
-              (result === 'success' || (result === 'skipped' && expected[job] === false));
-            console.log(`${job}: ${result || 'missing'}${passed ? '' : ' (required check failed)'}`);
-            failed ||= !passed;
+    build_project:
+      name: Package
+      needs: changes
+      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
+      uses: ./.github/workflows/build-upload-zip.yml
+
+    # Like integration-tests above for config.sww.pullRequests.privatePlugins.
+    e2e-tests:
+      name: E2E tests
+      needs: [changes, config, extract-values, build_project]
+      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && fromJSON(needs.config.outputs.json).capabilities.e2e && (!fromJSON(needs.config.outputs.json).pullRequests.privatePlugins || github.event.pull_request.head.repo.full_name == github.repository) }}
+      permissions:
+        contents: read
+        actions: read
+      uses: ./.github/workflows/run-e2e.yml
+      with:
+        artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+        source-sha: ${{ needs.build_project.outputs.source-sha }}
+        sha256: ${{ needs.build_project.outputs.sha256 }}
+        wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
+        wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
+        php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
+        trusted-plugins: ${{ fromJSON(needs.config.outputs.json).pullRequests.privatePlugins }}
+      secrets:
+        ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    # The single status that branch protection requires. It fails when any
+    # applicable check failed, was cancelled, is missing or was skipped
+    # unexpectedly, and always fails on drafts so a draft-era result can never
+    # satisfy branch protection once the PR is ready for review.
+    required:
+      name: Required checks
+      if: ${{ always() }}
+      needs: [changes, config, extract-values, spelling, setup, php-lint, phpstan, js-lint, actionlint, plugin-check, php-tests, integration-tests, build_project, e2e-tests]
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      permissions: {}
+      env:
+        CI_DRAFT: ${{ github.event.pull_request.draft }}
+        CI_RESULTS: ${{ toJSON(needs) }}
+        CI_EXPECTED: >-
+          {
+            "changes": true,
+            "config": true,
+            "extract-values": true,
+            "spelling": true,
+            "setup": ${{ needs.changes.outputs.php == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }},
+            "php-lint": ${{ needs.changes.outputs.php == 'true' }},
+            "phpstan": ${{ needs.changes.outputs.php == 'true' }},
+            "js-lint": ${{ needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }},
+            "actionlint": ${{ needs.changes.outputs.workflows == 'true' }},
+            "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.pluginCheck }},
+            "php-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.phpunit }},
+            "integration-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name == github.repository }},
+            "build_project": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
+            "e2e-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.e2e && (!fromJSON(needs.config.outputs.json).pullRequests.privatePlugins || github.event.pull_request.head.repo.full_name == github.repository) }}
           }
-          for (const [job, skipped] of Object.entries(JSON.parse(process.env.CI_FORK_SKIPPED))) {
-            if (skipped) {
-              console.log(`::warning title=Skipped for fork PR::${job} needs a private download (WooCommerce Bookings or Product Add-Ons), which fork PRs cannot access. Run it from a branch in this repository before merging.`);
+        # Checks that need private plugins (config.sww.pullRequests.privatePlugins) and are skipped
+        # for fork pull requests; reviewers run them from a branch in this repository.
+        CI_FORK_SKIPPED: >-
+          {
+            "integration-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name != github.repository }},
+            "e2e-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.e2e && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name != github.repository }}
+          }
+      steps:
+        - name: Check required results
+          run: |
+            node <<'NODE'
+            const results = JSON.parse(process.env.CI_RESULTS);
+            const expected = JSON.parse(process.env.CI_EXPECTED);
+            let failed = false;
+            for (const job of new Set([...Object.keys(expected), ...Object.keys(results)])) {
+              const result = results[job]?.result;
+              const passed = Object.hasOwn(expected, job) &&
+                (result === 'success' || (result === 'skipped' && expected[job] === false));
+              console.log(`${job}: ${result || 'missing'}${passed ? '' : ' (required check failed)'}`);
+              failed ||= !passed;
             }
-          }
-          if (process.env.CI_DRAFT === 'true') {
-            console.log('::error::Draft PR: PHP unit and integration tests, Plugin Check, the package build and E2E tests run once the PR is ready for review.');
-            failed = true;
-          }
-          process.exitCode = failed ? 1 : 0;
-          NODE
+            for (const [job, skipped] of Object.entries(JSON.parse(process.env.CI_FORK_SKIPPED))) {
+              if (skipped) {
+                console.log(`::warning title=Skipped for fork PR::${job} needs private plugin downloads, which fork PRs cannot access. Run it from a branch in this repository before merging.`);
+              }
+            }
+            if (process.env.CI_DRAFT === 'true') {
+              console.log('::error::Draft PR: Plugin Check, PHP tests, the package build and E2E tests run once the PR is ready for review.');
+              failed = true;
+            }
+            process.exitCode = failed ? 1 : 0;
+            NODE
+
+    notify:
+      # Report the same aggregate result that branch protection uses.
+      if: ${{ !cancelled() && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+      needs: required
+      name: Notify Slack
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      permissions: {}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        CI_STATUS: ${{ needs.required.result }}
+      steps:
+        - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+          with:
+            status: ${{ env.CI_STATUS }}
+            message: "Workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> in PR <{{refUrl}}|{{ref}}> finished with status: ${{ env.CI_STATUS }}."

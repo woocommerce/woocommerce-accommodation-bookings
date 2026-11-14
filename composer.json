@@ -31,6 +31,7 @@
         "lint:phpcs:baseline": "bash bin/phpcs.sh",
         "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
         "check:php": [
+            "@composer --working-dir=tools/php-quality install --no-interaction --prefer-dist --no-progress",
             "@lint:php:syntax",
             "@lint:phpcs:baseline"
         ],

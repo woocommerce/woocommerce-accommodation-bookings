@@ -8,6 +8,11 @@ on:
         default: acceptance-test-zip
       checkout-ref:
         type: string
+      # Also upload the QIT scan copy without config.sww.qit.derivativeExclude (artifact `qit-derivative`).
+      qit-derivative:
+        type: boolean
+        default: false
+
     outputs:
       artifact-id:
         description: Production ZIP artifact ID
@@ -27,60 +32,133 @@ permissions:
 
 jobs:
   build_project:
-        name: Build and upload
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        outputs:
-          artifact-id: ${{ steps.upload.outputs.artifact-id }}
-          source-sha: ${{ steps.identity.outputs.source-sha }}
-          sha256: ${{ steps.identity.outputs.sha256 }}
-          slug: ${{ steps.identity.outputs.slug }}
+    name: Build and upload
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      source-sha: ${{ steps.identity.outputs.source-sha }}
+      sha256: ${{ steps.identity.outputs.sha256 }}
+      slug: ${{ steps.identity.outputs.slug }}
 
-        steps:
+    steps:
 
-            - name: Checkout repository
-              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-              with:
-                ref: ${{ inputs.checkout-ref }}
-                persist-credentials: false
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
 
-            - name: Set up pnpm
-              uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - name: Read plugin metadata
+        id: config
+        run: bash bin/sww-config.sh --github-output
 
-            - name: Setup node version
-              uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-              with:
-                  node-version-file: '.nvmrc'
-                  cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
-                  package-manager-cache: ${{ inputs.checkout-ref == '' }}
-            - name: Install Node dependencies
-              run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
-            - name: Install PHP dependencies
-              run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: ${{ inputs.checkout-ref == '' && fromJSON(steps.config.outputs.json).capabilities.js && 'pnpm' || '' }}
+          package-manager-cache: ${{ inputs.checkout-ref == '' && fromJSON(steps.config.outputs.json).capabilities.js }}
 
-            - name: Build
-              env:
-                REQUESTED_SHA: ${{ inputs.checkout-ref }}
-              run: |
-                  if [[ -n "$REQUESTED_SHA" ]]; then
-                      test "$(git rev-parse HEAD)" = "$REQUESTED_SHA"
-                      test -z "$(git status --porcelain --untracked-files=no)"
-                  fi
-                  pnpm run build:zip
+      - name: Install Node dependencies
+        if: fromJSON(steps.config.outputs.json).capabilities.js
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
-            - name: Identify production ZIP
-              id: identity
-              run: |
-                slug=$(jq -er '.name | strings | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' package.json)
-                source_sha=$(git rev-parse HEAD)
-                checksum=$(sha256sum "deploy/$slug.zip")
-                printf 'slug=%s\nsource-sha=%s\nsha256=%s\n' "$slug" "$source_sha" "${checksum%% *}" >> "$GITHUB_OUTPUT"
+      # config.sww.zip.php "system" keeps the runner's PHP (a Composer install script may not support the newest PHP).
+      - name: Set up PHP
+        if: fromJSON(steps.config.outputs.json).zip.php != 'system'
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ fromJSON(steps.config.outputs.json).zip.php }}
+          coverage: none
+          tools: composer
+          github-token: ''
 
-            - name: Upload zip
-              id: upload
-              uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-              with:
-                name: ${{ inputs.artifact-name }}
-                path: ${{ github.workspace }}/deploy/${{ steps.identity.outputs.slug }}.zip
-                if-no-files-found: error
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Install WP-CLI
+        run: |
+          mkdir -p tools
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar \
+            --output tools/wp
+          echo 'ce34ddd838f7351d6759068d09793f26755463b4a4610a5a5c0a97b68220d85c  tools/wp' | sha256sum --check -
+          chmod +x tools/wp
+
+      - name: Build
+        env:
+          REQUESTED_SHA: ${{ inputs.checkout-ref }}
+        run: |
+          if [[ -n "$REQUESTED_SHA" ]]; then
+            test "$(git rev-parse HEAD)" = "$REQUESTED_SHA" || { echo "::error::Checked-out HEAD is not $REQUESTED_SHA"; exit 1; }
+            test -z "$(git status --porcelain --untracked-files=no)" || { echo "::error::Tracked files changed before the build"; git status --porcelain --untracked-files=no; exit 1; }
+          fi
+          export PATH=$PATH:${PWD}/tools
+          pnpm run build:zip
+
+      - name: Test build tooling
+        if: fromJSON(steps.config.outputs.json).capabilities.buildTests
+        run: pnpm run test:build
+
+      - name: Identify production ZIP
+        id: identity
+        run: |
+          slug=$(jq -er '.name | strings | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' package.json)
+          archive="deploy/$slug.zip"
+          # Release branches cut before the deploy/ directory still write the ZIP to the checkout root.
+          if [[ ! -f "$archive" ]]; then
+            archive="$slug.zip"
+          fi
+          source_sha=$(git rev-parse HEAD)
+          checksum=$(sha256sum "$archive")
+          printf 'slug=%s\nsource-sha=%s\nsha256=%s\narchive=%s\n' "$slug" "$source_sha" "${checksum%% *}" "$archive" >> "$GITHUB_OUTPUT"
+
+      # Checks of the shipped ZIP itself, such as PHP compatibility of every PHP file it contains.
+      - name: Run repository package checks
+        if: hashFiles('bin/hooks/package-check.sh') != ''
+        env:
+          ARCHIVE: ${{ steps.identity.outputs.archive }}
+        run: bash bin/hooks/package-check.sh "$ARCHIVE"
+
+      # The plugin folder's contents without the excluded path, for the QIT scans that cannot
+      # read it (for example Strauss-prefixed vendor code), plus a lineage record.
+      - name: Build the QIT security and compatibility derivative
+        if: inputs.qit-derivative && fromJSON(steps.config.outputs.json).qit.derivativeExclude != ''
+        env:
+          SLUG: ${{ steps.identity.outputs.slug }}
+          ARCHIVE: ${{ steps.identity.outputs.archive }}
+          SOURCE_SHA: ${{ steps.identity.outputs.source-sha }}
+          PRODUCTION_SHA256: ${{ steps.identity.outputs.sha256 }}
+          PLUGIN_DIR: ${{ fromJSON(steps.config.outputs.json).zip.root }}
+          EXCLUDED: ${{ fromJSON(steps.config.outputs.json).qit.derivativeExclude }}
+        run: |
+          scratch=$(mktemp -d)
+          unzip -q "$ARCHIVE" -d "$scratch"
+          rm -rf -- "${scratch:?}/$PLUGIN_DIR/${EXCLUDED%/}"
+          (cd "$scratch/$PLUGIN_DIR" && zip -rq "$GITHUB_WORKSPACE/deploy/$SLUG-qit.zip" .)
+          checksum=$(sha256sum "deploy/$SLUG-qit.zip")
+          jq -n --arg source "$SOURCE_SHA" --arg parent "$PRODUCTION_SHA256" --arg digest "${checksum%% *}" --arg excluded "$EXCLUDED" \
+            '{source_sha: $source, production_sha256: $parent, derivative_sha256: $digest, excluded_path: $excluded}' \
+            > "deploy/$SLUG-qit.json"
+
+      - name: Upload zip
+        id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ steps.identity.outputs.archive }}
+          if-no-files-found: error
+
+      - name: Upload the QIT derivative and its source information
+        if: inputs.qit-derivative && fromJSON(steps.config.outputs.json).qit.derivativeExclude != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: qit-derivative
+          path: |
+            deploy/${{ steps.identity.outputs.slug }}-qit.zip
+            deploy/${{ steps.identity.outputs.slug }}-qit.json
+          if-no-files-found: error

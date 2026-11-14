@@ -1,0 +1,35 @@
+# Data for .github/workflows/ci.yml (dorny/paths-filter, picomatch globs).
+# A file that matches any pattern of a category marks that category as changed.
+php:
+  - '**/*.php'
+  - 'composer.json'
+  - 'composer.lock'
+  - 'tools/php-stubs/composer.json'
+  - 'phpcs*.xml*'
+  - 'phpcs.baseline'
+  - 'phpstan*.neon*'
+  - 'phpunit.xml*'
+  - 'phpunit-integration.xml'
+  - 'tests/bin/*.sh'
+  - 'bin/php*.sh'
+  - 'bin/hooks/php-*.sh'
+  - 'tools/php-quality/**'
+  - 'tests/isolated/**'
+  # config.sww in package.json declares the PHP lint, PHPUnit and integration legs.
+  - 'package.json'
+frontend:
+  - '**/*.{js,jsx,ts,tsx,mjs,cjs,scss,css}'
+  - 'package.json'
+  - 'pnpm-lock.yaml'
+  - 'pnpm-workspace.yaml'
+  - '.nvmrc'
+  - '.stylelintrc.json'
+  - '.npmpackagejsonlintrc.json'
+docs:
+  - '**/*.md'
+  - '.markdownlint*'
+  - 'package.json'
+  - 'pnpm-lock.yaml'
+  - 'pnpm-workspace.yaml'
+workflows:
+  - '.github/**'

@@ -53,7 +53,9 @@ tests_add_filter(
 			update_option( 'active_plugins', array( 'woocommerce-bookings/woocommerce-bookings.php' ) );
 		}
 
-		require getenv( 'WC_DIR' ) . '/woocommerce.php';
+		// Same WooCommerce as bootstrap.php: CI's shared PHPUnit runner sets only WC_CORE_DIR.
+		$wc_dir = getenv( 'WC_DIR' ) ? getenv( 'WC_DIR' ) : getenv( 'WC_CORE_DIR' );
+		require $wc_dir . '/woocommerce.php';
 		require $accommodation_test_plugin_dir . '/woocommerce-accommodation-bookings.php';
 	}
 );
