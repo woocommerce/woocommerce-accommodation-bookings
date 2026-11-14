@@ -71,6 +71,7 @@ jobs:
             sparse-checkout: |
               package.json
               bin/woo-config.sh
+              bin/woo-config.schema.json
             sparse-checkout-cone-mode: false
         - name: Read config.woo
           id: config

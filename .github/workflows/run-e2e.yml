@@ -53,6 +53,7 @@ jobs:
           sparse-checkout: |
             package.json
             bin/woo-config.sh
+            bin/woo-config.schema.json
           sparse-checkout-cone-mode: false
       - name: Read config.woo
         id: config
@@ -76,7 +77,7 @@ jobs:
       PHP_VERSION: ${{ inputs.php-version }}
       RUN_INTEGRATION_TESTS: ${{ (inputs.trusted-plugins || !fromJSON(needs.config.outputs.json).e2e.privatePlugins) && '1' || '0' }}
       TEST_MODE: ${{ matrix.test_mode }}
-      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).name }}.zip
+      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).slug }}.zip
 
     steps:
 

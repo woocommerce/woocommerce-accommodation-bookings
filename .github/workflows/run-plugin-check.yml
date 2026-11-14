@@ -37,6 +37,7 @@ jobs:
           sparse-checkout: |
             package.json
             bin/woo-config.sh
+            bin/woo-config.schema.json
           sparse-checkout-cone-mode: false
       - name: Read config.woo
         id: config
@@ -47,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(needs.config.outputs.json).pluginCheck.timeoutMinutes }}
     env:
-      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).name }}.zip
+      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).slug }}.zip
       PLUGIN_DIR: ${{ fromJSON(needs.config.outputs.json).zip.root }}
       MAIN_FILE: ${{ fromJSON(needs.config.outputs.json).mainFile }}
     steps:

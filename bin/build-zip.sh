@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Packages the plugin as deploy/<package.json name>.zip with one root folder, config.woo.zip.root
-# (default: the package.json name).
+# Packages the plugin as deploy/<slug>.zip with one root folder, config.woo.zip.root
+# (default: the slug).
 #
 # Usage: bash bin/build-zip.sh [<commit>]
 #   Without a commit: runs the config.woo.zip.build package script (default `build`; empty for
@@ -20,7 +20,7 @@ cd "$(dirname "$0")/.."
 root=$PWD
 
 config=$(bash bin/woo-config.sh)
-name=$(jq -r .name <<< "$config")
+name=$(jq -r .slug <<< "$config")
 plugin_dir=$(jq -r .zip.root <<< "$config")
 exclude=$(jq -r .zip.exclude <<< "$config")
 build=$(jq -r '.zip.build // ""' <<< "$config")

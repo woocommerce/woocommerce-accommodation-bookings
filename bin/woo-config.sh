@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 #
 # Prints the plugin's tooling metadata: package.json `config.woo` with every default applied.
-# Shared scripts and workflows read per-repository values only through this script, so the
-# defaults live in one place. docs/config-sww.md in the shared set documents each key.
+# Shared scripts and workflows read per-plugin values only through this script, so the defaults
+# live in one place. woo-config.schema.json, next to this script, documents each key; the object
+# is validated against it first, so a misspelled key or a wrong type fails here.
+#
+# Run it from the plugin root, the folder with package.json.
 #
 # Usage:
 #   bash bin/woo-config.sh                   Normalized config as JSON.
@@ -12,13 +15,56 @@
 #                                            REQUESTED_WP, REQUESTED_WC and REQUESTED_PHP.
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
+schema="$(dirname "$0")/woo-config.schema.json"
+
+if [[ ! -f package.json ]]; then
+	echo 'No package.json here. Run this from the plugin root.' >&2
+	exit 1
+fi
+
+# The subset of JSON Schema that woo-config.schema.json uses: type, enum, pattern, required,
+# properties, additionalProperties, items and $ref into $defs.
+errors=$(jq -r --slurpfile schema "$schema" '
+	def check($node; $path):
+		(if $node | has("$ref") then $schema[0]["$defs"][$node["$ref"] | split("/") | last] else $node end) as $s
+		| . as $value
+		| type as $type
+		| if $s.type != null and ((if $s.type == "integer" then $type == "number" and $value == ($value | floor) else $type == $s.type end) | not) then
+			"\($path): expected \($s.type), got \($type)"
+		else
+			(if $s.enum != null and ($s.enum | any(. == $value) | not) then "\($path): \($value | tojson) is not one of \($s.enum | tojson)" else empty end),
+			(if $type == "string" and $s.pattern != null and ($value | test($s.pattern) | not) then "\($path): \($value | tojson) does not match \($s.pattern)" else empty end),
+			(if $type == "object" then
+				(($s.required // [])[] | select(. as $key | $value | has($key) | not) | "\($path): missing \(.)"),
+				($value | to_entries[] | .key as $key | .value
+					| if ($s.properties // {}) | has($key) then check($s.properties[$key]; "\($path).\($key)")
+					elif $s.additionalProperties == false then "\($path): unknown key \($key)"
+					elif ($s.additionalProperties | type) == "object" then check($s.additionalProperties; "\($path).\($key)")
+					else empty end)
+			else empty end),
+			(if $type == "array" and $s.items != null then
+				($value | to_entries[] | .key as $index | .value | check($s.items; "\($path)[\($index)]"))
+			else empty end)
+		end;
+	(if (.config | type) == "object" and (.config | has("sww")) then "config.sww: renamed to config.woo" else empty end),
+	(if (.config | type) == "object" and (.config | has("woo")) then .config.woo | check($schema[0]; "config.woo") else empty end)
+' package.json) || {
+	echo 'package.json is not valid JSON, or bin/woo-config.schema.json is missing.' >&2
+	exit 1
+}
+if [[ -n "$errors" ]]; then
+	echo 'Invalid package.json tooling config:' >&2
+	sed 's/^/  /' <<< "$errors" >&2
+	exit 1
+fi
 
 config=$(jq -ce '
 	# A key the object has, else the default. Unlike `//`, keeps false, 0 and "".
 	def opt($key; $default): if type == "object" and has($key) then .[$key] else $default end;
 	(.config.woo // {}) as $c
-	| .name as $name
+	| .name as $package
+	| ($c | opt("slug"; $package)) as $name
+	| if ($name | type) != "string" then error("no slug") else . end
 	| ($c | opt("mainFile"; $name + ".php")) as $main
 	| ($c | opt("capabilities"; {})) as $cap
 	| ($c | opt("zip"; {})) as $zip
@@ -29,7 +75,7 @@ config=$(jq -ce '
 	| ($c | opt("release"; {})) as $rel
 	| ($c | opt("phpLint"; {})) as $lint
 	| {
-		name: $name,
+		slug: $name,
 		version: .version,
 		mainFile: $main,
 		productName: ($c | opt("productName"; $name)),
@@ -82,6 +128,7 @@ config=$(jq -ce '
 			phpInput: ($unit | opt("phpInput"; "ignore")),
 			ini: ($unit | opt("ini"; "")),
 			scheduledWc: ($unit | opt("scheduledWc"; "")),
+			passEnv: ($unit | opt("passEnv"; [])),
 			legs: ($unit | opt("legs"; [
 				{ php: "7.4", wp: "latest", wc: "latest" },
 				{ php: "8.4", wp: "latest", wc: "latest", coverage: true }
@@ -111,12 +158,12 @@ config=$(jq -ce '
 		}
 	}
 ' package.json) || {
-	echo 'package.json must have a "name" and a valid "config.woo" object.' >&2
+	echo 'package.json must have a "name" or a config.woo.slug.' >&2
 	exit 1
 }
 
-if [[ ! "$(jq -r .name <<< "$config")" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-	echo 'package.json "name" must be the plugin slug.' >&2
+if [[ ! "$(jq -r .slug <<< "$config")" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+	echo 'The plugin slug must be lowercase words joined by hyphens. Set config.woo.slug when the package.json name is not the slug.' >&2
 	exit 1
 fi
 

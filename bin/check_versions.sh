@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# The main plugin file is package.json config.woo.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
+# The main plugin file is package.json config.woo.mainFile, or the plugin slug plus .php, never the checkout directory.
 MAIN_PLUGIN_FILE="$(bash "$(dirname "$0")/woo-config.sh" .mainFile)"
 if [[ ! -f "$MAIN_PLUGIN_FILE" ]]; then
 	echo "Missing main plugin file: $MAIN_PLUGIN_FILE"

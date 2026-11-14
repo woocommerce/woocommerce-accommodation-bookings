@@ -107,7 +107,7 @@ jobs:
       - name: Identify production ZIP
         id: identity
         run: |
-          slug=$(jq -er '.name | strings | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' package.json)
+          slug=$(bash bin/woo-config.sh .slug)
           archive="deploy/$slug.zip"
           # Release branches cut before the deploy/ directory still write the ZIP to the checkout root.
           if [[ ! -f "$archive" ]]; then

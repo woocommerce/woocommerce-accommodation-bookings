@@ -56,7 +56,7 @@ validate_core_version() {
     fi
 }
 
-# The main plugin file is package.json config.woo.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
+# The main plugin file is package.json config.woo.mainFile, or the plugin slug plus .php, never the checkout directory.
 get_main_plugin_file() {
     bash bin/woo-config.sh .mainFile
 }

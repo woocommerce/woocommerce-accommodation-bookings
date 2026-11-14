@@ -40,8 +40,7 @@ fi
 
 # Define variables.
 PACKAGE_VERSION=$(jq -r .version package.json)
-PACKAGE_BASE=$(jq -er '.name | strings | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' package.json) || {
-    echo "A valid plugin slug is required in package.json."
+PACKAGE_BASE=$(bash "$(dirname "$0")/woo-config.sh" .slug) || {
     exit 1
 }
 
