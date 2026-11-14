@@ -23,7 +23,7 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 
 ## Commands
 
-Use the [SWW command contract](https://linear.app/a8c/document/sww-developer-command-and-build-lifecycle-contract-dfe7a270b983). Run `pnpm run lint:php` for PHPCS, `pnpm run phpstan` for static analysis and `pnpm run test:php` for the host PHP suite. Run `pnpm run lint:php:syntax` for syntax checks.
+Use the [SWW command contract](https://linear.app/a8c/document/sww-developer-command-and-build-lifecycle-contract-dfe7a270b983). Run `pnpm run lint:php` for PHPCS, `pnpm run phpstan` for static analysis and `pnpm run test:php` for the host PHP suite. Run `pnpm run lint:php:syntax` for syntax checks. Use `pnpm run test:php:env` with optional PHPUnit arguments to run the same database-free suite in a started tests site.
 
 ### Setup and assets
 
@@ -66,7 +66,7 @@ composer test:isolated   # tests/isolated: changelog formatter round-trip, no Wo
 
 `phpunit.xml` loads `tests/phpunit/bootstrap.php`, which boots WP_Mock, defines a stub `WC_VERSION`, and loads `WC_Accommodation_Booking`. This is an isolated suite, not a full WordPress/WooCommerce/Bookings integration environment. Use it for supported isolated cases and Playwright or manual integration checks for behavior involving Bookings products, dates, availability, cart, or orders.
 
-These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host, not on wp-env, so there is no `env:test:unit`.
+These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host by default, so there is no `env:test:unit`.
 
 ### wp-env
 

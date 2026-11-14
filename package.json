@@ -94,6 +94,7 @@
     "phpstan": "composer run phpstan --",
     "watch:build": "pnpm run start:webpack",
     "test:php": "composer run test:php --",
+    "test:php:env": "bash ./bin/phpunit.sh",
     "test:isolated": "composer run test:isolated --",
     "lint:js:fix": "pnpm run lint:js --fix"
   }
