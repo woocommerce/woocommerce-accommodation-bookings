@@ -1,100 +1,112 @@
 name: 'WordPress Plugin Checks'
-on:
-  push:
-    branches:
-    - trunk
-    - develop
 
+on:
   workflow_call:
     inputs:
-      release-artifact:
+      artifact-id:
         type: string
+        required: true
+      source-sha:
+        type: string
+        required: true
+      expected-source-sha:
+        type: string
+        required: true
+      sha256:
+        type: string
+        required: true
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-    - name: Checkout
-      if: inputs.release-artifact == ''
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Download the production ZIP
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: release-package
 
-    - name: Download the release archive
-      if: inputs.release-artifact != ''
-      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-      with:
-        name: ${{ inputs.release-artifact }}
-        path: release-package
+      - name: Verify and unpack the production ZIP
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+          SOURCE_SHA: ${{ inputs.source-sha }}
+          EXPECTED_SOURCE_SHA: ${{ inputs.expected-source-sha }}
+          ZIP_SHA256: ${{ inputs.sha256 }}
+        run: |
+          if [[ -z "$EXPECTED_SOURCE_SHA" || "$SOURCE_SHA" != "$EXPECTED_SOURCE_SHA" ]]; then
+            echo "::error::Plugin Check candidate SHA does not match the requested source."
+            exit 1
+          fi
+          zip_file=release-package/woocommerce-accommodation-bookings.zip
+          printf '%s  %s\n' "$ZIP_SHA256" "$zip_file" | sha256sum --check -
+          unzip -q "$zip_file" -d release-build
+          shopt -s dotglob nullglob
+          entries=(release-build/*)
+          if [[ ${#entries[@]} != 1 || ! -f release-build/woocommerce-accommodation-bookings/woocommerce-accommodation-bookings.php ]]; then
+            echo "::error::The production ZIP must contain the expected plugin directory and main file."
+            exit 1
+          fi
+          printf 'Plugin Check artifact %s, commit %s, SHA-256 %s.\n' \
+            "$ARTIFACT_ID" "$SOURCE_SHA" "$ZIP_SHA256" >> "$GITHUB_STEP_SUMMARY"
 
-    - name: Unpack the release archive
-      if: inputs.release-artifact != ''
-      id: archive
-      run: |
-        unzip -q "release-package/${GITHUB_REPOSITORY#*/}.zip" -d release-build
-        shopt -s dotglob nullglob
-        entries=(release-build/*)
-        if [[ ${#entries[@]} != 1 || ! -d "${entries[0]}" ]]; then
-          echo "::error::The release ZIP must contain one plugin directory."
-          exit 1
-        fi
-        echo "plugin_dir=${entries[0]}" >> "$GITHUB_OUTPUT"
+      - name: Run plugin check
+        uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
+        with:
+          build-dir: release-build/woocommerce-accommodation-bookings
+          # Keep results in annotations and artifacts.
+          repo-token: ''
+          # Enforce warnings; ignore only reviewed codes below.
+          ignore-warnings: false
+          strict: true
 
-    - name: Run plugin check
-      uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
-      with:
-        build-dir: ${{ steps.archive.outputs.plugin_dir || './' }}
-        # Keep results in annotations and artifacts.
-        repo-token: ''
-        # Enforce warnings; ignore only reviewed codes below.
-        ignore-warnings: false
-        strict: true
+          exclude-directories: |
+            .github
+            node_modules
+            vendor
+            tests
+            bin
+            build
+            assets
+            tools
+            changelog
 
-        exclude-directories: |
-          .github
-          node_modules
-          vendor
-          tests
-          bin
-          build
-          assets
-          tools
-          changelog
+          # Development configuration and documentation.
+          exclude-files: |
+            .git
+            .gitignore
+            .gitattributes
+            .nvmrc
+            .wp-env.json
+            .wp-env.test.json
+            .stylelintrc.json
+            .markdownlintignore
+            .npmpackagejsonlintrc.json
+            .prettierrc.js
+            .coderabbit.yaml
+            phpcs.xml.dist
+            phpcs-compat.xml.dist
+            phpstan.neon.dist
+            phpstan-baseline.neon
+            phpstan-bootstrap.php
+            AGENTS.md
+            CLAUDE.md
+            DEVELOPER.md
 
-        # Development configuration and documentation.
-        exclude-files: |
-          .git
-          .gitignore
-          .gitattributes
-          .nvmrc
-          .wp-env.json
-          .wp-env.test.json
-          .stylelintrc.json
-          .markdownlintignore
-          .npmpackagejsonlintrc.json
-          .prettierrc.js
-          .coderabbit.yaml
-          phpcs.xml.dist
-          phpcs-compat.xml.dist
-          phpstan.neon.dist
-          phpstan-baseline.neon
-          phpstan-bootstrap.php
-          AGENTS.md
-          CLAUDE.md
-          DEVELOPER.md
-
-        # Existing metadata, WooCommerce contracts and reviewed legacy debt.
-        # These codes also suppress future occurrences; review before extending.
-        ignore-codes: |
-          WordPress.DB.DirectDatabaseQuery.DirectQuery
-          WordPress.DB.DirectDatabaseQuery.NoCaching
-          WordPress.DateTime.RestrictedFunctions.date_date
-          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-          WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-          WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-          plugin_header_nonexistent_domain_path
-          trademarked_term
+          # Existing metadata, WooCommerce contracts and reviewed legacy debt.
+          # These codes also suppress future occurrences; review before extending.
+          ignore-codes: |
+            WordPress.DB.DirectDatabaseQuery.DirectQuery
+            WordPress.DB.DirectDatabaseQuery.NoCaching
+            WordPress.DateTime.RestrictedFunctions.date_date
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+            WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            plugin_header_nonexistent_domain_path
+            trademarked_term

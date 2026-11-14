@@ -167,9 +167,17 @@ jobs:
 
   plugin-check:
     name: Plugin Check
-    needs: changes
+    needs: [changes, package]
     if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
+    permissions:
+      contents: read
+      actions: read
     uses: ./.github/workflows/plugin-check.yml
+    with:
+      artifact-id: ${{ needs.package.outputs.artifact-id }}
+      source-sha: ${{ needs.package.outputs.source-sha }}
+      expected-source-sha: ${{ github.sha }}
+      sha256: ${{ needs.package.outputs.sha256 }}
 
   # Builds the production ZIP with the release command and keeps it as an artifact for review and manual testing.
   package:

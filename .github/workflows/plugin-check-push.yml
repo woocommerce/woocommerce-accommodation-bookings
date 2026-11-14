@@ -1,0 +1,26 @@
+name: WordPress Plugin Checks
+
+on:
+  push:
+    branches:
+    - trunk
+    - develop
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    uses: ./.github/workflows/build-upload-zip.yml
+
+  plugin-check:
+    needs: package
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/plugin-check.yml
+    with:
+      artifact-id: ${{ needs.package.outputs.artifact-id }}
+      source-sha: ${{ needs.package.outputs.source-sha }}
+      expected-source-sha: ${{ github.sha }}
+      sha256: ${{ needs.package.outputs.sha256 }}
