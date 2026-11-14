@@ -1,0 +1,4 @@
+Significance: patch
+Type: fix
+
+Show the right nightly cost for ranges whose cost was set with +, ×, ÷ or = in Bookings, and preserve the standard room rate and rule priority when saving Rates.
