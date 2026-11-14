@@ -26,22 +26,23 @@ Install the pnpm version pinned in `package.json`. With Corepack, run `corepack 
 
 ```bash
 nvm use
-pnpm install
-pnpm run build:dev
+pnpm install --frozen-lockfile
+composer install
+pnpm run build
 ```
 
 ## pnpm scripts
 
 ```bash
 # Development build
-pnpm run build:dev      # Install composer deps, build JS/CSS, generate language files
+pnpm run build      # Build assets and translations
 
 # Watch mode
 pnpm run start:webpack  # Rebuild JS/CSS on file changes
 
 # Production build
-pnpm run build          # Production build + language files + zip
-pnpm run build:zip      # Same build, with the zip moved to deploy/ (used by the release CI)
+pnpm run build          # Build assets and translations
+pnpm run build:zip      # Build the production ZIP
 
 # Tests
 pnpm run env:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
