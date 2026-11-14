@@ -63,32 +63,3 @@ jobs:
       php-version: ${{ inputs.php-version }}
     secrets:
       ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
-
-  report-run:
-    name: Report test selection and outcomes
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions: {}
-    needs: [qit-tests, php-integration]
-    env:
-      WP_VERSION: ${{ inputs.wp-version }}
-      WC_VERSION: ${{ inputs.wc-version }}
-      PHP_VERSION: ${{ inputs.php-version }}
-      QIT_TESTS: ${{ inputs.qit-tests }}
-      QIT_TESTS_RESULT: ${{ needs.qit-tests.result }}
-      PHP_INTEGRATION_RESULT: ${{ needs.php-integration.result }}
-    steps:
-      - name: Write the test summary
-        run: |
-          {
-            printf '### Requested test environment\n\n'
-            printf -- '- Requested WordPress: %s\n' "$WP_VERSION"
-            printf -- '- Requested WooCommerce: %s\n' "$WC_VERSION"
-            printf -- '- Requested PHP: %s\n' "$PHP_VERSION"
-            printf -- '- QIT selection: %s\n' "$QIT_TESTS"
-            printf '\n### Job outcomes\n\n'
-            printf -- '- QIT: %s\n' "$QIT_TESTS_RESULT"
-            printf -- '- PHP integration: %s\n' "$PHP_INTEGRATION_RESULT"
-            printf '\nInstalled versions appear in the PHP and browser job logs where available. QIT results use their own environment.\n'
-          } >> "$GITHUB_STEP_SUMMARY"
