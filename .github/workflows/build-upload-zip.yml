@@ -3,6 +3,9 @@ name: Build and Upload zip
 on:
   workflow_call:
     inputs:
+      artifact-name:
+        type: string
+        default: acceptance-test-zip
       checkout-ref:
         type: string
     outputs:
@@ -69,6 +72,6 @@ jobs:
               id: upload
               uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
               with:
-                name: acceptance-test-zip
+                name: ${{ inputs.artifact-name }}
                 path: ${{ github.workspace }}/deploy/woocommerce-accommodation-bookings.zip
                 if-no-files-found: error
