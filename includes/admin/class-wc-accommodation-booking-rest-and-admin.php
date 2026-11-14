@@ -13,9 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Required functions for REST API and Admin functionality.
  *
  * @class   WC_Accommodation_Booking_REST_And_Admin
- * @version 1.4.0
+ * @version x.x.x
  */
 class WC_Accommodation_Booking_REST_And_Admin {
+
+	/**
+	 * Rates before WooCommerce runs the product object save.
+	 *
+	 * @var array<int, array{standard_rate: float, pricing: mixed}>
+	 */
+	private $rates_before_save = array();
 
 	/**
 	 * Constructor.
@@ -24,6 +31,7 @@ class WC_Accommodation_Booking_REST_And_Admin {
 		// The default CLI context only needs the status tool.
 		if ( is_admin() || ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			add_filter( 'product_type_selector', array( $this, 'product_type_selector' ) );
+			add_action( 'woocommerce_process_product_meta', array( $this, 'capture_rates_before_save' ), 5 );
 			add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_data' ), 25 );
 		}
 
@@ -44,6 +52,73 @@ class WC_Accommodation_Booking_REST_And_Admin {
 	}
 
 	/**
+	 * Get the value shown in a Rates row, before person and resource charges.
+	 *
+	 * @param array<string, mixed> $rate          Stored pricing rule.
+	 * @param float                $standard_rate Standard room rate.
+	 * @return string
+	 */
+	public static function get_rate_nightly_cost( $rate, $standard_rate ) {
+		if ( ! empty( $rate['override_block'] ) ) {
+			return (string) $rate['override_block'];
+		}
+		if ( ! isset( $rate['cost'] ) ) {
+			return '';
+		}
+		if ( empty( $rate['cost'] ) && empty( $rate['base_cost'] ) ) {
+			return (string) $standard_rate;
+		}
+		return (string) WC_Bookings_Cost_Calculation::apply_cost( $standard_rate, $rate['modifier'] ?? '', $rate['cost'] );
+	}
+
+	/**
+	 * Capture the saved rates before Bookings writes its own product panel fields.
+	 *
+	 * @param int $post_id Product ID.
+	 * @return void
+	 */
+	public function capture_rates_before_save( $post_id ) {
+		if ( $this->is_accommodation_save() ) {
+			$this->rates_before_save[ $post_id ] = $this->get_saved_rates( $post_id );
+		}
+	}
+
+	/**
+	 * Check which product type the form is saving.
+	 *
+	 * @return bool
+	 */
+	private function is_accommodation_save() {
+		// WooCommerce verifies the nonce before calling woocommerce_process_product_meta.
+		$product_type = $_POST['product-type'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
+		return is_string( $product_type ) && 'accommodation-booking' === sanitize_title( wp_unslash( $product_type ) );
+	}
+
+	/**
+	 * Get the standard rate and rules used to render the Rates panel.
+	 *
+	 * @param int $post_id Product ID.
+	 * @return array{standard_rate: float, pricing: mixed}
+	 */
+	private function get_saved_rates( $post_id ) {
+		return array(
+			'standard_rate' => abs( (float) get_post_meta( $post_id, '_wc_booking_block_cost', true ) ),
+			'pricing'       => get_post_meta( $post_id, '_wc_booking_pricing', true ),
+		);
+	}
+
+	/**
+	 * Match the rendered price, allowing equivalent numeric formatting.
+	 *
+	 * @param mixed  $posted_cost    Submitted row price.
+	 * @param string $displayed_cost Rendered row price.
+	 * @return bool
+	 */
+	private static function rate_cost_matches( $posted_cost, $displayed_cost ) {
+		return $posted_cost === $displayed_cost || ( is_numeric( $posted_cost ) && is_numeric( $displayed_cost ) && (float) $posted_cost === (float) $displayed_cost );
+	}
+
+	/**
 	 * Saves booking / accommodation data for a product.
 	 *
 	 * @version 1.0.11
@@ -54,11 +129,12 @@ class WC_Accommodation_Booking_REST_And_Admin {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput
 		global $wpdb;
 
-		$product_type = empty( $_POST['product-type'] ) ? 'simple' : sanitize_title( stripslashes( $_POST['product-type'] ) );
-
-		if ( 'accommodation-booking' !== $product_type ) {
+		if ( ! $this->is_accommodation_save() ) {
 			return;
 		}
+
+		$saved_rates = $this->rates_before_save[ $post_id ] ?? $this->get_saved_rates( $post_id );
+		unset( $this->rates_before_save[ $post_id ] );
 
 		// Authorize the entire person batch before saving any product or person fields.
 		$person_ids = array();
@@ -234,18 +310,58 @@ class WC_Accommodation_Booking_REST_And_Admin {
 		}
 
 		// Rates.
-		$pricing            = array();
-		$original_base_cost = abs( (float) get_post_meta( $post_id, '_wc_booking_base_cost', true ) );
+		$pricing                = array();
+		$standard_rate          = abs( (float) get_post_meta( $post_id, '_wc_booking_base_cost', true ) );
+		$previous_standard_rate = $saved_rates['standard_rate'];
+		$stored_rates           = $saved_rates['pricing'];
+
+		$rates_by_key = array();
+		foreach ( is_array( $stored_rates ) ? $stored_rates : array() as $stored_rate ) {
+			if ( is_array( $stored_rate ) ) {
+				$rates_by_key[ md5( maybe_serialize( $stored_rate ) ) ] = $stored_rate;
+			}
+		}
 
 		$row_size = isset( $_POST['wc_accommodation_booking_pricing_type'] ) ? count( $_POST['wc_accommodation_booking_pricing_type'] ) : 0;
 		for ( $i = 0; $i < $row_size; $i++ ) {
-			$pricing[ $i ]['base_cost']     = 0;
-			$pricing[ $i ]['cost']          = 0;
-			$pricing[ $i ]['type']          = wc_clean( $_POST['wc_accommodation_booking_pricing_type'][ $i ] );
-			$new_cost                       = abs( (float) wc_clean( $_POST['wc_accommodation_booking_pricing_block_cost'][ $i ] ) );
-			$pricing[ $i ]['base_modifier'] = $new_cost > $original_base_cost ? 'plus' : 'minus';
-			$pricing[ $i ]['modifier']      = $pricing[ $i ]['base_modifier'];
-			$pricing[ $i ]['cost']          = abs( $new_cost - $original_base_cost );
+			$rate_key              = $_POST['wc_accommodation_booking_pricing_key'][ $i ] ?? '';
+			$stored_rate           = is_string( $rate_key ) ? ( $rates_by_key[ $rate_key ] ?? array() ) : array();
+			$posted_cost           = wc_clean( wp_unslash( $_POST['wc_accommodation_booking_pricing_block_cost'][ $i ] ?? '' ) );
+			$pricing[ $i ]         = $stored_rate;
+			$pricing[ $i ]['type'] = wc_clean( $_POST['wc_accommodation_booking_pricing_type'][ $i ] );
+
+			// Keep the operator if the saved rule still yields the displayed price at both standard rates.
+			$keep_rule = $stored_rate && empty( $stored_rate['override_block'] )
+				&& self::rate_cost_matches( $posted_cost, self::get_rate_nightly_cost( $stored_rate, $previous_standard_rate ) )
+				&& ( $previous_standard_rate === $standard_rate || self::rate_cost_matches( $posted_cost, self::get_rate_nightly_cost( $stored_rate, $standard_rate ) ) );
+			if ( ! $keep_rule ) {
+				$new_cost                       = abs( (float) $posted_cost );
+				$modifier                       = $new_cost > $standard_rate ? '+' : 'minus';
+				$pricing[ $i ]['base_cost']     = $stored_rate['base_cost'] ?? 0;
+				$pricing[ $i ]['base_modifier'] = $stored_rate['base_modifier'] ?? $modifier;
+				$pricing[ $i ]['modifier']      = $modifier;
+				$pricing[ $i ]['cost']          = abs( $new_cost - $standard_rate );
+			}
+			unset( $pricing[ $i ]['override_block'] );
+
+			// Bookings 3.10 REST validates the addition operator as '+'.
+			foreach ( array( 'modifier', 'base_modifier' ) as $modifier_key ) {
+				if ( in_array( $pricing[ $i ][ $modifier_key ] ?? null, array( '', 'plus' ), true ) ) {
+					$pricing[ $i ][ $modifier_key ] = '+';
+				}
+			}
+
+			$modifier = $pricing[ $i ]['modifier'] ?? '';
+			$cost     = $pricing[ $i ]['cost'] ?? '';
+			if (
+				is_numeric( $cost ) && 0.0 === (float) $cost &&
+				in_array( $modifier, array( '', '+', 'minus', 'divide' ), true ) &&
+				( ! empty( $stored_rate['cost'] ) || ! empty( $stored_rate['base_cost'] ) || ! empty( $stored_rate['override_block'] ) )
+			) {
+				// Bookings skips rules with empty amounts. Multiplying by one retains priority through REST updates.
+				$pricing[ $i ]['modifier'] = 'times';
+				$pricing[ $i ]['cost']     = 1;
+			}
 
 			switch ( $pricing[ $i ]['type'] ) {
 				case 'custom':
