@@ -19,7 +19,119 @@
     "node": "^24.22.3"
   },
   "config": {
-    "wp_org_slug": "woocommerce-accommodation-bookings"
+    "wp_org_slug": "woocommerce-accommodation-bookings",
+    "sww": {
+      "productName": "Accommodation Bookings",
+      "capabilities": {
+        "js": true,
+        "e2e": true,
+        "isolated": true,
+        "integration": true,
+        "qit": true,
+        "pluginCheck": true
+      },
+      "pluginCheck": {
+        "excludeDirectories": [
+          ".github",
+          "node_modules",
+          "vendor",
+          "tests",
+          "bin",
+          "build",
+          "assets",
+          "tools",
+          "changelog"
+        ],
+        "excludeFiles": [
+          ".git",
+          ".gitignore",
+          ".gitattributes",
+          ".nvmrc",
+          ".wp-env.json",
+          ".wp-env.test.json",
+          ".stylelintrc.json",
+          ".markdownlintignore",
+          ".npmpackagejsonlintrc.json",
+          ".prettierrc.js",
+          ".coderabbit.yaml",
+          "phpcs.xml.dist",
+          "phpcs-compat.xml.dist",
+          "phpstan.neon.dist",
+          "phpstan-baseline.neon",
+          "phpstan-bootstrap.php",
+          "AGENTS.md",
+          "CLAUDE.md",
+          "DEVELOPER.md"
+        ],
+        "ignoreWarnings": false,
+        "strict": true,
+        "ignoreCodes": [
+          "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+          "WordPress.DB.DirectDatabaseQuery.NoCaching",
+          "WordPress.DateTime.RestrictedFunctions.date_date",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+          "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized",
+          "plugin_header_nonexistent_domain_path",
+          "trademarked_term"
+        ]
+      },
+      "e2e": {
+        "timeoutMinutes": 25,
+        "privatePlugins": true
+      },
+      "integration": {
+        "legs": [
+          {
+            "php": "8.4",
+            "script": "test:integration",
+            "coverage": true
+          },
+          {
+            "php": "7.4",
+            "wp": "minimum",
+            "wc": "minimum",
+            "script": "test:integration",
+            "defaultOnly": true
+          }
+        ]
+      },
+      "privatePlugins": [
+        {
+          "slug": "woocommerce-bookings",
+          "suites": [
+            "integration"
+          ],
+          "dirEnv": "BOOKINGS_DIR"
+        },
+        {
+          "slug": "woocommerce-product-addons",
+          "suites": [
+            "integration"
+          ],
+          "dirEnv": "ADDONS_DIR"
+        }
+      ],
+      "phpLint": {
+        "isolatedPhp": [
+          "7.4",
+          "8.4"
+        ]
+      },
+      "pullRequests": {
+        "privatePlugins": true
+      },
+      "release": {
+        "target": "wordpress.org",
+        "readmeChangelog": true,
+        "wpOrgSlug": "woocommerce-accommodation-bookings"
+      },
+      "qit": {
+        "plugins": "woocommerce-bookings"
+      }
+    }
   },
   "devDependencies": {
     "@babel/runtime": "^7.29.7",
