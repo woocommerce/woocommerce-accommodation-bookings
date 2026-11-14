@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SomewhereWarm Version Update Script
+# Plugin Version Update Script
 # This script updates version numbers across plugin files
 
 set -e  # Exit on any error
@@ -253,7 +253,7 @@ main() {
         print_error "Missing main plugin file: $main_plugin_file"
         exit 1
     fi
-    print_status "SomewhereWarm Version Update Script - $main_plugin_file"
+    print_status "Plugin Version Update Script - $main_plugin_file"
     echo
 
     # Get current version

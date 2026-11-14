@@ -79,7 +79,7 @@
                 "subheading"
             ],
             "formatter": {
-                "class": "SomewhereWarm\\Changelogger\\Changelog_Formatter",
+                "class": "Automattic\\WooCommerce\\ExtensionTools\\Changelogger\\Changelog_Formatter",
                 "title": "*** Changelog ***"
             },
             "versioning": "semver"

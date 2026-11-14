@@ -6,7 +6,7 @@
  * @since    1.3.14
  */
 
-namespace SomewhereWarm\Changelogger;
+namespace Automattic\WooCommerce\ExtensionTools\Changelogger;
 
 use Automattic\Jetpack\Changelog\Changelog;
 use Automattic\Jetpack\Changelog\ChangelogEntry;
@@ -38,7 +38,7 @@ use InvalidArgumentException;
  * no longer issue (such as `Feature` and `Update`), and rewriting them would turn every
  * release into a changelog-wide diff.
  *
- * @version 1.3.14
+ * @version x.x.x
  */
 class Changelog_Formatter extends Parser implements FormatterPlugin {
 

@@ -8,7 +8,7 @@
 
 use Automattic\Jetpack\Changelog\Changelog;
 use PHPUnit\Framework\TestCase;
-use SomewhereWarm\Changelogger\Changelog_Formatter;
+use Automattic\WooCommerce\ExtensionTools\Changelogger\Changelog_Formatter;
 
 require_once dirname( __DIR__, 2 ) . '/vendor/autoload.php';
 
@@ -18,7 +18,7 @@ require_once dirname( __DIR__, 2 ) . '/vendor/autoload.php';
  * The formatter rewrites the whole file on every release, so the tests that matter
  * are the ones asserting that nothing but the new entry changes.
  *
- * @version 1.3.14
+ * @version x.x.x
  */
 class SomewhereWarm_Changelog_Formatter_Tests extends TestCase {
 

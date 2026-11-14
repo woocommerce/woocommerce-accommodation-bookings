@@ -123,7 +123,7 @@ jobs:
         run: |
           plugins_dir="$RUNNER_TEMP/plugins"
           mkdir -p "$plugins_dir" "$RUNNER_TEMP/plugin-zips"
-          echo "SWW_PRIVATE_PLUGINS_DIR=$plugins_dir" >> "$GITHUB_ENV"
+          echo "WOO_PRIVATE_PLUGINS_DIR=$plugins_dir" >> "$GITHUB_ENV"
           while IFS= read -r plugin; do
             slug=$(jq -er '.slug | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' <<< "$plugin")
             zip="$RUNNER_TEMP/plugin-zips/$slug.zip"
@@ -289,4 +289,4 @@ jobs:
           SUITE: ${{ inputs.suite }}
         run: |
           eval "$(jq -r '.env | to_entries[] | select(.key | test("^[A-Z][A-Z0-9_]*$")) | "export \(.key)=\(.value | tostring | @sh)"' <<< "$LEG")"
-          SWW_PHPUNIT_SCRIPT=$(jq -r .script <<< "$LEG") bash bin/hooks/php-tests.sh
+          WOO_PHPUNIT_SCRIPT=$(jq -r .script <<< "$LEG") bash bin/hooks/php-tests.sh
