@@ -77,8 +77,11 @@ if [[ -z $CHANGELOG_EXIST ]]; then
 	echo "No changelog entry found... Exiting with error."
 	exit 1
 else
-	date -d "$(echo $CHANGELOG_EXIST | awk '{print $4}')" +'%Y-%m-%d'
-	if [[ $? -ne 0 ]]; then
+	CHANGELOG_DATE=$(echo $CHANGELOG_EXIST | awk '{print $4}')
+	# A real YYYY-MM-DD date comes back unchanged from GNU date or from the BSD form (macOS).
+	# BSD date rolls an impossible date over, and GNU date reads an empty one as today.
+	PARSED_DATE=$(date -d "$CHANGELOG_DATE" +'%Y-%m-%d' 2> /dev/null || date -j -f '%Y-%m-%d' "$CHANGELOG_DATE" +'%Y-%m-%d' 2> /dev/null)
+	if [[ -z "$CHANGELOG_DATE" || "$PARSED_DATE" != "$CHANGELOG_DATE" ]]; then
 		echo "Invalid date format found in changelog... Exiting with error."
 		exit 1
 	fi
