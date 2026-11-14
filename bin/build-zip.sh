@@ -3,7 +3,7 @@
 # Packages the plugin as deploy/<slug>.zip with one root folder, config.woo.zip.root
 # (default: the slug).
 #
-# Usage: bash bin/build-zip.sh [<commit>]
+# Usage: bash bin/build-zip.sh [<commit>], from the plugin root.
 #   Without a commit: runs the config.woo.zip.build package script (default `build`; empty for
 #   none), then packages the current checkout, uncommitted and untracked files included.
 #   With a commit: packages the files committed at it, for plugins without a build step.
@@ -16,10 +16,9 @@
 # `<root>/<path>`; a leading `/` anchors a line at the plugin root, and `#` starts a comment.
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
 root=$PWD
 
-config=$(bash bin/woo-config.sh)
+config=$(bash "$(dirname "$0")/woo-config.sh")
 name=$(jq -r .slug <<< "$config")
 plugin_dir=$(jq -r .zip.root <<< "$config")
 exclude=$(jq -r .zip.exclude <<< "$config")

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd -P "$(dirname "$0")/.."
-
 if [[ ! -f vendor/autoload.php ]]; then
     echo "Install the locked PHP dependencies with composer install first." >&2
     exit 1

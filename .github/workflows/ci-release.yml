@@ -331,8 +331,10 @@ jobs:
                 path: release-tooling
                 persist-credentials: false
 
+            # deploy.sh reads the product ID from the package.json in the working directory.
             - name: Wait for the marketplace to offer the release version
-              run: bash ./release-tooling/bin/deploy.sh confirm
+              working-directory: release-tooling
+              run: bash ./bin/deploy.sh confirm
 
     # config.woo.release.target "wordpress.org": deploys to WordPress.org once config.woo.release.wpOrgSlug
     # is set. Without it, the job finishes after the artifact checks and the release ends at the

@@ -58,7 +58,7 @@ validate_core_version() {
 
 # The main plugin file is package.json config.woo.mainFile, or the plugin slug plus .php, never the checkout directory.
 get_main_plugin_file() {
-    bash bin/woo-config.sh .mainFile
+    bash "$(dirname "$0")/woo-config.sh" .mainFile
 }
 
 # Escapes a literal string for a basic sed regular expression, or for a sed replacement.
@@ -91,7 +91,7 @@ update_version_patterns() {
         fi
         sedi "s/${anchor}\($(sed_regex "$before")\)$(sed_regex "$old_version")\($(sed_regex "$after")\)/\1$(sed_replacement "$new_version")\2/" "$file"
         print_success "Updated \"$pattern\" in $file"
-    done < <(bash bin/woo-config.sh '.versionPatterns[] | [.file, .pattern] | @tsv')
+    done < <(bash "$(dirname "$0")/woo-config.sh" '.versionPatterns[] | [.file, .pattern] | @tsv')
 }
 
 update_wp_tested_up_to() {
