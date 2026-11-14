@@ -10,7 +10,10 @@ function wp( ...args ) {
 	if ( args[ 0 ] === 'eval-file' ) {
 		args[ 1 ] = native
 			? path.join( native, args[ 1 ] )
-			: args[ 1 ].replace( `${ pluginDir }/tests/e2e/`, 'wp-content/e2e-fixtures/' );
+			: args[ 1 ].replace(
+				`${ pluginDir }/tests/e2e/`,
+				'wp-content/e2e-fixtures/'
+			);
 	}
 	return execFileSync(
 		native ? 'wp' : 'pnpm',
