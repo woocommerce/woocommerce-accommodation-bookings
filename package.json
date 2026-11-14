@@ -47,7 +47,7 @@
     "build:dev": "pnpm run build",
     "archive": "composer archive --file=$npm_package_name --format=zip",
     "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-    "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --exclude=tests,src",
+    "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --slug=$npm_package_name --exclude=tests,src",
     "phpcompat": "bash bin/phpcompat.sh",
     "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",

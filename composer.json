@@ -8,6 +8,7 @@
         "exclude": [
             "/vendor",
             "/deploy",
+            "/.git",
             "node_modules",
             "!/assets"
         ]
