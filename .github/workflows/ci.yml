@@ -176,16 +176,24 @@ jobs:
     name: Package
     needs: changes
     if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
-    uses: ./.github/workflows/generate-zip.yml
+    uses: ./.github/workflows/build-upload-zip.yml
 
   # The tests need WooCommerce Bookings, a private download. Fork PRs never
   # receive the secret, so E2E is skipped for them. Dependabot PRs still run it
   # and need ORG_DOWNLOADS as a Dependabot secret.
   e2e:
     name: E2E
-    needs: changes
+    needs: [changes, package]
     if: ${{ github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && needs.changes.outputs.product == 'true' }}
+    permissions:
+      contents: read
+      actions: read
     uses: ./.github/workflows/e2e.yml
+    with:
+      packaged: true
+      artifact-id: ${{ needs.package.outputs.artifact-id }}
+      source-sha: ${{ needs.package.outputs.source-sha }}
+      sha256: ${{ needs.package.outputs.sha256 }}
     secrets:
       ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 

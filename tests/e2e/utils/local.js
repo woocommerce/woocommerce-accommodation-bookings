@@ -7,8 +7,13 @@ const pluginDir = `wp-content/plugins/${ path.basename(
 ) }`;
 function wp( ...args ) {
 	const native = process.env.ACCOM_E2E_WP_PATH;
-	if ( native && args[ 0 ] === 'eval-file' ) {
-		args[ 1 ] = path.join( native, args[ 1 ] );
+	if ( args[ 0 ] === 'eval-file' ) {
+		args[ 1 ] = native
+			? path.join( native, args[ 1 ] )
+			: args[ 1 ].replace(
+					`${ pluginDir }/tests/e2e/`,
+					'wp-content/e2e-fixtures/e2e/'
+				);
 	}
 	return execFileSync(
 		native ? 'wp' : 'pnpm',

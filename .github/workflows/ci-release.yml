@@ -109,6 +109,22 @@ jobs:
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
 
+    e2e-tests:
+        name: E2E tests
+        needs: [build_project, check-versions]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/e2e.yml
+        with:
+          packaged: true
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
+          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
     check-release-archive:
         name: Check release archive
         needs: build_project
@@ -125,11 +141,12 @@ jobs:
 
     release:
         name: Release
-        needs: [ check-release-archive, php-tests, build_project, check-versions ]
+        needs: [ check-release-archive, php-tests, e2e-tests, build_project, check-versions ]
         runs-on: ubuntu-latest
         timeout-minutes: 5
         permissions:
           contents: write
+          actions: read
         outputs:
           artifact_id: ${{ steps.release_artifact.outputs.artifact-id }}
           sha256: ${{ steps.release_identity.outputs.sha256 }}
@@ -139,6 +156,8 @@ jobs:
           GH_RELEASE_COMMIT: ${{ needs.check-versions.outputs.commit }}
           RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}
           RELEASE_ARCHIVE: ${{ github.event.repository.name }}.zip
+          CANDIDATE_SHA: ${{ needs.build_project.outputs.source-sha }}
+          CANDIDATE_SHA256: ${{ needs.build_project.outputs.sha256 }}
 
         steps:
 
@@ -157,7 +176,7 @@ jobs:
             - name: Download the release artifact
               uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
               with:
-                name: acceptance-test-zip
+                artifact-ids: ${{ needs.build_project.outputs.artifact-id }}
                 path: .
 
             - name: Install tools
@@ -167,6 +186,8 @@ jobs:
             - name: Verify release artifact
               id: release_identity
               run: |
+                test "$GH_RELEASE_COMMIT" = "$CANDIDATE_SHA"
+                printf '%s  %s\n' "$CANDIDATE_SHA256" "$RELEASE_ARCHIVE" | sha256sum --check -
                 test -n "$RELEASE_VERSION"
                 test -s "$RELEASE_ARCHIVE"
                 jq -e --arg version "$RELEASE_VERSION" '.version == $version' package.json > /dev/null

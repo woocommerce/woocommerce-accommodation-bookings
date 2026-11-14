@@ -34,10 +34,22 @@ jobs:
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
+    production-package:
+        name: Package
+        uses: ./.github/workflows/build-upload-zip.yml
+
     e2e-tests:
         name: E2E tests
-        needs: [php-tests, integration-tests]
+        needs: [php-tests, integration-tests, production-package]
+        permissions:
+          contents: read
+          actions: read
         uses: ./.github/workflows/e2e.yml
+        with:
+          packaged: true
+          artifact-id: ${{ needs.production-package.outputs.artifact-id }}
+          source-sha: ${{ needs.production-package.outputs.source-sha }}
+          sha256: ${{ needs.production-package.outputs.sha256 }}
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
