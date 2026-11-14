@@ -23,7 +23,7 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 
 ## Commands
 
-Use the [SWW command contract](https://linear.app/a8c/document/sww-developer-command-and-build-lifecycle-contract-dfe7a270b983). Run `pnpm run lint:php` for PHPCS, `pnpm run phpstan` for static analysis and `pnpm run test:php` for the host PHP suite. Run `pnpm run lint:php:syntax` for syntax checks.
+Use the [SWW command contract](https://linear.app/a8c/document/sww-developer-command-and-build-lifecycle-contract-dfe7a270b983). Run `pnpm run lint:php` for PHPCS, `pnpm run phpstan` for static analysis and `pnpm run test:php` for the host PHP suite. Run `pnpm run lint:php:syntax` for syntax checks. Use `pnpm run test:php:env` with optional PHPUnit arguments to run the same database-free suite in a started tests site.
 
 ### Setup and assets
 
