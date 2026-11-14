@@ -11,7 +11,7 @@ if [[ -n "${SWW_E2E_PACKAGE:-}" ]]; then
     plugin_slug="woocommerce-accommodation-bookings"
     zip_dir="wp-content/e2e-packages"
 fi
-fixtures_dir="wp-content/e2e-fixtures"
+fixtures_dir="wp-content/e2e-fixtures/e2e"
 
 # Enable pretty permalinks.
 pnpm --silent run wp-env:test run wordpress chmod -c ugo+w /var/www/html

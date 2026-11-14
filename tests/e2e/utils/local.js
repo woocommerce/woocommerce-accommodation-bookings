@@ -11,9 +11,9 @@ function wp( ...args ) {
 		args[ 1 ] = native
 			? path.join( native, args[ 1 ] )
 			: args[ 1 ].replace(
-				`${ pluginDir }/tests/e2e/`,
-				'wp-content/e2e-fixtures/'
-			);
+					`${ pluginDir }/tests/e2e/`,
+					'wp-content/e2e-fixtures/e2e/'
+				);
 	}
 	return execFileSync(
 		native ? 'wp' : 'pnpm',
