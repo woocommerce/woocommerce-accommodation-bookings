@@ -14,11 +14,11 @@ An accommodations add-on for the WooCommerce Bookings extension.
 
 ### Prerequisites
 
+Composer installs the WP-CLI used to generate translations. Use `zip` and `unzip` to create the production archive. Start Docker before running wp-env. Install the Playwright browser with `pnpm exec playwright install chromium`.
+
 - [Node.js 24](https://nodejs.org) (managed via [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)): we recommend NVM to keep your Node version aligned with the development team. The repository contains an [`.nvmrc` file](.nvmrc) that pins the supported version.
 - [PHP 8.4](https://www.php.net/manual/en/install.php): use for PHPCS and QIT tooling to match CI. The plugin still supports PHP 7.4+.
-- [Composer](https://getcomposer.org/doc/00-intro.md): manages PHP dependencies and dev tooling.
-
-Docker is required to run the end-to-end test suite via `@wordpress/env`.
+- [Composer 2](https://getcomposer.org/doc/00-intro.md): manages PHP dependencies and dev tooling.
 
 ### Quick start
 
