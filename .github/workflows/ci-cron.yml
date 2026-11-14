@@ -44,9 +44,8 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: ./.github/workflows/e2e.yml
+        uses: ./.github/workflows/run-e2e.yml
         with:
-          packaged: true
           artifact-id: ${{ needs.production-package.outputs.artifact-id }}
           source-sha: ${{ needs.production-package.outputs.source-sha }}
           sha256: ${{ needs.production-package.outputs.sha256 }}
