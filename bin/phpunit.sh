@@ -9,8 +9,13 @@ if [[ ! -f vendor/autoload.php ]]; then
 fi
 
 install_path=$(pnpm --silent run wp-env:test status --json |
-    node -e 'const { installPath } = JSON.parse(require("node:fs").readFileSync(0, "utf8")); if (!installPath) process.exit(1); console.log(installPath);')
-compose=(docker compose -f "$install_path/docker-compose.yml")
+    node -p 'JSON.parse(require("node:fs").readFileSync(0, "utf8")).installPath ?? ""')
+compose_file="$install_path/docker-compose.yml"
+if [[ -z "$install_path" || ! -f "$compose_file" ]]; then
+    echo "Start the tests site with pnpm run env:test:start first." >&2
+    exit 1
+fi
+compose=(docker compose -f "$compose_file")
 if [[ -z "$("${compose[@]}" ps -q --status running cli)" ]]; then
     echo "Start the tests site with pnpm run env:test:start first." >&2
     exit 1
