@@ -10,7 +10,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-config=$(bash bin/sww-config.sh)
+config=$(bash bin/woo-config.sh)
 plugin_dir=$(jq -r .zip.root <<< "$config")
 main_file=$(jq -r '.mainFile | split("/") | last' <<< "$config")
 zip_name=$(jq -r .name <<< "$config")

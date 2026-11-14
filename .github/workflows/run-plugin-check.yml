@@ -21,7 +21,7 @@ permissions:
   actions: read
 
 jobs:
-  # config.sww.pluginCheck of the candidate's commit.
+  # config.woo.pluginCheck of the candidate's commit.
   config:
     name: Read plugin metadata
     runs-on: ubuntu-latest
@@ -36,11 +36,11 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             package.json
-            bin/sww-config.sh
+            bin/woo-config.sh
           sparse-checkout-cone-mode: false
-      - name: Read config.sww
+      - name: Read config.woo
         id: config
-        run: bash bin/sww-config.sh --github-output
+        run: bash bin/woo-config.sh --github-output
 
   test:
     needs: config
@@ -99,6 +99,6 @@ jobs:
           exclude-files: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.excludeFiles, fromJSON('"\n"')) }}
           ignore-warnings: ${{ fromJSON(needs.config.outputs.json).pluginCheck.ignoreWarnings }}
           strict: ${{ fromJSON(needs.config.outputs.json).pluginCheck.strict }}
-          # Plugin Check has no baseline support: config.sww.pluginCheck.ignoreCodes lists legacy
+          # Plugin Check has no baseline support: config.woo.pluginCheck.ignoreCodes lists legacy
           # codes with pre-existing hits that the repository's own PHPCS gate tracks.
           ignore-codes: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.ignoreCodes, fromJSON('"\n"')) }}

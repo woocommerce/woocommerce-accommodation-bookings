@@ -15,7 +15,7 @@ php:
   - 'bin/hooks/php-*.sh'
   - 'tools/php-quality/**'
   - 'tests/isolated/**'
-  # config.sww in package.json declares the PHP lint, PHPUnit and integration legs.
+  # config.woo in package.json declares the PHP lint, PHPUnit and integration legs.
   - 'package.json'
 frontend:
   - '**/*.{js,jsx,ts,tsx,mjs,cjs,scss,css}'

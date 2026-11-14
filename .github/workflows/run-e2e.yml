@@ -27,7 +27,7 @@ on:
       php-version:
         type: string
         default: ''
-      # Integration plugins that need ORG_DOWNLOADS (config.sww.e2e.privatePlugins) run only
+      # Integration plugins that need ORG_DOWNLOADS (config.woo.e2e.privatePlugins) run only
       # for trusted callers; specs tagged @integration are skipped otherwise.
       trusted-plugins:
         type: boolean
@@ -52,11 +52,11 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             package.json
-            bin/sww-config.sh
+            bin/woo-config.sh
           sparse-checkout-cone-mode: false
-      - name: Read config.sww
+      - name: Read config.woo
         id: config
-        run: bash bin/sww-config.sh --github-output
+        run: bash bin/woo-config.sh --github-output
 
   e2e-tests:
     name: Acceptance${{ matrix.test_mode != '' && format(' ({0})', matrix.test_mode) || '' }}
@@ -67,7 +67,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # config.sww.e2e.projects: Playwright projects, one job each ("" runs every project in one job).
+        # config.woo.e2e.projects: Playwright projects, one job each ("" runs every project in one job).
         test_mode: ${{ fromJSON(needs.config.outputs.json).e2e.projects }}
 
     env:

@@ -5,7 +5,7 @@ on:
     inputs:
       checkout-ref:
         type: string
-      # `unit` runs config.sww.phpunit.legs, `integration` runs config.sww.integration.legs.
+      # `unit` runs config.woo.phpunit.legs, `integration` runs config.woo.integration.legs.
       suite:
         type: string
         default: unit
@@ -19,7 +19,7 @@ on:
       php-version:
         type: string
         default: ''
-      # Private plugins (config.sww.privatePlugins) come from the token that only trusted
+      # Private plugins (config.woo.privatePlugins) come from the token that only trusted
       # (scheduled, dispatched or release) callers pass. Pull requests run without them, so
       # the tests that need them skip there.
       trusted-plugins:
@@ -54,7 +54,7 @@ jobs:
 
       - name: Read plugin metadata
         id: config
-        run: bash bin/sww-config.sh --github-output
+        run: bash bin/woo-config.sh --github-output
 
       - name: Resolve the legs
         id: matrix
@@ -86,7 +86,7 @@ jobs:
             ')
             export PREVIOUS_WP
           fi
-          matrix=$(bash bin/sww-config.sh --phpunit-matrix)
+          matrix=$(bash bin/woo-config.sh --phpunit-matrix)
           jq -e 'length > 0' <<< "$matrix" > /dev/null || { echo "::error::No PHPUnit legs for the $SUITE suite."; exit 1; }
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           jq -r '.[] | "- \(.label)"' <<< "$matrix" >> "$GITHUB_STEP_SUMMARY"
@@ -128,7 +128,7 @@ jobs:
             slug=$(jq -er '.slug | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' <<< "$plugin")
             zip="$RUNNER_TEMP/plugin-zips/$slug.zip"
             # The leg's release of this plugin: empty for the latest, a tag, or `<x.y.z` for the
-            # newest release older than x.y.z (config.sww.phpunit.legs[].plugins).
+            # newest release older than x.y.z (config.woo.phpunit.legs[].plugins).
             version=$(jq -r --arg slug "$slug" '.pluginVersions[$slug] // ""' <<< "$LEG")
             source=$(jq -r .source <<< "$plugin")
             if [[ -n "$version" && "$source" != release ]]; then

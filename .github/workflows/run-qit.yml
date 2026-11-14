@@ -14,7 +14,7 @@ on:
       artifact:
         type: string
         required: true
-      # Artifact with <extension>-qit.zip (config.sww.qit.derivativeExclude removed) and its
+      # Artifact with <extension>-qit.zip (config.woo.qit.derivativeExclude removed) and its
       # lineage record. When set, the security and PHP compatibility scans use it.
       derivative:
         type: string
@@ -31,7 +31,7 @@ on:
       php-version:
         type: string
         default: '8.4'
-      # Plugins the activation test installs with the extension (config.sww.qit.plugins), passed
+      # Plugins the activation test installs with the extension (config.woo.qit.plugins), passed
       # as `--plugin=<value>`.
       plugins:
         type: string

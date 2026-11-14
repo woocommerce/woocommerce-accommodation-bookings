@@ -20,7 +20,7 @@
   },
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings",
-    "sww": {
+    "woo": {
       "productName": "Accommodation Bookings",
       "capabilities": {
         "js": true,

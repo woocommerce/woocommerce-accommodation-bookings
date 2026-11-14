@@ -8,7 +8,7 @@ on:
         default: acceptance-test-zip
       checkout-ref:
         type: string
-      # Also upload the QIT scan copy without config.sww.qit.derivativeExclude (artifact `qit-derivative`).
+      # Also upload the QIT scan copy without config.woo.qit.derivativeExclude (artifact `qit-derivative`).
       qit-derivative:
         type: boolean
         default: false
@@ -51,7 +51,7 @@ jobs:
 
       - name: Read plugin metadata
         id: config
-        run: bash bin/sww-config.sh --github-output
+        run: bash bin/woo-config.sh --github-output
 
       - name: Set up pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -67,7 +67,7 @@ jobs:
         if: fromJSON(steps.config.outputs.json).capabilities.js
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      # config.sww.zip.php "system" keeps the runner's PHP (a Composer install script may not support the newest PHP).
+      # config.woo.zip.php "system" keeps the runner's PHP (a Composer install script may not support the newest PHP).
       - name: Set up PHP
         if: fromJSON(steps.config.outputs.json).zip.php != 'system'
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0

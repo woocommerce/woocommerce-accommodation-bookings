@@ -56,9 +56,9 @@ validate_core_version() {
     fi
 }
 
-# The main plugin file is package.json config.sww.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
+# The main plugin file is package.json config.woo.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
 get_main_plugin_file() {
-    bash bin/sww-config.sh .mainFile
+    bash bin/woo-config.sh .mainFile
 }
 
 # Escapes a literal string for a basic sed regular expression, or for a sed replacement.
@@ -70,7 +70,7 @@ sed_replacement() {
     printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'
 }
 
-# Rewrites every config.sww.versionPatterns entry: `pattern` is literal text with `%s` where
+# Rewrites every config.woo.versionPatterns entry: `pattern` is literal text with `%s` where
 # the version goes, and a leading `^` anchors it at the start of a line.
 update_version_patterns() {
     local old_version=$1
@@ -86,12 +86,12 @@ update_version_patterns() {
         before=${pattern%%%s*}
         after=${pattern#*%s}
         if [[ ! -f "$file" ]]; then
-            print_error "Missing $file from config.sww.versionPatterns"
+            print_error "Missing $file from config.woo.versionPatterns"
             exit 1
         fi
         sedi "s/${anchor}\($(sed_regex "$before")\)$(sed_regex "$old_version")\($(sed_regex "$after")\)/\1$(sed_replacement "$new_version")\2/" "$file"
         print_success "Updated \"$pattern\" in $file"
-    done < <(bash bin/sww-config.sh '.versionPatterns[] | [.file, .pattern] | @tsv')
+    done < <(bash bin/woo-config.sh '.versionPatterns[] | [.file, .pattern] | @tsv')
 }
 
 update_wp_tested_up_to() {

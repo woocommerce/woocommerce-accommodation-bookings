@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 #
-# Prints the plugin's tooling metadata: package.json `config.sww` with every default applied.
+# Prints the plugin's tooling metadata: package.json `config.woo` with every default applied.
 # Shared scripts and workflows read per-repository values only through this script, so the
 # defaults live in one place. docs/config-sww.md in the shared set documents each key.
 #
 # Usage:
-#   bash bin/sww-config.sh                   Normalized config as JSON.
-#   bash bin/sww-config.sh '<jq filter>'     One value, e.g. '.zip.root' (raw output).
-#   bash bin/sww-config.sh --github-output   Writes `json=<config>` to $GITHUB_OUTPUT.
-#   bash bin/sww-config.sh --phpunit-matrix  PHPUnit legs as a JSON array, for the versions in
+#   bash bin/woo-config.sh                   Normalized config as JSON.
+#   bash bin/woo-config.sh '<jq filter>'     One value, e.g. '.zip.root' (raw output).
+#   bash bin/woo-config.sh --github-output   Writes `json=<config>` to $GITHUB_OUTPUT.
+#   bash bin/woo-config.sh --phpunit-matrix  PHPUnit legs as a JSON array, for the versions in
 #                                            REQUESTED_WP, REQUESTED_WC and REQUESTED_PHP.
 set -euo pipefail
 
@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 config=$(jq -ce '
 	# A key the object has, else the default. Unlike `//`, keeps false, 0 and "".
 	def opt($key; $default): if type == "object" and has($key) then .[$key] else $default end;
-	(.config.sww // {}) as $c
+	(.config.woo // {}) as $c
 	| .name as $name
 	| ($c | opt("mainFile"; $name + ".php")) as $main
 	| ($c | opt("capabilities"; {})) as $cap
@@ -111,7 +111,7 @@ config=$(jq -ce '
 		}
 	}
 ' package.json) || {
-	echo 'package.json must have a "name" and a valid "config.sww" object.' >&2
+	echo 'package.json must have a "name" and a valid "config.woo" object.' >&2
 	exit 1
 }
 
@@ -120,7 +120,7 @@ if [[ ! "$(jq -r .name <<< "$config")" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
 	exit 1
 fi
 
-# Turns config.sww.phpunit.legs into concrete jobs. A leg's `wp` and `wc` are `latest`,
+# Turns config.woo.phpunit.legs into concrete jobs. A leg's `wp` and `wc` are `latest`,
 # `previous` (WordPress only: the newest release of the previous major series, from
 # $PREVIOUS_WP), `minimum` (the main file's "Requires at least" / "WC requires at least") or a
 # version. A requested WordPress or WooCommerce version replaces `latest` and `previous`. A
@@ -130,7 +130,7 @@ fi
 # SCHEDULED=true (Cron CI). A leg's `plugins` picks a private plugin release: `latest`, `minimum`
 # (that plugin's minimumPattern in the main file), `below-minimum` (the newest release older than
 # the minimum) or a tag; the leg's `pluginVersions` carries it to the download step (`<x.y.z` for
-# below-minimum). Identical legs are merged. SUITE=integration reads config.sww.integration.legs.
+# below-minimum). Identical legs are merged. SUITE=integration reads config.woo.integration.legs.
 phpunit_matrix() {
 	local main_file wp_minimum wc_minimum minimums='{}' slug pattern prefix suffix line version
 	main_file=$(jq -r .mainFile <<< "$config")
@@ -160,9 +160,9 @@ phpunit_matrix() {
 			| (.plugins // {}) as $plugins
 			| ($plugins | to_entries | map(select(.value != "latest"))) as $pinned
 			| ($pinned | map(.key as $slug | .value as $spec | { key: $slug, value: (
-				if ($private | any(. == $slug) | not) then error("Leg plugin \($slug) is not in config.sww.privatePlugins")
+				if ($private | any(. == $slug) | not) then error("Leg plugin \($slug) is not in config.woo.privatePlugins")
 				elif $spec == "minimum" or $spec == "below-minimum" then
-					($minimums[$slug] // error("config.sww.privatePlugins \($slug) needs a minimumPattern"))
+					($minimums[$slug] // error("config.woo.privatePlugins \($slug) needs a minimumPattern"))
 					| if $spec == "below-minimum" then "<" + . else . end
 				else $spec end) }) | from_entries) as $pluginVersions
 			| (.wp // "latest") as $legwp
