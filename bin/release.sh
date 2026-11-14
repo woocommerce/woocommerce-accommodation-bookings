@@ -40,7 +40,10 @@ fi
 
 # Define variables.
 PACKAGE_VERSION=$(jq -r .version package.json)
-PACKAGE_BASE=$(basename "$(git rev-parse --show-toplevel)")
+PACKAGE_BASE=$(jq -er '.name | strings | select(test("^[a-z0-9]+(-[a-z0-9]+)*$"))' package.json) || {
+    echo "A valid plugin slug is required in package.json."
+    exit 1
+}
 
 if ! command -v gh &> /dev/null; then
     echo -e "${RED}Error: GitHub CLI (gh) is not installed. Exiting...${NC}"

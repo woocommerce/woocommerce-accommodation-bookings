@@ -23,7 +23,7 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.1+. Chec
 
 ## Commands
 
-Script names follow WooCommerce core (`plugins/woocommerce/package.json`), and pnpm and Composer use the same names. Arguments after the script name reach the underlying tool. Run `pnpm run lint:php` for the full PHPCS report, `pnpm run lint:php:fix` to fix what PHPCS can, `pnpm run lint:php:syntax` for syntax checks, `pnpm run phpstan` for static analysis and `pnpm run test:php` for every PHPUnit suite that pull request CI runs. `pnpm run test:php:env` runs PHPUnit in the running tests site. `pnpm run build` builds assets from installed dependencies, and `pnpm run build:zip` packages the current checkout as a ZIP. See [Compatibility aliases](#compatibility-aliases) for the older names. Install the tools in the [prerequisites](README.md#prerequisites) first.
+Script names follow WooCommerce core (`plugins/woocommerce/package.json`), and pnpm and Composer use the same names. Arguments after the script name reach the underlying tool. Run `pnpm run lint:php` for the full PHPCS report, `pnpm run lint:php:fix` to fix what PHPCS can, `pnpm run lint:php:syntax` for syntax checks, `pnpm run phpstan` for static analysis and `pnpm run test:php` for every PHPUnit suite that pull request CI runs. `pnpm run test:php:env` runs PHPUnit in the running tests site. `pnpm run build` builds assets from installed dependencies, and `pnpm run build:zip` packages the current checkout as `deploy/<plugin-slug>.zip`. See [Compatibility aliases](#compatibility-aliases) for the older names. Install the tools in the [prerequisites](README.md#prerequisites) first.
 
 ### Setup and assets
 

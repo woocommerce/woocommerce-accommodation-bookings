@@ -32,7 +32,7 @@ pnpm run build
 ```bash
 # Build
 pnpm run build          # Build assets and translations from installed dependencies
-pnpm run build:zip      # Package the production ZIP
+pnpm run build:zip      # Package deploy/woocommerce-accommodation-bookings.zip
 
 # Watch mode
 pnpm run watch:build    # Rebuild JS/CSS on file changes
