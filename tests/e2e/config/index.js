@@ -48,10 +48,10 @@ const customer = {
 module.exports = {
 	admin,
 	customer,
-	// The tests site. bin/acceptance.sh exports ACCOM_E2E_URL from the port wp-env is running on;
+	// The browser test site. bin/e2e.sh exports WP_BASE_URL from the port wp-env is running on;
 	// otherwise follow WP_ENV_TESTS_PORT, which worktrees set to their own port.
 	baseUrl:
-		process.env.ACCOM_E2E_URL ||
+		process.env.WP_BASE_URL ||
 		`http://localhost:${ process.env.WP_ENV_TESTS_PORT || 8889 }`,
 	pluginConfig: {
 		checkInTime: '14:00',

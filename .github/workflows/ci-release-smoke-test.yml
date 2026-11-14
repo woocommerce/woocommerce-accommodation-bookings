@@ -16,11 +16,18 @@ jobs:
         timeout-minutes: 5
         outputs:
           release_version: ${{ steps.export.outputs.version }}
+          config: ${{ steps.config.outputs.json }}
 
         steps:
 
             - name: Checkout repository
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                persist-credentials: false
+
+            - name: Read plugin metadata
+              id: config
+              run: bash bin/sww-config.sh --github-output
 
             - name: Check Versions
               run: |
@@ -32,9 +39,29 @@ jobs:
               id: export
               run: echo "version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
 
+    setup:
+        name: Setup environments
+        needs: check-versions
+        uses: ./.github/workflows/setup-env.yml
+
+    php-lint:
+        name: PHP
+        needs: setup
+        uses: ./.github/workflows/php-lint.yml
+
+    js-lint:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.js }}
+        permissions:
+          contents: read
+          checks: write
+          pull-requests: read
+        name: JS Linting
+        needs: [check-versions, setup]
+        uses: ./.github/workflows/run-linting.yml
+
     handle-success:
-        if: ${{ success() }}
-        needs: [check-versions]
+        if: ${{ !failure() && !cancelled() && needs.php-lint.result == 'success' }}
+        needs: [check-versions, php-lint, js-lint]
         name: Handle success
         runs-on: ubuntu-latest
         timeout-minutes: 5
@@ -51,7 +78,7 @@ jobs:
 
     handle-cancelled:
         if: ${{ cancelled() }}
-        needs: [check-versions]
+        needs: [check-versions, php-lint, js-lint]
         name: Handle cancellation
         runs-on: ubuntu-latest
         timeout-minutes: 5
@@ -68,7 +95,7 @@ jobs:
 
     handle-error:
         if: ${{ failure() }}
-        needs: [check-versions]
+        needs: [check-versions, php-lint, js-lint]
         name: Handle failure
         runs-on: ubuntu-latest
         timeout-minutes: 5

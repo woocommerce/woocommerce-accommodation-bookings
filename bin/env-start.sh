@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Starts the wp-env tests site (.wp-env.test.json). The development site is `pnpm run env:start`.
+# Starts the wp-env tests site (.wp-env.test.json). The development site is `pnpm run env:dev:start`.
 # Extra arguments go to `wp-env start`.
 #
 # The tests site bind-mounts the git-ignored tests/_output/debug.log; Docker turns a missing

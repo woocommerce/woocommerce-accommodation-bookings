@@ -1,53 +1,141 @@
 name: Cron CI
 
 on:
-    schedule:
-        # Run at 01:00 on Monday.
-        - cron:  '0 1 * * 1'
+  schedule:
+    # Run at 01:00 on Monday.
+    - cron: '0 1 * * 1'
 
 permissions:
-    contents: read
+  contents: read
 
 jobs:
 
+    config:
+        name: Read plugin metadata
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        outputs:
+          json: ${{ steps.config.outputs.json }}
+        steps:
+          - name: Checkout package metadata
+            uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            with:
+              persist-credentials: false
+              sparse-checkout: |
+                package.json
+                bin/sww-config.sh
+              sparse-checkout-cone-mode: false
+          - name: Read config.sww
+            id: config
+            run: bash bin/sww-config.sh --github-output
+
+    setup:
+        name: Setup environments
+        uses: ./.github/workflows/setup-env.yml
+
     php-lint:
         name: PHP
-        uses: ./.github/workflows/phpcs.yml
+        needs: setup
+        uses: ./.github/workflows/php-lint.yml
 
-    js-lint:
-        name: JS Linting
-        uses: ./.github/workflows/js-lint.yml
-
-    css-lint:
-        name: CSS Linting
-        uses: ./.github/workflows/css-lint.yml
-
-    php-tests:
-        name: PHP
-        needs: [php-lint, js-lint, css-lint]
-        uses: ./.github/workflows/phpunit.yml
-
-    integration-tests:
-        name: Integration tests
-        needs: [php-lint, js-lint, css-lint]
-        uses: ./.github/workflows/phpunit-integration.yml
+    phpstan:
+        name: PHPStan
+        uses: ./.github/workflows/phpstan.yml
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
+    js-lint:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.js }}
+        permissions:
+          contents: read
+          checks: write
+          pull-requests: read
+        name: JS Linting
+        needs: [config, setup]
+        uses: ./.github/workflows/run-linting.yml
+
+    # config.sww.phpunit.scheduledWc (for example `trunk`) replaces the WooCommerce version here,
+    # so a core change that breaks the plugin shows up before it ships.
+    php-tests:
+        if: ${{ !failure() && !cancelled() && fromJSON(needs.config.outputs.json).capabilities.phpunit }}
+        name: PHP
+        needs: [config, php-lint, js-lint]
+        uses: ./.github/workflows/run-unit-tests.yml
+        with:
+          wc-version: ${{ fromJSON(needs.config.outputs.json).phpunit.scheduledWc }}
+          trusted-plugins: true
+          scheduled: true
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    integration-tests:
+        if: ${{ !failure() && !cancelled() && fromJSON(needs.config.outputs.json).capabilities.integration }}
+        name: PHP integration
+        needs: [config, php-lint, js-lint]
+        uses: ./.github/workflows/run-integration-tests.yml
+        with:
+          trusted-plugins: true
+          scheduled: true
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    build_project:
+        if: ${{ !failure() && !cancelled() }}
+        name: Package
+        needs: [config, php-tests, integration-tests]
+        uses: ./.github/workflows/build-upload-zip.yml
+        with:
+          qit-derivative: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
+
+    plugin-check:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.pluginCheck }}
+        name: Plugin Check
+        needs: [config, build_project]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-plugin-check.yml
+        with:
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          expected-source-sha: ${{ github.sha }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
+
     e2e-tests:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.e2e }}
         name: E2E tests
-        needs: [php-tests, integration-tests]
-        uses: ./.github/workflows/e2e.yml
+        needs: [config, build_project]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-e2e.yml
+        with:
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
+          trusted-plugins: true
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
     qit-tests:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
         name: QIT tests
-        needs: [php-tests, integration-tests]
-        uses: ./.github/workflows/qit.yml
-        secrets: inherit
+        needs: [config, build_project]
+        uses: ./.github/workflows/run-qit.yml
+        secrets:
+          ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+          ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
         with:
-          test: 'stable'
+          extension: ${{ fromJSON(needs.config.outputs.json).qit.extension }}
+          plugins: ${{ fromJSON(needs.config.outputs.json).qit.plugins }}
+          artifact: 'acceptance-test-zip'
+          derivative: ${{ fromJSON(needs.config.outputs.json).qit.derivativeExclude != '' && 'qit-derivative' || '' }}
+          timeout-minutes: ${{ fromJSON(needs.config.outputs.json).qit.timeoutMinutes }}
+          test-activation: ${{ 'true' }}
+          test-security: ${{ 'true' }}
+          test-phpcompatibility: ${{ 'true' }}
+          test-validation: ${{ 'true' }}
+          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (phpstan.yml) is the gate.
 
     audit:
         name: Dependency advisories
@@ -56,11 +144,12 @@ jobs:
         uses: ./.github/workflows/run-audit.yml
 
     handle-success:
-        if: ${{ success() }}
-        needs: [e2e-tests, qit-tests, audit]
+        if: ${{ !failure() && !cancelled() }}
+        needs: [phpstan, plugin-check, e2e-tests, qit-tests, audit]
         name: Handle success
         runs-on: ubuntu-latest
         timeout-minutes: 5
+        permissions: {}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         steps:
@@ -71,10 +160,11 @@ jobs:
 
     handle-cancelled:
         if: ${{ cancelled() }}
-        needs: [e2e-tests, qit-tests, audit]
+        needs: [phpstan, plugin-check, e2e-tests, qit-tests, audit]
         name: Handle cancellation
         runs-on: ubuntu-latest
         timeout-minutes: 5
+        permissions: {}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         steps:
@@ -85,10 +175,11 @@ jobs:
 
     handle-error:
         if: ${{ failure() }}
-        needs: [e2e-tests, qit-tests, audit]
+        needs: [phpstan, plugin-check, e2e-tests, qit-tests, audit]
         name: Handle failure
         runs-on: ubuntu-latest
         timeout-minutes: 5
+        permissions: {}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         steps:

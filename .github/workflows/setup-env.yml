@@ -1,0 +1,83 @@
+name: Setup NodeJS and Dependencies
+
+on:
+  workflow_call:
+    inputs:
+      checkout-ref:
+        type: string
+
+permissions:
+  contents: read
+
+# Warms the dependency caches that the lint and test jobs restore.
+jobs:
+  setup-node:
+    name: Setup NodeJS and Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+
+      - name: Read plugin metadata
+        id: config
+        run: bash bin/sww-config.sh --github-output
+
+      - name: Set up pnpm
+        if: fromJSON(steps.config.outputs.json).capabilities.js
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Setup Node.js and pnpm store cache
+        if: fromJSON(steps.config.outputs.json).capabilities.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
+          package-manager-cache: ${{ inputs.checkout-ref == '' }}
+
+      - name: Install Node Dependencies
+        if: fromJSON(steps.config.outputs.json).capabilities.js
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+  setup-php:
+    name: Setup PHP and Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer
+          # Pass an empty token so setup-php doesn't persist GITHUB_TOKEN to Composer's
+          # config. Composer rejects the new GITHUB_TOKEN token format.
+          github-token: ''
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer dependencies
+        if: inputs.checkout-ref == ''
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Validate Composer manifest and lockfile
+        run: composer validate --no-check-all --no-check-publish
+
+      # --no-scripts: this job only warms the Composer download cache. Install scripts (such as
+      # Strauss prefixing) run in the jobs that need their output.
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-ansi --no-interaction --optimize-autoloader --no-scripts

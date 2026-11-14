@@ -20,3 +20,18 @@ minimumReleaseAgeExclude:
   - "@automattic/*"
   - "@woocommerce/*"
   - "@wordpress/*"
+
+# Every dependency with an install script in any SWW lockfile; one absent from this lockfile stays listed.
+# Allow one only when the build or tests fail without it.
+# @parcel/watcher and fs-ext-extra-prebuilt load their prebuilt binaries without running a script.
+strictDepBuilds: true
+allowBuilds:
+  "@parcel/watcher": false
+  "fs-ext-extra-prebuilt": false
+  "@swc/core": false
+  "core-js": false
+  "core-js-pure": false
+  "unrs-resolver": false
+
+# The locked dependency graph uses registry packages throughout.
+blockExoticSubdeps: true

@@ -4,13 +4,6 @@
     "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
-    "archive": {
-        "exclude": [
-            "/deploy",
-            "node_modules",
-            "!/assets"
-        ]
-    },
     "require-dev": {
         "woocommerce/woocommerce-sniffs": "1.0.1",
         "phpunit/phpunit": "^9.6",
@@ -28,19 +21,41 @@
         ]
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --fail-on-empty-test-suite",
-        "test:isolated": "phpunit -c tests/isolated/phpunit.xml.dist --fail-on-empty-test-suite",
-        "lint:php": "bash bin/phplint.sh",
-        "lint:phpcs": "phpcs",
+        "lint:php": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpcs"
+        ],
         "lint:phpcs:baseline": "bash bin/phpcs.sh",
         "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
         "check:php": [
-            "@lint:php",
+            "@composer --working-dir=tools/php-quality install --no-interaction --prefer-dist --no-progress",
+            "@lint:php:syntax",
             "@lint:phpcs:baseline"
         ],
-        "lint:phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
-        "lint:phpstan:baseline:update": "@lint:phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
-        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite"
+        "lint:phpstan:baseline:update": "@phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
+        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite",
+        "lint:php:syntax": [
+            "Composer\\Config::disableProcessTimeout",
+            "bash bin/phplint.sh"
+        ],
+        "lint:php:fix": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpcbf"
+        ],
+        "phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
+        "test:php": [
+            "Composer\\Config::disableProcessTimeout",
+            "@test:php:unit",
+            "@test:php:isolated"
+        ],
+        "test:php:unit": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit --fail-on-empty-test-suite"
+        ],
+        "test:php:isolated": [
+            "Composer\\Config::disableProcessTimeout",
+            "phpunit -c tests/isolated/phpunit.xml.dist --fail-on-empty-test-suite"
+        ]
     },
     "config": {
         "platform": {

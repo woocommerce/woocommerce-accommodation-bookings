@@ -9,6 +9,7 @@
 	"themes": [ "https://downloads.wordpress.org/theme/storefront.zip" ],
 	"mappings": {
 		"./wp-content/bin": "./tests/_support/docker/bin",
+		"wp-content/e2e-fixtures": "./tests",
 		"./wp-content/debug.log": "./tests/_output/debug.log",
 		"wp-cli.yml": "./tests/e2e/bin/wp-cli.yml"
 	},

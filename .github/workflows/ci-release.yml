@@ -25,6 +25,7 @@ jobs:
           release_version: ${{ steps.candidate.outputs.version }}
           commit: ${{ steps.candidate.outputs.commit }}
           pull-request: ${{ steps.candidate.outputs.pull-request }}
+          config: ${{ steps.config.outputs.json }}
 
         permissions:
           actions: read
@@ -102,43 +103,99 @@ jobs:
                 bash ../bin/check_versions.sh
                 jq -e --arg version "$RELEASE_VERSION" '.version == $version' package.json > /dev/null
 
-    build_project:
-        name: Package
+            # Capabilities and the deploy target come from trunk's tooling metadata.
+            - name: Read plugin metadata
+              id: config
+              run: bash bin/sww-config.sh --github-output
+
+    php-lint:
+        name: PHP
         needs: check-versions
+        uses: ./.github/workflows/php-lint.yml
+        with:
+          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+
+    js-lint:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.js }}
+        permissions:
+          contents: read
+          checks: write
+          pull-requests: read
+        name: JS Linting
+        needs: check-versions
+        uses: ./.github/workflows/run-linting.yml
+        with:
+          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+
+    php-tests:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.phpunit }}
+        name: PHP
+        needs: [check-versions, php-lint]
+        uses: ./.github/workflows/run-unit-tests.yml
+        with:
+          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+
+    build_project:
+        if: ${{ !failure() && !cancelled() }}
+        name: Package
+        needs: [check-versions, php-tests, php-lint, js-lint]
         uses: ./.github/workflows/build-upload-zip.yml
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
+          artifact-name: release-candidate-${{ github.run_attempt }}
+
+    e2e-tests:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.e2e }}
+        name: E2E tests
+        needs: [check-versions, build_project]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-e2e.yml
+        with:
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
+          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+          trusted-plugins: true
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
     check-release-archive:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.pluginCheck }}
         name: Check release archive
-        needs: build_project
-        uses: ./.github/workflows/plugin-check.yml
+        needs: [build_project, check-versions]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-plugin-check.yml
         with:
-          release-artifact: acceptance-test-zip
-
-    php-tests:
-        name: PHP
-        needs: check-versions
-        uses: ./.github/workflows/phpunit.yml
-        with:
-          checkout-ref: ${{ needs.check-versions.outputs.commit }}
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          expected-source-sha: ${{ needs.check-versions.outputs.commit }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
 
     release:
+        # Every check the plugin has must pass; checks it does not have are skipped.
+        if: ${{ !failure() && !cancelled() && needs.build_project.result == 'success' }}
         name: Release
-        needs: [ check-release-archive, php-tests, build_project, check-versions ]
+        needs: [ check-release-archive, e2e-tests, build_project, check-versions ]
         runs-on: ubuntu-latest
         timeout-minutes: 5
         permissions:
           contents: write
+          actions: read
         outputs:
-          artifact_id: ${{ steps.release_artifact.outputs.artifact-id }}
+          artifact_id: ${{ needs.build_project.outputs.artifact-id }}
           sha256: ${{ steps.release_identity.outputs.sha256 }}
           version: ${{ steps.release_identity.outputs.version }}
         env:
           GH_TOKEN: ${{ github.token }}
           GH_RELEASE_COMMIT: ${{ needs.check-versions.outputs.commit }}
           RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}
-          RELEASE_ARCHIVE: ${{ github.event.repository.name }}.zip
+          RELEASE_ARCHIVE: ${{ needs.build_project.outputs.slug }}.zip
+          CANDIDATE_SHA: ${{ needs.build_project.outputs.source-sha }}
+          CANDIDATE_SHA256: ${{ needs.build_project.outputs.sha256 }}
 
         steps:
 
@@ -154,10 +211,19 @@ jobs:
                 path: release-tooling
                 persist-credentials: false
 
+            - name: Require a release candidate ID
+              env:
+                CANDIDATE_ID: ${{ needs.build_project.outputs.artifact-id }}
+              run: |
+                if [[ ! "$CANDIDATE_ID" =~ ^[1-9][0-9]*$ ]]; then
+                  echo "A single release candidate artifact ID is required." >&2
+                  exit 1
+                fi
+
             - name: Download the release artifact
-              uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+              uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
               with:
-                name: acceptance-test-zip
+                artifact-ids: ${{ needs.build_project.outputs.artifact-id }}
                 path: .
 
             - name: Install tools
@@ -167,33 +233,118 @@ jobs:
             - name: Verify release artifact
               id: release_identity
               run: |
+                test "$GH_RELEASE_COMMIT" = "$CANDIDATE_SHA"
+                printf '%s  %s\n' "$CANDIDATE_SHA256" "$RELEASE_ARCHIVE" | sha256sum --check -
                 test -n "$RELEASE_VERSION"
                 test -s "$RELEASE_ARCHIVE"
                 jq -e --arg version "$RELEASE_VERSION" '.version == $version' package.json > /dev/null
-                RELEASE_SHA256=$(sha256sum "$RELEASE_ARCHIVE")
-                echo "sha256=${RELEASE_SHA256%% *}" >> "$GITHUB_OUTPUT"
+                echo "sha256=$CANDIDATE_SHA256" >> "$GITHUB_OUTPUT"
                 echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
-
-            - name: Preserve the release archive for deployment
-              id: release_artifact
-              uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-              with:
-                name: release-zip-${{ github.run_attempt }}
-                path: ${{ env.RELEASE_ARCHIVE }}
-                if-no-files-found: error
 
             - name: Release
               run: |
                 bash ./release-tooling/bin/release.sh
 
-    # Deploys the archive released above to WordPress.org, under the plugin slug that
-    # package.json's config.wp_org_slug names.
-    deploy:
-        name: Deploy
+    # config.sww.release.target "woocommerce.com": submit the released archive to the marketplace.
+    submit-deployment:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).release.target == 'woocommerce.com' }}
+        name: Submit to WooCommerce.com
         needs: [release, check-versions]
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        permissions:
+          actions: read
+          contents: read
+        env:
+          RELEASE_ARTIFACT_ID: ${{ needs.release.outputs.artifact_id }}
+          RELEASE_VERSION: ${{ needs.release.outputs.version }}
+          RELEASE_SHA256: ${{ needs.release.outputs.sha256 }}
+
+        steps:
+
+            - name: Checkout repository
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                ref: ${{ needs.check-versions.outputs.commit }}
+                persist-credentials: false
+
+            - name: Checkout deployment tooling
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                path: release-tooling
+                persist-credentials: false
+
+            - name: Check release artifact identity
+              run: |
+                if [[ ! "$RELEASE_ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
+                  echo "A single release artifact ID is required."
+                  exit 1
+                fi
+
+            - name: Download the released archive
+              uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+              with:
+                artifact-ids: ${{ env.RELEASE_ARTIFACT_ID }}
+                path: .
+
+            - name: Check for an earlier submission attempt
+              env:
+                GH_TOKEN: ${{ github.token }}
+              run: |
+                for (( attempt=1; attempt<GITHUB_RUN_ATTEMPT; attempt++ )); do
+                  jobs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$attempt/jobs?per_page=100" \
+                    --jq '.jobs[] | select(.name == "Submit to WooCommerce.com") | .steps[] | select(.name == "Submit archive to WooCommerce.com" and .started_at != null and .conclusion != "skipped") | .name')
+                  if [[ -n "$jobs" ]]; then
+                    echo "UPLOAD_PREVIOUSLY_ATTEMPTED=true" >> "$GITHUB_ENV"
+                    break
+                  fi
+                done
+
+            - name: Check marketplace submission status
+              id: marketplace
+              env:
+                # Organization partner credentials, shared by the woocommerce/* repositories.
+                DEPLOY_API_KEY: ${{ secrets.ORG_PARTNER_USER }}
+                DEPLOY_API_SECRET: ${{ secrets.ORG_PARTNER_DEPLOY_SECRET }}
+              run: |
+                bash ./release-tooling/bin/deploy.sh prepare
+
+            - name: Submit archive to WooCommerce.com
+              if: steps.marketplace.outputs.upload == 'true'
+              env:
+                DEPLOY_API_KEY: ${{ secrets.ORG_PARTNER_USER }}
+                DEPLOY_API_SECRET: ${{ secrets.ORG_PARTNER_DEPLOY_SECRET }}
+              run: |
+                bash ./release-tooling/bin/deploy.sh submit
+
+    deploy:
+        name: Confirm deployment
+        needs: [submit-deployment, release]
+        runs-on: ubuntu-latest
+        timeout-minutes: 40
+        env:
+          RELEASE_VERSION: ${{ needs.release.outputs.version }}
+        steps:
+            - name: Checkout deployment tooling
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                path: release-tooling
+                persist-credentials: false
+
+            - name: Wait for the marketplace to offer the release version
+              run: bash ./release-tooling/bin/deploy.sh confirm
+
+    # config.sww.release.target "wordpress.org": deploys to WordPress.org once config.sww.release.wpOrgSlug
+    # is set. Without it, the job finishes after the artifact checks and the release ends at the
+    # GitHub release created above.
+    deploy-wporg:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).release.target == 'wordpress.org' }}
+        name: Deploy to WordPress.org
+        needs: [ release, check-versions, build_project ]
         runs-on: ubuntu-latest
         timeout-minutes: 60
         env:
+          WP_ORG_SLUG: ${{ fromJSON(needs.check-versions.outputs.config).release.wpOrgSlug }}
           RELEASE_ARTIFACT_ID: ${{ needs.release.outputs.artifact_id }}
           RELEASE_VERSION: ${{ needs.release.outputs.version }}
           RELEASE_SHA256: ${{ needs.release.outputs.sha256 }}
@@ -214,12 +365,13 @@ jobs:
                 fi
 
             - name: Download the released archive
-              uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+              uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
               with:
                 artifact-ids: ${{ env.RELEASE_ARTIFACT_ID }}
                 path: .
 
             - name: Checkout the woo-product-deploy action
+              if: env.WP_ORG_SLUG != ''
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                 repository: woocommerce/woo-product-deploy
@@ -233,13 +385,14 @@ jobs:
             # The action pushes the archive released above to WordPress.org as is: it checks the
             # checksum and the Version header, and does not rebuild. The GitHub release already exists.
             - name: Deploy to WordPress.org
+              if: env.WP_ORG_SLUG != ''
               uses: ./.github/actions/woo-product-deploy
               with:
                 repo_url: https://github.com/${{ github.repository }}
                 branch: ${{ inputs.branch }}
                 commit: ${{ needs.check-versions.outputs.commit }}
                 version: ${{ env.RELEASE_VERSION }}
-                zip: ${{ github.event.repository.name }}.zip
+                zip: ${{ needs.build_project.outputs.slug }}.zip
                 zip_sha256: ${{ env.RELEASE_SHA256 }}
                 node_version: '24'
                 npm_version: '11'
@@ -251,8 +404,9 @@ jobs:
                 wporg_password: ${{ secrets.WPORG_PASSWORD }}
 
     merge-release:
+        if: ${{ !failure() && !cancelled() && (needs.deploy.result == 'success' || needs.deploy-wporg.result == 'success') }}
         name: Merge shipped release
-        needs: [deploy, check-versions]
+        needs: [deploy, deploy-wporg, check-versions]
         runs-on: ubuntu-latest
         timeout-minutes: 5
         permissions: {}
@@ -274,9 +428,31 @@ jobs:
                   exit 1
                 fi
 
+    update_translations:
+        if: ${{ fromJSON(needs.check-versions.outputs.config).release.target == 'woocommerce.com' }}
+        name: Update Translations
+        needs: [ release, deploy, check-versions ]
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        env:
+          RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+        steps:
+
+            - name: Checkout repository
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                persist-credentials: false
+
+            - name: Update translations
+              run: |
+                bash ./bin/update_translations.sh
+
     roll-milestone:
+        if: ${{ !failure() && !cancelled() && (needs.deploy.result == 'success' || needs.deploy-wporg.result == 'success') }}
         name: Roll over milestone
-        needs: [ deploy, check-versions ]
+        needs: [ deploy, deploy-wporg, check-versions ]
         runs-on: ubuntu-latest
         timeout-minutes: 5
         permissions:
@@ -300,12 +476,11 @@ jobs:
                 fi
 
     handle-success:
-        if: ${{ success() }}
-        needs: [ deploy, merge-release, check-versions ]
+        if: ${{ !failure() && !cancelled() && needs.merge-release.result == 'success' }}
+        needs: [ deploy, deploy-wporg, merge-release, check-versions ]
         name: Handle success
         runs-on: ubuntu-latest
         timeout-minutes: 5
-        permissions: {}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}
@@ -318,11 +493,10 @@ jobs:
 
     handle-cancelled:
         if: ${{ cancelled() && needs.check-versions.outputs.release_version != '' }}
-        needs: [ deploy, merge-release, check-versions ]
+        needs: [ deploy, deploy-wporg, merge-release, check-versions ]
         name: Handle cancellation
         runs-on: ubuntu-latest
         timeout-minutes: 5
-        permissions: {}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}
@@ -335,11 +509,10 @@ jobs:
 
     handle-error:
         if: ${{ failure() && needs.check-versions.outputs.release_version != '' }}
-        needs: [ deploy, merge-release, check-versions ]
+        needs: [ deploy, deploy-wporg, merge-release, check-versions ]
         name: Handle failure
         runs-on: ubuntu-latest
         timeout-minutes: 5
-        permissions: {}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           RELEASE_VERSION: ${{ needs.check-versions.outputs.release_version }}

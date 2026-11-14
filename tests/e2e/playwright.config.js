@@ -11,19 +11,10 @@ module.exports = defineConfig( {
 		? '**/{persistence,admin-save-preservation}.spec.js'
 		: '**/*.spec.js',
 
-	/* warnings.spec.js runs only in the `warnings` project, after every other spec. */
-	testIgnore: '**/warnings.spec.js',
-
 	/* Maximum time one test can run for. */
 	timeout: 90 * 1000,
 
-	expect: {
-		/**
-		 * Maximum time expect() should wait for the condition to be met.
-		 * For example in `await expect(locator).toHaveText();`
-		 */
-		timeout: 20 * 1000,
-	},
+	expect: { timeout: 10_000 },
 
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	outputDir: './test-results/report',
@@ -35,7 +26,7 @@ module.exports = defineConfig( {
 	forbidOnly: !! process.env.CI,
 
 	/* Retry on CI only */
-	retries: process.env.CI ? 2 : 0,
+	retries: process.env.CI ? 1 : 0,
 
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : 1,
@@ -43,10 +34,8 @@ module.exports = defineConfig( {
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [
 		[ 'list' ],
-		// On CI, the "Annotate retry-only passes" workflow step reads this report.
-		...( process.env.CI
-			? [ [ 'json', { outputFile: 'test-results/results.json' } ] ]
-			: [] ),
+		// On GitHub Actions, failures and retry-only (flaky) passes become annotations.
+		...( process.env.GITHUB_ACTIONS ? [ [ 'github' ] ] : [] ),
 		[
 			'html',
 			{
@@ -80,14 +69,12 @@ module.exports = defineConfig( {
 	projects: [
 		{
 			name: 'chromium',
+			/* warnings.spec.js runs only in the `warnings` project, after every other spec. */
+			testIgnore: '**/warnings.spec.js',
 			teardown: 'warnings',
 			use: { ...devices[ 'Desktop Chrome' ] },
 		},
-		{
-			name: 'warnings',
-			testMatch: '**/warnings.spec.js',
-			testIgnore: [],
-		},
+		{ name: 'warnings', testMatch: '**/warnings.spec.js' },
 	],
 
 	// path to the global setup files.

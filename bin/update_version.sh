@@ -56,10 +56,42 @@ validate_core_version() {
     fi
 }
 
-# Function to get main plugin file from directory name
+# The main plugin file is package.json config.sww.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
 get_main_plugin_file() {
-    local dir_name=$(basename "$PWD")
-    echo "${dir_name}.php"
+    bash bin/sww-config.sh .mainFile
+}
+
+# Escapes a literal string for a basic sed regular expression, or for a sed replacement.
+sed_regex() {
+    printf '%s' "$1" | sed -e 's/[]\/$*.^[]/\\&/g'
+}
+
+sed_replacement() {
+    printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'
+}
+
+# Rewrites every config.sww.versionPatterns entry: `pattern` is literal text with `%s` where
+# the version goes, and a leading `^` anchors it at the start of a line.
+update_version_patterns() {
+    local old_version=$1
+    local new_version=$2
+    local file pattern anchor before after
+
+    while IFS=$'\t' read -r file pattern; do
+        anchor=''
+        if [[ "$pattern" == ^* ]]; then
+            anchor='^'
+            pattern=${pattern#^}
+        fi
+        before=${pattern%%%s*}
+        after=${pattern#*%s}
+        if [[ ! -f "$file" ]]; then
+            print_error "Missing $file from config.sww.versionPatterns"
+            exit 1
+        fi
+        sedi "s/${anchor}\($(sed_regex "$before")\)$(sed_regex "$old_version")\($(sed_regex "$after")\)/\1$(sed_replacement "$new_version")\2/" "$file"
+        print_success "Updated \"$pattern\" in $file"
+    done < <(bash bin/sww-config.sh '.versionPatterns[] | [.file, .pattern] | @tsv')
 }
 
 update_wp_tested_up_to() {
@@ -119,18 +151,14 @@ update_version_in_files() {
         print_warning "readme.txt not found, skipping..."
     fi
 
-    # Update main plugin file — header, @version annotation, and version constant
+    # Update the main plugin file header, then the product's own version strings
     if [[ -f "$main_plugin_file" ]]; then
-        sedi \
-            -e "s/^\( *\* Version:\) $old_version/\1 $new_version/" \
-            -e "s/^\( \* @version\)  $old_version/\1  $new_version/" \
-            -e "s/\(const VERSION = '\)$old_version'/\1$new_version'/" \
-            -e "s/\(define( '[A-Z_]*_VERSION', '\)$old_version'/\1$new_version'/" \
-            "$main_plugin_file"
+        sedi "s/^\( *\* Version:\) $old_version/\1 $new_version/" "$main_plugin_file"
         print_success "Updated $main_plugin_file"
     else
         print_warning "$main_plugin_file not found, skipping..."
     fi
+    update_version_patterns "$old_version" "$new_version"
 }
 
 # Function to find and replace x.x.x patterns in all files
@@ -142,7 +170,8 @@ replace_version_patterns() {
     # Get only git-tracked files that contain x.x.x pattern
     git ls-files | grep -E '\.(php|js|json|txt|css|scss)$' | while read -r file; do
         # Skip specific files we handle elsewhere
-        if [[ "$file" == "package.json" || "$file" == "readme.txt" || "$file" == "changelog.txt" ]]; then
+        # tests/ is skipped: its fixtures use x.x.x as literal data.
+        if [[ "$file" == "package.json" || "$file" == "readme.txt" || "$file" == "changelog.txt" || "$file" == tests/* ]]; then
             continue
         fi
 
@@ -220,6 +249,10 @@ parse_args() {
 main() {
     # Get main plugin file for display
     local main_plugin_file=$(get_main_plugin_file)
+    if [[ ! -f "$main_plugin_file" ]]; then
+        print_error "Missing main plugin file: $main_plugin_file"
+        exit 1
+    fi
     print_status "SomewhereWarm Version Update Script - $main_plugin_file"
     echo
 

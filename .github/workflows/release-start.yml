@@ -133,7 +133,13 @@ jobs:
                 echo "Compiled changelog entries for ${VERSION}:"
                 sed -n '3,/^$/p' changelog.txt
 
+            - name: Read plugin metadata
+              id: config
+              run: bash bin/sww-config.sh --github-output
+
+            # WordPress.org reads the changelog from readme.txt (config.sww.release.readmeChangelog).
             - name: Sync readme.txt changelog
+              if: fromJSON(steps.config.outputs.json).release.readmeChangelog
               run: bash bin/sync_readme_changelog.sh "$VERSION"
 
             - name: Open the next release milestone

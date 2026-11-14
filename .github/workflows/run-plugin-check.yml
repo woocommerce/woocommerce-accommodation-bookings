@@ -1,0 +1,104 @@
+name: 'WordPress Plugin Checks'
+
+on:
+  workflow_call:
+    inputs:
+      artifact-id:
+        type: string
+        required: true
+      source-sha:
+        type: string
+        required: true
+      expected-source-sha:
+        type: string
+        required: true
+      sha256:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  # config.sww.pluginCheck of the candidate's commit.
+  config:
+    name: Read plugin metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      json: ${{ steps.config.outputs.json }}
+    steps:
+      - name: Checkout package metadata
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.source-sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            package.json
+            bin/sww-config.sh
+          sparse-checkout-cone-mode: false
+      - name: Read config.sww
+        id: config
+        run: bash bin/sww-config.sh --github-output
+
+  test:
+    needs: config
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(needs.config.outputs.json).pluginCheck.timeoutMinutes }}
+    env:
+      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).name }}.zip
+      PLUGIN_DIR: ${{ fromJSON(needs.config.outputs.json).zip.root }}
+      MAIN_FILE: ${{ fromJSON(needs.config.outputs.json).mainFile }}
+    steps:
+      - name: Require a candidate artifact ID
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::A single production candidate artifact ID is required."
+            exit 1
+          fi
+
+      - name: Download the production ZIP
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: release-package
+
+      - name: Verify and unpack the production ZIP
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+          SOURCE_SHA: ${{ inputs.source-sha }}
+          EXPECTED_SOURCE_SHA: ${{ inputs.expected-source-sha }}
+          ZIP_SHA256: ${{ inputs.sha256 }}
+        run: |
+          if [[ -z "$EXPECTED_SOURCE_SHA" || "$SOURCE_SHA" != "$EXPECTED_SOURCE_SHA" ]]; then
+            echo "::error::Plugin Check candidate SHA does not match the requested source."
+            exit 1
+          fi
+          zip_file="release-package/$ZIP_NAME"
+          printf '%s  %s\n' "$ZIP_SHA256" "$zip_file" | sha256sum --check -
+          unzip -q "$zip_file" -d release-build
+          shopt -s dotglob nullglob
+          entries=(release-build/*)
+          if [[ ${#entries[@]} != 1 || ! -f "release-build/$PLUGIN_DIR/$MAIN_FILE" ]]; then
+            echo "::error::The production ZIP must contain the expected plugin directory and main file."
+            exit 1
+          fi
+          printf 'Plugin Check artifact %s, commit %s, SHA-256 %s.\n' \
+            "$ARTIFACT_ID" "$SOURCE_SHA" "$ZIP_SHA256" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run plugin check
+        uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
+        with:
+          build-dir: release-build/${{ fromJSON(needs.config.outputs.json).zip.root }}
+          repo-token: ''
+          exclude-checks: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.excludeChecks, fromJSON('"\n"')) }}
+          exclude-directories: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.excludeDirectories, fromJSON('"\n"')) }}
+          exclude-files: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.excludeFiles, fromJSON('"\n"')) }}
+          ignore-warnings: ${{ fromJSON(needs.config.outputs.json).pluginCheck.ignoreWarnings }}
+          strict: ${{ fromJSON(needs.config.outputs.json).pluginCheck.strict }}
+          # Plugin Check has no baseline support: config.sww.pluginCheck.ignoreCodes lists legacy
+          # codes with pre-existing hits that the repository's own PHPCS gate tracks.
+          ignore-codes: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.ignoreCodes, fromJSON('"\n"')) }}

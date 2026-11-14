@@ -1,63 +1,237 @@
 name: Test Runner
 
-# Entry point for WooCommerce core's `pnpm run-canonical-extensions-tests`
-# (bin/run-canonical-extensions-tests.sh), which dispatches the four inputs below.
+# WooCommerce core dispatches this workflow by file name with `wc-version`, `wp-version`,
+# `php-version` and the `qit-tests` option "WooCommerce Pre-Release Tests (includes Activation,
+# WooCommerce E2E and API tests)". Keep those names and that option.
 on:
   workflow_dispatch:
     inputs:
       wp-version:
-        description: 'WordPress version to be tested: `latest`, `rc` (QIT only) or a specific version number.'
+        description: 'WordPress Version to be tested: `latest` or a specific version number.'
         type: string
         default: 'latest'
       wc-version:
-        description: 'WooCommerce version to be tested: `latest`, `nightly`, `rc` (QIT only) or a specific version number (e.g. `10.3.0-rc.1`).'
+        description: 'WooCommerce Version to be tested: `latest`, `nightly` or a specific version number.'
         type: string
         default: 'latest'
       php-version:
         description: 'PHP version. Default is `8.4`.'
         type: string
         default: '8.4'
-      qit-tests:
-        description: 'QIT Tests'
+      extension-tests:
+        description: 'Extension Tests'
         type: choice
-        default: 'WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)'
+        default: 'All'
+        options:
+          - 'E2E Tests'
+          - 'Unit Tests'
+          - 'Plugin Check'
+          - 'All'
+          - 'None'
+      qit-tests:
+        description: 'QIT Tests (skipped for plugins without QIT)'
+        type: choice
         options:
           - 'WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)'
-          - 'Weekly default set'
+          - 'Code Quality Checks (includes Security, Validation, Malware, and PHP Compatibility tests)'
           - 'Activation'
-          - 'WooCommerce API'
-          - 'WooCommerce E2E'
           - 'Security'
+          - 'Validation'
           - 'Malware'
           - 'PHP Compatibility'
           - 'PHPStan'
-          - 'Validation'
+          - 'WooCommerce E2E and API tests'
+          - 'Plugin Checks (for dotOrg metadata)'
+          - 'REST fuzzing'
+          - 'None'
+      qit-wait:
+        description: 'Wait for QIT? Requires additional time for the QIT tests to complete within GHA.'
+        type: boolean
+        default: true
+      options:
+        description: 'QIT Additional options for `qit` command, like `--optional_features=hpos`.'
+        type: string
+        default: ''
 
-run-name: Tests with WP-${{ inputs.wp-version }} - WC-${{ inputs.wc-version }} - PHP ${{ inputs.php-version }} - QIT ${{ inputs.qit-tests }}
+run-name: Tests with WP-${{ inputs.wp-version }} - WC-${{ inputs.wc-version }} - PHP ${{ inputs.php-version }} - Tests ${{ inputs.extension-tests }} - QIT ${{ inputs.qit-tests }}
 
 permissions:
   contents: read
 
 jobs:
-  qit-tests:
-    name: QIT
-    uses: ./.github/workflows/qit.yml
-    with:
-      test: ${{ fromJSON('{"WooCommerce Pre-Release Tests (includes Activation, WooCommerce E2E and API tests)":"prerelease","Weekly default set":"default","Activation":"activation","WooCommerce API":"api","WooCommerce E2E":"e2e","Security":"security","Malware":"malware","PHP Compatibility":"phpcompat","PHPStan":"phpstan","Validation":"validation"}')[inputs.qit-tests] }}
-      # `latest` is QIT's `stable`; every other value (including empty) is passed on unchanged.
-      wp-version: ${{ inputs.wp-version == 'latest' && 'stable' || inputs.wp-version }}
-      wc-version: ${{ inputs.wc-version == 'latest' && 'stable' || inputs.wc-version }}
-      php-version: ${{ inputs.php-version }}
-    secrets: inherit
 
-  # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: empty keeps the default versions, anything else replaces them.
-  php-integration:
-    name: PHP integration tests
-    if: ${{ inputs.wp-version != 'rc' && inputs.wc-version != 'rc' }}
-    uses: ./.github/workflows/phpunit-integration.yml
-    with:
-      wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
-      wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
-      php-version: ${{ inputs.php-version }}
-    secrets:
-      ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+    config:
+        name: Read plugin metadata
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        outputs:
+          json: ${{ steps.config.outputs.json }}
+        steps:
+          - name: Checkout package metadata
+            uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            with:
+              persist-credentials: false
+              sparse-checkout: |
+                package.json
+                bin/sww-config.sh
+              sparse-checkout-cone-mode: false
+          - name: Read config.sww
+            id: config
+            run: bash bin/sww-config.sh --github-output
+
+    setup:
+        name: Setup environments
+        uses: ./.github/workflows/setup-env.yml
+
+    # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: config.sww.phpunit.phpInput decides whether it replaces the suite's own versions.
+    php-tests:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.phpunit && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
+        name: PHP
+        needs: [config, setup]
+        uses: ./.github/workflows/run-unit-tests.yml
+        with:
+          wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
+          wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
+          php-version: ${{ inputs.php-version }}
+          trusted-plugins: true
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    integration-tests:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.integration && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
+        name: PHP integration
+        needs: [config, setup]
+        uses: ./.github/workflows/run-integration-tests.yml
+        with:
+          wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
+          wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
+          php-version: ${{ inputs.php-version }}
+          trusted-plugins: true
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    build_project:
+        if: ${{ (inputs.qit-tests != 'None' && fromJSON(needs.config.outputs.json).capabilities.qit) || (fromJSON(needs.config.outputs.json).capabilities.e2e && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'E2E'))) || (fromJSON(needs.config.outputs.json).capabilities.pluginCheck && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Plugin Check'))) }}
+        name: Package
+        needs: [config, setup]
+        uses: ./.github/workflows/build-upload-zip.yml
+        with:
+          qit-derivative: ${{ contains(inputs.qit-tests, 'Security') || contains(inputs.qit-tests, 'Compatibility') }}
+
+    plugin-check:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.pluginCheck && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Plugin Check')) }}
+        name: Plugin Check
+        needs: [config, build_project]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-plugin-check.yml
+        with:
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          expected-source-sha: ${{ github.sha }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
+
+    qit-tests:
+        if: ${{ inputs.qit-tests != 'None' && fromJSON(needs.config.outputs.json).capabilities.qit }}
+        name: QIT
+        needs: [config, build_project]
+        uses: ./.github/workflows/run-qit.yml
+        with:
+          extension: ${{ fromJSON(needs.config.outputs.json).qit.extension }}
+          plugins: ${{ fromJSON(needs.config.outputs.json).qit.plugins }}
+          artifact: 'acceptance-test-zip'
+          derivative: ${{ fromJSON(needs.config.outputs.json).qit.derivativeExclude != '' && 'qit-derivative' || '' }}
+          timeout-minutes: ${{ fromJSON(needs.config.outputs.json).qit.timeoutMinutes }}
+          wp-version: ${{ inputs.wp-version == 'latest' && 'stable' || inputs.wp-version }}
+          wc-version: ${{ inputs.wc-version == 'latest' && 'stable' || inputs.wc-version }}
+          php-version: ${{ inputs.php-version }}
+          test-activation: ${{ contains(inputs.qit-tests, 'Activation') && 'true' || 'false' }}
+          test-security: ${{ contains(inputs.qit-tests, 'Security') && 'true' || 'false' }}
+          test-phpcompatibility: ${{ contains(inputs.qit-tests, 'Compatibility') && 'true' || 'false' }}
+          test-phpstan: ${{ contains(inputs.qit-tests, 'PHPStan') && 'true' || 'false' }}
+          test-woo-api: ${{ contains(inputs.qit-tests, 'API') && 'true' || 'false' }}
+          test-woo-e2e: ${{ contains(inputs.qit-tests, 'WooCommerce E2E') && 'true' || 'false' }}
+          test-malware: ${{ contains(inputs.qit-tests, 'Malware') && 'true' || 'false' }}
+          test-validation: ${{ contains(inputs.qit-tests, 'Validation') && 'true' || 'false' }}
+          test-plugin-check: ${{ contains(inputs.qit-tests, 'dotOrg') && 'true' || 'false' }}
+          test-api-fuzz: ${{ contains(inputs.qit-tests, 'fuzzing') && fromJSON(needs.config.outputs.json).qit.apiFuzz && 'true' || 'false' }}
+          options: ${{ inputs.options }}
+          wait: ${{ inputs.qit-wait }}
+        secrets:
+          ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+          ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
+
+    # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: empty keeps the default version, anything else replaces it.
+    e2e-tests:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.e2e && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'E2E')) }}
+        name: E2E tests
+        needs: [config, build_project]
+        permissions:
+          contents: read
+          actions: read
+        uses: ./.github/workflows/run-e2e.yml
+        with:
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
+          wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
+          wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
+          php-version: ${{ inputs.php-version }}
+          trusted-plugins: true
+        secrets:
+          ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+
+    handle-success:
+        if: |
+          always() &&
+          needs.config.result == 'success' &&
+          needs.setup.result == 'success' &&
+          (needs.build_project.result == 'success' || needs.build_project.result == 'skipped') &&
+          (needs.plugin-check.result == 'success' || needs.plugin-check.result == 'skipped') &&
+          (needs.qit-tests.result == 'success' || needs.qit-tests.result == 'skipped') &&
+          (needs.e2e-tests.result == 'success' || needs.e2e-tests.result == 'skipped') &&
+          (needs.php-tests.result == 'success' || needs.php-tests.result == 'skipped') &&
+          (needs.integration-tests.result == 'success' || needs.integration-tests.result == 'skipped')
+        needs: [config, setup, build_project, plugin-check, qit-tests, e2e-tests, php-tests, integration-tests]
+        name: Handle success
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions: {}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: success
+                message: "Test Runner Workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> passed."
+
+    handle-cancelled:
+        if: cancelled()
+        needs: [plugin-check, qit-tests, e2e-tests, php-tests, integration-tests]
+        name: Handle cancellation
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions: {}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: cancelled
+                message: "Test Runner Workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> cancelled."
+
+    handle-error:
+        if: failure()
+        needs: [plugin-check, qit-tests, e2e-tests, php-tests, integration-tests]
+        name: Handle failure
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions: {}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        steps:
+          - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
+            with:
+                status: failure
+                message: "Test Runner Workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed."

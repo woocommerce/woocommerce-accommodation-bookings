@@ -1,0 +1,19 @@
+# Data for .github/workflows/ci.yml (dorny/paths-filter, picomatch globs).
+# A file must match EVERY pattern to count as a product change.
+product:
+  # Anything that can affect the build or browser behavior:
+  # everything except unit and integration tests, docs, and
+  # tooling config.
+  - '**'
+  - '!tests/phpunit/**'
+  - '!tests/isolated/**'
+  - '!tests/integration/**'
+  - '!tests/bin/**'
+  - '!phpunit.xml'
+  - '!phpunit-integration.xml'
+  - '!**/*.md'
+  - '!.markdownlintignore'
+  - '!changelog.txt'
+  - '!changelog/**'
+  - '!readme.txt'
+  - '!.coderabbit.yaml'

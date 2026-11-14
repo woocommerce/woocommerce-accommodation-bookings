@@ -1,0 +1,180 @@
+name: Acceptance tests with Docker
+
+on:
+  workflow_call:
+    secrets:
+      ORG_DOWNLOADS:
+        required: false
+    inputs:
+      checkout-ref:
+        type: string
+      artifact-id:
+        type: string
+        required: true
+      source-sha:
+        type: string
+        required: true
+      sha256:
+        type: string
+        required: true
+      # Empty keeps the .wp-env.test.json versions; `latest`, `nightly` or a release tag otherwise.
+      wc-version:
+        type: string
+        default: ''
+      wp-version:
+        type: string
+        default: ''
+      php-version:
+        type: string
+        default: ''
+      # Integration plugins that need ORG_DOWNLOADS (config.sww.e2e.privatePlugins) run only
+      # for trusted callers; specs tagged @integration are skipped otherwise.
+      trusted-plugins:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  config:
+    name: Read plugin metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      json: ${{ steps.config.outputs.json }}
+    steps:
+      - name: Checkout package metadata
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+          sparse-checkout: |
+            package.json
+            bin/sww-config.sh
+          sparse-checkout-cone-mode: false
+      - name: Read config.sww
+        id: config
+        run: bash bin/sww-config.sh --github-output
+
+  e2e-tests:
+    name: Acceptance${{ matrix.test_mode != '' && format(' ({0})', matrix.test_mode) || '' }}
+    needs: config
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(needs.config.outputs.json).e2e.timeoutMinutes }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # config.sww.e2e.projects: Playwright projects, one job each ("" runs every project in one job).
+        test_mode: ${{ fromJSON(needs.config.outputs.json).e2e.projects }}
+
+    env:
+      WP_VERSION: ${{ inputs.wp-version }}
+      WC_VERSION: ${{ inputs.wc-version }}
+      PHP_VERSION: ${{ inputs.php-version }}
+      RUN_INTEGRATION_TESTS: ${{ (inputs.trusted-plugins || !fromJSON(needs.config.outputs.json).e2e.privatePlugins) && '1' || '0' }}
+      TEST_MODE: ${{ matrix.test_mode }}
+      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).name }}.zip
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
+          package-manager-cache: ${{ inputs.checkout-ref == '' }}
+
+      - name: Require a candidate artifact ID
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::A single production candidate artifact ID is required."
+            exit 1
+          fi
+
+      - name: Download the release artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: .
+
+      - name: Verify the production ZIP
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+          CANDIDATE_SHA: ${{ inputs.source-sha }}
+          CANDIDATE_SHA256: ${{ inputs.sha256 }}
+        run: |
+          test "$CANDIDATE_SHA" = "$(git rev-parse HEAD)"
+          printf '%s  %s\n' "$CANDIDATE_SHA256" "$ZIP_NAME" | sha256sum --check -
+          printf 'Playwright artifact %s, commit %s, SHA-256 %s.\n' \
+            "$ARTIFACT_ID" "$CANDIDATE_SHA" "$CANDIDATE_SHA256" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Keep ORG_DOWNLOADS out of the dependency install step: install scripts must not see it.
+      - name: Setup Environment
+        env:
+          ORG_DOWNLOADS: ${{ env.RUN_INTEGRATION_TESTS == '1' && fromJSON(needs.config.outputs.json).e2e.privatePlugins && secrets.ORG_DOWNLOADS || '' }}
+        run: E2E_PLUGIN_ZIP="./$ZIP_NAME" bash ./bin/e2e.sh prepare
+
+      - name: Run wp-env start
+        uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: bash ./bin/e2e.sh start
+
+      - name: Seed the tests site
+        run: pnpm run env:test:e2e:seed
+
+      - name: Report installed versions
+        shell: bash
+        run: |
+          if versions=$(pnpm --silent run wp-env:e2e run cli wp eval 'printf("wp-env versions: WordPress %s, WooCommerce %s, PHP %s%s", $GLOBALS["wp_version"], defined("WC_VERSION") ? WC_VERSION : "unavailable", PHP_VERSION, PHP_EOL);' | grep -m1 -E '^wp-env versions: WordPress [0-9][A-Za-z0-9.+-]*, WooCommerce ([0-9][A-Za-z0-9.+-]*|unavailable), PHP [0-9][A-Za-z0-9.+-]*$'); then
+            printf '%s\n' "${versions#wp-env versions: }" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'Installed versions were unavailable.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Read the Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | awk '{ print $2 }')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        if: inputs.checkout-ref == ''
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.version }}
+
+      - name: Install Chromium
+        run: pnpm run test:e2e:install --with-deps
+
+      - name: Run acceptance tests
+        id: acceptance
+        run: pnpm run test:e2e ${TEST_MODE:+--project "$TEST_MODE"}
+
+      - name: Upload test artifacts
+        if: ${{ !cancelled() && steps.acceptance.outcome != 'skipped' && steps.acceptance.outcome != '' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: acceptance-test-artifacts-${{ strategy.job-index }}
+          # Keep the Playwright login state (storageState files) out of the artifact.
+          path: |
+            tests/e2e/test-results/
+            !tests/e2e/test-results/storage*
+            tests/_output/e2e-debug.log

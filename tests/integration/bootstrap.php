@@ -8,8 +8,9 @@
 $plugin_dir = dirname( __DIR__, 2 );
 require $plugin_dir . '/vendor/autoload.php';
 
+// CI's shared PHPUnit runner installs WooCommerce to WC_CORE_DIR (bin/install.sh).
 $tests_dir = getenv( 'WP_TESTS_DIR' );
-$wc_dir    = getenv( 'WC_DIR' );
+$wc_dir    = getenv( 'WC_DIR' ) ? getenv( 'WC_DIR' ) : getenv( 'WC_CORE_DIR' );
 $bookings  = getenv( 'BOOKINGS_DIR' );
 $addons    = getenv( 'ADDONS_DIR' );
 foreach ( array( "$tests_dir/includes/functions.php", "$wc_dir/woocommerce.php", "$bookings/woocommerce-bookings.php", "$addons/woocommerce-product-addons.php" ) as $required ) {

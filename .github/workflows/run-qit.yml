@@ -1,0 +1,579 @@
+name: Run QIT
+
+on:
+  workflow_call:
+    secrets:
+      ORG_PARTNER_USER:
+        required: true
+      ORG_PARTNER_SECRET:
+        required: true
+    inputs:
+      extension:
+        required: true
+        type: string
+      artifact:
+        type: string
+        required: true
+      # Artifact with <extension>-qit.zip (config.sww.qit.derivativeExclude removed) and its
+      # lineage record. When set, the security and PHP compatibility scans use it.
+      derivative:
+        type: string
+        default: ''
+      timeout-minutes:
+        type: number
+        default: 100
+      wp-version:
+        type: string
+        default: 'stable'
+      wc-version:
+        type: string
+        default: 'stable'
+      php-version:
+        type: string
+        default: '8.4'
+      # Plugins the activation test installs with the extension (config.sww.qit.plugins), passed
+      # as `--plugin=<value>`.
+      plugins:
+        type: string
+        default: ''
+      # Customize which QIT test types to run.
+      test-activation:
+        type: string
+        default: 'false'
+      test-security:
+        type: string
+        default: 'false'
+      test-phpcompatibility:
+        type: string
+        default: 'false'
+      test-phpstan:
+        type: string
+        default: 'false'
+      test-woo-api:
+        type: string
+        default: 'false'
+      test-woo-e2e:
+        type: string
+        default: 'false'
+      test-additional-plugins:
+        type: string
+        default: ''
+      test-malware:
+        type: string
+        default: 'false'
+      test-plugin-check:
+        type: string
+        default: 'false'
+      test-validation:
+        type: string
+        default: 'false'
+      test-api-fuzz:
+        type: string
+        default: 'false'
+      options:
+        type: string
+        default: ''
+      # End of QIT tests.
+      wait:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  NO_COLOR: 1
+  QIT_DISABLE_ONBOARDING: yes
+  EXTENSION_SLUG: ${{ inputs.extension }}
+  WP_VERSION: ${{ inputs.wp-version && inputs.wp-version || 'stable' }}
+  WC_VERSION: ${{ inputs.wc-version && inputs.wc-version || 'stable' }}
+  PHP_VERSION: ${{ inputs.php-version && inputs.php-version || '8.4' }}
+  # QIT names the WordPress/WooCommerce release candidates 'rc', not 'nightly'.
+  WP_VERSION_ARG: ${{ inputs.wp-version == 'nightly' && 'rc' || ( inputs.wp-version && inputs.wp-version || 'stable' ) }}
+  WC_VERSION_ARG: ${{ inputs.wc-version == 'nightly' && 'rc' || ( inputs.wc-version && inputs.wc-version || 'stable' ) }}
+  ADDITIONAL_PLUGINS: ${{ inputs.test-additional-plugins && format( '--additional_plugins={0}', inputs.test-additional-plugins ) || '' }}
+  ACTIVATION_PLUGINS: ${{ inputs.plugins && format( '--plugin={0}', inputs.plugins ) || '' }}
+  WAIT_FLAG: ${{ inputs.wait && '--wait' || '' }}
+  EXTRA_OPTIONS: ${{ inputs.options }}
+  # Signed report URLs stay out of public repositories' logs and artifacts.
+  REPORT_URL_OPTION: ${{ github.event.repository.private && '--print-report-url' || '' }}
+
+jobs:
+
+  qit-tests:
+
+        name: Run QIT Tests
+        runs-on: ubuntu-latest
+        # The API fuzz campaign alone can take up to 45 minutes.
+        timeout-minutes: ${{ inputs.timeout-minutes }}
+        steps:
+
+          - name: Install QIT via composer
+            shell: bash
+            run: composer require 'woocommerce/qit-cli:1.3.3'
+
+          - name: Add Partner and Prepare Environment
+            id: prepare-environment
+            shell: bash
+            env:
+              PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+              PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
+            run: |
+
+              if [[ -z "$PARTNER_USER" || -z "$PARTNER_SECRET" ]]; then
+                echo "::error::QIT partner credentials are missing."
+                exit 1
+              fi
+
+              # Add Partner.
+              ./vendor/bin/qit partner:add \
+                --user="$PARTNER_USER" \
+                --application_password="$PARTNER_SECRET"
+
+              # Export ZIP file paths to GITHUB_ENV.
+              echo "ZIP_FILE_PATH=${{ github.workspace }}/$EXTENSION_SLUG.zip" >> $GITHUB_ENV
+              # Security and PHP compatibility scans run against the derivative when there is one.
+              if [[ -n "${{ inputs.derivative }}" ]]; then
+                echo "SCAN_ZIP_FILE_PATH=${{ github.workspace }}/$EXTENSION_SLUG-qit.zip" >> $GITHUB_ENV
+              else
+                echo "SCAN_ZIP_FILE_PATH=${{ github.workspace }}/$EXTENSION_SLUG.zip" >> $GITHUB_ENV
+              fi
+
+              # Create a directory to store QIT Results.
+              mkdir ${{ github.workspace }}/qit-results
+
+          - name: Download the zip
+            id: download-zip
+            uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+            with:
+                name: ${{ inputs.artifact }}
+                path: ${{ github.workspace }}
+
+          - name: Download the QIT derivative
+            id: download-derivative
+            if: inputs.derivative != '' && (inputs.test-security == 'true' || inputs.test-phpcompatibility == 'true')
+            uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+            with:
+              name: ${{ inputs.derivative }}
+              path: ${{ github.workspace }}
+
+          - name: Verify QIT derivative lineage
+            id: verify-scan-zip
+            if: ${{ !cancelled() && steps.download-zip.outcome == 'success' && (inputs.test-security == 'true' || inputs.test-phpcompatibility == 'true') }}
+            run: |
+              if [[ -z "${{ inputs.derivative }}" ]]; then
+                exit 0
+              fi
+              manifest="$EXTENSION_SLUG-qit.json"
+              parent=$(jq -er '.production_sha256' "$manifest")
+              digest=$(jq -er '.derivative_sha256' "$manifest")
+              printf '%s  %s\n%s  %s\n' "$parent" "$ZIP_FILE_PATH" "$digest" "$SCAN_ZIP_FILE_PATH" | sha256sum --check -
+              cat "$manifest" >> "$GITHUB_STEP_SUMMARY"
+
+          ##############################
+          # Activation Tests.
+          ##############################
+
+          - name: Activation test
+            id: run-activation-test
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-activation == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              echo "Running activation test for $EXTENSION_SLUG"
+              ./vendor/bin/qit run:activation \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                --wp="$WP_VERSION_ARG" \
+                --woo="$WC_VERSION_ARG" \
+                --php_version="$PHP_VERSION" \
+                $REPORT_URL_OPTION \
+                $ACTIVATION_PLUGINS \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-activation-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo activation results
+            if: ${{ !cancelled() && inputs.test-activation == 'true' && steps.run-activation-test.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-activation-results.txt
+              exit ${{ steps.run-activation-test.outputs.exitcode || '1' }}
+
+          ##############################
+          # Security Tests.
+          ##############################
+
+          - name: Run security test
+            id: run-security-test
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.verify-scan-zip.outcome == 'success' && inputs.test-security == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:security \
+                "$EXTENSION_SLUG" \
+                --zip="$SCAN_ZIP_FILE_PATH" \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-security-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo security results
+            if: ${{ !cancelled() && inputs.test-security == 'true' && steps.run-security-test.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-security-results.txt
+              exit ${{ steps.run-security-test.outputs.exitcode || '1' }}
+
+          ##############################
+          # PHP Compatibility Tests.
+          ##############################
+
+          - name: Run PHP compatibility test
+            id: run-php-compatibility-test
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.verify-scan-zip.outcome == 'success' && inputs.test-phpcompatibility == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:phpcompatibility \
+                "$EXTENSION_SLUG" \
+                --zip="$SCAN_ZIP_FILE_PATH" \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-php-compatibility-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo PHP compatibility results
+            if: ${{ !cancelled() && inputs.test-phpcompatibility == 'true' && steps.run-php-compatibility-test.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-php-compatibility-results.txt
+              exit ${{ steps.run-php-compatibility-test.outputs.exitcode || '1' }}
+
+          ##############################
+          # PHPStan Tests.
+          ##############################
+          - name: Run PHPStan Tests
+            id: run-phpstan-tests
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-phpstan == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:phpstan \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                --wordpress_version="$WP_VERSION_ARG" \
+                --woocommerce_version="$WC_VERSION_ARG" \
+                $ADDITIONAL_PLUGINS \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-phpstan-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo PHPStan results
+            if: ${{ !cancelled() && inputs.test-phpstan == 'true' && steps.run-phpstan-tests.outputs.exitcode != '' }}
+            run: |
+
+              cat ${{ github.workspace }}/qit-results/qit-phpstan-results.txt
+              exit ${{ steps.run-phpstan-tests.outputs.exitcode || '1' }}
+
+          ##############################
+          # Malware Tests.
+          ##############################
+          - name: Run Malware Tests
+            id: run-malware-tests
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-malware == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:malware \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-malware-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo Malware results
+            if: ${{ !cancelled() && inputs.test-malware == 'true' && steps.run-malware-tests.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-malware-results.txt
+              exit ${{ steps.run-malware-tests.outputs.exitcode || '1' }}
+
+          ##############################
+          # Plugin Check Tests (for dotOrg).
+          ##############################
+          - name: Run Plugin Check Tests
+            id: run-plugin-check-tests
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-plugin-check == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:plugin-check \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-plugin-check-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo Plugin Check results
+            if: ${{ !cancelled() && inputs.test-plugin-check == 'true' && steps.run-plugin-check-tests.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-plugin-check-results.txt
+              exit ${{ steps.run-plugin-check-tests.outputs.exitcode || '1' }}
+
+          ##############################
+          # Validation Tests.
+          ##############################
+          - name: Run Validation Tests
+            id: run-validation-tests
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-validation == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:validation \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                --php_version="$PHP_VERSION" \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-validation-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo Validation results
+            if: ${{ !cancelled() && inputs.test-validation == 'true' && steps.run-validation-tests.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-validation-results.txt
+              exit ${{ steps.run-validation-tests.outputs.exitcode || '1' }}
+
+          ##############################
+          # WC API Tests.
+          ##############################
+          - name: Run WC API Tests
+            id: run-woo-api-tests
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-woo-api == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:woo-api \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                --wordpress_version="$WP_VERSION_ARG" \
+                --woocommerce_version="$WC_VERSION_ARG" \
+                --php_version="$PHP_VERSION" \
+                $ADDITIONAL_PLUGINS \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-woo-api-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo WC API results
+            if: ${{ !cancelled() && inputs.test-woo-api == 'true' && steps.run-woo-api-tests.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-woo-api-results.txt
+              exit ${{ steps.run-woo-api-tests.outputs.exitcode || '1' }}
+
+          ##############################
+          # WC E2E Tests.
+          ##############################
+          - name: Run WC E2E Tests
+            id: run-woo-e2e-tests
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-woo-e2e == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:woo-e2e \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                --wordpress_version="$WP_VERSION_ARG" \
+                --woocommerce_version="$WC_VERSION_ARG" \
+                --php_version="$PHP_VERSION" \
+                $ADDITIONAL_PLUGINS \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-woo-e2e-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+              # A WooCommerce version without its own core E2E package (e.g. a beta) runs a
+              # mismatched package, so its result says nothing about the extension; flag it.
+              if grep -q 'No test package covers WooCommerce' ${{ github.workspace }}/qit-results/qit-woo-e2e-results.txt; then
+                echo "nopackage=true" >> "$GITHUB_OUTPUT"
+              fi
+
+          # Judge the extension on stable WooCommerce, which always has a matching package.
+          - name: Run WC E2E Tests on stable WooCommerce
+            id: run-woo-e2e-stable-tests
+            if: ${{ !cancelled() && steps.run-woo-e2e-tests.outputs.nopackage == 'true' && env.WC_VERSION_ARG != 'stable' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:woo-e2e \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                --wordpress_version="$WP_VERSION_ARG" \
+                --woocommerce_version=stable \
+                --php_version="$PHP_VERSION" \
+                $ADDITIONAL_PLUGINS \
+                $WAIT_FLAG \
+                $REPORT_URL_OPTION \
+                $EXTRA_OPTIONS \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-woo-e2e-stable-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo WC E2E results
+            if: ${{ !cancelled() && inputs.test-woo-e2e == 'true' && steps.run-woo-e2e-tests.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-woo-e2e-results.txt
+              if [ "${{ steps.run-woo-e2e-tests.outputs.nopackage }}" = 'true' ]; then
+                echo "::warning title=QIT Woo E2E not verified on the requested WooCommerce::$(grep -m1 'No test package covers WooCommerce' ${{ github.workspace }}/qit-results/qit-woo-e2e-results.txt) The result on stable WooCommerce decides this check."
+                if [ -f ${{ github.workspace }}/qit-results/qit-woo-e2e-stable-results.txt ]; then
+                  cat ${{ github.workspace }}/qit-results/qit-woo-e2e-stable-results.txt
+                fi
+                exit ${{ steps.run-woo-e2e-stable-tests.outputs.exitcode || '1' }}
+              fi
+              exit ${{ steps.run-woo-e2e-tests.outputs.exitcode || '1' }}
+
+          ##############################
+          # REST API fuzzing.
+          ##############################
+          # QIT fuzzes the REST routes the plugin adds or changes, on stable WordPress and WooCommerce
+          # (the command takes no version options), and confirms each finding twice from a clean state.
+          # It always waits and takes no `options`: an `--async` run would exit 0 before any result, and the
+          # other test types' options (e.g. --optional_features) are not valid for it.
+          - name: Run API fuzz test
+            id: run-api-fuzz-test
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' && steps.download-zip.outcome == 'success' && inputs.test-api-fuzz == 'true' }}
+            # Do not fail when the `qit` fails, so we can annotate the results.
+            shell: bash --noprofile --norc {0}
+            run: |
+              ./vendor/bin/qit run:api-fuzz \
+                "$EXTENSION_SLUG" \
+                --zip="$ZIP_FILE_PATH" \
+                -n \
+                > ${{ github.workspace }}/qit-results/qit-api-fuzz-results.txt
+              echo "exitcode=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+          - name: Echo API fuzz results
+            if: ${{ !cancelled() && inputs.test-api-fuzz == 'true' && steps.run-api-fuzz-test.outputs.exitcode != '' }}
+            run: |
+              cat ${{ github.workspace }}/qit-results/qit-api-fuzz-results.txt
+              exit ${{ steps.run-api-fuzz-test.outputs.exitcode || '1' }}
+
+          # Keep each run's server-side record (named failed tests, resolved WP/WC/PHP);
+          # the hosted report expires after 7 days. Public repos drop the signed report URLs.
+          - name: Retain QIT run records
+            if: ${{ !cancelled() && steps.prepare-environment.outcome == 'success' }}
+            shell: bash
+            env:
+              PUBLIC_REPO: ${{ github.event.repository.private == false }}
+            run: |
+              cd "$GITHUB_WORKSPACE/qit-results"
+              for f in qit-*-results.txt; do
+                check=${f#qit-}
+                check=${check%-results.txt}
+                id=$(grep -m1 -oE 'Test ID: [0-9]+|qit_results=[0-9]+' "$f" | grep -oE '[0-9]+$' | head -n1) || continue
+                # `qit get` exits nonzero for a failed run but still prints its record.
+                record=$("$GITHUB_WORKSPACE/vendor/bin/qit" get "$id" --json -n) || true
+                if [ "$PUBLIC_REPO" = 'true' ]; then
+                  record=$(jq 'del(.test_results_manager_url, .test_result_aws_url)' <<< "$record") || record=''
+                fi
+                printf '%s\n' "$record" > "$check.record.json"
+              done
+
+          - name: Summarize QIT results
+            if: ${{ always() }}
+            env:
+              QIT_INPUTS: ${{ toJSON(inputs) }}
+              QIT_STEPS: ${{ toJSON(steps) }}
+            run: |
+              python3 - <<'PYTHON'
+              import glob
+              import json
+              import os
+
+              inputs = json.loads(os.environ['QIT_INPUTS'])
+              steps = json.loads(os.environ['QIT_STEPS'])
+              checks = {
+                  'activation': 'run-activation-test',
+                  'security': 'run-security-test',
+                  'phpcompatibility': 'run-php-compatibility-test',
+                  'phpstan': 'run-phpstan-tests',
+                  'malware': 'run-malware-tests',
+                  'plugin-check': 'run-plugin-check-tests',
+                  'validation': 'run-validation-tests',
+                  'woo-api': 'run-woo-api-tests',
+                  'woo-e2e': 'run-woo-e2e-tests',
+                  'api-fuzz': 'run-api-fuzz-test',
+              }
+              failed = False
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+                  summary.write('| QIT check | Result |\n| --- | --- |\n')
+                  for check, step in checks.items():
+                      code = steps.get(step, {}).get('outputs', {}).get('exitcode', '')
+                      if inputs['test-' + check] != 'true':
+                          result = 'unrequested'
+                      elif code == '':
+                          result = 'blocked'
+                          failed = True
+                      elif steps.get(step, {}).get('outputs', {}).get('nopackage') == 'true':
+                          stable = steps.get('run-woo-e2e-stable-tests', {}).get('outputs', {}).get('exitcode', '')
+                          if stable == '0':
+                              result = 'passed on stable WooCommerce; requested version not verified (no matching test package)'
+                          else:
+                              result = 'failed on stable WooCommerce (exit ' + (stable or 'none') + '); requested version not verified (no matching test package)'
+                              failed = True
+                      elif code == '0':
+                          result = 'passed'
+                      else:
+                          result = 'failed (exit ' + code + ')'
+                          failed = True
+                      summary.write('| ' + check + ' | ' + result + ' |\n')
+                  records = sorted(glob.glob(os.path.join(os.environ['GITHUB_WORKSPACE'], 'qit-results', '*.record.json')))
+                  if records:
+                      summary.write('\n| QIT record | ID | Status | WordPress | WooCommerce | PHP | Failed tests |\n| --- | --- | --- | --- | --- | --- | --- |\n')
+                  for path in records:
+                      try:
+                          with open(path) as f:
+                              record = json.load(f)
+                          cells = [str(record[key]) for key in ('test_run_id', 'status', 'wordpress_version', 'woocommerce_version', 'php_version')]
+                      except Exception:
+                          # An unreadable record must not change the QIT verdict.
+                          record, cells = {}, ['record unavailable', '', '', '', '']
+                      try:
+                          ctrf = record.get('ctrf_json') or {}
+                          tests = ctrf['results']['tests'] if ctrf else []
+                          names = [t.get('suite', '') + ' › ' + t.get('name', '') for t in tests if t.get('status') == 'failed']
+                          # API fuzz findings are not tests; list each one as its request and error.
+                          # Other checks (e.g. malware) store a list here, so only read a mapping.
+                          result = record.get('test_result_json')
+                          findings = (result.get('findings') or []) if isinstance(result, dict) else []
+                          names += [f.get('method', '') + ' ' + f.get('route', '') + ' › ' + str(f.get('error_message') or 'HTTP ' + str(f.get('response_status', ''))).replace('\n', ' ') for f in findings if not f.get('suppressed')]
+                      except Exception:
+                          # A malformed CTRF report only blanks the failed-test column.
+                          names = ['failed-test list unavailable']
+                      failed_tests = '<br>'.join(names).replace('|', '\\|') or '-'
+                      summary.write('| ' + ' | '.join([os.path.basename(path)[:-len('.record.json')]] + cells + [failed_tests]) + ' |\n')
+              raise SystemExit(1 if failed else 0)
+              PYTHON
+
+          - name: Upload results
+            if: always()
+            uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+            with:
+                name: qit-results
+                path: ${{ github.workspace }}/qit-results/

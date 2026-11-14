@@ -1,0 +1,72 @@
+# Paths that stay out of deploy/woocommerce-accommodation-bookings.zip (bin/build-zip.sh): one zip -x
+# wildcard per line, matched against woocommerce-accommodation-bookings/<path>; a leading / anchors it
+# at the plugin root. src/ and SECURITY.md keep shipping, as they always have.
+# Development folders.
+/.ai/*
+/.claude/*
+/.codex/*
+/.cursor/*
+/.github/*
+/.husky/*
+/.idea/*
+/.playwright-mcp/*
+/.tx/*
+/.vscode/*
+/bin/*
+/changelog/*
+/coverage/*
+/logs/*
+/node_modules/*
+/tests/*
+/tools/*
+/vendor/*
+# Development files.
+/*.zip
+/.coderabbit.yaml
+/.editorconfig
+/.eslintrc
+/.gitattributes
+/.gitignore
+/.gitmodules
+/.markdownlintignore
+/.npmpackagejsonlintrc.json
+/.nvmrc
+/.phpunit.result.cache
+/.prettierrc.js
+/.stylelintrc.json
+/.travis.yml
+/.wp-env*.json
+/AGENTS.md
+/CLAUDE.md
+/CLAUDE.local.md
+/DEVELOPER.md
+/README.md
+/babel.config.js
+/composer.json
+/composer.lock
+/eslint.config.mjs
+/eslint_report.json
+/exclude.lst
+/jest-puppeteer.config.js
+/package-lock.json
+/package.json
+/phpcs-compat.xml.dist
+/phpcs.baseline
+/phpcs.xml.dist
+/phpstan-baseline.neon
+/phpstan-bootstrap.php
+/phpstan.neon.dist
+/phpunit-integration.xml
+/phpunit.xml
+/phpunit.xml.dist
+/pnpm-lock.yaml
+/pnpm-workspace.yaml
+/postcss.config.js
+/webpack.config.js
+# Anywhere.
+*/.git
+*/.git/*
+*/.DS_Store
+*/Thumbs.db
+*/.buildpath
+*/.project

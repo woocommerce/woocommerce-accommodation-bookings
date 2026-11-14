@@ -19,7 +19,124 @@
     "node": "^24.22.3"
   },
   "config": {
-    "wp_org_slug": "woocommerce-accommodation-bookings"
+    "wp_org_slug": "woocommerce-accommodation-bookings",
+    "sww": {
+      "productName": "Accommodation Bookings",
+      "capabilities": {
+        "js": true,
+        "e2e": true,
+        "isolated": true,
+        "integration": true,
+        "qit": true,
+        "pluginCheck": true
+      },
+      "pluginCheck": {
+        "excludeDirectories": [
+          ".github",
+          "node_modules",
+          "vendor",
+          "tests",
+          "bin",
+          "build",
+          "assets",
+          "tools",
+          "changelog"
+        ],
+        "excludeFiles": [
+          ".git",
+          ".gitignore",
+          ".gitattributes",
+          ".nvmrc",
+          ".wp-env.json",
+          ".wp-env.test.json",
+          ".stylelintrc.json",
+          ".markdownlintignore",
+          ".npmpackagejsonlintrc.json",
+          ".prettierrc.js",
+          ".coderabbit.yaml",
+          "phpcs.xml.dist",
+          "phpcs-compat.xml.dist",
+          "phpstan.neon.dist",
+          "phpstan-baseline.neon",
+          "phpstan-bootstrap.php",
+          "AGENTS.md",
+          "CLAUDE.md",
+          "DEVELOPER.md"
+        ],
+        "ignoreWarnings": false,
+        "strict": true,
+        "ignoreCodes": [
+          "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+          "WordPress.DB.DirectDatabaseQuery.NoCaching",
+          "WordPress.DateTime.RestrictedFunctions.date_date",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound",
+          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+          "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized",
+          "plugin_header_nonexistent_domain_path",
+          "trademarked_term"
+        ]
+      },
+      "e2e": {
+        "timeoutMinutes": 25,
+        "privatePlugins": true
+      },
+      "integration": {
+        "legs": [
+          {
+            "php": "8.4",
+            "script": "test:integration",
+            "coverage": true
+          },
+          {
+            "php": "7.4",
+            "wp": "minimum",
+            "wc": "minimum",
+            "script": "test:integration",
+            "defaultOnly": true
+          }
+        ]
+      },
+      "privatePlugins": [
+        {
+          "slug": "woocommerce-bookings",
+          "suites": [
+            "integration"
+          ],
+          "dirEnv": "BOOKINGS_DIR"
+        },
+        {
+          "slug": "woocommerce-product-addons",
+          "suites": [
+            "integration"
+          ],
+          "dirEnv": "ADDONS_DIR"
+        }
+      ],
+      "phpLint": {
+        "isolatedPhp": [
+          "7.4",
+          "8.4"
+        ]
+      },
+      "pullRequests": {
+        "privatePlugins": true
+      },
+      "versionPatterns": [
+        {
+          "pattern": "define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '%s'"
+        }
+      ],
+      "release": {
+        "target": "wordpress.org",
+        "readmeChangelog": true,
+        "wpOrgSlug": "woocommerce-accommodation-bookings"
+      },
+      "qit": {
+        "plugins": "woocommerce-bookings"
+      }
+    }
   },
   "devDependencies": {
     "@babel/runtime": "^7.29.7",
@@ -40,21 +157,15 @@
     "webpack-remove-empty-scripts": "^1.0.4"
   },
   "scripts": {
-    "prebuild": "rm -rf ./vendor && composer install",
-    "build": "pnpm run build:webpack && pnpm run makepot && pnpm run archive",
-    "build:zip": "pnpm run build && mkdir -p deploy && mv $npm_package_name.zip deploy/",
+    "build": "pnpm run build:webpack && pnpm run makepot",
+    "build:zip": "bash ./bin/build-zip.sh",
     "build:webpack": "wp-scripts build",
-    "start:webpack": "wp-scripts start",
-    "build:dev": "composer install && pnpm run build:webpack && pnpm run makepot",
-    "prearchive": "rm -rf ./vendor",
-    "archive": "composer archive --file=$npm_package_name --format=zip",
-    "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
-    "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --exclude=tests,src",
+    "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --slug=$npm_package_name --exclude=tests,src,deploy",
     "phpcompat": "bash bin/phpcompat.sh",
     "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",
     "lint:js": "wp-scripts lint-js --max-warnings 0",
-    "lint:js-fix": "pnpm run lint:js --fix",
+    "lint:js:report": "wp-scripts lint-js --output-file eslint_report.json --format json",
     "lint:style": "wp-scripts lint-style src/css/frontend.scss --max-warnings 0",
     "lint:style-fix": "pnpm run lint:style --fix",
     "lint:md:docs": "wp-scripts lint-md-docs --dot",
@@ -62,28 +173,45 @@
     "changelog:check": "bash bin/check_changelog.sh",
     "check-licenses": "wp-scripts check-licenses --ignore=@woocommerce/e2e-utils-playwright",
     "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "env:test:e2e": "bash ./bin/acceptance.sh",
-    "env:test:e2e:help": "bash ./bin/acceptance.sh help",
-    "env:test:e2e:setup": "bash ./bin/acceptance.sh setup",
-    "env:test:e2e:reset": "bash ./bin/acceptance.sh reset",
-    "env:test:e2e:run": "bash ./bin/acceptance.sh run",
-    "env:test:e2e:run:ui": "E2E_SHOW_UI=1 bash ./bin/acceptance.sh run",
+    "check:js": "pnpm run check-licenses && pnpm run lint:pkg-json && pnpm run lint:style && pnpm run lint:js",
     "env:test:e2e:seed": "bash ./tests/e2e/bin/initialize.sh",
     "env:dev:seed": "wp-env run cli bash wp-content/bin/seed_dev.sh",
     "env:dev:reset": "bash ./bin/env-dev-reset.sh",
-    "env:start": "wp-env start",
-    "env:stop": "wp-env stop",
-    "env:destroy": "wp-env destroy",
+    "env:start": "pnpm run env:dev:start",
+    "env:stop": "pnpm run env:dev:stop",
+    "env:restart": "pnpm run env:dev:restart",
+    "env:destroy": "pnpm run env:dev:destroy",
     "env:test:start": "bash ./bin/env-start.sh",
     "env:test:stop": "pnpm run wp-env:test stop",
     "env:test:destroy": "pnpm run wp-env:test destroy",
     "wp-env": "wp-env",
     "wp-env:test": "WP_ENV_PORT=${WP_ENV_TESTS_PORT:-8889} wp-env --config .wp-env.test.json",
-    "test:e2e-local": "export $(cat ./tests/e2e/config/.env | xargs) && pnpm run env:test:e2e:run",
-    "test:e2e-debug": "pnpm run env:test:e2e:run --debug",
+    "wp-env:e2e": "WP_ENV_PORT=${WP_ENV_TESTS_PORT:-8889} wp-env --config .wp-env.e2e.json",
+    "test:e2e-local": "export $(cat ./tests/e2e/config/.env | xargs) && pnpm run test:e2e",
     "test:e2e-codegen": "playwright codegen",
-    "test:e2e-report": "playwright show-report tests/e2e/test-results/playwright-report",
-    "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 pnpm run env:test:e2e:run",
-    "test:e2e:reset": "node -e \"require('./tests/e2e/utils/local').seed()\""
+    "test:e2e:regression": "ACCOM_E2E_REGRESSION=1 pnpm run test:e2e",
+    "test:e2e:regression:seed": "node -e \"require('./tests/e2e/utils/local').seed()\"",
+    "lint:php": "composer run lint:php --",
+    "lint:php:syntax": "composer run lint:php:syntax --",
+    "lint:php:fix": "composer run lint:php:fix --",
+    "phpstan": "composer run phpstan --",
+    "test:php": "composer run test:php --",
+    "test:php:unit": "composer run test:php:unit --",
+    "test:php:isolated": "composer run test:php:isolated --",
+    "test:php:env": "bash ./bin/phpunit.sh",
+    "watch:build": "wp-scripts start",
+    "lint:js:fix": "pnpm run lint:js --fix",
+    "env:dev:start": "wp-env start",
+    "env:dev:stop": "wp-env stop",
+    "env:dev:restart": "wp-env destroy --force && wp-env start --update",
+    "env:dev:destroy": "wp-env destroy",
+    "test:e2e": "bash ./bin/e2e.sh run",
+    "test:e2e:with-env": "bash ./bin/e2e.sh with-env",
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e:setup": "bash ./bin/e2e.sh setup",
+    "test:e2e:reset": "bash ./bin/e2e.sh reset",
+    "test:e2e:ui": "pnpm run test:e2e --ui",
+    "test:e2e:debug": "pnpm run test:e2e --debug",
+    "test:e2e:report": "playwright show-report tests/e2e/test-results/playwright-report"
   }
 }
