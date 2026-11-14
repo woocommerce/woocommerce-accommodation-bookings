@@ -106,14 +106,14 @@ The Playwright suite runs against the tests site; logins `admin` / `password`, `
 ```bash
 pnpm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
 E2E_TARGET=product pnpm run test:e2e       # Inner loop: spec files matching a path or name
-E2E_FILTER=@foundational pnpm run env:test:e2e:run # Tests whose title or tag matches (--grep)
-pnpm run env:test:e2e:run:ui                       # Same, with the browser visible
+E2E_FILTER=@foundational pnpm run test:e2e # Tests whose title or tag matches (--grep)
+pnpm run test:e2e:ui                       # Same, with the browser visible
 pnpm run env:test:e2e:reset                        # Reset and re-seed just the DB
-pnpm run env:test:e2e                              # Full pipeline, as CI (setup, whole suite, stop)
+pnpm run test:e2e:with-env                              # Full pipeline, as CI (setup, whole suite, stop)
 pnpm run env:test:e2e:help                         # All subcommands, E2E_* knobs and examples
 ```
 
-- `bin/acceptance.sh` exports the tests site's URL as `ACCOM_E2E_URL` for `tests/e2e/config/index.js`; arguments after `run` go to `playwright test` (for example `pnpm run env:test:e2e:run --debug`).
+- `bin/acceptance.sh` exports the tests site's URL as `ACCOM_E2E_URL` for `tests/e2e/config/index.js`; arguments after `run` go to `playwright test` (for example `pnpm run test:e2e --debug`).
 - The tests site is seeded by `pnpm run env:test:e2e:seed` (`tests/e2e/bin/initialize.sh`: Bookings and Bookings Availability from their ZIPs, users, pages, store settings and the E2E mu-plugins). It fails until `woocommerce-bookings.zip` and `woocommerce-bookings-availability.zip` are in the checkout root.
 - The regression journeys (`pnpm run test:e2e:reset`, then `pnpm run test:e2e:regression`) are described in `tests/e2e/README.md`.
 - Extend the existing Playwright specs in `tests/e2e/specs/` and report which scenarios ran. A foundational or focused run is not full-suite coverage; identify behavior that still needs manual verification.
