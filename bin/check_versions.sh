@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PACKAGE_BASE=$(echo "$GITHUB_REPOSITORY" | awk -F'/' '{print $2}' )
+MAIN_PLUGIN_FILE="woocommerce-accommodation-bookings.php"
 
 # HELPERS.
 BLUE='\033[0;32m'
@@ -9,8 +9,8 @@ UNDERLINE_START='\e[4m'
 UNDERLINE_STOP='\e[0m'
 
 # GET BASE PHP VERSIONS.
-PHP_HEADER_VERSION=$( awk '/\* *Version/ {print}' $PACKAGE_BASE.php | sed 's/[^0-9.]*\([0-9.]*\).*/\1/' )
-PHP_IN_VERSION=$( awk "/const VERSION|define\\( *'[A-Z_]*_VERSION'/ {print}" $PACKAGE_BASE.php | sed 's/[^0-9.]*\([0-9.]*[-dev]*\).*/\1/' )
+PHP_HEADER_VERSION=$( awk '/\* *Version/ {print}' "$MAIN_PLUGIN_FILE" | sed 's/[^0-9.]*\([0-9.]*\).*/\1/' )
+PHP_IN_VERSION=$( awk "/const VERSION|define\\( *'[A-Z_]*_VERSION'/ {print}" "$MAIN_PLUGIN_FILE" | sed 's/[^0-9.]*\([0-9.]*[-dev]*\).*/\1/' )
 if [[ $PHP_HEADER_VERSION != $PHP_IN_VERSION ]]; then
 	echo "Different Versions in the main PHP file... Exiting with error."
 	exit 1
