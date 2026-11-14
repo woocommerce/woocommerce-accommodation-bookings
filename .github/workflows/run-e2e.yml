@@ -1,0 +1,164 @@
+name: E2E test
+
+on:
+  workflow_call:
+    inputs:
+      artifact-id:
+        type: string
+        required: true
+      source-sha:
+        type: string
+        required: true
+      sha256:
+        type: string
+        required: true
+      checkout-ref:
+        type: string
+    secrets:
+      ORG_DOWNLOADS:
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  e2e:
+    name: E2E Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      # Runs before checkout so no pull-request code or dependency can observe the token.
+      - name: Download booking dependencies
+        run: |
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::The ORG_DOWNLOADS secret isn't available to this run (fork and Dependabot PRs don't receive it), so the booking dependencies cannot be downloaded."
+            exit 1
+          fi
+          gh release download --repo woocommerce/woocommerce-bookings --pattern woocommerce-bookings.zip --dir "$RUNNER_TEMP"
+          gh release download --repo woocommerce/woocommerce-bookings-availability --pattern woocommerce-bookings-availability.zip --dir "$RUNNER_TEMP"
+        env:
+          GH_TOKEN: ${{ secrets.ORG_DOWNLOADS }}
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.checkout-ref }}
+          persist-credentials: false
+
+      - name: Require a production candidate
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+          SOURCE_SHA: ${{ inputs.source-sha }}
+          ZIP_SHA256: ${{ inputs.sha256 }}
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ || ! "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ || ! "$ZIP_SHA256" =~ ^[a-f0-9]{64}$ ]]; then
+            echo "::error::The production candidate needs an artifact ID, source SHA and digest."
+            exit 1
+          fi
+
+      - name: Download the production ZIP
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: release-package
+
+      - name: Verify and unpack the production ZIP
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+          SOURCE_SHA: ${{ inputs.source-sha }}
+          ZIP_SHA256: ${{ inputs.sha256 }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          archive=release-package/woocommerce-accommodation-bookings.zip
+          printf '%s  %s\n' "$ZIP_SHA256" "$archive" | sha256sum --check -
+          unzip -q "$archive" -d release-build
+          test -f release-build/woocommerce-accommodation-bookings/woocommerce-accommodation-bookings.php
+          printf 'Playwright artifact %s, commit %s, SHA-256 %s.\n' \
+            "$ARTIFACT_ID" "$SOURCE_SHA" "$ZIP_SHA256" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          package-manager-cache: false
+
+      - name: Node install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install Playwright Browsers
+        run: ./node_modules/.bin/playwright install chromium
+
+      - name: Stage booking dependencies
+        run: |
+          mv "$RUNNER_TEMP/woocommerce-bookings.zip" .
+          mv "$RUNNER_TEMP/woocommerce-bookings-availability.zip" .
+
+      - name: Mount the production plugin and separate test fixtures
+        run: |
+          config=.wp-env.test.override.json
+          if [[ -f "$config" ]]; then
+              source=$config
+          else
+              source=.wp-env.test.json
+          fi
+          jq -e '.plugins | index(".")' "$source" > /dev/null
+          jq --arg plugin './release-build/woocommerce-accommodation-bookings' '
+              .plugins |= map(if . == "." then $plugin else . end)
+              | .mappings["wp-content/e2e-packages/woocommerce-bookings.zip"] = "./woocommerce-bookings.zip"
+              | .mappings["wp-content/e2e-packages/woocommerce-bookings-availability.zip"] = "./woocommerce-bookings-availability.zip"
+          ' "$source" > "$config.tmp"
+          mv "$config.tmp" "$config"
+          echo "SWW_E2E_PACKAGE=1" >> "$GITHUB_ENV"
+
+      - name: Setup WP environment
+        run: pnpm run env:test:start
+
+      - name: Seed the tests site
+        run: pnpm run env:test:e2e:seed
+
+      - name: Report installed browser test versions
+        shell: bash
+        run: |
+          if versions=$(pnpm --silent run wp-env:test run cli wp eval 'printf("wp-env versions: WordPress %s, WooCommerce %s, PHP %s%s", $GLOBALS["wp_version"], defined("WC_VERSION") ? WC_VERSION : "unavailable", PHP_VERSION, PHP_EOL);' | grep -m1 -E '^wp-env versions: WordPress [0-9][A-Za-z0-9.+-]*, WooCommerce ([0-9][A-Za-z0-9.+-]*|unavailable), PHP [0-9][A-Za-z0-9.+-]*$'); then
+            printf '%s\n' "${versions#wp-env versions: }" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'Installed browser test versions were unavailable.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Run E2E tests
+        run: pnpm run env:test:e2e:run
+
+      - name: Annotate retry-only passes
+        if: always()
+        run: |
+          # A flaky test in the json report failed, then passed on retry.
+          [ -f tests/e2e/test-results/results.json ] || exit 0
+          node -e '
+            const walk = ( suite, titles ) => [
+              ...( suite.specs || [] ).map( ( spec ) => [ spec, [ ...titles, spec.title ] ] ),
+              ...( suite.suites || [] ).flatMap( ( child ) => walk( child, [ ...titles, child.title ] ) ),
+            ];
+            for ( const [ spec, titles ] of require( process.argv[ 1 ] ).suites.flatMap( ( file ) => walk( file, [] ) ) ) {
+              for ( const test of spec.tests.filter( ( t ) => t.status === "flaky" ) ) {
+                const message = spec.file + ":" + spec.line + " › " + titles.join( " › " ) + "\n" + ( test.results[ 0 ].error?.message ?? test.results[ 0 ].error?.value ?? "" );
+                console.log( "::warning title=Retry-only pass::" + message.replace( /\u001b\[[0-9;]*m/g, "" ).replace( /%/g, "%25" ).replace( /\r?\n/g, "%0A" ) );
+              }
+            }
+          ' "$PWD/tests/e2e/test-results/results.json"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: playwright-report
+          # Keep the Playwright login state (storageState files) out of the artifact.
+          path: |
+            tests/e2e/test-results/
+            !tests/e2e/test-results/storage*
+          retention-days: 2

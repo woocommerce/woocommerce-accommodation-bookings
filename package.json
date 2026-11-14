@@ -60,7 +60,7 @@
     "changelog:check": "bash bin/check_changelog.sh",
     "check-licenses": "wp-scripts check-licenses --ignore=@woocommerce/e2e-utils-playwright",
     "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "env:test:e2e": "bash ./bin/acceptance.sh",
+    "env:test:e2e": "bash ./bin/acceptance.sh with-env",
     "env:test:e2e:help": "bash ./bin/acceptance.sh help",
     "env:test:e2e:setup": "bash ./bin/acceptance.sh setup",
     "env:test:e2e:reset": "bash ./bin/acceptance.sh reset",

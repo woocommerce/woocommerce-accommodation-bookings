@@ -25,6 +25,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Require a candidate artifact ID
+        env:
+          ARTIFACT_ID: ${{ inputs.artifact-id }}
+        run: |
+          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::A single production candidate artifact ID is required."
+            exit 1
+          fi
+
       - name: Download the production ZIP
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:

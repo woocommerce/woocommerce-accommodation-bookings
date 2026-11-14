@@ -13,7 +13,9 @@ jobs:
     qit-tests:
         name: QIT
         uses: ./.github/workflows/qit.yml
-        secrets: inherit
+        secrets:
+          ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+          ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
         with:
           test: 'default'
           wp-version: 'nightly'

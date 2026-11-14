@@ -44,9 +44,8 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: ./.github/workflows/e2e.yml
+        uses: ./.github/workflows/run-e2e.yml
         with:
-          packaged: true
           artifact-id: ${{ needs.production-package.outputs.artifact-id }}
           source-sha: ${{ needs.production-package.outputs.source-sha }}
           sha256: ${{ needs.production-package.outputs.sha256 }}
@@ -57,7 +56,9 @@ jobs:
         name: QIT tests
         needs: [php-tests, integration-tests]
         uses: ./.github/workflows/qit.yml
-        secrets: inherit
+        secrets:
+          ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
+          ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
         with:
           test: 'stable'
 
