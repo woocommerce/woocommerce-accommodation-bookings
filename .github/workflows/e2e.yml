@@ -145,6 +145,15 @@ jobs:
       - name: Seed the tests site
         run: pnpm run env:test:e2e:seed
 
+      - name: Report installed browser test versions
+        shell: bash
+        run: |
+          if versions=$(pnpm --silent run wp-env:test run cli wp eval 'printf("wp-env versions: WordPress %s, WooCommerce %s, PHP %s%s", $GLOBALS["wp_version"], defined("WC_VERSION") ? WC_VERSION : "unavailable", PHP_VERSION, PHP_EOL);' | grep -m1 -E '^wp-env versions: WordPress [0-9][A-Za-z0-9.+-]*, WooCommerce ([0-9][A-Za-z0-9.+-]*|unavailable), PHP [0-9][A-Za-z0-9.+-]*$'); then
+            printf '%s\n' "${versions#wp-env versions: }" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'Installed browser test versions were unavailable.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Run E2E tests
         run: pnpm run env:test:e2e:run
 
