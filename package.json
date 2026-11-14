@@ -123,6 +123,11 @@
       "pullRequests": {
         "privatePlugins": true
       },
+      "versionPatterns": [
+        {
+          "pattern": "define( 'WC_ACCOMMODATION_BOOKINGS_VERSION', '%s'"
+        }
+      ],
       "release": {
         "target": "wordpress.org",
         "readmeChangelog": true,

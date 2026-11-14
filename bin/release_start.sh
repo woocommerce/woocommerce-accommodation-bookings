@@ -66,7 +66,7 @@ command -v jq >/dev/null 2>&1 || abort "jq is not installed."
 # Prompt interactively when no version was given, showing the current values.
 if [[ -z "$VERSION" ]]; then
     CURRENT_VERSION=$(jq -r .version package.json)
-    MAIN_PLUGIN_FILE="$(jq -r '.config.mainFile // (.name + ".php")' package.json)"
+    MAIN_PLUGIN_FILE="$(bash bin/sww-config.sh .mainFile)"
     [[ -f "$MAIN_PLUGIN_FILE" ]] || abort "Missing main plugin file: $MAIN_PLUGIN_FILE"
     CURRENT_WP=$(grep '^Tested up to:' readme.txt | head -1 | sed 's/.*Tested up to:[[:space:]]*\([0-9.]*\).*/\1/')
     CURRENT_WC=$(grep 'WC tested up to:' "$MAIN_PLUGIN_FILE" | head -1 | sed 's/.*WC tested up to:[[:space:]]*\([0-9.]*\).*/\1/')
