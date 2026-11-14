@@ -14,9 +14,7 @@ Do not regenerate it to hide new findings.
 ## Plugin Check
 
 CI uses the pinned `wordpress/plugin-check-action` with warnings enabled and
-`strict: true`, so every reported error or warning fails. It checks owned
-production source; dependency, development, test and generated files are excluded
-in `.github/workflows/plugin-check.yml`.
+`strict: true`, so every reported error or warning fails. It checks the verified production ZIP with the path exclusions in `.github/workflows/plugin-check.yml`.
 
 The workflow lists specific ignored codes for existing findings and established
 WooCommerce names and behavior. These exclusions also hide future occurrences of
