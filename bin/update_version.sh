@@ -56,10 +56,9 @@ validate_core_version() {
     fi
 }
 
-# Function to get main plugin file from directory name
+# The main plugin file is package.json config.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
 get_main_plugin_file() {
-    local dir_name=$(basename "$PWD")
-    echo "${dir_name}.php"
+    echo "$(jq -r '.config.mainFile // (.name + ".php")' package.json)"
 }
 
 update_wp_tested_up_to() {
@@ -142,7 +141,8 @@ replace_version_patterns() {
     # Get only git-tracked files that contain x.x.x pattern
     git ls-files | grep -E '\.(php|js|json|txt|css|scss)$' | while read -r file; do
         # Skip specific files we handle elsewhere
-        if [[ "$file" == "package.json" || "$file" == "readme.txt" || "$file" == "changelog.txt" ]]; then
+        # tests/ is skipped: its fixtures use x.x.x as literal data.
+        if [[ "$file" == "package.json" || "$file" == "readme.txt" || "$file" == "changelog.txt" || "$file" == tests/* ]]; then
             continue
         fi
 
@@ -220,6 +220,10 @@ parse_args() {
 main() {
     # Get main plugin file for display
     local main_plugin_file=$(get_main_plugin_file)
+    if [[ ! -f "$main_plugin_file" ]]; then
+        print_error "Missing main plugin file: $main_plugin_file"
+        exit 1
+    fi
     print_status "SomewhereWarm Version Update Script - $main_plugin_file"
     echo
 
