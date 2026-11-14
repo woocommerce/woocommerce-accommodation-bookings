@@ -5,6 +5,16 @@ on:
     inputs:
       checkout-ref:
         type: string
+    outputs:
+      artifact-id:
+        description: Production ZIP artifact ID
+        value: ${{ jobs.build_project.outputs.artifact-id }}
+      source-sha:
+        description: Packaged source commit
+        value: ${{ jobs.build_project.outputs.source-sha }}
+      sha256:
+        description: Production ZIP SHA-256
+        value: ${{ jobs.build_project.outputs.sha256 }}
 
 permissions:
   contents: read
@@ -14,7 +24,10 @@ jobs:
         name: Build and upload
         runs-on: ubuntu-latest
         timeout-minutes: 5
-
+        outputs:
+          artifact-id: ${{ steps.upload.outputs.artifact-id }}
+          source-sha: ${{ steps.build.outputs.source-sha }}
+          sha256: ${{ steps.build.outputs.sha256 }}
         steps:
 
             - name: Checkout repository
@@ -39,16 +52,21 @@ jobs:
               run: composer install --prefer-dist --no-progress --no-interaction
 
             - name: Build
+              id: build
               env:
                 REQUESTED_SHA: ${{ inputs.checkout-ref }}
               run: |
+                  source_sha=$(git rev-parse HEAD)
                   if [[ -n "$REQUESTED_SHA" ]]; then
                       test "$(git rev-parse HEAD)" = "$REQUESTED_SHA"
                       test -z "$(git status --porcelain --untracked-files=no)"
                   fi
                   pnpm run build:zip
+                  checksum=$(sha256sum deploy/woocommerce-accommodation-bookings.zip)
+                  printf 'source-sha=%s\nsha256=%s\n' "$source_sha" "${checksum%% *}" >> "$GITHUB_OUTPUT"
 
             - name: Upload zip
+              id: upload
               uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
               with:
                 name: acceptance-test-zip
