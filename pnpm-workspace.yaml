@@ -20,3 +20,16 @@ minimumReleaseAgeExclude:
   - "@automattic/*"
   - "@woocommerce/*"
   - "@wordpress/*"
+
+# List every dependency with an install script. Allow one only when the build or tests fail without it.
+# @parcel/watcher and fs-ext-extra-prebuilt load their prebuilt binaries without running a script.
+strictDepBuilds: true
+allowBuilds:
+  "@parcel/watcher": false
+  "fs-ext-extra-prebuilt": false
+  "core-js": false
+  "core-js-pure": false
+  "unrs-resolver": false
+
+# The locked dependency graph uses registry packages throughout.
+blockExoticSubdeps: true
