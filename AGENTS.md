@@ -105,7 +105,7 @@ The Playwright suite runs against the tests site; logins `admin` / `password`, `
 
 ```bash
 pnpm run env:test:e2e:setup                        # Once: download the Bookings plugins, start, reset and seed the tests site (leaves it up)
-E2E_TARGET=product pnpm run env:test:e2e:run       # Inner loop: spec files matching a path or name
+E2E_TARGET=product pnpm run test:e2e       # Inner loop: spec files matching a path or name
 E2E_FILTER=@foundational pnpm run env:test:e2e:run # Tests whose title or tag matches (--grep)
 pnpm run env:test:e2e:run:ui                       # Same, with the browser visible
 pnpm run env:test:e2e:reset                        # Reset and re-seed just the DB
