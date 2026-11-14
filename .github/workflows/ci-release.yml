@@ -127,10 +127,16 @@ jobs:
 
     check-release-archive:
         name: Check release archive
-        needs: build_project
+        needs: [build_project, check-versions]
+        permissions:
+          contents: read
+          actions: read
         uses: ./.github/workflows/plugin-check.yml
         with:
-          release-artifact: acceptance-test-zip
+          artifact-id: ${{ needs.build_project.outputs.artifact-id }}
+          source-sha: ${{ needs.build_project.outputs.source-sha }}
+          expected-source-sha: ${{ needs.check-versions.outputs.commit }}
+          sha256: ${{ needs.build_project.outputs.sha256 }}
 
     php-tests:
         name: PHP
