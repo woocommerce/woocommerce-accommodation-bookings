@@ -14,11 +14,7 @@ An accommodations add-on for the WooCommerce Bookings extension.
 
 ### Prerequisites
 
-- [Node.js 24](https://nodejs.org) (managed via [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)): we recommend NVM to keep your Node version aligned with the development team. The repository contains an [`.nvmrc` file](.nvmrc) that pins the supported version.
-- [PHP 8.4](https://www.php.net/manual/en/install.php): use for PHPCS and QIT tooling to match CI. The plugin still supports PHP 7.4+.
-- [Composer](https://getcomposer.org/doc/00-intro.md): manages PHP dependencies and dev tooling.
-
-Docker is required to run the end-to-end test suite via `@wordpress/env`.
+Use the Node.js version in `.nvmrc`, the pnpm version in `package.json`, PHP 8.4 and Composer 2. Composer installs the WP-CLI used for translations; install `zip` and `unzip` for packaging. Start Docker before running wp-env. Install the Playwright browser with `pnpm run test:e2e:install`. The plugin header gives the minimum PHP version for customer sites.
 
 ### Quick start
 
@@ -26,34 +22,32 @@ Install the pnpm version pinned in `package.json`. With Corepack, run `corepack 
 
 ```bash
 nvm use
-pnpm install
-pnpm run build:dev
+pnpm install --frozen-lockfile
+composer install
+pnpm run build
 ```
 
 ## pnpm scripts
 
 ```bash
-# Development build
-pnpm run build:dev      # Install composer deps, build JS/CSS, generate language files
+# Build
+pnpm run build          # Build assets and translations from installed dependencies
+pnpm run build:zip      # Package the production ZIP
 
 # Watch mode
-pnpm run start:webpack  # Rebuild JS/CSS on file changes
-
-# Production build
-pnpm run build          # Production build + language files + zip
-pnpm run build:zip      # Same build, with the zip moved to deploy/ (used by the release CI)
+pnpm run watch:build    # Rebuild JS/CSS on file changes
 
 # Tests
-pnpm run env:start                                 # Start the wp-env development site (see AGENTS.md for ports and worktrees)
-pnpm run env:dev:seed                              # Seed it with a browsable store
-pnpm run env:test:e2e:setup                        # Download the Bookings plugins, start and seed the wp-env tests site
-pnpm run env:test:e2e                              # Full Playwright E2E pipeline: set up, run, stop
-E2E_FILTER=@foundational pnpm run env:test:e2e:run # Run @foundational-tagged tests on a set-up tests site
-pnpm run test:e2e-debug                            # Run E2E tests in debug mode
-pnpm run env:test:e2e:help                         # All E2E subcommands and knobs
+pnpm run env:dev:start                      # Start the wp-env development site (see AGENTS.md for ports and worktrees)
+pnpm run env:dev:seed                       # Seed it with a browsable store
+pnpm run test:e2e:setup                     # Download the Bookings plugins, start and seed the wp-env tests site
+pnpm run test:e2e:with-env                  # Full Playwright E2E pipeline: set up, run, stop
+E2E_FILTER=@foundational pnpm run test:e2e  # Run @foundational-tagged tests on a set-up tests site
+pnpm run test:e2e:debug                     # Run E2E tests in debug mode
+bash ./bin/acceptance.sh help               # All E2E subcommands and knobs
 
 # Quality
-pnpm run phpcompat      # Builds/checks release ZIP; run composer install afterward
+pnpm run phpcompat      # Builds and checks the release ZIP
 pnpm run lint:js        # Authored JavaScript and formatting (same as CI)
 pnpm run lint:style     # Stylelint on CSS/SCSS
 ```
@@ -64,8 +58,8 @@ Install PHP 7.4 or newer and Composer, then run these commands from a fresh chec
 
 ```bash
 composer install
-composer test
-composer test -- --filter testTimestampKeepsTheDate
+composer test:php
+composer test:php:unit -- --filter testTimestampKeepsTheDate
 ```
 
 This suite uses PHPUnit and WP_Mock. It does not need Docker, a database, WordPress,
@@ -77,7 +71,7 @@ To collect local line and branch coverage, install a PHP-compatible Xdebug drive
 and enable its coverage mode:
 
 ```bash
-XDEBUG_MODE=coverage composer test -- --path-coverage --coverage-html coverage/unit --coverage-text
+XDEBUG_MODE=coverage composer test:php:unit -- --path-coverage --coverage-html coverage/unit --coverage-text
 ```
 
 PCOV can collect line coverage with `php -d pcov.enabled=1 vendor/bin/phpunit
