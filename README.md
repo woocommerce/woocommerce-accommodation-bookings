@@ -14,7 +14,11 @@ An accommodations add-on for the WooCommerce Bookings extension.
 
 ### Prerequisites
 
-Use the Node.js version in `.nvmrc`, the pnpm version in `package.json`, PHP 8.4 and Composer 2. Composer installs the WP-CLI used for translations; install `zip` and `unzip` for packaging. Start Docker before running wp-env. Install the Playwright browser with `pnpm run test:e2e:install`. The plugin header gives the minimum PHP version for customer sites.
+Use the Node.js version in `.nvmrc`, the pnpm version in `package.json`, PHP 8.4 and Composer 2. Install WP-CLI 2.12.0 on `PATH` for translations and `zip` for packaging. Start Docker before running wp-env. The plugin header gives the minimum PHP version for customer sites.
+
+Install the Playwright browser with `pnpm run test:e2e:install`.
+
+Composer also installs the WP-CLI that `pnpm run makepot` uses, so WP-CLI on `PATH` is optional here; the E2E runner needs `unzip`.
 
 ### Quick start
 
@@ -40,11 +44,11 @@ pnpm run watch:build    # Rebuild JS/CSS on file changes
 # Tests
 pnpm run env:dev:start                      # Start the wp-env development site (see AGENTS.md for ports and worktrees)
 pnpm run env:dev:seed                       # Seed it with a browsable store
-pnpm run test:e2e:setup                     # Download the Bookings plugins, start and seed the wp-env tests site
+pnpm run test:e2e:setup                     # Package the plugin, download the Bookings plugins, start and seed the browser test site
 pnpm run test:e2e:with-env                  # Full Playwright E2E pipeline: set up, run, stop
-E2E_FILTER=@foundational pnpm run test:e2e  # Run @foundational-tagged tests on a set-up tests site
+E2E_FILTER=@foundational pnpm run test:e2e  # Run @foundational-tagged tests on a set-up site
 pnpm run test:e2e:debug                     # Run E2E tests in debug mode
-bash ./bin/acceptance.sh help               # All E2E subcommands and knobs
+bash ./bin/e2e.sh help                      # All E2E subcommands and knobs
 
 # Quality
 pnpm run phpcompat      # Builds and checks the release ZIP

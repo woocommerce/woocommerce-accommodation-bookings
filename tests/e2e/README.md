@@ -9,28 +9,28 @@ Install Node 24, locked pnpm/Composer dependencies, Docker and access to the pri
 Bookings releases (tested with 3.10.0). Then run, from the checkout root:
 
 ```bash
-pnpm run test:e2e:setup        # Once: download the Bookings plugins, start, reset and seed the wp-env tests site
-pnpm run test:e2e:reset
+pnpm run test:e2e:setup        # Once: package the plugin, download the Bookings plugins, start, reset and seed the browser test site
+pnpm run test:e2e:regression:seed
 pnpm run test:e2e:regression
 pnpm run test:e2e:regression --grep 'independent customers'
 ```
 
-Setup uses the wp-env tests site (`.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`,
-default 8889). `bin/acceptance.sh` finds its port, so worktrees on other ports need no
-`ACCOM_E2E_URL`. `pnpm run env:test:start` and `pnpm run env:test:e2e:seed` bring a stopped
-site back. With an existing **dedicated test store**, enable
+Setup uses the browser test site (`.wp-env.e2e.json`, written by `bin/e2e.sh` from
+`.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`, default 8889). `bin/e2e.sh` finds its port, so
+worktrees on other ports need no `WP_BASE_URL`. `bash ./bin/e2e.sh start` and `pnpm run env:test:e2e:seed`
+bring a stopped site back. With an existing **dedicated test store**, enable
 `ACCOM_E2E` in wp-config, activate WooCommerce/Bookings/Accommodation and Storefront,
 copy `fixtures/local.php` into `wp-content/mu-plugins/accommodation-e2e.php`, and
-run the reset command.
+run the seed command.
 The `warnings` check, which runs last, also needs `WP_DEBUG` and `WP_DEBUG_LOG` set
 to `true`, `WP_DEBUG_DISPLAY` set to `false`, and
 `tests/e2e/mu-plugins/e2e-log-marker.php` copied into that site's
 `wp-content/mu-plugins/`.
 Whenever `fixtures/local.php` changes, copy it into the test store again before running.
 For a native local WordPress server, set
-`ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `ACCOM_E2E_URL` before reset, and
+`ACCOM_E2E_WP_PATH=/absolute/path/to/wordpress` and `WP_BASE_URL` before the seed, and
 run Playwright directly (`ACCOM_E2E_REGRESSION=1 ./node_modules/.bin/playwright test --config tests/e2e/playwright.config.js`),
-since `test:e2e:regression` targets the wp-env tests site.
+since `test:e2e:regression` targets the browser test site.
 This switches only the WP-CLI transport; the browser and plugin paths are the same.
 
 Every new test resets records owned by these fixtures: their products, resources,
