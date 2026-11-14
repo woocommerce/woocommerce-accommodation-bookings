@@ -66,7 +66,7 @@ composer test:isolated   # tests/isolated: changelog formatter round-trip, no Wo
 
 `phpunit.xml` loads `tests/phpunit/bootstrap.php`, which boots WP_Mock, defines a stub `WC_VERSION`, and loads `WC_Accommodation_Booking`. This is an isolated suite, not a full WordPress/WooCommerce/Bookings integration environment. Use it for supported isolated cases and Playwright or manual integration checks for behavior involving Bookings products, dates, availability, cart, or orders.
 
-These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host, not on wp-env, so there is no `env:test:unit`.
+These suites and the integration suite (`tests/integration/README.md`, with its own WordPress install and database) run on the host by default, so there is no `env:test:unit`.
 
 ### wp-env
 
