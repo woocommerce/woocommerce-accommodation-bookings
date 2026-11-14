@@ -39,7 +39,7 @@ For an existing isolated WordPress test installation, set `WP_TESTS_DIR`, `WC_DI
 `BOOKINGS_DIR` and `ADDONS_DIR` to its actual paths and run
 `vendor/bin/phpunit -c phpunit-integration.xml`. For browser checks, the browser test
 site (`pnpm run test:e2e:setup`; see AGENTS.md) loads the same fixture factory through
-`pnpm run test:e2e:regression:seed`. CI runs `composer test:integration` through the shared PHPUnit
+`pnpm run test:e2e:regression:seed`. CI runs `composer test:php:integration` through the shared PHPUnit
 runner (`bin/install.sh` WordPress and WooCommerce, with Bookings and Product Add-Ons in `BOOKINGS_DIR`
 and `ADDONS_DIR`; `WC_DIR` falls back to `WC_CORE_DIR`).
 

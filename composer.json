@@ -33,7 +33,8 @@
             "@lint:phpcs:baseline"
         ],
         "lint:phpstan:baseline:update": "@phpstan --generate-baseline=phpstan-baseline.neon --allow-empty-baseline",
-        "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite",
+        "test:php:integration": "vendor/bin/phpunit -c phpunit-integration.xml --fail-on-empty-test-suite",
+        "test:integration": "@test:php:integration",
         "lint:php:syntax": [
             "Composer\\Config::disableProcessTimeout",
             "bash bin/phplint.sh"

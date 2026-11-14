@@ -86,14 +86,14 @@
         "legs": [
           {
             "php": "8.4",
-            "script": "test:integration",
+            "script": "test:php:integration",
             "coverage": true
           },
           {
             "php": "7.4",
             "wp": "minimum",
             "wc": "minimum",
-            "script": "test:integration",
+            "script": "test:php:integration",
             "defaultOnly": true
           }
         ]
@@ -198,6 +198,7 @@
     "test:php": "composer run test:php --",
     "test:php:unit": "composer run test:php:unit --",
     "test:php:isolated": "composer run test:php:isolated --",
+    "test:php:integration": "composer run test:php:integration --",
     "test:php:env": "bash ./bin/phpunit.sh",
     "watch:build": "wp-scripts start",
     "lint:js:fix": "pnpm run lint:js --fix",
@@ -212,6 +213,9 @@
     "test:e2e:reset": "bash ./bin/e2e.sh reset",
     "test:e2e:ui": "pnpm run test:e2e --ui",
     "test:e2e:debug": "pnpm run test:e2e --debug",
-    "test:e2e:report": "playwright show-report tests/e2e/test-results/playwright-report"
+    "test:e2e:report": "playwright show-report tests/e2e/test-results/playwright-report",
+    "check:php": "composer run check:php --",
+    "lint": "pnpm run check:php && pnpm run check:js && pnpm run lint:md:docs",
+    "test": "pnpm run test:php"
   }
 }
