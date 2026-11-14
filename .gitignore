@@ -10,6 +10,8 @@ Thumbs.db
 .vscode
 .wp-env.override.json
 .wp-env.test.override.json
+# Written by bin/link_plugins.js (bin/e2e.sh prepare).
+.wp-env.e2e.json
 /tests/_output/*
 !/tests/_output/.gitkeep
 sftp-config.json

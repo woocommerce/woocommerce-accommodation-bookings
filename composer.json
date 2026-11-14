@@ -4,15 +4,6 @@
     "homepage": "https://woocommerce.com/products/woocommerce-accommodation-bookings/",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
-    "archive": {
-        "exclude": [
-            "/vendor",
-            "/deploy",
-            "/.git",
-            "node_modules",
-            "!/assets"
-        ]
-    },
     "require-dev": {
         "woocommerce/woocommerce-sniffs": "1.0.1",
         "phpunit/phpunit": "^9.6",

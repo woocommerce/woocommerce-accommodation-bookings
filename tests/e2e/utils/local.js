@@ -1,10 +1,11 @@
 const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
 const { expect } = require( '@playwright/test' );
-// wp-env mounts the checkout under its folder name, so this also works in worktrees.
-const pluginDir = `wp-content/plugins/${ path.basename(
-	path.resolve( __dirname, '../../..' )
-) }`;
+// The browser test site mounts the packaged plugin under its slug (bin/e2e.sh); a native
+// WordPress site (ACCOM_E2E_WP_PATH) has the checkout under its folder name.
+const pluginDir = process.env.ACCOM_E2E_WP_PATH
+	? `wp-content/plugins/${ path.basename( path.resolve( __dirname, '../../..' ) ) }`
+	: 'wp-content/plugins/woocommerce-accommodation-bookings';
 function wp( ...args ) {
 	const native = process.env.ACCOM_E2E_WP_PATH;
 	if ( args[ 0 ] === 'eval-file' ) {
@@ -19,7 +20,7 @@ function wp( ...args ) {
 		native ? 'wp' : 'pnpm',
 		native
 			? [ `--path=${ native }`, ...args ]
-			: [ '--silent', 'run', 'wp-env:test', 'run', 'cli', 'wp', ...args ],
+			: [ '--silent', 'run', 'wp-env:e2e', 'run', 'cli', 'wp', ...args ],
 		{
 			cwd: path.resolve( __dirname, '../../..' ),
 			encoding: 'utf8',

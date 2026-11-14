@@ -65,7 +65,7 @@ export default [
 		},
 	},
 	{
-		files: [ '*.js', '*.mjs', 'tests/e2e/**/*.js' ],
+		files: [ '*.js', '*.mjs', 'bin/**/*.js', 'tests/e2e/**/*.js' ],
 		languageOptions: {
 			sourceType: 'commonjs',
 			globals: {
@@ -82,7 +82,7 @@ export default [
 			},
 		},
 		rules: {
-			// Node configurations and Playwright helpers use CommonJS loaders.
+			// Node configurations, scripts and Playwright helpers use CommonJS loaders.
 			'@typescript-eslint/no-require-imports': 'off',
 		},
 	},
