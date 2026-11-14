@@ -8,19 +8,5 @@ if [[ ! -f vendor/autoload.php ]]; then
     exit 1
 fi
 
-install_path=$(pnpm --silent run wp-env:test status --json |
-    node -p 'JSON.parse(require("node:fs").readFileSync(0, "utf8")).installPath ?? ""')
-compose_file="$install_path/docker-compose.yml"
-if [[ -z "$install_path" || ! -f "$compose_file" ]]; then
-    echo "Start the tests site with pnpm run env:test:start first." >&2
-    exit 1
-fi
-compose=(docker compose -f "$compose_file")
-if [[ -z "$("${compose[@]}" ps -q --status running cli)" ]]; then
-    echo "Start the tests site with pnpm run env:test:start first." >&2
-    exit 1
-fi
-
-# Pass PHPUnit its own options and exit status directly, without wp-env parsing them.
-exec "${compose[@]}" exec -T -u "$(id -u):$(id -g)" -w "/var/www/html/wp-content/plugins/${PWD##*/}" \
-    cli php vendor/bin/phpunit -c phpunit.xml --fail-on-empty-test-suite "$@"
+exec pnpm run wp-env:test run cli --env-cwd="wp-content/plugins/${PWD##*/}" -- \
+    php vendor/bin/phpunit -c phpunit.xml --fail-on-empty-test-suite "$@"
