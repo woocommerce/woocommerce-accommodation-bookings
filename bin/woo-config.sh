@@ -131,7 +131,8 @@ config=$(jq -ce '
 			passEnv: ($unit | opt("passEnv"; [])),
 			legs: ($unit | opt("legs"; [
 				{ php: "7.4", wp: "latest", wc: "latest" },
-				{ php: "8.4", wp: "latest", wc: "latest", coverage: true }
+				{ php: "8.4", wp: "latest", wc: "latest", coverage: true },
+				{ php: "8.5", wp: "latest", wc: "latest" }
 			]))
 		},
 		integration: {
