@@ -47,53 +47,26 @@ jobs:
     needs: config
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(needs.config.outputs.json).pluginCheck.timeoutMinutes }}
-    env:
-      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).slug }}.zip
-      PLUGIN_DIR: ${{ fromJSON(needs.config.outputs.json).zip.root }}
-      MAIN_FILE: ${{ fromJSON(needs.config.outputs.json).mainFile }}
     steps:
-      - name: Require a candidate artifact ID
-        env:
-          ARTIFACT_ID: ${{ inputs.artifact-id }}
-        run: |
-          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
-            echo "::error::A single production candidate artifact ID is required."
-            exit 1
-          fi
-
-      - name: Download the production ZIP
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          artifact-ids: ${{ inputs.artifact-id }}
-          path: release-package
-
+      # Pinned for review. To bump: take `gh api repos/woocommerce/.github/commits/trunk --jq .sha`,
+      # review the verify-candidate-zip diff since this SHA, then update the SHA and date.
       - name: Verify and unpack the production ZIP
-        env:
-          ARTIFACT_ID: ${{ inputs.artifact-id }}
-          SOURCE_SHA: ${{ inputs.source-sha }}
-          EXPECTED_SOURCE_SHA: ${{ inputs.expected-source-sha }}
-          ZIP_SHA256: ${{ inputs.sha256 }}
-        run: |
-          if [[ -z "$EXPECTED_SOURCE_SHA" || "$SOURCE_SHA" != "$EXPECTED_SOURCE_SHA" ]]; then
-            echo "::error::Plugin Check candidate SHA does not match the requested source."
-            exit 1
-          fi
-          zip_file="release-package/$ZIP_NAME"
-          printf '%s  %s\n' "$ZIP_SHA256" "$zip_file" | sha256sum --check -
-          unzip -q "$zip_file" -d release-build
-          shopt -s dotglob nullglob
-          entries=(release-build/*)
-          if [[ ${#entries[@]} != 1 || ! -f "release-build/$PLUGIN_DIR/$MAIN_FILE" ]]; then
-            echo "::error::The production ZIP must contain the expected plugin directory and main file."
-            exit 1
-          fi
-          printf 'Plugin Check artifact %s, commit %s, SHA-256 %s.\n' \
-            "$ARTIFACT_ID" "$SOURCE_SHA" "$ZIP_SHA256" >> "$GITHUB_STEP_SUMMARY"
+        id: candidate
+        uses: woocommerce/.github/actions/verify-candidate-zip@b8284427f0dece122f22ff8170f83dd23120281f # trunk @ 2026-11-15
+        with:
+          artifact-id: ${{ inputs.artifact-id }}
+          source-sha: ${{ inputs.source-sha }}
+          expected-source-sha: ${{ inputs.expected-source-sha }}
+          sha256: ${{ inputs.sha256 }}
+          zip-name: ${{ fromJSON(needs.config.outputs.json).slug }}.zip
+          destination: release-build
+          root: ${{ fromJSON(needs.config.outputs.json).zip.root }}
+          main-file: ${{ fromJSON(needs.config.outputs.json).mainFile }}
 
       - name: Run plugin check
         uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
         with:
-          build-dir: release-build/${{ fromJSON(needs.config.outputs.json).zip.root }}
+          build-dir: ${{ steps.candidate.outputs.plugin-dir }}
           repo-token: ''
           exclude-checks: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.excludeChecks, fromJSON('"\n"')) }}
           exclude-directories: ${{ join(fromJSON(needs.config.outputs.json).pluginCheck.excludeDirectories, fromJSON('"\n"')) }}
