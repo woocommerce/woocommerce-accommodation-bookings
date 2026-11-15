@@ -283,6 +283,28 @@
 				}
 			}
 		},
+		"makepot": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"exclude": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": [],
+					"description": "Paths bin/makepot.sh skips (wp i18n make-pot --exclude), on top of the WP-CLI defaults such as node_modules and vendor."
+				},
+				"headers": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "string"
+					},
+					"default": {},
+					"description": "POT headers bin/makepot.sh sets (wp i18n make-pot --headers). Keys are written as given."
+				}
+			}
+		},
 		"integration": {
 			"type": "object",
 			"additionalProperties": false,
