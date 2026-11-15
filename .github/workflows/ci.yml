@@ -102,7 +102,7 @@ jobs:
 
     spelling:
       name: Spelling
-      uses: ./.github/workflows/spell-check.yml
+      uses: woocommerce/.github/.github/workflows/plugin-spell-check.yml@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
     setup:
       name: Setup environments
