@@ -18,281 +18,38 @@ permissions:
 
 jobs:
 
-    # Detect which kinds of files changed so each check runs only when its
-    # inputs change. A workflow change counts as every kind of change, so CI
-    # edits exercise the whole pipeline. The patterns are the repository's
-    # .github/paths-filter.yml and .github/product-filter.yml.
-    changes:
-      name: Detect changes
-      runs-on: ubuntu-latest
-      timeout-minutes: 5
+    # Change detection, lint, PHPStan, PHPUnit, the production ZIP, Plugin Check and E2E, each
+    # gated on config.woo and on the files that changed (.github/paths-filter.yml and
+    # .github/product-filter.yml). Its `Check results` job fails when an applicable check did
+    # not pass, and on drafts.
+    ci:
+      name: CI
       permissions:
         contents: read
-        pull-requests: read
-      outputs:
-        php: ${{ steps.categories.outputs.php == 'true' || steps.categories.outputs.workflows == 'true' }}
-        frontend: ${{ steps.categories.outputs.frontend == 'true' || steps.categories.outputs.workflows == 'true' }}
-        docs: ${{ steps.categories.outputs.docs == 'true' || steps.categories.outputs.workflows == 'true' }}
-        product: ${{ steps.product.outputs.product == 'true' || steps.categories.outputs.workflows == 'true' }}
-        workflows: ${{ steps.categories.outputs.workflows }}
-      steps:
-        - name: Checkout the filters
-          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          with:
-            persist-credentials: false
-            sparse-checkout: .github
-        # Note: paths-filter uses picomatch, so markdown is matched with
-        # '**/*.md', not GitHub's native '**.md'.
-        - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-          id: categories
-          with:
-            filters: .github/paths-filter.yml
-        - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-          id: product
-          with:
-            # A file must satisfy EVERY pattern to count as a product change.
-            # Without this the action ORs them ('some', the default), so '**'
-            # matches on its own and every '!' negation is dead code.
-            predicate-quantifier: 'every'
-            filters: .github/product-filter.yml
-
-    # The plugin's capabilities and settings: package.json config.woo with defaults.
-    config:
-      name: Read plugin metadata
-      runs-on: ubuntu-latest
-      timeout-minutes: 5
-      outputs:
-        json: ${{ steps.config.outputs.json }}
-      steps:
-        - name: Read config.woo
-          id: config
-          uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-
-    extract-values:
-      name: Parse Commit Message
-      runs-on: ubuntu-latest
-      timeout-minutes: 5
-      outputs:
-        WC_VERSION: ${{ steps.extract-commit-values.outputs.WC_VERSION }}
-        WP_VERSION: ${{ steps.extract-commit-values.outputs.WP_VERSION }}
-        PHP_VERSION: ${{ steps.extract-commit-values.outputs.PHP_VERSION }}
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          with:
-            ref: ${{ github.event.pull_request.head.sha }}
-            persist-credentials: false
-        # Empty values keep each suite's default versions.
-        - name: Extract values from commit message
-          id: extract-commit-values
-          run: |
-            commit_message=$(git show -s --format=%s)
-            echo "$commit_message"
-            wc_version=$(node ./bin/parse-commit-message-args.js "$commit_message" "wc-version" "__default__")
-            wp_version=$(node ./bin/parse-commit-message-args.js "$commit_message" "wp-version" "__default__")
-            php_version=$(node ./bin/parse-commit-message-args.js "$commit_message" "php-version" "__default__")
-            [ "$wc_version" = "__default__" ] && wc_version=""
-            [ "$wp_version" = "__default__" ] && wp_version=""
-            [ "$php_version" = "__default__" ] && php_version=""
-            {
-              echo "WC_VERSION=$wc_version"
-              echo "WP_VERSION=$wp_version"
-              echo "PHP_VERSION=$php_version"
-            } | tee -a "$GITHUB_OUTPUT"
-
-    spelling:
-      name: Spelling
-      uses: woocommerce/.github/.github/workflows/plugin-spell-check.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-
-    php-lint:
-      name: PHP
-      needs: changes
-      if: ${{ needs.changes.outputs.php == 'true' }}
-      uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-
-    phpstan:
-      name: PHPStan
-      needs: changes
-      if: ${{ needs.changes.outputs.php == 'true' }}
-      uses: woocommerce/.github/.github/workflows/plugin-phpstan.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-      secrets:
-        ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
-
-    js-lint:
-      name: JS Linting
-      needs: [changes, config]
-      if: ${{ fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }}
-      permissions:
-        contents: read
+        actions: read
         checks: write
         pull-requests: read
-      uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-      with:
-        frontend: ${{ needs.changes.outputs.frontend == 'true' }}
-        docs: ${{ needs.changes.outputs.docs == 'true' }}
-
-    actionlint:
-      name: Workflow lint
-      needs: changes
-      if: ${{ needs.changes.outputs.workflows == 'true' }}
-      runs-on: ubuntu-latest
-      timeout-minutes: 5
-      permissions:
-        contents: read
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-          with:
-            persist-credentials: false
-
-        - name: Lint workflows
-          uses: woocommerce/.github/actions/actionlint@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-
-    # The jobs below run only for ready-for-review PRs.
-
-    plugin-check:
-      name: Plugin Check
-      needs: [changes, config, build_project]
-      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && fromJSON(needs.config.outputs.json).capabilities.pluginCheck }}
-      permissions:
-        contents: read
-        actions: read
-      uses: woocommerce/.github/.github/workflows/plugin-check.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-      with:
-        artifact-id: ${{ needs.build_project.outputs.artifact-id }}
-        source-sha: ${{ needs.build_project.outputs.source-sha }}
-        expected-source-sha: ${{ github.sha }}
-        sha256: ${{ needs.build_project.outputs.sha256 }}
-
-    php-tests:
-      name: PHP
-      needs: [changes, config, extract-values]
-      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.phpunit }}
-      uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-      with:
-        wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
-        wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
-        php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
-
-    # config.woo.pullRequests.privatePlugins: the suite needs private plugins in every run, so
-    # same-repository pull requests download them (Dependabot needs ORG_DOWNLOADS as a Dependabot
-    # secret) and fork pull requests, which never receive secrets, skip it with a warning below.
-    integration-tests:
-      name: PHP integration
-      needs: [changes, config, extract-values]
-      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name == github.repository }}
-      uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-      with:
-        suite: integration
-        wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
-        wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
-        php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
-        trusted-plugins: true
+      uses: woocommerce/.github/.github/workflows/plugin-pr-ci.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
       secrets:
         ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-    build_project:
-      name: Package
-      needs: changes
-      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
-      uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-
-    # Like integration-tests above for config.woo.pullRequests.privatePlugins.
-    e2e-tests:
-      name: E2E tests
-      needs: [changes, config, extract-values, build_project]
-      if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && fromJSON(needs.config.outputs.json).capabilities.e2e && (!fromJSON(needs.config.outputs.json).pullRequests.privatePlugins || github.event.pull_request.head.repo.full_name == github.repository) }}
-      permissions:
-        contents: read
-        actions: read
-      uses: woocommerce/.github/.github/workflows/plugin-e2e.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-      with:
-        artifact-id: ${{ needs.build_project.outputs.artifact-id }}
-        source-sha: ${{ needs.build_project.outputs.source-sha }}
-        sha256: ${{ needs.build_project.outputs.sha256 }}
-        wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
-        wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
-        php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
-        trusted-plugins: ${{ fromJSON(needs.config.outputs.json).pullRequests.privatePlugins }}
-      secrets:
-        ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
-
-    # The single status that branch protection requires. It fails when any
-    # applicable check failed, was cancelled, is missing or was skipped
-    # unexpectedly, and always fails on drafts so a draft-era result can never
-    # satisfy branch protection once the PR is ready for review.
+    # The single status that branch protection requires. It passes only when the shared
+    # workflow succeeded, so a failed, cancelled or draft-era run never satisfies it.
     required:
       name: Required checks
       if: ${{ always() }}
-      needs: [changes, config, extract-values, spelling, php-lint, phpstan, js-lint, actionlint, plugin-check, php-tests, integration-tests, build_project, e2e-tests]
+      needs: ci
       runs-on: ubuntu-latest
       timeout-minutes: 5
       permissions: {}
       env:
-        CI_DRAFT: ${{ github.event.pull_request.draft }}
-        CI_RESULTS: ${{ toJSON(needs) }}
-        CI_EXPECTED: >-
-          {
-            "changes": true,
-            "config": true,
-            "extract-values": true,
-            "spelling": true,
-            "php-lint": ${{ needs.changes.outputs.php == 'true' }},
-            "phpstan": ${{ needs.changes.outputs.php == 'true' }},
-            "js-lint": ${{ needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }},
-            "actionlint": ${{ needs.changes.outputs.workflows == 'true' }},
-            "plugin-check": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.pluginCheck }},
-            "php-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.phpunit }},
-            "integration-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name == github.repository }},
-            "build_project": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
-            "e2e-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.e2e && (!fromJSON(needs.config.outputs.json).pullRequests.privatePlugins || github.event.pull_request.head.repo.full_name == github.repository) }}
-          }
-        # Checks that need private plugins (config.woo.pullRequests.privatePlugins) and are skipped
-        # for fork pull requests; reviewers run them from a branch in this repository.
-        CI_FORK_SKIPPED: >-
-          {
-            "integration-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name != github.repository }},
-            "e2e-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.e2e && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name != github.repository }}
-          }
+        CI_RESULT: ${{ needs.ci.result }}
       steps:
-        - name: Check required results
+        - name: Check the CI result
           run: |
-            node <<'NODE'
-            const results = JSON.parse(process.env.CI_RESULTS);
-            const expected = JSON.parse(process.env.CI_EXPECTED);
-            let failed = false;
-            for (const job of new Set([...Object.keys(expected), ...Object.keys(results)])) {
-              const result = results[job]?.result;
-              const passed = Object.hasOwn(expected, job) &&
-                (result === 'success' || (result === 'skipped' && expected[job] === false));
-              console.log(`${job}: ${result || 'missing'}${passed ? '' : ' (required check failed)'}`);
-              failed ||= !passed;
-            }
-            for (const [job, skipped] of Object.entries(JSON.parse(process.env.CI_FORK_SKIPPED))) {
-              if (skipped) {
-                console.log(`::warning title=Skipped for fork PR::${job} needs private plugin downloads, which fork PRs cannot access. Run it from a branch in this repository before merging.`);
-              }
-            }
-            if (process.env.CI_DRAFT === 'true') {
-              console.log('::error::Draft PR: Plugin Check, PHP tests, the package build and E2E tests run once the PR is ready for review.');
-              failed = true;
-            }
-            process.exitCode = failed ? 1 : 0;
-            NODE
-
-    notify:
-      # Report the same aggregate result that branch protection uses.
-      if: ${{ !cancelled() && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-      needs: required
-      name: Notify Slack
-      runs-on: ubuntu-latest
-      timeout-minutes: 5
-      permissions: {}
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        CI_STATUS: ${{ needs.required.result }}
-      steps:
-        - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-          with:
-            status: ${{ env.CI_STATUS }}
-            message: "Workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> in PR <{{refUrl}}|{{ref}}> finished with status: ${{ env.CI_STATUS }}."
+            echo "CI: $CI_RESULT"
+            if [[ "$CI_RESULT" != 'success' ]]; then
+              echo "::error::CI did not pass ($CI_RESULT). Its CI / Check results job lists each check."
+              exit 1
+            fi
