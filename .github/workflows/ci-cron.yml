@@ -39,7 +39,7 @@ jobs:
           pull-requests: read
         name: JS Linting
         needs: config
-        uses: ./.github/workflows/run-linting.yml
+        uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # config.woo.phpunit.scheduledWc (for example `trunk`) replaces the WooCommerce version here,
     # so a core change that breaks the plugin shows up before it ships.
