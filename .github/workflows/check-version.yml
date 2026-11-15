@@ -29,7 +29,7 @@ jobs:
         run: |
           # git runs on its own line so a failed comparison fails the check, and the
           # file names stay in shell variables, never in workflow expression syntax.
-          FILES=$(git diff --name-only --diff-filter=ACM origin/trunk...HEAD -- '*.php')
+          FILES=$(git -c core.quotePath=false diff --name-only --diff-filter=ACM origin/trunk...HEAD -- '*.php')
           if [ -z "$FILES" ]; then
             echo "✅ No PHP files changed. Skipping validation."
             exit 0
