@@ -102,7 +102,6 @@ jobs:
               uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
               with:
                 php-version: '8.4'
-                github-token: ${{ github.token }}
 
             - name: Bump versions
               run: |
