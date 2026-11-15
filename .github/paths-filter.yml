@@ -17,6 +17,9 @@ php:
   - 'tests/isolated/**'
   # config.woo in package.json declares the PHP lint, PHPUnit and integration legs.
   - 'package.json'
+  # The reader and its schema turn config.woo into those jobs.
+  - 'bin/woo-config.sh'
+  - 'bin/woo-config.schema.json'
 frontend:
   - '**/*.{js,jsx,ts,tsx,mjs,cjs,scss,css}'
   - 'package.json'
