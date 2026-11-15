@@ -5,6 +5,3 @@ paths:
   .github/workflows/ci-cron.yml:
     ignore:
       - 'unknown permission scope "vulnerability-alerts"'
-  .github/workflows/run-audit.yml:
-    ignore:
-      - 'unknown permission scope "vulnerability-alerts"'

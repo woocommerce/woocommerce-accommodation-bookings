@@ -133,7 +133,7 @@ jobs:
         name: Dependency advisories
         permissions:
             vulnerability-alerts: read
-        uses: ./.github/workflows/run-audit.yml
+        uses: woocommerce/.github/.github/workflows/plugin-audit.yml@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
     handle-success:
         if: ${{ !failure() && !cancelled() }}
