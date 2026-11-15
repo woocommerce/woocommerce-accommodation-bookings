@@ -99,11 +99,10 @@ jobs:
                 echo "url=https://github.com/${{ github.repository }}/milestone/${MILESTONE_NUMBER}?closed=1" >> $GITHUB_OUTPUT
 
             - name: Set up PHP
-              uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+              uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
               with:
                 php-version: '8.4'
-                coverage: none
-                tools: composer
+                github-token: ${{ github.token }}
 
             - name: Bump versions
               run: |

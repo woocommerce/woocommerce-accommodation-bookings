@@ -178,32 +178,18 @@ jobs:
           persist-credentials: false
 
       # Hook-provisioned legs may build assets or start wp-env (bin/hooks/php-tests-provision.sh
-      # runs `pnpm install` itself).
-      - name: Set up pnpm
-        if: matrix.provision == 'hook' && fromJSON(needs.config.outputs.json).capabilities.js
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-
-      - name: Setup node version
-        if: matrix.provision == 'hook' && fromJSON(needs.config.outputs.json).capabilities.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      # runs `pnpm install` itself), so they also get Node.js, and WP-CLI.
+      - name: Set up PHP, the Composer cache and Node.js
+        uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
         with:
-          node-version-file: '.nvmrc'
-          cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
-          package-manager-cache: ${{ inputs.checkout-ref == '' }}
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
-        with:
+          node: ${{ matrix.provision == 'hook' && fromJSON(needs.config.outputs.json).capabilities.js }}
+          node-cache: ${{ inputs.checkout-ref == '' }}
           php-version: ${{ matrix.php }}
-          coverage: ${{ matrix.coverage && 'pcov' || 'none' }}
+          php-coverage: ${{ matrix.coverage && 'pcov' || 'none' }}
           # Without pcov.directory, pcov only instruments src/, lib/ or app/ when one of them exists.
-          ini-values: ${{ fromJSON(needs.config.outputs.json).phpunit.ini != '' && format('{0}, pcov.directory=.', fromJSON(needs.config.outputs.json).phpunit.ini) || 'pcov.directory=.' }}
-          # WP-CLI for hook-provisioned legs.
-          tools: composer, wp-cli
-          # Pass an empty token so setup-php doesn't persist GITHUB_TOKEN to Composer's
-          # config. Composer rejects the new GITHUB_TOKEN token format.
-          # See: https://github.com/composer/composer/issues/12849
-          github-token: ''
+          php-ini-values: ${{ fromJSON(needs.config.outputs.json).phpunit.ini != '' && format('{0}, pcov.directory=.', fromJSON(needs.config.outputs.json).phpunit.ini) || 'pcov.directory=.' }}
+          php-tools: composer, wp-cli
+          composer-cache: ${{ inputs.checkout-ref == '' }}
 
       - name: Install Subversion
         run: |
@@ -214,18 +200,6 @@ jobs:
         run: |
           sudo systemctl start mysql.service
           mysql -V
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
-
-      - name: Cache composer dependencies
-        if: inputs.checkout-ref == ''
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
         run: |
