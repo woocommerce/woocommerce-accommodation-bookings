@@ -21,6 +21,13 @@
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings",
     "woo": {
+      "makepot": {
+        "exclude": [
+          "tests",
+          "src",
+          "deploy"
+        ]
+      },
       "productName": "Accommodation Bookings",
       "capabilities": {
         "js": true,
@@ -160,7 +167,7 @@
     "build": "pnpm run build:webpack && pnpm run makepot",
     "build:zip": "bash ./bin/build-zip.sh",
     "build:webpack": "wp-scripts build",
-    "makepot": "slug=$(bash bin/woo-config.sh .slug) && WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --slug=$slug --exclude=tests,src,deploy",
+    "makepot": "bash bin/makepot.sh",
     "phpcompat": "bash bin/phpcompat.sh",
     "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",

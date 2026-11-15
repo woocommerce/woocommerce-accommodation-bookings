@@ -74,6 +74,7 @@ config=$(jq -ce '
 	| ($c | opt("phpunit"; {})) as $unit
 	| ($c | opt("release"; {})) as $rel
 	| ($c | opt("phpLint"; {})) as $lint
+	| ($c | opt("makepot"; {})) as $pot
 	| {
 		slug: $name,
 		version: .version,
@@ -110,6 +111,10 @@ config=$(jq -ce '
 		phpLint: {
 			php: ($lint | opt("php"; [ "8.4" ])),
 			isolatedPhp: ($lint | opt("isolatedPhp"; [ "8.4" ]))
+		},
+		makepot: {
+			exclude: ($pot | opt("exclude"; [])),
+			headers: ($pot | opt("headers"; {}))
 		},
 		qit: {
 			extension: ($qit | opt("extension"; $name)),
