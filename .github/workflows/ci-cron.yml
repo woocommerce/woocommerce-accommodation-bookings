@@ -123,7 +123,7 @@ jobs:
           test-security: ${{ 'true' }}
           test-phpcompatibility: ${{ 'true' }}
           test-validation: ${{ 'true' }}
-          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (phpstan.yml) is the gate.
+          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (the shared plugin-phpstan.yml) is the gate.
 
     audit:
         name: Dependency advisories
