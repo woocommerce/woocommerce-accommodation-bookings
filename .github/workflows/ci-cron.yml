@@ -71,7 +71,7 @@ jobs:
         if: ${{ !failure() && !cancelled() }}
         name: Package
         needs: [config, php-tests, integration-tests]
-        uses: ./.github/workflows/build-upload-zip.yml
+        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           qit-derivative: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
 

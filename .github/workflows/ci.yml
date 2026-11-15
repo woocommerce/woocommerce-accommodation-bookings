@@ -195,7 +195,7 @@ jobs:
       name: Package
       needs: changes
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
-      uses: ./.github/workflows/build-upload-zip.yml
+      uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # Like integration-tests above for config.woo.pullRequests.privatePlugins.
     e2e-tests:

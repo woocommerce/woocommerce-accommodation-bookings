@@ -103,7 +103,7 @@ jobs:
         if: ${{ (inputs.qit-tests != 'None' && fromJSON(needs.config.outputs.json).capabilities.qit) || (fromJSON(needs.config.outputs.json).capabilities.e2e && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'E2E'))) || (fromJSON(needs.config.outputs.json).capabilities.pluginCheck && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Plugin Check'))) }}
         name: Package
         needs: config
-        uses: ./.github/workflows/build-upload-zip.yml
+        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           qit-derivative: ${{ contains(inputs.qit-tests, 'Security') || contains(inputs.qit-tests, 'Compatibility') }}
 
