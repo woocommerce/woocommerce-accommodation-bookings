@@ -31,7 +31,7 @@
 				"jsTests": {
 					"type": "boolean",
 					"default": false,
-					"description": "pnpm run test:js in run-linting.yml."
+					"description": "pnpm run test:js in the shared plugin-js-lint.yml workflow."
 				},
 				"buildTests": {
 					"type": "boolean",
@@ -41,22 +41,22 @@
 				"e2e": {
 					"type": "boolean",
 					"default": false,
-					"description": "Playwright through bin/e2e.sh and run-e2e.yml."
+					"description": "Playwright through bin/e2e.sh and the shared plugin-e2e.yml workflow."
 				},
 				"phpunit": {
 					"type": "boolean",
 					"default": true,
-					"description": "run-unit-tests.yml with phpunit.legs."
+					"description": "The shared plugin-phpunit.yml workflow with phpunit.legs."
 				},
 				"isolated": {
 					"type": "boolean",
 					"default": false,
-					"description": "composer run test:php:isolated in php-lint.yml."
+					"description": "composer run test:php:isolated in the shared plugin-php-lint.yml workflow."
 				},
 				"integration": {
 					"type": "boolean",
 					"default": false,
-					"description": "run-integration-tests.yml with integration.legs (scheduled and manual runs)."
+					"description": "The shared plugin-phpunit.yml workflow with integration.legs (scheduled and manual runs)."
 				},
 				"qit": {
 					"type": "boolean",
@@ -269,7 +269,7 @@
 					"default": [
 						"8.4"
 					],
-					"description": "PHP versions of the php-lint.yml coding standards job (composer check:php, bin/hooks/php-lint.sh)."
+					"description": "PHP versions of the plugin-php-lint.yml coding standards job (composer check:php, bin/hooks/php-lint.sh)."
 				},
 				"isolatedPhp": {
 					"type": "array",
@@ -279,7 +279,7 @@
 					"default": [
 						"8.4"
 					],
-					"description": "PHP versions of the php-lint.yml isolated tests job (capabilities.isolated)."
+					"description": "PHP versions of the plugin-php-lint.yml isolated tests job (capabilities.isolated)."
 				}
 			}
 		},

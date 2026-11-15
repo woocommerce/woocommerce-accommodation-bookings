@@ -39,15 +39,10 @@ jobs:
               id: export
               run: echo "version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
 
-    setup:
-        name: Setup environments
-        needs: check-versions
-        uses: ./.github/workflows/setup-env.yml
-
     php-lint:
         name: PHP
-        needs: setup
-        uses: ./.github/workflows/php-lint.yml
+        needs: check-versions
+        uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     js-lint:
         if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.js }}
@@ -56,8 +51,8 @@ jobs:
           checks: write
           pull-requests: read
         name: JS Linting
-        needs: [check-versions, setup]
-        uses: ./.github/workflows/run-linting.yml
+        needs: check-versions
+        uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     handle-success:
         if: ${{ !failure() && !cancelled() && needs.php-lint.result == 'success' }}

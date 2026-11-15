@@ -19,19 +19,14 @@ jobs:
         steps:
           - name: Read config.woo
             id: config
-            uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+            uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # Plugins without QIT (config.woo.capabilities.qit false) skip every job below.
-    setup:
-        if: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
-        name: Setup environments
-        needs: config
-        uses: ./.github/workflows/setup-env.yml
-
     build_project:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
         name: Package
-        needs: [config, setup]
-        uses: ./.github/workflows/build-upload-zip.yml
+        needs: config
+        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           qit-derivative: true
 
@@ -54,7 +49,7 @@ jobs:
           test-security: ${{ 'true' }}
           test-phpcompatibility: ${{ 'true' }}
           test-validation: ${{ 'true' }}
-          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (phpstan.yml) is the gate.
+          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (the shared plugin-phpstan.yml) is the gate.
           test-woo-api: ${{ 'true' }}
           test-woo-e2e: ${{ 'true' }}
           test-malware: ${{ 'true' }}

@@ -19,20 +19,15 @@ jobs:
         steps:
           - name: Read config.woo
             id: config
-            uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
-
-    setup:
-        name: Setup environments
-        uses: ./.github/workflows/setup-env.yml
+            uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     php-lint:
         name: PHP
-        needs: setup
-        uses: ./.github/workflows/php-lint.yml
+        uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     phpstan:
         name: PHPStan
-        uses: ./.github/workflows/phpstan.yml
+        uses: woocommerce/.github/.github/workflows/plugin-phpstan.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         secrets:
           ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
@@ -43,8 +38,8 @@ jobs:
           checks: write
           pull-requests: read
         name: JS Linting
-        needs: [config, setup]
-        uses: ./.github/workflows/run-linting.yml
+        needs: config
+        uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # config.woo.phpunit.scheduledWc (for example `trunk`) replaces the WooCommerce version here,
     # so a core change that breaks the plugin shows up before it ships.
@@ -52,7 +47,7 @@ jobs:
         if: ${{ !failure() && !cancelled() && fromJSON(needs.config.outputs.json).capabilities.phpunit }}
         name: PHP
         needs: [config, php-lint, js-lint]
-        uses: ./.github/workflows/run-unit-tests.yml
+        uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           wc-version: ${{ fromJSON(needs.config.outputs.json).phpunit.scheduledWc }}
           trusted-plugins: true
@@ -64,8 +59,9 @@ jobs:
         if: ${{ !failure() && !cancelled() && fromJSON(needs.config.outputs.json).capabilities.integration }}
         name: PHP integration
         needs: [config, php-lint, js-lint]
-        uses: ./.github/workflows/run-integration-tests.yml
+        uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
+          suite: integration
           trusted-plugins: true
           scheduled: true
         secrets:
@@ -75,7 +71,7 @@ jobs:
         if: ${{ !failure() && !cancelled() }}
         name: Package
         needs: [config, php-tests, integration-tests]
-        uses: ./.github/workflows/build-upload-zip.yml
+        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           qit-derivative: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
 
@@ -86,7 +82,7 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: ./.github/workflows/run-plugin-check.yml
+        uses: woocommerce/.github/.github/workflows/plugin-check.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           artifact-id: ${{ needs.build_project.outputs.artifact-id }}
           source-sha: ${{ needs.build_project.outputs.source-sha }}
@@ -100,7 +96,7 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: ./.github/workflows/run-e2e.yml
+        uses: woocommerce/.github/.github/workflows/plugin-e2e.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           artifact-id: ${{ needs.build_project.outputs.artifact-id }}
           source-sha: ${{ needs.build_project.outputs.source-sha }}
@@ -127,13 +123,13 @@ jobs:
           test-security: ${{ 'true' }}
           test-phpcompatibility: ${{ 'true' }}
           test-validation: ${{ 'true' }}
-          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (phpstan.yml) is the gate.
+          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (the shared plugin-phpstan.yml) is the gate.
 
     audit:
         name: Dependency advisories
         permissions:
             vulnerability-alerts: read
-        uses: woocommerce/.github/.github/workflows/plugin-audit.yml@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-audit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     handle-success:
         if: ${{ !failure() && !cancelled() }}

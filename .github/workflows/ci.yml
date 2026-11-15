@@ -66,7 +66,7 @@ jobs:
       steps:
         - name: Read config.woo
           id: config
-          uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+          uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     extract-values:
       name: Parse Commit Message
@@ -102,37 +102,31 @@ jobs:
 
     spelling:
       name: Spelling
-      uses: woocommerce/.github/.github/workflows/plugin-spell-check.yml@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
-
-    setup:
-      name: Setup environments
-      needs: changes
-      if: ${{ needs.changes.outputs.php == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }}
-      uses: ./.github/workflows/setup-env.yml
+      uses: woocommerce/.github/.github/workflows/plugin-spell-check.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     php-lint:
       name: PHP
-      needs: [changes, setup]
+      needs: changes
       if: ${{ needs.changes.outputs.php == 'true' }}
-      uses: ./.github/workflows/php-lint.yml
+      uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     phpstan:
       name: PHPStan
       needs: changes
       if: ${{ needs.changes.outputs.php == 'true' }}
-      uses: ./.github/workflows/phpstan.yml
+      uses: woocommerce/.github/.github/workflows/plugin-phpstan.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       secrets:
         ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 
     js-lint:
       name: JS Linting
-      needs: [changes, config, setup]
+      needs: [changes, config]
       if: ${{ fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }}
       permissions:
         contents: read
         checks: write
         pull-requests: read
-      uses: ./.github/workflows/run-linting.yml
+      uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
         frontend: ${{ needs.changes.outputs.frontend == 'true' }}
         docs: ${{ needs.changes.outputs.docs == 'true' }}
@@ -152,7 +146,7 @@ jobs:
             persist-credentials: false
 
         - name: Lint workflows
-          uses: woocommerce/.github/actions/actionlint@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+          uses: woocommerce/.github/actions/actionlint@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # The jobs below run only for ready-for-review PRs.
 
@@ -163,7 +157,7 @@ jobs:
       permissions:
         contents: read
         actions: read
-      uses: ./.github/workflows/run-plugin-check.yml
+      uses: woocommerce/.github/.github/workflows/plugin-check.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
         artifact-id: ${{ needs.build_project.outputs.artifact-id }}
         source-sha: ${{ needs.build_project.outputs.source-sha }}
@@ -174,7 +168,7 @@ jobs:
       name: PHP
       needs: [changes, config, extract-values]
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.phpunit }}
-      uses: ./.github/workflows/run-unit-tests.yml
+      uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
         wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
         wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
@@ -187,8 +181,9 @@ jobs:
       name: PHP integration
       needs: [changes, config, extract-values]
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name == github.repository }}
-      uses: ./.github/workflows/run-integration-tests.yml
+      uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
+        suite: integration
         wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
         wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
         php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
@@ -200,7 +195,7 @@ jobs:
       name: Package
       needs: changes
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
-      uses: ./.github/workflows/build-upload-zip.yml
+      uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # Like integration-tests above for config.woo.pullRequests.privatePlugins.
     e2e-tests:
@@ -210,7 +205,7 @@ jobs:
       permissions:
         contents: read
         actions: read
-      uses: ./.github/workflows/run-e2e.yml
+      uses: woocommerce/.github/.github/workflows/plugin-e2e.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
         artifact-id: ${{ needs.build_project.outputs.artifact-id }}
         source-sha: ${{ needs.build_project.outputs.source-sha }}
@@ -229,7 +224,7 @@ jobs:
     required:
       name: Required checks
       if: ${{ always() }}
-      needs: [changes, config, extract-values, spelling, setup, php-lint, phpstan, js-lint, actionlint, plugin-check, php-tests, integration-tests, build_project, e2e-tests]
+      needs: [changes, config, extract-values, spelling, php-lint, phpstan, js-lint, actionlint, plugin-check, php-tests, integration-tests, build_project, e2e-tests]
       runs-on: ubuntu-latest
       timeout-minutes: 5
       permissions: {}
@@ -242,7 +237,6 @@ jobs:
             "config": true,
             "extract-values": true,
             "spelling": true,
-            "setup": ${{ needs.changes.outputs.php == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }},
             "php-lint": ${{ needs.changes.outputs.php == 'true' }},
             "phpstan": ${{ needs.changes.outputs.php == 'true' }},
             "js-lint": ${{ needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }},
