@@ -56,7 +56,7 @@ jobs:
             predicate-quantifier: 'every'
             filters: .github/product-filter.yml
 
-    # The plugin's capabilities and settings: package.json config.sww with defaults.
+    # The plugin's capabilities and settings: package.json config.woo with defaults.
     config:
       name: Read plugin metadata
       runs-on: ubuntu-latest
@@ -70,11 +70,12 @@ jobs:
             persist-credentials: false
             sparse-checkout: |
               package.json
-              bin/sww-config.sh
+              bin/woo-config.sh
+              bin/woo-config.schema.json
             sparse-checkout-cone-mode: false
-        - name: Read config.sww
+        - name: Read config.woo
           id: config
-          run: bash bin/sww-config.sh --github-output
+          run: bash bin/woo-config.sh --github-output
 
     extract-values:
       name: Parse Commit Message
@@ -197,7 +198,7 @@ jobs:
         wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
         php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
 
-    # config.sww.pullRequests.privatePlugins: the suite needs private plugins in every run, so
+    # config.woo.pullRequests.privatePlugins: the suite needs private plugins in every run, so
     # same-repository pull requests download them (Dependabot needs ORG_DOWNLOADS as a Dependabot
     # secret) and fork pull requests, which never receive secrets, skip it with a warning below.
     integration-tests:
@@ -219,7 +220,7 @@ jobs:
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }}
       uses: ./.github/workflows/build-upload-zip.yml
 
-    # Like integration-tests above for config.sww.pullRequests.privatePlugins.
+    # Like integration-tests above for config.woo.pullRequests.privatePlugins.
     e2e-tests:
       name: E2E tests
       needs: [changes, config, extract-values, build_project]
@@ -270,7 +271,7 @@ jobs:
             "build_project": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' }},
             "e2e-tests": ${{ github.event.pull_request.draft == false && needs.changes.outputs.product == 'true' && needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.e2e && (!fromJSON(needs.config.outputs.json).pullRequests.privatePlugins || github.event.pull_request.head.repo.full_name == github.repository) }}
           }
-        # Checks that need private plugins (config.sww.pullRequests.privatePlugins) and are skipped
+        # Checks that need private plugins (config.woo.pullRequests.privatePlugins) and are skipped
         # for fork pull requests; reviewers run them from a branch in this repository.
         CI_FORK_SKIPPED: >-
           {

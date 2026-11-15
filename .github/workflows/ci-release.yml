@@ -106,7 +106,7 @@ jobs:
             # Capabilities and the deploy target come from trunk's tooling metadata.
             - name: Read plugin metadata
               id: config
-              run: bash bin/sww-config.sh --github-output
+              run: bash bin/woo-config.sh --github-output
 
     php-lint:
         name: PHP
@@ -245,7 +245,7 @@ jobs:
               run: |
                 bash ./release-tooling/bin/release.sh
 
-    # config.sww.release.target "woocommerce.com": submit the released archive to the marketplace.
+    # config.woo.release.target "woocommerce.com": submit the released archive to the marketplace.
     submit-deployment:
         if: ${{ fromJSON(needs.check-versions.outputs.config).release.target == 'woocommerce.com' }}
         name: Submit to WooCommerce.com
@@ -331,10 +331,12 @@ jobs:
                 path: release-tooling
                 persist-credentials: false
 
+            # deploy.sh reads the product ID from the package.json in the working directory.
             - name: Wait for the marketplace to offer the release version
-              run: bash ./release-tooling/bin/deploy.sh confirm
+              working-directory: release-tooling
+              run: bash ./bin/deploy.sh confirm
 
-    # config.sww.release.target "wordpress.org": deploys to WordPress.org once config.sww.release.wpOrgSlug
+    # config.woo.release.target "wordpress.org": deploys to WordPress.org once config.woo.release.wpOrgSlug
     # is set. Without it, the job finishes after the artifact checks and the release ends at the
     # GitHub release created above.
     deploy-wporg:

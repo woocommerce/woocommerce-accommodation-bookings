@@ -1,0 +1,29 @@
+name: AI Code Review
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened]
+  issue_comment:
+    types: [created]
+
+# The shared workflow's review job needs these; it reviews same-repository pull requests only
+# and rejects pull requests from forks.
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # The shared workflow rejects other organizations, so a fork's own Actions skip it.
+    if: github.repository_owner == 'woocommerce'
+    # Pinned for review. To bump: take `gh api repos/woocommerce/.github/commits/trunk --jq .sha`,
+    # review the ai-code-review.yml diff since this SHA, then update the SHA and date.
+    uses: woocommerce/.github/.github/workflows/ai-code-review.yml@5902c4fb5a72aa9c6a7e2ee3d1400e92958a7048 # trunk @ 2026-10-06
+    secrets:
+      AI_CODE_REVIEW_ANTHROPIC_API_KEY: ${{ secrets.AI_CODE_REVIEW_ANTHROPIC_API_KEY }}
+      AI_REVIEW_TELEMETRY_TOKEN: ${{ secrets.AI_REVIEW_TELEMETRY_TOKEN }}
+      AI_REVIEW_SLACK_WEBHOOK_URL: ${{ secrets.AI_REVIEW_SLACK_WEBHOOK_URL }}

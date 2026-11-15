@@ -8,12 +8,10 @@
 # Usage: bash ./bin/e2e.sh [ prepare | start | setup | reset | run [playwright args] | with-env [playwright args] | help ]
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
-
-config=$(bash bin/sww-config.sh)
+config=$(bash "$(dirname "$0")/woo-config.sh")
 plugin_dir=$(jq -r .zip.root <<< "$config")
 main_file=$(jq -r '.mainFile | split("/") | last' <<< "$config")
-zip_name=$(jq -r .name <<< "$config")
+zip_name=$(jq -r .slug <<< "$config")
 subcommand=${1:-help}
 shift || true
 

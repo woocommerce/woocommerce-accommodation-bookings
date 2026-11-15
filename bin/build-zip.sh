@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
 #
-# Packages the plugin as deploy/<package.json name>.zip with one root folder, config.sww.zip.root
-# (default: the package.json name).
+# Packages the plugin as deploy/<slug>.zip with one root folder, config.woo.zip.root
+# (default: the slug).
 #
-# Usage: bash bin/build-zip.sh [<commit>]
-#   Without a commit: runs the config.sww.zip.build package script (default `build`; empty for
+# Usage: bash bin/build-zip.sh [<commit>], from the plugin root.
+#   Without a commit: runs the config.woo.zip.build package script (default `build`; empty for
 #   none), then packages the current checkout, uncommitted and untracked files included.
 #   With a commit: packages the files committed at it, for plugins without a build step.
 #
 # Steps: copy the source into a staging folder (never .git, node_modules, deploy or vendor),
-# install production Composer dependencies there when config.sww.zip.composerProduction is true,
+# install production Composer dependencies there when config.woo.zip.composerProduction is true,
 # run bin/hooks/build-zip-stage.sh <staging folder> when the repository has it, then zip the
-# staging folder without the paths that the exclude list (config.sww.zip.exclude, default
+# staging folder without the paths that the exclude list (config.woo.zip.exclude, default
 # exclude.lst) names. The exclude list has one `zip -x` wildcard per line, matched against
 # `<root>/<path>`; a leading `/` anchors a line at the plugin root, and `#` starts a comment.
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
 root=$PWD
 
-config=$(bash bin/sww-config.sh)
-name=$(jq -r .name <<< "$config")
+config=$(bash "$(dirname "$0")/woo-config.sh")
+name=$(jq -r .slug <<< "$config")
 plugin_dir=$(jq -r .zip.root <<< "$config")
 exclude=$(jq -r .zip.exclude <<< "$config")
 build=$(jq -r '.zip.build // ""' <<< "$config")
@@ -33,7 +32,7 @@ trap 'rm -rf -- "$work"' EXIT
 source_dir=$root
 if [[ -n "$ref" ]]; then
 	if [[ -n "$build" ]]; then
-		echo "Packaging a commit needs a plugin without a build step (config.sww.zip.build is \"$build\"). Check the commit out and run bash bin/build-zip.sh." >&2
+		echo "Packaging a commit needs a plugin without a build step (config.woo.zip.build is \"$build\"). Check the commit out and run bash bin/build-zip.sh." >&2
 		exit 1
 	fi
 	commit=$(git rev-parse --verify --end-of-options "$ref^{commit}")

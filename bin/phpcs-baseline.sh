@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOTDIR="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOTDIR"
-
 report="$(mktemp)"
 trap 'rm -f "$report"' EXIT
 status=0

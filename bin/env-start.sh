@@ -7,7 +7,10 @@
 # mount source into a directory, so create the file first.
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
+if [[ ! -f package.json ]]; then
+	echo 'No package.json here. Run this from the plugin root.' >&2
+	exit 1
+fi
 
 rmdir tests/_output/debug.log 2>/dev/null || true
 touch tests/_output/debug.log

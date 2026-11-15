@@ -20,7 +20,7 @@
   },
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings",
-    "sww": {
+    "woo": {
       "productName": "Accommodation Bookings",
       "capabilities": {
         "js": true,
@@ -86,14 +86,14 @@
         "legs": [
           {
             "php": "8.4",
-            "script": "test:integration",
+            "script": "test:php:integration",
             "coverage": true
           },
           {
             "php": "7.4",
             "wp": "minimum",
             "wc": "minimum",
-            "script": "test:integration",
+            "script": "test:php:integration",
             "defaultOnly": true
           }
         ]
@@ -160,7 +160,7 @@
     "build": "pnpm run build:webpack && pnpm run makepot",
     "build:zip": "bash ./bin/build-zip.sh",
     "build:webpack": "wp-scripts build",
-    "makepot": "WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --slug=$npm_package_name --exclude=tests,src,deploy",
+    "makepot": "slug=$(bash bin/woo-config.sh .slug) && WP_CLI_PHP_ARGS='-d memory_limit=2048M' ./vendor/bin/wp i18n make-pot . --slug=$slug --exclude=tests,src,deploy",
     "phpcompat": "bash bin/phpcompat.sh",
     "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",
@@ -198,6 +198,7 @@
     "test:php": "composer run test:php --",
     "test:php:unit": "composer run test:php:unit --",
     "test:php:isolated": "composer run test:php:isolated --",
+    "test:php:integration": "composer run test:php:integration --",
     "test:php:env": "bash ./bin/phpunit.sh",
     "watch:build": "wp-scripts start",
     "lint:js:fix": "pnpm run lint:js --fix",
@@ -212,6 +213,9 @@
     "test:e2e:reset": "bash ./bin/e2e.sh reset",
     "test:e2e:ui": "pnpm run test:e2e --ui",
     "test:e2e:debug": "pnpm run test:e2e --debug",
-    "test:e2e:report": "playwright show-report tests/e2e/test-results/playwright-report"
+    "test:e2e:report": "playwright show-report tests/e2e/test-results/playwright-report",
+    "check:php": "composer run check:php --",
+    "lint": "pnpm run check:php && pnpm run check:js && pnpm run lint:md:docs",
+    "test": "pnpm run test:php"
   }
 }

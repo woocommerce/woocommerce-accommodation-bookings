@@ -1,6 +1,6 @@
 name: PHP Integration Tests
 
-# The suite that loads other plugins (config.sww.integration.legs and the private plugins whose
+# The suite that loads other plugins (config.woo.integration.legs and the private plugins whose
 # `suites` list `integration`). It shares the PHPUnit runner with the unit suite.
 on:
   workflow_call:

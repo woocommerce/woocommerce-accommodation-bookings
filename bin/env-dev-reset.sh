@@ -6,7 +6,10 @@
 # would move a worktree's site back to the default port. Keep the port the site is running on.
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
+if [[ ! -f package.json ]]; then
+	echo 'No package.json here. Run this from the plugin root.' >&2
+	exit 1
+fi
 
 if [ -z "${WP_ENV_PORT:-}" ]; then
 	port=$(wp-env status --json 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).ports?.development || ""' 2>/dev/null || true)

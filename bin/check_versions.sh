@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# The main plugin file is package.json config.sww.mainFile, or the package.json name (the plugin slug) plus .php, never the checkout directory.
-MAIN_PLUGIN_FILE="$(bash "$(dirname "$0")/sww-config.sh" .mainFile)"
+# The main plugin file is package.json config.woo.mainFile, or the plugin slug plus .php, never the checkout directory.
+MAIN_PLUGIN_FILE="$(bash "$(dirname "$0")/woo-config.sh" .mainFile)"
 if [[ ! -f "$MAIN_PLUGIN_FILE" ]]; then
 	echo "Missing main plugin file: $MAIN_PLUGIN_FILE"
 	exit 1
@@ -16,7 +16,7 @@ UNDERLINE_STOP='\e[0m'
 # GET BASE PHP VERSIONS.
 PHP_HEADER_VERSION=$( awk '/\* *Version/ {print}' "$MAIN_PLUGIN_FILE" | sed 's/[^0-9.]*\([0-9.]*\).*/\1/' )
 PHP_IN_VERSION=$PHP_HEADER_VERSION
-# Every config.sww.versionPatterns entry (literal text with %s for the version, a leading ^
+# Every config.woo.versionPatterns entry (literal text with %s for the version, a leading ^
 # anchoring it at the start of a line) must carry the header version.
 while IFS=$'\t' read -r file pattern; do
 	anchored=false
@@ -42,7 +42,7 @@ while IFS=$'\t' read -r file pattern; do
 		echo "\"$pattern\" in $file has version '$found', the main file header has '$PHP_HEADER_VERSION'... Exiting with error."
 		exit 1
 	fi
-done < <(bash "$(dirname "$0")/sww-config.sh" '.versionPatterns[] | [.file, .pattern] | @tsv')
+done < <(bash "$(dirname "$0")/woo-config.sh" '.versionPatterns[] | [.file, .pattern] | @tsv')
 echo -e "${BLUE}- Main PHP file versions: OK${NC}"
 
 README_VERSION=$( awk '/Stable tag/ {print}' readme.txt | sed 's/[^0-9.]*\([0-9.]*[-dev]*\).*/\1/' )
@@ -61,8 +61,8 @@ else
 	echo -e "${BLUE}- Readme.txt version: OK${NC}"
 fi
 
-# WordPress.org reads the changelog from readme.txt (config.sww.release.readmeChangelog).
-if [[ "$(bash "$(dirname "$0")/sww-config.sh" .release.readmeChangelog)" == true ]]; then
+# WordPress.org reads the changelog from readme.txt (config.woo.release.readmeChangelog).
+if [[ "$(bash "$(dirname "$0")/woo-config.sh" .release.readmeChangelog)" == true ]]; then
 	README_CHANGELOG_EXIST=$( awk -v heading="= $PACKAGE_VERSION - " 'index($0, heading) == 1' readme.txt )
 	if [[ -z $README_CHANGELOG_EXIST ]]; then
 		echo "No readme.txt changelog entry found... Exiting with error."
@@ -77,8 +77,11 @@ if [[ -z $CHANGELOG_EXIST ]]; then
 	echo "No changelog entry found... Exiting with error."
 	exit 1
 else
-	date -d "$(echo $CHANGELOG_EXIST | awk '{print $4}')" +'%Y-%m-%d'
-	if [[ $? -ne 0 ]]; then
+	CHANGELOG_DATE=$(echo $CHANGELOG_EXIST | awk '{print $4}')
+	# A real YYYY-MM-DD date comes back unchanged from GNU date or from the BSD form (macOS).
+	# BSD date rolls an impossible date over, and GNU date reads an empty one as today.
+	PARSED_DATE=$(date -d "$CHANGELOG_DATE" +'%Y-%m-%d' 2> /dev/null || date -j -f '%Y-%m-%d' "$CHANGELOG_DATE" +'%Y-%m-%d' 2> /dev/null)
+	if [[ -z "$CHANGELOG_DATE" || "$PARSED_DATE" != "$CHANGELOG_DATE" ]]; then
 		echo "Invalid date format found in changelog... Exiting with error."
 		exit 1
 	fi

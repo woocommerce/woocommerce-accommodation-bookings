@@ -23,11 +23,12 @@ jobs:
               persist-credentials: false
               sparse-checkout: |
                 package.json
-                bin/sww-config.sh
+                bin/woo-config.sh
+                bin/woo-config.schema.json
               sparse-checkout-cone-mode: false
-          - name: Read config.sww
+          - name: Read config.woo
             id: config
-            run: bash bin/sww-config.sh --github-output
+            run: bash bin/woo-config.sh --github-output
 
     setup:
         name: Setup environments
@@ -54,7 +55,7 @@ jobs:
         needs: [config, setup]
         uses: ./.github/workflows/run-linting.yml
 
-    # config.sww.phpunit.scheduledWc (for example `trunk`) replaces the WooCommerce version here,
+    # config.woo.phpunit.scheduledWc (for example `trunk`) replaces the WooCommerce version here,
     # so a core change that breaks the plugin shows up before it ships.
     php-tests:
         if: ${{ !failure() && !cancelled() && fromJSON(needs.config.outputs.json).capabilities.phpunit }}

@@ -80,7 +80,7 @@ jobs:
 
       - name: Read plugin metadata
         id: config
-        run: bash bin/sww-config.sh --github-output
+        run: bash bin/woo-config.sh --github-output
 
       - name: Run JavaScript unit tests
         if: ${{ inputs.frontend && fromJSON(steps.config.outputs.json).capabilities.jsTests }}

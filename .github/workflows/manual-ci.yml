@@ -73,17 +73,18 @@ jobs:
               persist-credentials: false
               sparse-checkout: |
                 package.json
-                bin/sww-config.sh
+                bin/woo-config.sh
+                bin/woo-config.schema.json
               sparse-checkout-cone-mode: false
-          - name: Read config.sww
+          - name: Read config.woo
             id: config
-            run: bash bin/sww-config.sh --github-output
+            run: bash bin/woo-config.sh --github-output
 
     setup:
         name: Setup environments
         uses: ./.github/workflows/setup-env.yml
 
-    # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: config.sww.phpunit.phpInput decides whether it replaces the suite's own versions.
+    # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: config.woo.phpunit.phpInput decides whether it replaces the suite's own versions.
     php-tests:
         if: ${{ fromJSON(needs.config.outputs.json).capabilities.phpunit && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
         name: PHP

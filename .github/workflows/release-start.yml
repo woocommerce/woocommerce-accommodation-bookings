@@ -135,9 +135,9 @@ jobs:
 
             - name: Read plugin metadata
               id: config
-              run: bash bin/sww-config.sh --github-output
+              run: bash bin/woo-config.sh --github-output
 
-            # WordPress.org reads the changelog from readme.txt (config.sww.release.readmeChangelog).
+            # WordPress.org reads the changelog from readme.txt (config.woo.release.readmeChangelog).
             - name: Sync readme.txt changelog
               if: fromJSON(steps.config.outputs.json).release.readmeChangelog
               run: bash bin/sync_readme_changelog.sh "$VERSION"
