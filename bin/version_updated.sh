@@ -20,16 +20,6 @@ if [ "$CURRENT_BRANCH" = "trunk" ] && [ -z "$GITHUB_BASE_REF" ]; then
   exit 0
 fi
 
-# Determine which `awk` is available (BSD or GNU)
-AWK_CMD="awk"
-if [[ "$(uname)" == "Darwin" ]]; then
-  AWK_CMD="gawk" # macOS requires GNU awk for compatibility
-  if ! command -v gawk &>/dev/null; then
-    echo "⚠️ Warning: 'gawk' (GNU awk) is not installed. Falling back to standard awk, which may not be fully compatible."
-    AWK_CMD="awk"
-  fi
-fi
-
 # Iterate over all PHP files passed as arguments
 for FILE in "$@"; do
   # Ensure the file exists before proceeding
@@ -39,12 +29,13 @@ for FILE in "$@"; do
   fi
 
   # Check if the file contains a class, trait, or interface definition
-  if grep -E '^\s*(abstract\s+|final\s+)?(class|trait|interface)\s+\w+' "$FILE" > /dev/null; then
+  # POSIX classes instead of \s and \w, so BSD (macOS), GNU and mawk read the pattern alike.
+  if grep -E '^[[:space:]]*(abstract[[:space:]]+|final[[:space:]]+)?(class|trait|interface|enum)[[:space:]]+[[:alnum:]_]+' "$FILE" > /dev/null; then
     # Extract the docblock before the first class/trait/interface definition
-    DOCBLOCK=$($AWK_CMD '/^\s*(abstract\s+|final\s+)?(class|trait|interface)\s+\w+/ {exit} {print}' "$FILE")
+    DOCBLOCK=$(awk '/^[[:space:]]*(abstract[[:space:]]+|final[[:space:]]+)?(class|trait|interface|enum)[[:space:]]+[[:alnum:]_]+/ {exit} {print}' "$FILE")
 
     # Check if the docblock contains @version x.x.x
-    if ! echo "$DOCBLOCK" | grep -E '@version\s+x\.x\.x' > /dev/null; then
+    if ! echo "$DOCBLOCK" | grep -E '@version[[:space:]]+x\.x\.x' > /dev/null; then
       FAILED_FILES+=("$FILE")
       if [ "$IS_GITHUB_ACTION" = "true" ]; then
         # GitHub Actions annotation format
