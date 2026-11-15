@@ -19,7 +19,7 @@ jobs:
         steps:
           - name: Read config.woo
             id: config
-            uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+            uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # Plugins without QIT (config.woo.capabilities.qit false) skip every job below.
     build_project:

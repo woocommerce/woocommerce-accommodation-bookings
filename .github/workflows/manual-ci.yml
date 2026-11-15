@@ -69,7 +69,7 @@ jobs:
         steps:
           - name: Read config.woo
             id: config
-            uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+            uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: config.woo.phpunit.phpInput decides whether it replaces the suite's own versions.
     php-tests:

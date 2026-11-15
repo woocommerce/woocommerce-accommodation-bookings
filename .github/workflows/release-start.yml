@@ -99,7 +99,7 @@ jobs:
                 echo "url=https://github.com/${{ github.repository }}/milestone/${MILESTONE_NUMBER}?closed=1" >> $GITHUB_OUTPUT
 
             - name: Set up PHP
-              uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
+              uses: woocommerce/.github/actions/setup-plugin-env@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
               with:
                 php-version: '8.4'
 
