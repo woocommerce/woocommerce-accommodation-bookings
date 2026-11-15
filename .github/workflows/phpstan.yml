@@ -18,20 +18,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
+      - name: Set up PHP and the Composer cache
+        uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
         with:
           php-version: '8.4'
-          coverage: none
-          tools: composer
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
-      - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          github-token: ${{ github.token }}
+          composer-cache: true
       # Plugins without tools/php-stubs have no integration stubs to install.
       - name: Install integration stubs
         if: hashFiles('tools/php-stubs/composer.json') != ''

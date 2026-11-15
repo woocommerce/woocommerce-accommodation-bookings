@@ -17,18 +17,9 @@ jobs:
         outputs:
           json: ${{ steps.config.outputs.json }}
         steps:
-          - name: Checkout package metadata
-            uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-            with:
-              persist-credentials: false
-              sparse-checkout: |
-                package.json
-                bin/woo-config.sh
-                bin/woo-config.schema.json
-              sparse-checkout-cone-mode: false
           - name: Read config.woo
             id: config
-            run: bash bin/woo-config.sh --github-output
+            uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
     setup:
         name: Setup environments
@@ -142,7 +133,7 @@ jobs:
         name: Dependency advisories
         permissions:
             vulnerability-alerts: read
-        uses: ./.github/workflows/run-audit.yml
+        uses: woocommerce/.github/.github/workflows/plugin-audit.yml@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
     handle-success:
         if: ${{ !failure() && !cancelled() }}

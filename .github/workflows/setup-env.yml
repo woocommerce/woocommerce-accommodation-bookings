@@ -25,17 +25,11 @@ jobs:
         id: config
         run: bash bin/woo-config.sh --github-output
 
-      - name: Set up pnpm
-        if: fromJSON(steps.config.outputs.json).capabilities.js
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-
-      - name: Setup Node.js and pnpm store cache
-        if: fromJSON(steps.config.outputs.json).capabilities.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - name: Set up Node.js and the pnpm store cache
+        uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
         with:
-          node-version-file: '.nvmrc'
-          cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
-          package-manager-cache: ${{ inputs.checkout-ref == '' }}
+          node: ${{ fromJSON(steps.config.outputs.json).capabilities.js }}
+          node-cache: ${{ inputs.checkout-ref == '' }}
 
       - name: Install Node Dependencies
         if: fromJSON(steps.config.outputs.json).capabilities.js
@@ -52,27 +46,11 @@ jobs:
           ref: ${{ inputs.checkout-ref }}
           persist-credentials: false
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - name: Set up PHP and the Composer cache
+        uses: woocommerce/.github/actions/setup-plugin-env@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
         with:
           php-version: '8.4'
-          coverage: none
-          tools: composer
-          # Pass an empty token so setup-php doesn't persist GITHUB_TOKEN to Composer's
-          # config. Composer rejects the new GITHUB_TOKEN token format.
-          github-token: ''
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
-
-      - name: Cache composer dependencies
-        if: inputs.checkout-ref == ''
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          composer-cache: ${{ inputs.checkout-ref == '' }}
 
       - name: Validate Composer manifest and lockfile
         run: composer validate --no-check-all --no-check-publish
