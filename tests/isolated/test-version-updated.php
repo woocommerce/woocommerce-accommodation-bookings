@@ -51,12 +51,15 @@ class Version_Updated_Script_Tests extends TestCase {
 		file_put_contents( $file, "<?php\n$source\n" );
 		// The pull request environment, so the script does not skip itself on trunk.
 		$env     = array_merge( getenv(), array( 'GITHUB_ACTIONS' => 'true', 'GITHUB_BASE_REF' => 'trunk', 'GITHUB_ENV' => '/dev/null' ) );
-		$process = proc_open( array( 'bash', dirname( __DIR__, 2 ) . '/bin/version_updated.sh', $file ), array( 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, null, $env );
-		$output  = stream_get_contents( $pipes[1] ) . stream_get_contents( $pipes[2] );
-		fclose( $pipes[1] );
-		fclose( $pipes[2] );
-		$code = proc_close( $process );
-		unlink( $file );
-		$this->assertSame( $passes ? 0 : 1, $code, $output );
+		try {
+			$process = proc_open( array( 'bash', dirname( __DIR__, 2 ) . '/bin/version_updated.sh', $file ), array( 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, null, $env );
+			$this->assertIsResource( $process, 'Could not start bash.' );
+			$output = stream_get_contents( $pipes[1] ) . stream_get_contents( $pipes[2] );
+			fclose( $pipes[1] );
+			fclose( $pipes[2] );
+			$this->assertSame( $passes ? 0 : 1, proc_close( $process ), $output );
+		} finally {
+			unlink( $file );
+		}
 	}
 }
