@@ -25,12 +25,16 @@ fi
 # Xdebug is not needed here and slows extraction down; large plugins need more than 128M.
 php_args='-d xdebug.mode=off -d memory_limit=2048M'
 
-args=(i18n make-pot . "languages/.$slug.pot.tmp" "--slug=$slug")
+mkdir -p languages
+# A fresh temporary file per run, removed on any exit, so a failed or overlapping run never
+# leaves a partial template in languages/.
+tmp=$(mktemp "languages/.$slug.pot.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+
+args=(i18n make-pot . "$tmp" "--slug=$slug")
 [[ -z "$exclude" ]] || args+=("--exclude=$exclude")
 [[ "$headers" == '{}' ]] || args+=("--headers=$headers")
 
-mkdir -p languages
-rm -f "languages/.$slug.pot.tmp"
 if [[ -x vendor/bin/wp ]]; then
 	wp=vendor/bin/wp
 elif ! wp=$(command -v wp); then
@@ -46,8 +50,9 @@ else
 	WP_CLI_PHP_ARGS=$php_args "$wp" "${args[@]}"
 fi
 
-if [[ ! -s "languages/.$slug.pot.tmp" ]]; then
+if [[ ! -s "$tmp" ]]; then
 	echo "WP-CLI did not write $pot." >&2
 	exit 1
 fi
-mv "languages/.$slug.pot.tmp" "$pot"
+chmod 644 "$tmp"
+mv "$tmp" "$pot"
