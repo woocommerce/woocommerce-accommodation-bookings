@@ -28,10 +28,10 @@ for FILE in "$@"; do
     continue
   fi
 
-  # Check if the file contains a class, trait, or interface definition
+  # Check if the file contains a class, trait, interface, or enum definition
   # POSIX classes instead of \s and \w, so BSD (macOS), GNU and mawk read the pattern alike.
   if grep -E '^[[:space:]]*(abstract[[:space:]]+|final[[:space:]]+)?(class|trait|interface|enum)[[:space:]]+[[:alnum:]_]+' "$FILE" > /dev/null; then
-    # Extract the docblock before the first class/trait/interface definition
+    # Extract the docblock before the first class/trait/interface/enum definition
     DOCBLOCK=$(awk '/^[[:space:]]*(abstract[[:space:]]+|final[[:space:]]+)?(class|trait|interface|enum)[[:space:]]+[[:alnum:]_]+/ {exit} {print}' "$FILE")
 
     # Check if the docblock contains @version x.x.x
@@ -39,10 +39,10 @@ for FILE in "$@"; do
       FAILED_FILES+=("$FILE")
       if [ "$IS_GITHUB_ACTION" = "true" ]; then
         # GitHub Actions annotation format
-        echo "::error file=$FILE::A class, trait, or interface in this file was modified, but the '@version x.x.x' tag was not updated."
+        echo "::error file=$FILE::A class, trait, interface, or enum in this file was modified, but the '@version x.x.x' tag was not updated."
       else
         # Standard output for local usage (lint-staged)
-        echo "❌ Error: A class, trait, or interface in '$FILE' was modified, but the '@version x.x.x' tag was not updated."
+        echo "❌ Error: A class, trait, interface, or enum in '$FILE' was modified, but the '@version x.x.x' tag was not updated."
       fi
       FAILED=1
     fi
