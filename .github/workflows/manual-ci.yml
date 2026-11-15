@@ -76,7 +76,7 @@ jobs:
         if: ${{ fromJSON(needs.config.outputs.json).capabilities.phpunit && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
         name: PHP
         needs: config
-        uses: ./.github/workflows/run-unit-tests.yml
+        uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
           wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
@@ -89,8 +89,9 @@ jobs:
         if: ${{ fromJSON(needs.config.outputs.json).capabilities.integration && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
         name: PHP integration
         needs: config
-        uses: ./.github/workflows/run-integration-tests.yml
+        uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
+          suite: integration
           wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
           wc-version: ${{ inputs.wc-version != 'latest' && inputs.wc-version != 'stable' && inputs.wc-version || '' }}
           php-version: ${{ inputs.php-version }}

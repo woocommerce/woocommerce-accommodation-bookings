@@ -168,7 +168,7 @@ jobs:
       name: PHP
       needs: [changes, config, extract-values]
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.phpunit }}
-      uses: ./.github/workflows/run-unit-tests.yml
+      uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
         wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
         wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
@@ -181,8 +181,9 @@ jobs:
       name: PHP integration
       needs: [changes, config, extract-values]
       if: ${{ github.event.pull_request.draft == false && needs.changes.outputs.php == 'true' && fromJSON(needs.config.outputs.json).capabilities.integration && fromJSON(needs.config.outputs.json).pullRequests.privatePlugins && github.event.pull_request.head.repo.full_name == github.repository }}
-      uses: ./.github/workflows/run-integration-tests.yml
+      uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       with:
+        suite: integration
         wc-version: ${{ needs.extract-values.outputs.WC_VERSION }}
         wp-version: ${{ needs.extract-values.outputs.WP_VERSION }}
         php-version: ${{ needs.extract-values.outputs.PHP_VERSION }}
