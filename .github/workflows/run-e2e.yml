@@ -77,7 +77,6 @@ jobs:
       PHP_VERSION: ${{ inputs.php-version }}
       RUN_INTEGRATION_TESTS: ${{ (inputs.trusted-plugins || !fromJSON(needs.config.outputs.json).e2e.privatePlugins) && '1' || '0' }}
       TEST_MODE: ${{ matrix.test_mode }}
-      ZIP_NAME: ${{ fromJSON(needs.config.outputs.json).slug }}.zip
 
     steps:
 
@@ -97,31 +96,21 @@ jobs:
           cache: ${{ inputs.checkout-ref == '' && 'pnpm' || '' }}
           package-manager-cache: ${{ inputs.checkout-ref == '' }}
 
-      - name: Require a candidate artifact ID
-        env:
-          ARTIFACT_ID: ${{ inputs.artifact-id }}
-        run: |
-          if [[ ! "$ARTIFACT_ID" =~ ^[1-9][0-9]*$ ]]; then
-            echo "::error::A single production candidate artifact ID is required."
-            exit 1
-          fi
+      - name: Read the checked-out commit
+        id: head
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Download the release artifact
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          artifact-ids: ${{ inputs.artifact-id }}
-          path: .
-
+      # Pinned for review. To bump: take `gh api repos/woocommerce/.github/commits/trunk --jq .sha`,
+      # review the verify-candidate-zip diff since this SHA, then update the SHA and date.
       - name: Verify the production ZIP
-        env:
-          ARTIFACT_ID: ${{ inputs.artifact-id }}
-          CANDIDATE_SHA: ${{ inputs.source-sha }}
-          CANDIDATE_SHA256: ${{ inputs.sha256 }}
-        run: |
-          test "$CANDIDATE_SHA" = "$(git rev-parse HEAD)"
-          printf '%s  %s\n' "$CANDIDATE_SHA256" "$ZIP_NAME" | sha256sum --check -
-          printf 'Playwright artifact %s, commit %s, SHA-256 %s.\n' \
-            "$ARTIFACT_ID" "$CANDIDATE_SHA" "$CANDIDATE_SHA256" >> "$GITHUB_STEP_SUMMARY"
+        id: candidate
+        uses: woocommerce/.github/actions/verify-candidate-zip@b8284427f0dece122f22ff8170f83dd23120281f # trunk @ 2026-11-15
+        with:
+          artifact-id: ${{ inputs.artifact-id }}
+          source-sha: ${{ inputs.source-sha }}
+          expected-source-sha: ${{ steps.head.outputs.sha }}
+          sha256: ${{ inputs.sha256 }}
+          zip-name: ${{ fromJSON(needs.config.outputs.json).slug }}.zip
 
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
@@ -130,7 +119,8 @@ jobs:
       - name: Setup Environment
         env:
           ORG_DOWNLOADS: ${{ env.RUN_INTEGRATION_TESTS == '1' && fromJSON(needs.config.outputs.json).e2e.privatePlugins && secrets.ORG_DOWNLOADS || '' }}
-        run: E2E_PLUGIN_ZIP="./$ZIP_NAME" bash ./bin/e2e.sh prepare
+          E2E_PLUGIN_ZIP: ${{ steps.candidate.outputs.zip }}
+        run: bash ./bin/e2e.sh prepare
 
       - name: Run wp-env start
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4
