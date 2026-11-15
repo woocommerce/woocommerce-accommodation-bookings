@@ -1,0 +1,4 @@
+Significance: patch
+Type: tweak
+
+Raised minimum required WooCommerce to 11.2 and declared compatibility with WooCommerce 11.3.

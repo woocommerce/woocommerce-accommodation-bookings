@@ -11,7 +11,7 @@
         "wp-cli/i18n-command": "^2.6",
         "phpstan/phpstan": "^2.1",
         "szepeviktor/phpstan-wordpress": "^2.0",
-        "php-stubs/woocommerce-stubs": "^10.9",
+        "php-stubs/woocommerce-stubs": "^11.2",
         "yoast/phpunit-polyfills": "^1.1",
         "automattic/jetpack-changelogger": "^6.0"
     },

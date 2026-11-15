@@ -3,8 +3,8 @@ Contributors:  woocommerce, automattic
 Tags: woocommerce, bookings, accommodations
 Requires at least: 7.0
 Requires PHP: 7.4
-WC requires at least: 11.1
-WC tested up to: 11.2
+WC requires at least: 11.2
+WC tested up to: 11.3
 Tested up to: 7.1
 Stable tag: 1.4.0
 License: GNU General Public License v3.0
