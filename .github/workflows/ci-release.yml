@@ -111,7 +111,7 @@ jobs:
     php-lint:
         name: PHP
         needs: check-versions
-        uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
 
@@ -123,7 +123,7 @@ jobs:
           pull-requests: read
         name: JS Linting
         needs: check-versions
-        uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-js-lint.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
 
@@ -131,7 +131,7 @@ jobs:
         if: ${{ fromJSON(needs.check-versions.outputs.config).capabilities.phpunit }}
         name: PHP
         needs: [check-versions, php-lint]
-        uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-phpunit.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
 
@@ -139,7 +139,7 @@ jobs:
         if: ${{ !failure() && !cancelled() }}
         name: Package
         needs: [check-versions, php-tests, php-lint, js-lint]
-        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
           artifact-name: release-candidate-${{ github.run_attempt }}
@@ -151,7 +151,7 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: woocommerce/.github/.github/workflows/plugin-e2e.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-e2e.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         with:
           artifact-id: ${{ needs.build_project.outputs.artifact-id }}
           source-sha: ${{ needs.build_project.outputs.source-sha }}
@@ -168,7 +168,7 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: woocommerce/.github/.github/workflows/plugin-check.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+        uses: woocommerce/.github/.github/workflows/plugin-check.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         with:
           artifact-id: ${{ needs.build_project.outputs.artifact-id }}
           source-sha: ${{ needs.build_project.outputs.source-sha }}

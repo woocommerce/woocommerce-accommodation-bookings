@@ -1,4 +1,4 @@
-# Data for .github/workflows/ci.yml (dorny/paths-filter, picomatch globs).
+# Data for the shared plugin-pr-ci.yml workflow, read from this checkout (dorny/paths-filter, picomatch globs).
 # A file that matches any pattern of a category marks that category as changed.
 php:
   - '**/*.php'

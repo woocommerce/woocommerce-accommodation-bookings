@@ -40,4 +40,4 @@ jobs:
         # The job always runs to completion so it can be a required check:
         # a job skipped by a condition reports as skipped, not as passing.
         steps:
-            - uses: woocommerce/.github/actions/check-changelog@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
+            - uses: woocommerce/.github/actions/check-changelog@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15

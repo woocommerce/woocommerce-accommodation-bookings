@@ -4,98 +4,20 @@ on:
   schedule:
     # Run at 02:00 on Wednesdays.
     - cron: '0 2 * * 3'
+  # The same run on demand, for example to check a workflow change on its branch.
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
 
-    config:
-        name: Read plugin metadata
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        outputs:
-          json: ${{ steps.config.outputs.json }}
-        steps:
-          - name: Read config.woo
-            id: config
-            uses: woocommerce/.github/actions/read-plugin-config@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-
-    # Plugins without QIT (config.woo.capabilities.qit false) skip every job below.
-    build_project:
-        if: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
-        name: Package
-        needs: config
-        uses: woocommerce/.github/.github/workflows/plugin-build-zip.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
-        with:
-          qit-derivative: true
-
-    qit-tests:
+    # The full set of QIT tests on the WordPress and WooCommerce release candidates. Plugins
+    # without config.woo.capabilities.qit skip it.
+    qit:
         name: QIT
-        needs: [config, build_project]
-        uses: ./.github/workflows/run-qit.yml
+        uses: woocommerce/.github/.github/workflows/plugin-cron-qit.yml@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
         secrets:
           ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
           ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
-        with:
-          extension: ${{ fromJSON(needs.config.outputs.json).qit.extension }}
-          plugins: ${{ fromJSON(needs.config.outputs.json).qit.plugins }}
-          artifact: 'acceptance-test-zip'
-          derivative: ${{ fromJSON(needs.config.outputs.json).qit.derivativeExclude != '' && 'qit-derivative' || '' }}
-          timeout-minutes: ${{ fromJSON(needs.config.outputs.json).qit.timeoutMinutes }}
-          wp-version: 'nightly'
-          wc-version: 'nightly'
-          test-activation: ${{ 'true' }}
-          test-security: ${{ 'true' }}
-          test-phpcompatibility: ${{ 'true' }}
-          test-validation: ${{ 'true' }}
-          test-phpstan: ${{ 'false' }} # QIT PHPStan uses its own config (no repo bootstrap/baseline); the repo's PHPStan (the shared plugin-phpstan.yml) is the gate.
-          test-woo-api: ${{ 'true' }}
-          test-woo-e2e: ${{ 'true' }}
-          test-malware: ${{ 'true' }}
-          test-api-fuzz: ${{ fromJSON(needs.config.outputs.json).qit.apiFuzz && 'true' || 'false' }}
-
-    handle-success:
-        if: ${{ success() && needs.qit-tests.result == 'success' }}
-        needs: qit-tests
-        name: Handle success
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        permissions: {}
-        env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        steps:
-            - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-              with:
-                  status: success
-                  message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> passed."
-
-    handle-cancelled:
-        if: ${{ cancelled() }}
-        needs: qit-tests
-        name: Handle cancellation
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        permissions: {}
-        env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        steps:
-            - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-              with:
-                  status: cancelled
-                  message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> cancelled."
-
-    handle-error:
-        if: ${{ failure() }}
-        needs: qit-tests
-        name: Handle failure
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        permissions: {}
-        env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        steps:
-            - uses: act10ns/slack@d96404edccc6d6467fc7f8134a420c851b1e9054 # v2
-              with:
-                  status: failure
-                  message: "Scheduled workflow <{{workflowUrl}}|{{workflow}}> with run ID <{{workflowRunUrl}}|{{runId}}> failed. You can find the results in the artifacts section."
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
