@@ -39,14 +39,9 @@ jobs:
               id: export
               run: echo "version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
 
-    setup:
-        name: Setup environments
-        needs: check-versions
-        uses: ./.github/workflows/setup-env.yml
-
     php-lint:
         name: PHP
-        needs: setup
+        needs: check-versions
         uses: ./.github/workflows/php-lint.yml
 
     js-lint:
@@ -56,7 +51,7 @@ jobs:
           checks: write
           pull-requests: read
         name: JS Linting
-        needs: [check-versions, setup]
+        needs: check-versions
         uses: ./.github/workflows/run-linting.yml
 
     handle-success:

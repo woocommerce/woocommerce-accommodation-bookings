@@ -104,15 +104,9 @@ jobs:
       name: Spelling
       uses: woocommerce/.github/.github/workflows/plugin-spell-check.yml@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
-    setup:
-      name: Setup environments
-      needs: changes
-      if: ${{ needs.changes.outputs.php == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }}
-      uses: ./.github/workflows/setup-env.yml
-
     php-lint:
       name: PHP
-      needs: [changes, setup]
+      needs: changes
       if: ${{ needs.changes.outputs.php == 'true' }}
       uses: ./.github/workflows/php-lint.yml
 
@@ -126,7 +120,7 @@ jobs:
 
     js-lint:
       name: JS Linting
-      needs: [changes, config, setup]
+      needs: [changes, config]
       if: ${{ fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }}
       permissions:
         contents: read
@@ -229,7 +223,7 @@ jobs:
     required:
       name: Required checks
       if: ${{ always() }}
-      needs: [changes, config, extract-values, spelling, setup, php-lint, phpstan, js-lint, actionlint, plugin-check, php-tests, integration-tests, build_project, e2e-tests]
+      needs: [changes, config, extract-values, spelling, php-lint, phpstan, js-lint, actionlint, plugin-check, php-tests, integration-tests, build_project, e2e-tests]
       runs-on: ubuntu-latest
       timeout-minutes: 5
       permissions: {}
@@ -242,7 +236,6 @@ jobs:
             "config": true,
             "extract-values": true,
             "spelling": true,
-            "setup": ${{ needs.changes.outputs.php == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true' }},
             "php-lint": ${{ needs.changes.outputs.php == 'true' }},
             "phpstan": ${{ needs.changes.outputs.php == 'true' }},
             "js-lint": ${{ needs.config.result == 'success' && fromJSON(needs.config.outputs.json).capabilities.js && (needs.changes.outputs.frontend == 'true' || needs.changes.outputs.docs == 'true') }},

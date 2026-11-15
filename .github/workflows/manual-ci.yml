@@ -71,15 +71,11 @@ jobs:
             id: config
             uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
-    setup:
-        name: Setup environments
-        uses: ./.github/workflows/setup-env.yml
-
     # WordPress and WooCommerce: `latest` and `stable` run the default version, `rc` skips this job (QIT covers it), and an exact version (e.g. 10.3.0-rc.1) or WooCommerce `nightly` is installed as given. PHP: config.woo.phpunit.phpInput decides whether it replaces the suite's own versions.
     php-tests:
         if: ${{ fromJSON(needs.config.outputs.json).capabilities.phpunit && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
         name: PHP
-        needs: [config, setup]
+        needs: config
         uses: ./.github/workflows/run-unit-tests.yml
         with:
           wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
@@ -92,7 +88,7 @@ jobs:
     integration-tests:
         if: ${{ fromJSON(needs.config.outputs.json).capabilities.integration && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Unit')) }}
         name: PHP integration
-        needs: [config, setup]
+        needs: config
         uses: ./.github/workflows/run-integration-tests.yml
         with:
           wp-version: ${{ inputs.wp-version != 'latest' && inputs.wp-version != 'stable' && inputs.wp-version || '' }}
@@ -105,7 +101,7 @@ jobs:
     build_project:
         if: ${{ (inputs.qit-tests != 'None' && fromJSON(needs.config.outputs.json).capabilities.qit) || (fromJSON(needs.config.outputs.json).capabilities.e2e && inputs.wp-version != 'rc' && inputs.wc-version != 'rc' && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'E2E'))) || (fromJSON(needs.config.outputs.json).capabilities.pluginCheck && (contains(inputs.extension-tests, 'All') || contains(inputs.extension-tests, 'Plugin Check'))) }}
         name: Package
-        needs: [config, setup]
+        needs: config
         uses: ./.github/workflows/build-upload-zip.yml
         with:
           qit-derivative: ${{ contains(inputs.qit-tests, 'Security') || contains(inputs.qit-tests, 'Compatibility') }}
@@ -178,14 +174,13 @@ jobs:
         if: |
           always() &&
           needs.config.result == 'success' &&
-          needs.setup.result == 'success' &&
           (needs.build_project.result == 'success' || needs.build_project.result == 'skipped') &&
           (needs.plugin-check.result == 'success' || needs.plugin-check.result == 'skipped') &&
           (needs.qit-tests.result == 'success' || needs.qit-tests.result == 'skipped') &&
           (needs.e2e-tests.result == 'success' || needs.e2e-tests.result == 'skipped') &&
           (needs.php-tests.result == 'success' || needs.php-tests.result == 'skipped') &&
           (needs.integration-tests.result == 'success' || needs.integration-tests.result == 'skipped')
-        needs: [config, setup, build_project, plugin-check, qit-tests, e2e-tests, php-tests, integration-tests]
+        needs: [config, build_project, plugin-check, qit-tests, e2e-tests, php-tests, integration-tests]
         name: Handle success
         runs-on: ubuntu-latest
         timeout-minutes: 5

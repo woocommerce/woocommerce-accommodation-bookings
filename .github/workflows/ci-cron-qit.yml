@@ -22,15 +22,10 @@ jobs:
             uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
     # Plugins without QIT (config.woo.capabilities.qit false) skip every job below.
-    setup:
-        if: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
-        name: Setup environments
-        needs: config
-        uses: ./.github/workflows/setup-env.yml
-
     build_project:
+        if: ${{ fromJSON(needs.config.outputs.json).capabilities.qit }}
         name: Package
-        needs: [config, setup]
+        needs: config
         uses: ./.github/workflows/build-upload-zip.yml
         with:
           qit-derivative: true

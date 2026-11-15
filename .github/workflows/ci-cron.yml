@@ -21,13 +21,8 @@ jobs:
             id: config
             uses: woocommerce/.github/actions/read-plugin-config@531bb6e871b08c298de6c093870e83702277f3aa # trunk @ 2026-11-15
 
-    setup:
-        name: Setup environments
-        uses: ./.github/workflows/setup-env.yml
-
     php-lint:
         name: PHP
-        needs: setup
         uses: ./.github/workflows/php-lint.yml
 
     phpstan:
@@ -43,7 +38,7 @@ jobs:
           checks: write
           pull-requests: read
         name: JS Linting
-        needs: [config, setup]
+        needs: config
         uses: ./.github/workflows/run-linting.yml
 
     # config.woo.phpunit.scheduledWc (for example `trunk`) replaces the WooCommerce version here,
