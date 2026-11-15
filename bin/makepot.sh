@@ -32,13 +32,18 @@ args=(i18n make-pot . "languages/.$slug.pot.tmp" "--slug=$slug")
 mkdir -p languages
 rm -f "languages/.$slug.pot.tmp"
 if [[ -x vendor/bin/wp ]]; then
-	WP_CLI_PHP_ARGS=$php_args vendor/bin/wp "${args[@]}"
-elif wp=$(command -v wp); then
+	wp=vendor/bin/wp
+elif ! wp=$(command -v wp); then
+	echo 'WP-CLI not found: run composer install or put wp on PATH.' >&2
+	exit 1
+fi
+# The phar starts with a php shebang. A Composer or WP-CLI launcher is a shell script that
+# passes WP_CLI_PHP_ARGS to PHP; handing it to php would print it instead of running it.
+if head -n 1 "$wp" | grep -q php; then
 	# shellcheck disable=SC2086 # php_args holds several options.
 	php $php_args "$wp" "${args[@]}"
 else
-	echo 'WP-CLI not found: run composer install or put wp on PATH.' >&2
-	exit 1
+	WP_CLI_PHP_ARGS=$php_args "$wp" "${args[@]}"
 fi
 
 if [[ ! -s "languages/.$slug.pot.tmp" ]]; then
