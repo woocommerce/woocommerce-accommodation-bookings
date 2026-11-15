@@ -108,13 +108,13 @@ jobs:
       name: PHP
       needs: changes
       if: ${{ needs.changes.outputs.php == 'true' }}
-      uses: ./.github/workflows/php-lint.yml
+      uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
 
     phpstan:
       name: PHPStan
       needs: changes
       if: ${{ needs.changes.outputs.php == 'true' }}
-      uses: ./.github/workflows/phpstan.yml
+      uses: woocommerce/.github/.github/workflows/plugin-phpstan.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
       secrets:
         ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
 

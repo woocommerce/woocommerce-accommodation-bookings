@@ -111,7 +111,7 @@ jobs:
     php-lint:
         name: PHP
         needs: check-versions
-        uses: ./.github/workflows/php-lint.yml
+        uses: woocommerce/.github/.github/workflows/plugin-php-lint.yml@38ce412f7993a9d344fce1875d8e29634ed399ae # trunk @ 2026-11-15
         with:
           checkout-ref: ${{ needs.check-versions.outputs.commit }}
 
