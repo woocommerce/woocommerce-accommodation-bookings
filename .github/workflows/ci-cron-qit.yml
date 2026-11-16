@@ -16,7 +16,7 @@ jobs:
     # without config.woo.capabilities.qit skip it.
     qit:
         name: QIT
-        uses: woocommerce/.github/.github/workflows/plugin-cron-qit.yml@98ba1eea58b2c918bfc29f91a848090526b993ce # trunk @ 2026-11-16
+        uses: woocommerce/.github/.github/workflows/plugin-cron-qit.yml@c2e5183fbeb0f9fc23e2e974ee7b0a59e6b6b5e0 # trunk @ 2026-11-16
         secrets:
           ORG_PARTNER_USER: ${{ secrets.ORG_PARTNER_USER }}
           ORG_PARTNER_SECRET: ${{ secrets.ORG_PARTNER_SECRET }}
