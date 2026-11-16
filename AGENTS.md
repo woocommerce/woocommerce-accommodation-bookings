@@ -38,7 +38,7 @@ pnpm run lint:js:fix     # Fix lint and WordPress formatting findings
 pnpm run lint:style
 ```
 
-`webpack.config.js` maps `src/js/booking-form.js`, `src/js/writepanel.js`, and `src/css/frontend.scss` to `build/`. Edit these sources and rebuild; do not hand-edit generated assets. Run `composer install` before building or extracting translations.
+`webpack.config.js` maps `src/js/booking-form.js`, `src/js/writepanel.js`, and `src/css/frontend.scss` to `build/`. Edit these sources and rebuild; do not hand-edit generated assets. Put WP-CLI 2.12.0 on `PATH` before building or extracting translations.
 
 ### PHP checks
 

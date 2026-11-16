@@ -26,6 +26,16 @@ jobs:
             - name: Install PHP dependencies
               run: composer install --prefer-dist --no-progress --no-interaction
 
+            - name: Install WP-CLI
+              run: |
+                  mkdir -p tools
+                  curl --fail --location --proto '=https' --tlsv1.2 \
+                    https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar \
+                    --output tools/wp
+                  echo 'ce34ddd838f7351d6759068d09793f26755463b4a4610a5a5c0a97b68220d85c  tools/wp' | sha256sum --check -
+                  chmod +x tools/wp
+                  echo "$PWD/tools" >> "$GITHUB_PATH"
+
             - name: Generate ZIP file
               run: pnpm run build:zip && rm -rf ./woocommerce-accommodation-bookings && unzip deploy/woocommerce-accommodation-bookings.zip -d ./woocommerce-accommodation-bookings
 
