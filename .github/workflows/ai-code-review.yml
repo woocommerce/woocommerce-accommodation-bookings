@@ -12,14 +12,17 @@ permissions:
   pull-requests: write
   id-token: write
 
-concurrency:
-  group: ai-review-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
-  cancel-in-progress: true
-
 jobs:
   review:
-    # The shared workflow rejects other organizations, so a fork's own Actions skip it.
-    if: github.repository_owner == 'woocommerce'
+    # The shared workflow still validates the exact review command and permissions.
+    if: >-
+      github.repository_owner == 'woocommerce' &&
+      (github.event_name != 'issue_comment' ||
+       (github.event.issue.pull_request != null && github.event.issue.state == 'open' &&
+        contains(github.event.comment.body, '@claude') && contains(github.event.comment.body, 'review')))
+    concurrency:
+      group: ai-review-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
+      cancel-in-progress: true
     # Pinned for review. To bump: take `gh api repos/woocommerce/.github/commits/trunk --jq .sha`,
     # review the ai-code-review.yml diff since this SHA, then update the SHA and date.
     uses: woocommerce/.github/.github/workflows/ai-code-review.yml@5902c4fb5a72aa9c6a7e2ee3d1400e92958a7048 # trunk @ 2026-10-06
