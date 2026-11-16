@@ -14,7 +14,6 @@ import {
 import { pluginConfig } from '../config';
 const { promisify } = require( 'util' );
 const execAsync = promisify( require( 'child_process' ).exec );
-export const api = require( './api' );
 
 /**
  * Switch tab in add/edit product page.

@@ -81,7 +81,4 @@ module.exports = defineConfig( {
 	globalSetup: process.env.ACCOM_E2E_REGRESSION
 		? undefined
 		: require.resolve( './global-setup' ),
-	globalTeardown: process.env.ACCOM_E2E_REGRESSION
-		? undefined
-		: require.resolve( './global-teardown' ),
 } );
