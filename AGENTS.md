@@ -174,7 +174,7 @@ Validate person-record ownership and edit permissions before saving accommodatio
 | `Type` | `add`, `fix`, `tweak`, `dev` | Becomes the `* Fix - ...` prefix in `changelog.txt`. Entries are grouped by type in that order. |
 | Entry | One line | Multi-line entries are rejected: every line after the first is re-read as its own entry when the changelog is next parsed. Put extra detail in a `Comment:` header instead, which is not compiled into `changelog.txt`. |
 
-The `Check changelog` CI job requires a change file unless the pull request has the **`no changelog`** label, which applies to changes that need no entry (CI, tooling, docs). The job still validates any change file on a labeled pull request. Release branches and Dependabot pull requests skip the check.
+The `Check changelog` CI job requires a change file unless the pull request has the **`no changelog`** label, which applies to changes that need no entry (CI, tooling, docs). The job still validates any change file added by a labeled pull request. Release branches and Dependabot pull requests skip the check.
 
 The formatter that preserves the `changelog.txt` format lives in `tools/changelogger/`, and is
 configured under `extra.changelogger` in `composer.json`.
