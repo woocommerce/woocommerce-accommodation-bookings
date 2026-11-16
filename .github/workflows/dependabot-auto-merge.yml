@@ -7,7 +7,6 @@ on:
 permissions:
   pull-requests: write
   contents: write
-  security-events: read
   statuses: write
 jobs:
   dependabot-auto-merge:
@@ -15,7 +14,6 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
-      security-events: read
       statuses: write
     with:
       event-name: ${{ github.event_name }}

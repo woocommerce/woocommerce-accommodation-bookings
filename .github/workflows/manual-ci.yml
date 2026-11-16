@@ -67,7 +67,7 @@ jobs:
         permissions:
           contents: read
           actions: read
-        uses: woocommerce/.github/.github/workflows/plugin-test-runner.yml@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
+        uses: woocommerce/.github/.github/workflows/plugin-test-runner.yml@11ae4c883ff955b4a4181bac17214e4fd2545547 # shared @ 2026-11-16
         with:
           wp-version: ${{ inputs.wp-version }}
           wc-version: ${{ inputs.wc-version }}

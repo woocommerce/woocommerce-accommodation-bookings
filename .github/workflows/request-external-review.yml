@@ -4,14 +4,13 @@ on:
   pull_request_target:
     types: [opened, ready_for_review, reopened]
 
-permissions:
-  pull-requests: write
+permissions: {}
 
 jobs:
   # Asks @woocommerce/somewherewarm to review pull requests from outside the team. It never checks
   # out or runs code from the pull request.
   request-review:
-    uses: woocommerce/.github/.github/workflows/plugin-request-external-review.yml@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
+    uses: woocommerce/.github/.github/workflows/plugin-request-external-review.yml@11ae4c883ff955b4a4181bac17214e4fd2545547 # shared @ 2026-11-16
     with:
       team: somewherewarm
     secrets:
