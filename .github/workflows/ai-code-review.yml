@@ -20,12 +20,13 @@ jobs:
       (github.event_name != 'issue_comment' ||
        (github.event.issue.pull_request != null && github.event.issue.state == 'open' &&
         contains(github.event.comment.body, '@claude') && contains(github.event.comment.body, 'review')))
+    # Comment runs get their own group until the shared guard validates the command.
     concurrency:
-      group: ai-review-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
+      group: ai-review-${{ github.event.pull_request.number || github.run_id }}-${{ github.event_name }}
       cancel-in-progress: true
     # Pinned for review. To bump: take `gh api repos/woocommerce/.github/commits/trunk --jq .sha`,
     # review the ai-code-review.yml diff since this SHA, then update the SHA and date.
-    uses: woocommerce/.github/.github/workflows/ai-code-review.yml@5902c4fb5a72aa9c6a7e2ee3d1400e92958a7048 # trunk @ 2026-10-06
+    uses: woocommerce/.github/.github/workflows/ai-code-review.yml@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
     secrets:
       AI_CODE_REVIEW_ANTHROPIC_API_KEY: ${{ secrets.AI_CODE_REVIEW_ANTHROPIC_API_KEY }}
       AI_REVIEW_TELEMETRY_TOKEN: ${{ secrets.AI_REVIEW_TELEMETRY_TOKEN }}

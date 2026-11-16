@@ -11,7 +11,7 @@ jobs:
   # Asks @woocommerce/somewherewarm to review pull requests from outside the team. It never checks
   # out or runs code from the pull request.
   request-review:
-    uses: woocommerce/.github/.github/workflows/plugin-request-external-review.yml@651018795be30e4b10eda3801810cc1b2e995a6b # shared @ 2026-11-16
+    uses: woocommerce/.github/.github/workflows/plugin-request-external-review.yml@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
     with:
       team: somewherewarm
     secrets:

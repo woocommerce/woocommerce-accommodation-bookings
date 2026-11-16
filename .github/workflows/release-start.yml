@@ -33,7 +33,7 @@ jobs:
     # Bumps the versions on a new release/X.Y.Z branch and opens the release pull request.
     start:
         name: Start
-        uses: woocommerce/.github/.github/workflows/plugin-release-start.yml@651018795be30e4b10eda3801810cc1b2e995a6b # shared @ 2026-11-16
+        uses: woocommerce/.github/.github/workflows/plugin-release-start.yml@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
         with:
           version: ${{ inputs.version }}
           wp_version: ${{ inputs.wp_version }}

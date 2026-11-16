@@ -28,7 +28,7 @@ jobs:
         contents: read
         actions: read
         pull-requests: read
-      uses: woocommerce/.github/.github/workflows/plugin-pr-ci.yml@651018795be30e4b10eda3801810cc1b2e995a6b # shared @ 2026-11-16
+      uses: woocommerce/.github/.github/workflows/plugin-pr-ci.yml@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
       secrets:
         ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
