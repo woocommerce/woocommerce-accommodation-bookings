@@ -1,8 +1,8 @@
 version: 2
 updates:
     # SHA-pinned Actions get no Dependabot security alerts, so these monthly
-    # version-update PRs are how the pins stay current. Review each bump; this repo
-    # has no auto-merge, so every bump is merged by hand.
+    # version-update PRs keep the pins current. Eligibility for automatic merges
+    # is set by .github/workflows/dependabot-auto-merge.yml.
     - package-ecosystem: 'github-actions'
       directories:
         - '/'

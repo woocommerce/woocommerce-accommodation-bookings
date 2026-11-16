@@ -1,7 +1,7 @@
 name: Changelog
 
-# Every pull request drops a change file into changelog/ instead of editing
-# changelog.txt; changelogger compiles them into changelog.txt at release time.
+# Change files under changelog/ supply the release entries. The 'no changelog'
+# label waives the change-file requirement when an entry is unnecessary.
 #
 # This runs as its own workflow rather than a job in ci.yml so that adding or
 # removing the 'no changelog' label re-runs the check on its own, without
