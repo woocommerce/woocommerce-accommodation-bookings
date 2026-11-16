@@ -17,4 +17,4 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: woocommerce/.github/actions/check-version@4abad420d9818a172e1cd4207adf64a67a525852 # trunk @ 2026-11-15
+      - uses: woocommerce/.github/actions/check-version@0f986df9f4bfb68803757855a7f3ab361bc56ed3 # trunk @ 2026-11-16
