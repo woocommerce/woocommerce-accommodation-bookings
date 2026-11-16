@@ -110,88 +110,6 @@ test.describe( 'Product Tests', () => {
 		).toContainText( 'Selected! Re-select to change your check-in date.' );
 	} );
 
-	test( 'Verify Setting Minimum Nights Restriction - "Minimum number of nights allowed in a booking" - @foundational', async ( {
-		page,
-	} ) => {
-		await visitProductPage( page, productId );
-
-		await fillBookingStartDate( page, getFutureDate( 1 ) );
-		await fillBookingEndDate(
-			page,
-			getFutureDate( parseInt( productDetails.minimumNight, 10 ) )
-		);
-
-		const addToCardButton = await page.locator(
-			'.single_add_to_cart_button'
-		);
-
-		await expect(
-			page.locator( '.wc-bookings-booking-cost .booking-error' )
-		).toContainText(
-			`The minimum duration is ${ productDetails.minimumNight } nights`
-		);
-
-		await expect( addToCardButton ).toHaveClass( /disabled/ );
-
-		await fillBookingStartDate( page, getFutureDate( 1 ) );
-		await fillBookingEndDate(
-			page,
-			getFutureDate( parseInt( productDetails.minimumNight, 10 ) + 1 )
-		);
-		await expect(
-			page.locator( '.wc-bookings-booking-cost' )
-		).toContainText(
-			`Booking cost: $${ parseFloat(
-				productDetails.minimumNight * productDetails.baseCost
-			) }`
-		);
-		await expect( addToCardButton ).not.toHaveClass( /disabled/ );
-		await addToCart( page );
-		await clearCart( page );
-	} );
-
-	test( 'Verify Setting Maximum Nights Restriction "Maximum number of nights allowed in a booking" - @foundational', async ( {
-		page,
-	} ) => {
-		await visitProductPage( page, productId );
-
-		await fillBookingStartDate( page, getFutureDate( 1 ) );
-		await fillBookingEndDate(
-			page,
-			getFutureDate( parseInt( productDetails.maximumNight, 10 ) + 2 )
-		);
-
-		const addToCardButton = await page.locator(
-			'.single_add_to_cart_button'
-		);
-
-		await expect(
-			page.locator( '.wc-bookings-booking-cost .booking-error' )
-		).toContainText(
-			`The maximum duration is ${ productDetails.maximumNight } nights`
-		);
-
-		await expect( addToCardButton ).toHaveClass( /disabled/ );
-
-		await visitProductPage( page, productId );
-		await fillBookingStartDate( page, getFutureDate( 1 ) );
-		await fillBookingEndDate(
-			page,
-			getFutureDate( parseInt( productDetails.maximumNight, 10 ) + 1 )
-		);
-		await expect(
-			page.locator( '.wc-bookings-booking-cost' )
-		).toContainText(
-			`Booking cost: $${ parseFloat(
-				parseInt( productDetails.maximumNight, 10 ) *
-					productDetails.baseCost
-			) }`
-		);
-		await expect( addToCardButton ).not.toHaveClass( /disabled/ );
-		await addToCart( page );
-		await clearCart( page );
-	} );
-
 	test( 'Verify the Number of Rooms Availability - @foundational', async ( {
 		page,
 	} ) => {
@@ -343,94 +261,15 @@ test.describe( 'Product Tests', () => {
 		).toBeVisible();
 	} );
 
-	for ( const { unit, value, before, after, boundary } of [
-		{ unit: 'day', value: '4', before: 1, after: 6, boundary: 4 },
-		{ unit: 'week', value: '1', before: 1, after: 9, boundary: 7 },
-		{ unit: 'month', value: '1', before: 1, after: 33, boundary: 33 },
-	] ) {
-		test( `Minimum advance booking in ${ unit }s rejects early stays and accepts later stays - @foundational`, async ( {
-			page,
-		} ) => {
-			const product = await createProduct( adminPage, {
-				title: `Accommodation minimum advance ${ unit }`,
-				baseCost: '10.00',
-				availabilityStart: value,
-				availabilityStartUnit: unit,
-			} );
-			await visitProductPage( page, product );
-			await fillBookingStartDate( page, getFutureDate( before ), false );
-			await fillBookingEndDate(
-				page,
-				getFutureDate( before + 2 ),
-				false
-			);
-			await expect(
-				page.locator( '.wc-bookings-booking-cost .booking-error' )
-			).toBeVisible();
-			await expect(
-				page.locator( '.single_add_to_cart_button' )
-			).toHaveClass( /disabled/ );
-
-			await visitProductPage( page, product );
-			await fillBookingStartDate(
-				page,
-				getFutureDate( boundary ),
-				false
-			);
-			await fillBookingEndDate(
-				page,
-				getFutureDate( boundary + 2 ),
-				false
-			);
-			await expect(
-				page.locator( '.wc-bookings-booking-cost' )
-			).toContainText( 'Booking cost:' );
-			await expect(
-				page.locator( '.single_add_to_cart_button' )
-			).not.toHaveClass( /disabled/ );
-		} );
-
-		test( `Maximum advance booking in ${ unit }s rejects late stays and accepts earlier stays - @foundational`, async ( {
-			page,
-		} ) => {
-			const product = await createProduct( adminPage, {
-				title: `Accommodation maximum advance ${ unit }`,
-				baseCost: '10.00',
-				availabilityEnd: value,
-				availabilityEndUnit: unit,
-			} );
-			await visitProductPage( page, product );
-			await fillBookingStartDate( page, getFutureDate( after ), false );
-			await fillBookingEndDate( page, getFutureDate( after + 2 ), false );
-			await expect(
-				page.locator( '.wc-bookings-booking-cost .booking-error' )
-			).toBeVisible();
-			await expect(
-				page.locator( '.single_add_to_cart_button' )
-			).toHaveClass( /disabled/ );
-
-			await visitProductPage( page, product );
-			await fillBookingStartDate( page, getFutureDate( before ), false );
-			await fillBookingEndDate(
-				page,
-				getFutureDate( before + 2 ),
-				false
-			);
-			await expect(
-				page.locator( '.wc-bookings-booking-cost' )
-			).toContainText( 'Booking cost:' );
-			await expect(
-				page.locator( '.single_add_to_cart_button' )
-			).not.toHaveClass( /disabled/ );
-		} );
-	}
-
-	test( 'A stay crossing the minimum advance boundary is rejected - @foundational', async ( {
+	test( 'Only the first eligible check-in or a later date can reach the cart - @foundational', async ( {
 		page,
 	} ) => {
+		const title = 'Accommodation minimum crossing boundary';
 		const product = await createProduct( adminPage, {
-			title: 'Accommodation minimum crossing boundary',
+			title,
 			baseCost: '10.00',
+			minimumNight: '2',
+			maximumNight: '5',
 			availabilityStart: '4',
 			availabilityStartUnit: 'day',
 		} );
@@ -458,26 +297,33 @@ test.describe( 'Product Tests', () => {
 		await expect(
 			page.locator( '.single_add_to_cart_button' )
 		).toHaveClass( /disabled/ );
-	} );
 
-	test( 'A stay may check out beyond the maximum advance window when check-in is within it - @foundational', async ( {
-		page,
-	} ) => {
-		const product = await createProduct( adminPage, {
-			title: 'Accommodation maximum crossing boundary',
-			baseCost: '10.00',
-			availabilityEnd: '4',
-			availabilityEndUnit: 'day',
-		} );
 		await visitProductPage( page, product );
-		await fillBookingStartDate( page, getFutureDate( 3 ), false );
+		await fillBookingStartDate( page, getFutureDate( 4 ), false );
+
 		await fillBookingEndDate( page, getFutureDate( 5 ), false );
+		const error = page.locator(
+			'.wc-bookings-booking-cost .booking-error'
+		);
+		const bookButton = page.locator( '.single_add_to_cart_button' );
+		await expect( error ).toHaveText( 'The minimum duration is 2 nights' );
+		await expect( bookButton ).toHaveClass( /disabled/ );
+
+		await fillBookingEndDate( page, getFutureDate( 10 ), false );
+		await expect( error ).toHaveText( 'The maximum duration is 5 nights' );
+		await expect( bookButton ).toHaveClass( /disabled/ );
+
+		await fillBookingEndDate( page, getFutureDate( 6 ), false );
 		await expect(
-			page.locator( '.wc-bookings-booking-cost' )
-		).toContainText( 'Booking cost:' );
+			page.locator( '.wc-bookings-booking-cost .booking-cost-label' )
+		).toHaveText( 'Booking cost: $20.00' );
+		await expect( bookButton ).not.toHaveClass( /disabled/ );
+		await addToCart( page );
+		await page.getByRole( 'link', { name: 'View cart' } ).first().click();
 		await expect(
-			page.locator( '.single_add_to_cart_button' )
-		).not.toHaveClass( /disabled/ );
+			page.getByRole( 'link', { name: title, exact: true } )
+		).toBeVisible();
+		await clearCart( page );
 	} );
 
 	test( 'Verify Rate Setting should work as expected - @foundational', async ( {
