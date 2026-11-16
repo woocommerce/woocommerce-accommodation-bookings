@@ -8,7 +8,6 @@
         "woocommerce/woocommerce-sniffs": "1.0.1",
         "phpunit/phpunit": "^9.6",
         "10up/wp_mock": "^1.0.1",
-        "wp-cli/i18n-command": "^2.6",
         "phpstan/phpstan": "^2.1",
         "szepeviktor/phpstan-wordpress": "^2.0",
         "php-stubs/woocommerce-stubs": "^11.2",

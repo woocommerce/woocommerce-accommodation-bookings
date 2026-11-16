@@ -18,7 +18,7 @@ Use the Node.js version in `.nvmrc`, the pnpm version in `package.json`, PHP 8.4
 
 Install the Playwright browser with `pnpm run test:e2e:install`.
 
-Composer also installs the WP-CLI that `pnpm run makepot` uses, so WP-CLI on `PATH` is optional here; the E2E runner needs `unzip`.
+The E2E runner needs `unzip`.
 
 ### Quick start
 
