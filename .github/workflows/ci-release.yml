@@ -344,7 +344,8 @@ jobs:
         name: Deploy to WordPress.org
         needs: [ release, check-versions, build_project ]
         runs-on: ubuntu-latest
-        timeout-minutes: 60
+        # The deploy may take its full 60 minutes; the confirmation then waits up to 10.
+        timeout-minutes: 75
         env:
           WP_ORG_SLUG: ${{ fromJSON(needs.check-versions.outputs.config).release.wpOrgSlug }}
           RELEASE_ARTIFACT_ID: ${{ needs.release.outputs.artifact_id }}
@@ -372,8 +373,24 @@ jobs:
                 artifact-ids: ${{ env.RELEASE_ARTIFACT_ID }}
                 path: .
 
-            - name: Checkout the woo-product-deploy action
+            - name: Checkout deployment tooling
               if: env.WP_ORG_SLUG != ''
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                path: release-tooling
+                persist-credentials: false
+
+            # A retry after the SVN commit landed finds the tag already holding this archive and
+            # skips the deploy, which would otherwise fail on the existing tag.
+            - name: Check WordPress.org for this version
+              id: wporg
+              if: env.WP_ORG_SLUG != ''
+              run: |
+                command -v svn > /dev/null || { sudo apt-get update && sudo apt-get install -y subversion; }
+                bash ./release-tooling/bin/wporg-deploy.sh prepare
+
+            - name: Checkout the woo-product-deploy action
+              if: steps.wporg.outputs.deploy == 'true'
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                 repository: woocommerce/woo-product-deploy
@@ -387,7 +404,7 @@ jobs:
             # The action pushes the archive released above to WordPress.org as is: it checks the
             # checksum and the Version header, and does not rebuild. The GitHub release already exists.
             - name: Deploy to WordPress.org
-              if: env.WP_ORG_SLUG != ''
+              if: steps.wporg.outputs.deploy == 'true'
               uses: ./.github/actions/woo-product-deploy
               with:
                 repo_url: https://github.com/${{ github.repository }}
@@ -404,6 +421,10 @@ jobs:
                 deploy_pat: ${{ secrets.ORG_DEPLOY_SECRET }}
                 wporg_username: ${{ secrets.WPORG_USERNAME }}
                 wporg_password: ${{ secrets.WPORG_PASSWORD }}
+
+            - name: Wait for WordPress.org to offer the release version
+              if: env.WP_ORG_SLUG != ''
+              run: bash ./release-tooling/bin/wporg-deploy.sh confirm
 
     merge-release:
         if: ${{ !failure() && !cancelled() && (needs.deploy.result == 'success' || needs.deploy-wporg.result == 'success') }}
