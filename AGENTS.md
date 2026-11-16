@@ -147,9 +147,7 @@ pnpm run env:dev:destroy --force; pnpm run env:test:destroy --force; pnpm run wp
 
 ### Changelog
 
-`changelog.txt` is **generated**. Never edit it by hand. Each pull request drops a change file
-into `changelog/` instead, and [Jetpack Changelogger](https://github.com/Automattic/jetpack-changelogger)
-compiles them into `changelog.txt` at release time.
+`changelog.txt` is **generated**. Never edit it by hand. Add release entries as change files in `changelog/`. [Jetpack Changelogger](https://github.com/Automattic/jetpack-changelogger) compiles them into `changelog.txt` at release time.
 
 ```bash
 pnpm run changelog add          # Interactive: significance, type, and the entry
@@ -176,17 +174,14 @@ Validate person-record ownership and edit permissions before saving accommodatio
 | `Type` | `add`, `fix`, `tweak`, `dev` | Becomes the `* Fix - ...` prefix in `changelog.txt`. Entries are grouped by type in that order. |
 | Entry | One line | Multi-line entries are rejected: every line after the first is re-read as its own entry when the changelog is next parsed. Put extra detail in a `Comment:` header instead, which is not compiled into `changelog.txt`. |
 
-The `Changelog / Check changelog` CI job requires an added change file on every pull request.
-Label the pull request **`no changelog`** for changes that need no entry (CI, tooling, docs). The
-label waives the requirement, not the format: a change file added anyway is still validated.
-Release branches and Dependabot pull requests are skipped entirely.
+The `Check changelog` CI job requires a change file unless the pull request has the **`no changelog`** label, which applies to changes that need no entry (CI, tooling, docs). The job still validates any change file added by a labeled pull request. Release branches and Dependabot pull requests skip the check.
 
 The formatter that preserves the `changelog.txt` format lives in `tools/changelogger/`, and is
 configured under `extra.changelogger` in `composer.json`.
 
 ## Shared tooling
 
-The workflows in `.github/workflows/`, `bin/woo-config.sh`, `bin/woo-config.schema.json`, `bin/build-zip.sh`, `bin/e2e.sh`, `bin/install.sh` and the version and release scripts in `bin/` are identical in every SomewhereWarm and WooCommerce extension repository. Change them in every repository at once. A repository differs only in:
+The standard caller workflows in `.github/workflows/` and the common `bin/` scripts are shared across the extension repositories. Extensions that run E2E share `bin/e2e.sh`. Some extensions have additional workflows for build previews, snapshots, or other repo-specific checks. Keep shared tooling in sync across its callers. The following settings and files vary by extension.
 
 - `package.json` `config.woo`. `bin/woo-config.schema.json` documents every key, `bash bin/woo-config.sh` validates the object against it and prints it with every default applied, and the shared files read it only through that script. It holds the plugin slug (default: the `package.json` name), the capabilities (`js`, `jsTests`, `buildTests`, `e2e`, `phpunit`, `isolated`, `integration`, `qit`, `pluginCheck`), the ZIP settings, the version strings in `versionPatterns`, the Plugin Check settings, the PHPUnit legs, the private plugins and the release target.
 - The data files the shared files read: `exclude.lst`, `.github/paths-filter.yml`, `.github/product-filter.yml`, `.wp-env*.json`, the PHPCS and PHPStan configs, and the tests.
@@ -279,7 +274,7 @@ Build on existing extension points such as `WC_Data`, `WC_Data_Store_WP`, `WC_Se
 ## Contribution and tooling notes
 
 - Follow the parent SWW instructions for Git/Linear work and the repository's `.github/PULL_REQUEST_TEMPLATE.md`. Use the global authenticated `gh` CLI for GitHub operations; commit, push, and draft-PR creation each need their own authorization.
-- **Always add a changelog file.** Run `pnpm run changelog add` and commit the file it creates under `changelog/`, one per PR. Never edit `changelog.txt` directly - it is compiled from the change files at release time. See [Changelog](#changelog).
+- **Changelog.** Run `pnpm run changelog add` and commit the file it creates under `changelog/` for a change that needs an entry. Label tooling, CI, and docs PRs that need no entry `no changelog`. See [Changelog](#changelog).
 - The template has no auto-assign-milestone checkbox. Report that missing control instead of inventing a checked box. The release workflows require and roll over the release milestone, but pull requests are not assigned to it automatically.
 - QIT runs twice a week: four tests on the stable versions in Cron CI on Mondays, and the full set on the pre-release versions in Cron QIT on Wednesdays. QIT PHPStan stays off because the repo's own PHPStan (level 8) is the gate.
 - Releases are started via the `Start Release` GitHub Actions workflow (Actions UI, or locally with `bin/release_start.sh [X.Y.Z] [--wp A.B] [--wc C.D]`, which dispatches it). It bumps versions, compiles `changelog/` into `changelog.txt` and copies the release's entries into the `readme.txt` changelog on a `release/X.Y.Z` branch, then opens a release PR against `trunk`. Run `Publish release` from `trunk` with the release branch as input. It builds the ZIP, tags the release, deploys that ZIP to WordPress.org through `woocommerce/woo-product-deploy` (`config.woo.release.wpOrgSlug` in `package.json` names the plugin slug; keep the top-level `wp_org_slug` beside it equal, since the action reads that one), and rolls the milestone over. Building a ZIP does not authorize starting a release.

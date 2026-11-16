@@ -1,7 +1,7 @@
 name: Changelog
 
-# Every pull request drops a change file into changelog/ instead of editing
-# changelog.txt; changelogger compiles them into changelog.txt at release time.
+# Change files under changelog/ supply the release entries. The 'no changelog'
+# label waives the change-file requirement when an entry is unnecessary.
 #
 # This runs as its own workflow rather than a job in ci.yml so that adding or
 # removing the 'no changelog' label re-runs the check on its own, without
@@ -40,4 +40,4 @@ jobs:
         # The job always runs to completion so it can be a required check:
         # a job skipped by a condition reports as skipped, not as passing.
         steps:
-            - uses: woocommerce/.github/actions/check-changelog@c2e5183fbeb0f9fc23e2e974ee7b0a59e6b6b5e0 # trunk @ 2026-11-16
+            - uses: woocommerce/.github/actions/check-changelog@e08449c1714a8e133134812f32f3dfe412d4fb6a # shared @ 2026-11-16
