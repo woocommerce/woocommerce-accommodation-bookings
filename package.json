@@ -172,7 +172,6 @@
     "audit:npm": "pnpm audit --audit-level=high",
     "audit:composer": "composer audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium && composer --working-dir=tools/php-quality audit --locked --no-plugins --no-scripts --abandoned=report --ignore-severity=low --ignore-severity=medium",
     "lint:js": "wp-scripts lint-js --max-warnings 0",
-    "lint:js:report": "wp-scripts lint-js --output-file eslint_report.json --format json",
     "lint:style": "wp-scripts lint-style src/css/frontend.scss --max-warnings 0",
     "lint:style-fix": "pnpm run lint:style --fix",
     "lint:md:docs": "wp-scripts lint-md-docs --dot",

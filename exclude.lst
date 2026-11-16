@@ -45,7 +45,6 @@
 /composer.json
 /composer.lock
 /eslint.config.mjs
-/eslint_report.json
 /exclude.lst
 /jest-puppeteer.config.js
 /package-lock.json

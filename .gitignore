@@ -47,5 +47,3 @@ woocommerce-bookings-availability.zip
 # Not committed: the PHPStan job installs the newest generated stubs every run.
 /tools/php-stubs/composer.lock
 
-# pnpm run lint:js:report (CI annotations).
-eslint_report.json
