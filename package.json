@@ -28,7 +28,6 @@
           "deploy"
         ]
       },
-      "productName": "Accommodation Bookings",
       "capabilities": {
         "js": true,
         "e2e": true,
