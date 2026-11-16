@@ -20,7 +20,6 @@ const {
 	updateSettings,
 	getCheckInTime,
 	getCheckOutTime,
-	api,
 	confirmBooking,
 	clearEmailLogs,
 } = require( '../utils' );
@@ -157,10 +156,31 @@ test.describe( 'Order Tests', () => {
 			.first()
 			.waitFor();
 		const orderId = await placeOrder( page, true );
-		await api.update.order( {
-			id: orderId,
-			status: 'completed',
-		} );
+		const nonceResponse = await adminPage.request.get(
+			'/wp-admin/admin-ajax.php?action=rest-nonce',
+			{ maxRedirects: 0 }
+		);
+		expect( nonceResponse.ok(), 'Could not fetch a REST nonce' ).toBe(
+			true
+		);
+		const nonce = ( await nonceResponse.text() ).trim();
+		expect( nonce, 'Expected a REST nonce from the admin session' ).toMatch(
+			/^[a-f0-9]{10}$/i
+		);
+
+		const response = await adminPage.request.put(
+			`/wp-json/wc/v3/orders/${ orderId }`,
+			{
+				data: { status: 'completed' },
+				headers: { 'X-WP-Nonce': nonce },
+				maxRedirects: 0,
+			}
+		);
+		expect(
+			response.ok(),
+			`Could not complete order ${ orderId }: HTTP ${ response.status() }`
+		).toBe( true );
+		expect( ( await response.json() ).status ).toBe( 'completed' );
 
 		const bookingList = await page
 			.locator( '.wc-booking-summary-number' )

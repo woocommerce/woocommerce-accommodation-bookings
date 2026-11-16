@@ -49,7 +49,6 @@ module.exports = async ( config ) => {
 	// Pre-requisites
 	let adminLoggedIn = false;
 	let customerLoggedIn = false;
-	let customerKeyConfigured = false;
 
 	// Specify user agent when running against an external test site to avoid getting HTTP 406 NOT ACCEPTABLE errors.
 	const contextOptions = { baseURL, userAgent };
@@ -94,46 +93,6 @@ module.exports = async ( config ) => {
 	if ( ! adminLoggedIn ) {
 		console.error(
 			'Cannot proceed e2e test, as admin login failed. Please check if the test site has been setup correctly.'
-		);
-		process.exit( 1 );
-	}
-
-	// While we're here, let's add a consumer token for API access
-	// This step was failing occasionally, and globalsetup doesn't retry, so make it retry
-	const nRetries = 5;
-	for ( let i = 0; i < nRetries; i++ ) {
-		try {
-			console.log( 'Trying to add consumer token...' );
-			await adminPage.goto(
-				`/wp-admin/admin.php?page=wc-settings&tab=advanced&section=keys&create-key=1`
-			);
-			await adminPage
-				.locator( '#key_description' )
-				.fill( 'Key for API access' );
-			await adminPage
-				.locator( '#key_permissions' )
-				.selectOption( 'read_write' );
-			await adminPage.locator( 'text=Generate API key' ).click();
-			process.env.CONSUMER_KEY = await adminPage
-				.locator( '#key_consumer_key' )
-				.inputValue();
-			process.env.CONSUMER_SECRET = await adminPage
-				.locator( '#key_consumer_secret' )
-				.inputValue();
-			console.log( 'Added consumer token successfully.' );
-			customerKeyConfigured = true;
-			break;
-		} catch ( e ) {
-			console.log(
-				`Failed to add consumer token. Retrying... ${ i }/${ nRetries }`
-			);
-			console.log( e );
-		}
-	}
-
-	if ( ! customerKeyConfigured ) {
-		console.error(
-			'Cannot proceed e2e test, as we could not set the customer key. Please check if the test site has been setup correctly.'
 		);
 		process.exit( 1 );
 	}
