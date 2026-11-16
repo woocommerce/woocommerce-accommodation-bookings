@@ -26,7 +26,7 @@
 				"js": {
 					"type": "boolean",
 					"default": true,
-					"description": "pnpm dependencies and the JavaScript gate (check:js, lint:md:docs, lint:js:report)."
+					"description": "pnpm dependencies and the JavaScript gate (check:js, lint:md:docs)."
 				},
 				"jsTests": {
 					"type": "boolean",
