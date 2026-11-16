@@ -28,7 +28,7 @@ jobs:
           issues: write
           pull-requests: read
           statuses: read
-        uses: woocommerce/.github/.github/workflows/plugin-release.yml@c2e5183fbeb0f9fc23e2e974ee7b0a59e6b6b5e0 # trunk @ 2026-11-16
+        uses: woocommerce/.github/.github/workflows/plugin-release.yml@651018795be30e4b10eda3801810cc1b2e995a6b # shared @ 2026-11-16
         with:
           branch: ${{ inputs.branch }}
           slack-channel: '#team-somewherewarm-releases'
