@@ -8,67 +8,11 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Asks @woocommerce/somewherewarm to review pull requests from outside the team. It never checks
+  # out or runs code from the pull request.
   request-review:
-    name: Request review
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      # This workflow runs against the base branch and must never check out or
-      # execute code from the pull request head.
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          github-token: ${{ secrets.SWW_REVIEW_RELEASE_TOKEN }}
-          script: |
-            const org  = 'woocommerce';
-            const team = 'somewherewarm';
-            const pr   = context.payload.pull_request;
-            const user = pr.user.login;
-
-            // botwoo opens the release pull requests. GitHub reports it as a
-            // regular user, so the Bot type check alone does not catch it.
-            if ( pr.user.type === 'Bot' || user === 'botwoo' ) {
-              core.info( `${ user } is a bot, skipping.` );
-              return;
-            }
-
-            let isMember = false;
-
-            try {
-              const { data } = await github.rest.teams.getMembershipForUserInOrg( {
-                org,
-                team_slug: team,
-                username: user,
-              } );
-              isMember = 'active' === data.state;
-            } catch ( error ) {
-              // A non-member returns 404. Anything else means the membership
-              // lookup itself failed, so fail loudly rather than mistaking the
-              // author for an outsider.
-              if ( 404 !== error.status ) {
-                throw error;
-              }
-            }
-
-            if ( isMember ) {
-              core.info( `${ user } is on @${ org }/${ team }, skipping.` );
-              return;
-            }
-
-            const { data: requested } = await github.rest.pulls.listRequestedReviewers( {
-              ...context.repo,
-              pull_number: pr.number,
-            } );
-
-            if ( requested.teams.some( ( t ) => t.slug === team ) ) {
-              core.info( `@${ org }/${ team } is already requested, skipping.` );
-              return;
-            }
-
-            await github.rest.pulls.requestReviewers( {
-              ...context.repo,
-              pull_number: pr.number,
-              team_reviewers: [ team ],
-            } );
-
-            core.info( `Requested a review from @${ org }/${ team } for external author ${ user }.` );
+    uses: woocommerce/.github/.github/workflows/plugin-request-external-review.yml@c2e5183fbeb0f9fc23e2e974ee7b0a59e6b6b5e0 # trunk @ 2026-11-16
+    with:
+      team: somewherewarm
+    secrets:
+      REVIEW_TOKEN: ${{ secrets.SWW_REVIEW_RELEASE_TOKEN }}
