@@ -13,11 +13,7 @@ jobs:
     # The versions in the plugin files, PHP lint and JavaScript lint on the release branch.
     smoke:
         name: Smoke test
-        permissions:
-          contents: read
-          checks: write
-          pull-requests: read
-        uses: woocommerce/.github/.github/workflows/plugin-release-smoke-test.yml@3dc9149c6355a79c6b24fcf6a26ebbaf5df0116a # trunk @ 2026-11-16
+        uses: woocommerce/.github/.github/workflows/plugin-release-smoke-test.yml@98ba1eea58b2c918bfc29f91a848090526b993ce # trunk @ 2026-11-16
         with:
           slack-channel: '#team-somewherewarm-releases'
         secrets:
