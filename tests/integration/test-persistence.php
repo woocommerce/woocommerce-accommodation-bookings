@@ -679,10 +679,15 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 		return array( array( 'customer' ), array( 'automatic' ) );
 	}
 
-	public function test_native_exact_maximum_nights_and_excess() {
-		$product = accommodation_test_room( array( 'max_duration' => 5 ) );
+	public function test_native_exact_minimum_and_maximum_nights() {
+		$product = accommodation_test_room(
+			array(
+				'min_duration' => 2,
+				'max_duration' => 5,
+			)
+		);
 		$year    = (int) gmdate( 'Y' ) + 1;
-		foreach ( array( 5, 6 ) as $nights ) {
+		foreach ( array( 1, 2, 5, 6 ) as $nights ) {
 			$data = wc_bookings_get_posted_data(
 				array(
 					'wc_bookings_field_start_date_year'  => $year,
@@ -693,14 +698,94 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 				$product
 			);
 			$cost = WC_Bookings_Cost_Calculation::calculate_booking_cost( $data, $product );
-			if ( 5 === $nights ) {
+			if ( 2 === $nights || 5 === $nights ) {
 				$this->assertNotWPError( $cost );
-				$this->assertSame( 500.0, (float) $cost );
+				$this->assertSame( 2 === $nights ? 200.0 : 500.0, (float) $cost );
 			} else {
 				$this->assertWPError( $cost );
-				$this->assertSame( 'The maximum duration is 5 blocks', $cost->get_error_message() );
+				$this->assertSame(
+					1 === $nights ? 'The minimum duration is 2 blocks' : 'The maximum duration is 5 blocks',
+					$cost->get_error_message()
+				);
 			}
 		}
+	}
+
+	/**
+	 * An accepted boundary stay keeps the exact dates and cost in the real cart and booking.
+	 *
+	 * @dataProvider advance_windows
+	 * @param string $limit Minimum or maximum check-in boundary.
+	 * @param string $unit Advance setting unit.
+	 * @param int    $value Number of units.
+	 * @param string $offset Fixture date offset.
+	 */
+	public function test_native_advance_window_keeps_valid_stays( $limit, $unit, $value, $offset ) {
+		update_option( 'timezone_string', 'UTC' );
+		$boundary = new DateTimeImmutable( 'today', new DateTimeZone( 'UTC' ) );
+		$boundary = $boundary->modify( $offset );
+		$invalid  = $boundary->modify( 'min' === $limit ? '-1 day' : '+1 day' );
+		$product  = accommodation_test_room(
+			array(
+				$limit . '_date_value' => $value,
+				$limit . '_date_unit'  => $unit,
+			)
+		);
+
+		$original = array( WC()->session, WC()->customer, WC()->cart, $_POST, get_current_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Snapshot the native test's request state.
+		try {
+			$user = self::factory()->user->create( array( 'role' => 'customer' ) );
+			wp_set_current_user( $user );
+			WC()->session = new WC_Session_Handler();
+			WC()->session->init();
+			WC()->customer = new WC_Customer( $user );
+			WC()->cart     = new WC_Cart();
+
+			foreach ( array( $invalid, $boundary ) as $check_in ) {
+				$_POST = array(
+					'add-to-cart'                        => $product->get_id(),
+					'wc_bookings_field_start_date_year'  => $check_in->format( 'Y' ),
+					'wc_bookings_field_start_date_month' => $check_in->format( 'n' ),
+					'wc_bookings_field_start_date_day'   => $check_in->format( 'j' ),
+					'wc_bookings_field_duration'         => 2,
+				);
+				$key   = WC()->cart->add_to_cart( $product->get_id() );
+				if ( $invalid === $check_in ) {
+					$this->assertFalse( $key );
+					$this->assertSame( array(), WC()->cart->get_cart_contents() );
+					continue;
+				}
+
+				$this->assertIsString( $key, wp_json_encode( wc_get_notices() ) );
+				$item = WC()->cart->get_cart_item( $key );
+				$this->assertSame( $product->get_id(), $item['product_id'] );
+				$this->assertSame( 200.0, (float) $item['booking']['_cost'] );
+				WC()->cart->calculate_totals();
+				$this->assertSame( 200.0, (float) WC()->cart->get_total( 'edit' ) );
+				$booking = new WC_Booking( $item['booking']['_booking_id'] );
+				$this->assertSame( 'in-cart', $booking->get_status() );
+				$this->assertSame( $product->get_id(), $booking->get_product_id() );
+				$this->assertSame( $check_in->format( 'Y-m-d' ), gmdate( 'Y-m-d', $booking->get_start() ) );
+				$this->assertSame( $check_in->modify( '+2 days' )->format( 'Y-m-d' ), gmdate( 'Y-m-d', $booking->get_end() ) );
+			}
+		} finally {
+			WC()->cart->empty_cart();
+			wc_clear_notices();
+			list( WC()->session, WC()->customer, WC()->cart, $_POST, $original_user ) = $original;
+			wp_set_current_user( $original_user );
+		}
+	}
+
+	/** Both sides of each advance-window unit. */
+	public function advance_windows() {
+		return array(
+			'minimum days'   => array( 'min', 'day', 4, '+4 days' ),
+			'minimum weeks'  => array( 'min', 'week', 1, '+7 days' ),
+			'minimum months' => array( 'min', 'month', 1, '+1 month' ),
+			'maximum days'   => array( 'max', 'day', 4, '+4 days' ),
+			'maximum weeks'  => array( 'max', 'week', 1, '+7 days' ),
+			'maximum months' => array( 'max', 'month', 1, '+1 month' ),
+		);
 	}
 
 	/**
