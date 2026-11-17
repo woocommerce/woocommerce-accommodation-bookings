@@ -96,7 +96,8 @@ config=$(jq -ce '
 			exclude: ($zip | opt("exclude"; "exclude.lst")),
 			build: ($zip | opt("build"; "build")),
 			composerProduction: ($zip | opt("composerProduction"; false)),
-			php: ($zip | opt("php"; "8.4"))
+			php: ($zip | opt("php"; "8.4")),
+			phpCompatibility: ($zip | opt("phpCompatibility"; null))
 		},
 		versionPatterns: [ ($c | opt("versionPatterns"; []))[] | { file: opt("file"; $main), pattern: .pattern } ],
 		pluginCheck: {
