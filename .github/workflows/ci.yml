@@ -54,22 +54,8 @@ jobs:
       runs-on: ubuntu-latest
       timeout-minutes: 5
       permissions: {}
-      env:
-        CI_RESULT: ${{ needs.ci.result }}
       steps:
-        - name: Check the CI result
-          run: |
-            echo "CI: $CI_RESULT"
-            if [[ "$CI_RESULT" != 'success' ]]; then
-              echo "::error::CI did not pass ($CI_RESULT). Its CI / Check results job lists each check."
-              exit 1
-            fi
-        - name: Check the version validation result
-          env:
-            VERSION_RESULT: ${{ needs.version-check.result }}
-          run: |
-            echo "Version validation: $VERSION_RESULT"
-            if [[ "$VERSION_RESULT" != 'success' && "$VERSION_RESULT" != 'skipped' ]]; then
-              echo "::error::Version validation did not pass ($VERSION_RESULT). See the Validate @version Tag job."
-              exit 1
-            fi
+        - uses: woocommerce/.github/actions/check-pr-results@f4f900ad820b24736f688f6a97b98a4aa8636ff8 # shared @ 2026-11-17
+          with:
+            ci-result: ${{ needs.ci.result }}
+            version-result: ${{ needs.version-check.result }}
