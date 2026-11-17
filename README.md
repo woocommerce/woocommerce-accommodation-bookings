@@ -31,6 +31,12 @@ composer install
 pnpm run build
 ```
 
+### Shared tooling
+
+`@woocommerce/extension-tooling` provides the shared build, lint, and environment commands. The CI and release workflows pin `woocommerce/.github`. `bash bin/woo-config.sh` validates `package.json`'s `config.woo` against the shared schema and prints the values with defaults applied. CI reads the configuration before installing plugin dependencies.
+
+Update the fallback version and tarball SHA-512 in `bin/extension-tooling.sh` when changing the pinned `@woocommerce/extension-tooling` dependency. `pnpm run test:build` checks these against the manifest and lockfile.
+
 ## pnpm scripts
 
 ```bash

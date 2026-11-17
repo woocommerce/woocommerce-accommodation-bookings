@@ -24,8 +24,8 @@
             "Composer\\Config::disableProcessTimeout",
             "phpcs"
         ],
-        "lint:phpcs:baseline": "bash bin/phpcs.sh",
-        "lint:phpcs:baseline:update": "bash bin/phpcs-baseline.sh",
+        "lint:phpcs:baseline": "bash bin/extension-tooling.sh phpcs.sh",
+        "lint:phpcs:baseline:update": "bash bin/extension-tooling.sh phpcs-baseline.sh",
         "check:php": [
             "@composer --working-dir=tools/php-quality install --no-interaction --prefer-dist --no-progress",
             "@lint:php:syntax",
@@ -36,13 +36,13 @@
         "test:integration": "@test:php:integration",
         "lint:php:syntax": [
             "Composer\\Config::disableProcessTimeout",
-            "bash bin/phplint.sh"
+            "bash bin/extension-tooling.sh phplint.sh"
         ],
         "lint:php:fix": [
             "Composer\\Config::disableProcessTimeout",
             "phpcbf"
         ],
-        "phpstan": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
+        "phpstan": "bash bin/extension-tooling.sh phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=2G",
         "test:php": [
             "Composer\\Config::disableProcessTimeout",
             "@test:php:unit",

@@ -1,4 +1,4 @@
-# Paths that stay out of deploy/woocommerce-accommodation-bookings.zip (bin/build-zip.sh): one zip -x
+# Paths that stay out of deploy/woocommerce-accommodation-bookings.zip (pnpm run build:zip): one zip -x
 # wildcard per line, matched against woocommerce-accommodation-bookings/<path>; a leading / anchors it
 # at the plugin root. src/ and SECURITY.md keep shipping, as they always have.
 # Development folders.
@@ -54,6 +54,7 @@
 /phpcs.xml.dist
 /phpstan-baseline.neon
 /phpstan-bootstrap.php
+/phpstan-tooling-neon.php
 /phpstan.neon.dist
 /phpunit-integration.xml
 /phpunit.xml

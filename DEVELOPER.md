@@ -2,7 +2,7 @@
 
 Install dependencies with `composer install` and
 `composer --working-dir=tools/php-quality install` using PHP 8.4.
-Run `composer check:php` for the PHP syntax and PHPCS checks used on PRs that change PHP.
+Run `composer check:php` for the PHP syntax and PHPCS checks used on PRs that change PHP. The tools use `jq` to read plugin settings. When the pnpm dependencies are absent, these checks and PHPStan fetch the pinned `@woocommerce/extension-tooling` tarball with `curl` and verify its digest with `shasum` before extracting it with `tar`. PHPUnit provisioning accepts `latest`, `nightly`, or a numeric WordPress release.
 Owned production and authored test PHP are included; vendor code, generated files
 and build tools are excluded. PHP compatibility remains a separate check.
 

@@ -42,5 +42,6 @@ changelog export-ignore
 phpstan.neon.dist export-ignore
 phpstan-baseline.neon export-ignore
 phpstan-bootstrap.php export-ignore
+phpstan-tooling-neon.php export-ignore
 .markdownlintignore export-ignore
 .npmpackagejsonlintrc.json export-ignore

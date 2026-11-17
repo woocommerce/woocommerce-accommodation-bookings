@@ -5,16 +5,14 @@ includes:
     # minimum: includes/class-wc-accommodation-dependencies.php /is_bookings_above_or_equal_to_version\( '([0-9.]+)' \)/
     - tools/php-stubs/vendor/woocommerce/php-stubs/stubs/woocommerce-bookings/3.10.0.neon
     - phpstan-baseline.neon
+    - phpstan-tooling-neon.php
 
 parameters:
-    level: 8
     phpVersion: 70400
     bootstrapFiles:
         - phpstan-bootstrap.php
     dynamicConstantNames:
         - WC_BOOKINGS_VERSION
-    parallel:
-        maximumNumberOfProcesses: 2
     paths:
         - woocommerce-accommodation-bookings.php
         - includes

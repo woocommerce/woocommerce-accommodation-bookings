@@ -8,7 +8,8 @@
 	],
 	"themes": [ "https://downloads.wordpress.org/theme/storefront.zip" ],
 	"mappings": {
-		"./wp-content/bin": "./tests/_support/docker/bin"
+		"./wp-content/bin": "./tests/_support/docker/bin",
+		"./wp-content/woo-extension-tooling": "./node_modules/@woocommerce/extension-tooling/bin"
 	},
 	"config": {
 		"JETPACK_AUTOLOAD_DEV": true,
