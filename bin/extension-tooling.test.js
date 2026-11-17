@@ -33,7 +33,7 @@ nodeTest(
 );
 
 nodeTest(
-	'the PHP-only launcher rejects a changed dependency pin or archive',
+	'the PHP-only launcher skips disabled installs and rejects mismatched pins and archives',
 	( t ) => {
 		const fixture = fs.mkdtempSync(
 			path.join( os.tmpdir(), 'woo-extension-tooling-' )
@@ -53,6 +53,13 @@ nodeTest(
 			...process.env,
 			PATH: `${ bin }${ path.delimiter }${ process.env.PATH }`,
 		};
+		const disabled = spawnSync( 'bash', [ script, 'install.sh' ], {
+			cwd: fixture,
+			env: { ...env, RUN_UNIT_TESTS: '0' },
+			encoding: 'utf8',
+		} );
+		assert.equal( disabled.status, 0, disabled.stderr );
+
 		const run = ( version ) => {
 			fs.writeFileSync(
 				path.join( fixture, 'package.json' ),
