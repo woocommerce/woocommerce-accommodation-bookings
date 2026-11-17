@@ -33,12 +33,24 @@ jobs:
         ORG_DOWNLOADS: ${{ secrets.ORG_DOWNLOADS }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-    # The single status that branch protection requires. It passes only when the shared
-    # workflow succeeded, so a failed, cancelled or draft-era run never satisfies it.
+    # Reserve both required check names for trunk so GitHub cannot reuse a result
+    # from another base when a pull request is retargeted.
+    version-check:
+      name: ${{ github.base_ref == 'trunk' && 'Validate @version Tag' || 'Validate @version Tag (non-trunk)' }}
+      if: ${{ github.base_ref == 'trunk' }}
+      runs-on: ubuntu-latest
+      timeout-minutes: 5
+      steps:
+        # Release bumps replace 'x.x.x' with the real version by design. Skip
+        # the step so the currently required job still reports its check name.
+        - uses: woocommerce/.github/actions/check-version@11ae4c883ff955b4a4181bac17214e4fd2545547 # shared @ 2026-11-16
+          if: ${{ !(github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/')) }}
+
+    # Require both shared CI and version validation when applicable.
     required:
-      name: Required checks
+      name: ${{ github.base_ref == 'trunk' && 'Required checks' || 'Required checks (non-trunk)' }}
       if: ${{ always() }}
-      needs: ci
+      needs: [ci, version-check]
       runs-on: ubuntu-latest
       timeout-minutes: 5
       permissions: {}
@@ -50,5 +62,14 @@ jobs:
             echo "CI: $CI_RESULT"
             if [[ "$CI_RESULT" != 'success' ]]; then
               echo "::error::CI did not pass ($CI_RESULT). Its CI / Check results job lists each check."
+              exit 1
+            fi
+        - name: Check the version validation result
+          env:
+            VERSION_RESULT: ${{ needs.version-check.result }}
+          run: |
+            echo "Version validation: $VERSION_RESULT"
+            if [[ "$VERSION_RESULT" != 'success' && "$VERSION_RESULT" != 'skipped' ]]; then
+              echo "::error::Version validation did not pass ($VERSION_RESULT). See the Validate @version Tag job."
               exit 1
             fi
