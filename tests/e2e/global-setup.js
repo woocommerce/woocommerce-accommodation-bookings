@@ -7,6 +7,7 @@
  * External dependencies
  */
 const { chromium, expect } = require( '@playwright/test' );
+const { RequestUtils } = require( '@wordpress/e2e-test-utils-playwright' );
 
 /**
  * Internal dependencies
@@ -65,14 +66,10 @@ module.exports = async ( config ) => {
 	for ( let i = 0; i < adminRetries; i++ ) {
 		try {
 			console.log( 'Trying to log-in as admin...' );
-			await adminPage.goto( `/wp-admin` );
-			await adminPage.fill( 'input[name="log"]', admin.username );
-			await adminPage.fill( 'input[name="pwd"]', admin.password );
-			await adminPage.locator( '#wp-submit' ).click();
-			await adminPage.waitForLoadState( 'networkidle' );
-			await adminPage.goto( `/wp-admin` );
-			await adminPage.waitForLoadState( 'domcontentloaded' );
-
+			await new RequestUtils( adminContext.request, {
+				user: admin,
+			} ).login();
+			await adminPage.goto( './wp-admin/' );
 			await expect( adminPage.locator( 'div.wrap > h1' ) ).toHaveText(
 				'Dashboard'
 			);
@@ -102,13 +99,10 @@ module.exports = async ( config ) => {
 	for ( let i = 0; i < customerRetries; i++ ) {
 		try {
 			console.log( 'Trying to log-in as customer...' );
-			await customerPage.goto( `/wp-admin` );
-			await customerPage.fill( 'input[name="log"]', customer.username );
-			await customerPage.fill( 'input[name="pwd"]', customer.password );
-			await customerPage.locator( '#wp-submit' ).click();
-			await customerPage.waitForLoadState( 'networkidle' );
-
-			await customerPage.goto( `/my-account` );
+			await new RequestUtils( customerContext.request, {
+				user: customer,
+			} ).login();
+			await customerPage.goto( './my-account/' );
 			await expect(
 				customerPage.locator(
 					'.woocommerce-MyAccount-navigation-link--customer-logout'
