@@ -23,7 +23,6 @@ pnpm-workspace.yaml export-ignore
 composer.json export-ignore
 composer.lock export-ignore
 babel.config.js export-ignore
-.travis.yml export-ignore
 .editorconfig export-ignore
 phpunit.xml export-ignore
 phpunit-integration.xml export-ignore
