@@ -21,6 +21,11 @@
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings",
     "woo": {
+      "zip": {
+        "phpCompatibility": {
+          "ruleset": "phpcs-compat.xml.dist"
+        }
+      },
       "makepot": {
         "exclude": [
           "tests",

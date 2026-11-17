@@ -74,6 +74,25 @@
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
+				"phpCompatibility": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"testVersion": {
+							"type": "string",
+							"pattern": "^[0-9]+[.][0-9]+(-[0-9]+[.][0-9]+)?$",
+							"description": "PHP range to check against the packaged files, for example 7.4-8.5."
+						},
+						"ruleset": {
+							"type": "string",
+							"description": "Optional PHPCS ruleset using the plugin's locked tools/php-quality dependencies."
+						},
+						"ignore": {
+							"type": "string",
+							"description": "Optional comma-separated PHPCS path exclusions."
+						}
+					}
+				},
 				"root": {
 					"type": "string",
 					"description": "Folder inside the ZIP. Default: the slug."

@@ -36,7 +36,7 @@ never regenerate it to hide new findings. PHPCS and PHPCompatibility remain sepa
 
 ## Production PHP compatibility
 
-Use PHP 8.4 and the Node version in `.nvmrc`, install JavaScript dependencies with `pnpm install --frozen-lockfile`, then run `pnpm run phpcompat`. It builds the release ZIP, extracts it into a temporary directory and checks only its PHP files. CI runs the same ruleset on the candidate ZIP: the shared `plugin-build-zip.yml` workflow calls `bin/hooks/package-check.sh`. The checker and its dependencies are locked in `tools/php-quality/composer.lock`, using PHPCompatibility revision `8daeec54772a592ad369be23ae02ed593c71e7f1`. The shared `phpcs-compat.xml.dist` keeps the PHP 7.4–8.4 range and WordPress polyfill exclusions.
+Use PHP 8.4 and the Node version in `.nvmrc`, install JavaScript dependencies with `pnpm install --frozen-lockfile`, then run `pnpm run phpcompat`. It builds the release ZIP, extracts it into a temporary directory and checks only its PHP files. The shared `plugin-build-zip.yml` workflow runs the same ruleset on the candidate ZIP. The checker and its dependencies are locked in `tools/php-quality/composer.lock`, using PHPCompatibility revision `8daeec54772a592ad369be23ae02ed593c71e7f1`. The shared `phpcs-compat.xml.dist` keeps the PHP 7.4–8.4 range and WordPress polyfill exclusions.
 
 Run `pnpm run phpcompat /absolute/path/production.zip` to check an existing release artifact without rebuilding it. The ZIP must contain the plugin directory named in `package.json`. The command uses the repository's release builder unchanged; builders based on `git archive HEAD` package committed PHP, so commit intended PHP changes before building those packages. The isolated checker does not change global Composer packages.
 

@@ -47,7 +47,7 @@ pnpm run lint:php      # Coding standards from phpcs.xml.dist
 pnpm run phpcompat     # Builds and checks the release ZIP
 ```
 
-CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks, and `bin/hooks/package-check.sh` runs `pnpm run phpcompat` on the candidate ZIP. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:php` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.
+CI uses `composer check:php` for the full-source PHP syntax and PHPCS baseline checks, and the shared packaging workflow checks the candidate ZIP using the same rules as `pnpm run phpcompat`. See `DEVELOPER.md` for the PHP 8.4 tooling setup. Run the same command locally; `composer lint:php` shows the full inventory, including existing violations. The compatibility script uses the separate `phpcs-compat.xml.dist` ruleset.
 
 PHPStan (`composer phpstan`) also needs the stubs of the plugins Accommodation Bookings integrates with. They come from the public `woocommerce/php-stubs` package, installed separately:
 
@@ -190,7 +190,7 @@ The standard caller workflows in `.github/workflows/` and the common `bin/` scri
 
 `exclude.lst` lists the paths that stay out of the ZIP, one `zip -x` wildcard per line, matched against `<plugin folder>/<path>`. A leading `/` anchors a line at the plugin folder, and `#` starts a comment.
 
-In this repository `config.woo` declares Playwright with private plugins (`e2e.privatePlugins`: Bookings and Bookings Availability, downloaded by `bin/hooks/e2e-prepare.sh`), the isolated suite, the integration suite (two legs of `composer test:integration`, with Bookings and Product Add-Ons from `privatePlugins` in `BOOKINGS_DIR` and `ADDONS_DIR`), the Plugin Check lists, and the WordPress.org release with its `readme.txt` changelog. Same-repository pull requests get the private plugins for E2E and the integration suite (`pullRequests.privatePlugins`), the isolated suite runs on PHP 7.4 and 8.4 (`phpLint.isolatedPhp`), and the QIT activation test installs Bookings (`qit.plugins`). `bin/hooks/package-check.sh` checks the PHP compatibility of the built ZIP; `bin/link_plugins.js` writes `.wp-env.e2e.json`.
+In this repository `config.woo` declares Playwright with private plugins (`e2e.privatePlugins`: Bookings and Bookings Availability, downloaded by `bin/hooks/e2e-prepare.sh`), the isolated suite, the integration suite (two legs of `composer test:integration`, with Bookings and Product Add-Ons from `privatePlugins` in `BOOKINGS_DIR` and `ADDONS_DIR`), the Plugin Check lists, and the WordPress.org release with its `readme.txt` changelog. Same-repository pull requests get the private plugins for E2E and the integration suite (`pullRequests.privatePlugins`), the isolated suite runs on PHP 7.4 and 8.4 (`phpLint.isolatedPhp`), and the QIT activation test installs Bookings (`qit.plugins`). Shared packaging CI checks the PHP compatibility of the built ZIP; `bin/link_plugins.js` writes `.wp-env.e2e.json`.
 
 ## Repository compatibility contracts
 
