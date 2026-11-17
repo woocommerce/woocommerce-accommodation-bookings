@@ -1,14 +1,15 @@
 # WordPress Playground previews
 
-The files behind the WordPress Playground option of the "Test the build" comment that
-`.github/workflows/test-the-build.yml` posts on every pull request. None of them ships in the
-plugin ZIP: `tests` is `export-ignore`d.
+The shared `plugin-test-the-build.yml` workflow in `woocommerce/.github` uses these files to
+prepare the WordPress Playground preview and its PR comment. The plugin ZIP excludes `tests/`.
 
 | File | Purpose |
 | --- | --- |
 | `setup.php` | One-off store setup: no setup wizard, store pages, cash on delivery, check-in and check-out times. |
 | `preview.php` | Copied to `mu-plugins`. Says that the add-on needs WooCommerce Bookings, and creates a "Sample room" once it is active. |
 | `blueprint-local.json` | The Blueprint for a local preview with WooCommerce Bookings already installed. |
+| `blueprint-browser.json` | The Blueprint for the PR preview. The workflow replaces `__ARTIFACT_URL__` with the preview artifact URL. |
+| `comment.md` | The PR comment template. The workflow supplies `$PLAYGROUND_URL` and `$README_URL`. |
 
 ## What the link in the comment can show
 

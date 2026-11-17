@@ -1,0 +1,59 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/plugin-install.php?tab=upload",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "unzip",
+      "zipFile": {
+        "resource": "url",
+        "url": "__ARTIFACT_URL__",
+        "caption": "Downloading the build of this pull request"
+      },
+      "extractToPath": "/tmp/pr"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "vfs",
+        "path": "/tmp/pr/woocommerce-accommodation-bookings.zip"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "cp",
+      "fromPath": "/tmp/pr/tests/playground/preview.php",
+      "toPath": "/wordpress/wp-content/mu-plugins/accommodation-bookings-preview.php"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require \"/wordpress/wp-load.php\"; require \"/tmp/pr/tests/playground/setup.php\";"
+    }
+  ]
+}

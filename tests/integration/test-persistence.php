@@ -722,6 +722,15 @@ class Accommodation_Persistence_Test extends WP_UnitTestCase {
 	 */
 	public function test_native_advance_window_keeps_valid_stays( $limit, $unit, $value, $offset ) {
 		update_option( 'timezone_string', 'UTC' );
+		// Bookings uses the current time of day for its maximum advance window.
+		// A midnight check-in keeps the final date valid whenever the test runs.
+		update_option(
+			'woocommerce_accommodation_bookings_times_settings',
+			array(
+				'check_in'  => '00:00',
+				'check_out' => '11:00',
+			)
+		);
 		$boundary = new DateTimeImmutable( 'today', new DateTimeZone( 'UTC' ) );
 		$boundary = $boundary->modify( $offset );
 		$invalid  = $boundary->modify( 'min' === $limit ? '-1 day' : '+1 day' );
