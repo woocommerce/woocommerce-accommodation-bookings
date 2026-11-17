@@ -1,6 +1,6 @@
 {
-	"extends": "@wordpress/stylelint-config/scss-stylistic",
-	"rules": {
-		"selector-class-pattern": null
-	}
+	"extends": [
+		"@wordpress/stylelint-config/scss-stylistic",
+		"@woocommerce/extension-tooling/stylelint/legacy-scss"
+	]
 }

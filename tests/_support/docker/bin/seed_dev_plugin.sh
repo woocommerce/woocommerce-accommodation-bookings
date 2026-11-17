@@ -2,7 +2,7 @@
 #
 # Plugin-specific part of the development site seed: WooCommerce Bookings, when its zip
 # is in deploy/e2e-dependencies/ or the checkout root, and one accommodation product.
-# Called by seed_dev.sh after the store is set up.
+# Called by the shared seed-dev.sh after the store is set up.
 #
 set -euo pipefail
 

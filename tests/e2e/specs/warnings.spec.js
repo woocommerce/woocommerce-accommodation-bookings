@@ -12,6 +12,7 @@
  */
 const path = require( 'path' );
 const { test, expect } = require( '@playwright/test' );
+const { readPhpDebugLog } = require( '@woocommerce/e2e-utils-playwright' );
 
 /*
  * wp-env mounts the checkout under its directory name: the slug in CI, but it
@@ -27,19 +28,10 @@ const PLUGIN_PATHS = [
 test( 'debug.log contains no PHP issues from the plugin', async ( {
 	request,
 } ) => {
-	const marker = `${ Date.now() }`;
-	const markerResponse = await request.get( `/?e2e_log_marker=${ marker }` );
-	expect( markerResponse.ok(), 'the marker request must succeed' ).toBe(
-		true
-	);
-
-	const response = await request.get( '/wp-content/debug.log' );
-	expect( response.status(), 'debug.log must be readable' ).toBe( 200 );
-
-	const log = await response.text();
-	expect( log, 'debug.log must be the log WordPress writes to' ).toContain(
-		`e2e-log-marker-${ marker }`
-	);
+	const log = await readPhpDebugLog( request, {
+		queryParameter: 'e2e_log_marker',
+		logPrefix: 'e2e-log-marker-',
+	} );
 
 	const offending = log
 		.split( '\n' )
