@@ -38,7 +38,7 @@ use InvalidArgumentException;
  * no longer issue (such as `Feature` and `Update`), and rewriting them would turn every
  * release into a changelog-wide diff.
  *
- * @version x.x.x
+ * @version 1.4.1
  */
 class Changelog_Formatter extends Parser implements FormatterPlugin {
 

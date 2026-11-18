@@ -1,5 +1,10 @@
 *** Changelog ***
 
+= 1.4.1 - 2026-11-18 =
+* Fix - Show imported Bookings nightly rates correctly and preserve their pricing rules and priority when saving Rates.
+* Tweak - Raised minimum required WooCommerce to 11.2 and declared compatibility with WooCommerce 11.3.
+* Dev - Update development and CI tooling to Node.js 24.22.3.
+
 = 1.4.0 - 2026-11-11 =
 * Add - Made the stale booking transient cleanup tool available through WP-CLI.
 * Fix - Fixed a fatal error on the product edit screen when a booking pricing rule has an empty or non-numeric cost.

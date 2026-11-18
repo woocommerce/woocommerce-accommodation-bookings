@@ -6,7 +6,7 @@ Requires PHP: 7.4
 WC requires at least: 11.2
 WC tested up to: 11.3
 Tested up to: 7.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,11 @@ Or use the automatic installation wizard through your admin panel, just search f
 If the prices shown on the product do not match the prices defined in the dashboard, the caching mechanism used for pricing calculation is most likely still using old information (e.g. when you updated the prices, or when changing a Bookable product to an Accommodation product). The quickest way to make sure that your prices are correct is to save your existing accommodation product again. The save will update the cache and the price on your site will now reflect what you have defined in your dashboard.
 
 == Changelog ==
+
+= 1.4.1 - 2026-11-18 =
+* Fix - Show imported Bookings nightly rates correctly and preserve their pricing rules and priority when saving Rates.
+* Tweak - Raised minimum required WooCommerce to 11.2 and declared compatibility with WooCommerce 11.3.
+* Dev - Update development and CI tooling to Node.js 24.22.3.
 
 = 1.4.0 - 2026-11-11 =
 * Add - Made the stale booking transient cleanup tool available through WP-CLI.
