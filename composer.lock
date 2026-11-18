@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0150e0bc7b92e5f70d512102a2aa75e",
+    "content-hash": "32eb5560379ab26b4658e6651fa73863",
     "packages": [],
     "packages-dev": [
         {
@@ -3835,11 +3835,17 @@
         },
         {
             "name": "woocommerce/extension-checks",
-            "version": "v1.0.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/woocommerce/.github",
+                "url": "https://github.com/woocommerce/.github.git",
                 "reference": "15d42fb30b57d39079902afb550d8a48751fa654"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/woocommerce/.github/releases/download/v1.0.0/extension-checks-1.0.0.zip",
+                "reference": "15d42fb30b57d39079902afb550d8a48751fa654",
+                "shasum": "964b1d5ba57ef7dfa214aec6e9641f86df0b9389"
             },
             "suggest": {
                 "automattic/jetpack-changelogger": "Validates the changelog fragments in the consuming extension"
@@ -3852,8 +3858,7 @@
             "license": [
                 "GPL-3.0-or-later"
             ],
-            "description": "Changelog and PHP version-tag checks used by WooCommerce extensions",
-            "time": "2026-11-18T13:06:52+00:00"
+            "description": "Changelog and PHP version-tag checks used by WooCommerce extensions"
         },
         {
             "name": "woocommerce/woocommerce-sniffs",
