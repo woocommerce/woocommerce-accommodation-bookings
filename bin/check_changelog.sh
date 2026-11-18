@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-validator="$(dirname "$0")/../vendor/bin/check_changelog.sh"
-if [[ -x "$validator" ]]; then
-    exec "$validator" "$@"
-fi
-
-# Keep usage available on a checkout without Composer dependencies.
+# Show the extension command in help, including before Composer setup.
 # Keep these options in sync with the pinned validator.
 print_usage() {
     cat <<'USAGE'
@@ -36,5 +31,10 @@ for argument in "$@"; do
 done
 
 # The shared check discovers and validates files for valid invocations.
+validator="$(dirname "$0")/../vendor/bin/check_changelog.sh"
+if [[ -x "$validator" ]]; then
+    exec "$validator" "$@"
+fi
+
 echo "Run 'composer install' to install the shared extension checks." >&2
 exit 127
