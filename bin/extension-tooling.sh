@@ -9,7 +9,7 @@ if [[ "$script" == install.sh && "${RUN_UNIT_TESTS:-}" == 0 ]]; then
 	exit 0
 fi
 
-version=1.0.0
+version=1.1.0
 root="$(cd "$(dirname "$0")/.." && pwd)"
 if [[ $(jq -r '.devDependencies["@woocommerce/extension-tooling"]' "$root/package.json") != "$version" ]]; then
 	echo 'Update the extension tooling version and archive checksum together.' >&2
@@ -25,7 +25,7 @@ if [[ ! -f "$tooling/package.json" ]] || [[ $(jq -r .version "$tooling/package.j
 	curl --fail --silent --show-error --location --proto '=https' \
 		--connect-timeout 10 --max-time 30 --retry 3 \
 		--output "$archive" "https://registry.npmjs.org/@woocommerce/extension-tooling/-/extension-tooling-$version.tgz"
-	sha512=4692e4e4d0024264c1ef11d5e0d1030c6b67a818cef2c3cda3746b148d5709539721022171cfe249d5420eafc7b8988bbd96cbb1c94d719d7f2eddd7de64121a
+	sha512=86e27a87dc7ca627c5c5dfd4b75b82e3bdd28814ab8d33f4d06aa63623d03eca9ca9f69474944bf94f877da22a3340d3e37d76edea1551c1bcd48aafdc6ffe4f
 	if ! printf '%s  %s\n' "$sha512" "$archive" | shasum -a 512 -c -s; then
 		echo 'Extension tooling archive checksum does not match.' >&2
 		exit 1
