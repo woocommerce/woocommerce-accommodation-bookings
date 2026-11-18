@@ -19,7 +19,7 @@ use Automattic\Jetpack\Changelog\ChangelogEntry;
  * history is exactly what the round-trip test exists to prevent. Entries created by
  * `changelogger write` have no raw string and are formatted canonically.
  *
- * @version x.x.x
+ * @version 1.4.1
  */
 class Changelog_Entry extends ChangelogEntry {
 
