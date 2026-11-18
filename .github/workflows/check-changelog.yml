@@ -40,4 +40,4 @@ jobs:
         # The job always runs to completion so it can be a required check:
         # a job skipped by a condition reports as skipped, not as passing.
         steps:
-            - uses: woocommerce/.github/actions/check-changelog@12e5645b1a032fe1bee29bb387b61fa7a9817553 # shared @ 2026-11-17
+            - uses: woocommerce/.github/actions/check-changelog@15d42fb30b57d39079902afb550d8a48751fa654 # extension-checks 1.0.0, matches composer.lock

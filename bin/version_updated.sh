@@ -1,65 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Flag to track if validation fails
-FAILED=0
-IS_GITHUB_ACTION=${GITHUB_ACTIONS:-false}
-FAILED_FILES=()
-
-# Detect if running on GitHub Actions
-if [ "$IS_GITHUB_ACTION" = "true" ]; then
-  TARGET_BRANCH=${GITHUB_BASE_REF}  # PR target branch
-  CURRENT_BRANCH=${GITHUB_REF_NAME} # Current branch (for direct commits)
-else
-  TARGET_BRANCH=$(git rev-parse --abbrev-ref HEAD)  # Local branch name
-  CURRENT_BRANCH=$TARGET_BRANCH
+validator="$(dirname "$0")/../vendor/bin/version_updated.sh"
+if [[ -x "$validator" ]]; then
+    exec "$validator" "$@"
 fi
 
-# Skip validation if this is a direct commit to trunk
-if [ "$CURRENT_BRANCH" = "trunk" ] && [ -z "$GITHUB_BASE_REF" ]; then
-  echo "✅ Skipping version validation on direct commits to trunk."
-  exit 0
-fi
-
-# Iterate over all PHP files passed as arguments
-for FILE in "$@"; do
-  # Ensure the file exists before proceeding
-  if [ ! -f "$FILE" ]; then
-    echo "⚠️ Warning: Skipping '$FILE' because it does not exist."
-    continue
-  fi
-
-  # Check if the file contains a class, trait, interface, or enum definition
-  # POSIX classes instead of \s and \w, so BSD (macOS), GNU and mawk read the pattern alike.
-  if grep -E '^[[:space:]]*(abstract[[:space:]]+|final[[:space:]]+)?(class|trait|interface|enum)[[:space:]]+[[:alnum:]_]+' "$FILE" > /dev/null; then
-    # Extract the docblock before the first class/trait/interface/enum definition
-    DOCBLOCK=$(awk '/^[[:space:]]*(abstract[[:space:]]+|final[[:space:]]+)?(class|trait|interface|enum)[[:space:]]+[[:alnum:]_]+/ {exit} {print}' "$FILE")
-
-    # Check if the docblock contains @version x.x.x
-    if ! echo "$DOCBLOCK" | grep -E '@version[[:space:]]+x\.x\.x' > /dev/null; then
-      FAILED_FILES+=("$FILE")
-      if [ "$IS_GITHUB_ACTION" = "true" ]; then
-        # GitHub Actions annotation format
-        echo "::error file=$FILE::A class, trait, interface, or enum in this file was modified, but the '@version x.x.x' tag was not updated."
-      else
-        # Standard output for local usage (lint-staged)
-        echo "❌ Error: A class, trait, interface, or enum in '$FILE' was modified, but the '@version x.x.x' tag was not updated."
-      fi
-      FAILED=1
+# Preserve the direct-trunk skip on a checkout without Composer dependencies.
+if [[ -z ${GITHUB_BASE_REF:-} ]]; then
+    if [[ ${GITHUB_ACTIONS:-false} == true ]]; then
+        current_branch=${GITHUB_REF_NAME:-}
+    else
+        current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
     fi
-  fi
-done
-
-# Output only the failed files for GitHub Actions
-if [ "$IS_GITHUB_ACTION" = "true" ]; then
-  if [ ${#FAILED_FILES[@]} -gt 0 ]; then
-    FAILED_FILES_STRING=$(printf "%s " "${FAILED_FILES[@]}")
-    echo "FAILED_FILES=$FAILED_FILES_STRING" >> $GITHUB_ENV
-  fi
+    if [[ "$current_branch" == trunk ]]; then
+        echo "✅ Skipping version validation on direct commits to trunk."
+        exit 0
+    fi
 fi
 
-# If any file failed validation, exit with error
-if [ "$FAILED" -ne 0 ]; then
-  exit 1
-fi
-
-exit 0
+echo "Run 'composer install' to install the shared extension checks." >&2
+exit 127
