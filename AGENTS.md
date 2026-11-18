@@ -16,10 +16,10 @@ The plugin header requires PHP 7.4+, WordPress 7.0+, and WooCommerce 11.2+. Chec
 | `includes/admin/`, `includes/integrations/` | Admin screens and integration code. |
 | `src/js/`, `src/css/` | Source assets; webpack writes generated files under `build/`. |
 | `tests/phpunit/` | Isolated PHPUnit/WP_Mock tests. |
-| `tests/isolated/` | Composer-only PHPUnit tests (the changelog formatter); no WordPress or WP_Mock. |
+| `tests/isolated/` | Composer-only PHPUnit tests for the plugin’s changelog and version checks. |
 | `tests/e2e/` | Playwright specs, fixtures, and configuration. |
 | `tests/playground/` | WordPress Playground preview behind the "Test the build" pull request comment. Its README covers the local run and where to turn on in-progress features. |
-| `changelog/`, `tools/changelogger/` | Pending change files and the Jetpack Changelogger formatter that compiles them into `changelog.txt`. |
+| `changelog/` | Pending change files that Jetpack Changelogger compiles into `changelog.txt`. |
 
 ## Commands
 
@@ -176,8 +176,7 @@ Validate person-record ownership and edit permissions before saving accommodatio
 
 The `Check changelog` CI job requires a change file unless the pull request has the **`no changelog`** label, which applies to changes that need no entry (CI, tooling, docs). The job still validates any change file added by a labeled pull request. Release branches and Dependabot pull requests skip the check.
 
-The formatter that preserves the `changelog.txt` format lives in `tools/changelogger/`, and is
-configured under `extra.changelogger` in `composer.json`.
+Composer installs `woocommerce/extension-changelogger` as a development dependency. The plugin configures the formatter under `extra.changelogger` in `composer.json`.
 
 ## Shared tooling
 

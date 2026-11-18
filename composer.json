@@ -12,6 +12,7 @@
         }
     ],
     "require-dev": {
+        "woocommerce/extension-changelogger": "1.0.0",
         "woocommerce/extension-checks": "1.0.0",
         "woocommerce/woocommerce-sniffs": "1.0.1",
         "phpunit/phpunit": "^9.6",
@@ -21,11 +22,6 @@
         "php-stubs/woocommerce-stubs": "^11.2",
         "yoast/phpunit-polyfills": "^1.1",
         "automattic/jetpack-changelogger": "^6.0"
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tools/changelogger/"
-        ]
     },
     "scripts": {
         "lint:php": [

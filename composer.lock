@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32eb5560379ab26b4658e6651fa73863",
+    "content-hash": "e5fd5c2f0ea37408edc1ff785718b47f",
     "packages": [],
     "packages-dev": [
         {
@@ -3832,6 +3832,55 @@
                 }
             ],
             "time": "2025-11-17T20:03:58+00:00"
+        },
+        {
+            "name": "woocommerce/extension-changelogger",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/woocommerce/extension-changelogger.git",
+                "reference": "caa68336a6813f1d57b1a09edea8d797314b9041"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/woocommerce/extension-changelogger/zipball/caa68336a6813f1d57b1a09edea8d797314b9041",
+                "reference": "caa68336a6813f1d57b1a09edea8d797314b9041",
+                "shasum": ""
+            },
+            "require": {
+                "automattic/jetpack-changelogger": "^6.0",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.6",
+                "woocommerce/woocommerce-sniffs": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "changelogger": {
+                    "types": {
+                        "add": "Added functionality",
+                        "dev": "Development related task",
+                        "fix": "Fixed behavior"
+                    },
+                    "changelog": "CHANGELOG.md"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "description": "Jetpack Changelogger formatter for the WooCommerce extension changelog format",
+            "support": {
+                "issues": "https://github.com/woocommerce/extension-changelogger/issues",
+                "source": "https://github.com/woocommerce/extension-changelogger/tree/v1.0.0"
+            },
+            "time": "2026-11-18T19:01:10+00:00"
         },
         {
             "name": "woocommerce/extension-checks",
