@@ -1,0 +1,4 @@
+Significance: patch
+Type: dev
+
+Reduced the release ZIP size by excluding JavaScript and CSS build sources.
