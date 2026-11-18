@@ -24,6 +24,8 @@ This extension extends Bookings and makes it possible to:
 
 Accommodation Bookings is fully [compatible with WooPayments](https://woocommerce.com/products/woopayments/).
 
+The [source code and build instructions](https://github.com/woocommerce/woocommerce-accommodation-bookings#readme) are available on GitHub.
+
 == Installation ==
 
 1. Make sure WooCommerce & WooCommerce Bookings are installed.
