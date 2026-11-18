@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74bba60f845ba58def611166228bbfa8",
+    "content-hash": "b0150e0bc7b92e5f70d512102a2aa75e",
     "packages": [],
     "packages-dev": [
         {
@@ -3832,6 +3832,28 @@
                 }
             ],
             "time": "2025-11-17T20:03:58+00:00"
+        },
+        {
+            "name": "woocommerce/extension-checks",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/woocommerce/.github",
+                "reference": "15d42fb30b57d39079902afb550d8a48751fa654"
+            },
+            "suggest": {
+                "automattic/jetpack-changelogger": "Validates the changelog fragments in the consuming extension"
+            },
+            "bin": [
+                "actions/check-changelog/check_changelog.sh",
+                "actions/check-version/version_updated.sh"
+            ],
+            "type": "library",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "description": "Changelog and PHP version-tag checks used by WooCommerce extensions",
+            "time": "2026-11-18T13:06:52+00:00"
         },
         {
             "name": "woocommerce/woocommerce-sniffs",

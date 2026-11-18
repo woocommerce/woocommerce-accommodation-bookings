@@ -43,7 +43,7 @@ jobs:
       steps:
         # Release bumps replace 'x.x.x' with the real version by design. Skip
         # the step so the currently required job still reports its check name.
-        - uses: woocommerce/.github/actions/check-version@12e5645b1a032fe1bee29bb387b61fa7a9817553 # shared @ 2026-11-17
+        - uses: woocommerce/.github/actions/check-version@15d42fb30b57d39079902afb550d8a48751fa654 # extension-checks 1.0.0, matches composer.lock
           if: ${{ !(github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/')) }}
 
     # Require both shared CI and version validation when applicable.
