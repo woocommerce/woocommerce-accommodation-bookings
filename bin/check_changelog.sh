@@ -5,13 +5,10 @@ if [[ -x "$validator" ]]; then
     exec "$validator" "$@"
 fi
 
-# Keep help available on a checkout without Composer dependencies.
+# Keep usage available on a checkout without Composer dependencies.
 # Keep these options in sync with the pinned validator.
-for argument in "$@"; do
-    case "$argument" in
-        --all|--optional) ;;
-        -h|--help)
-            cat <<'USAGE'
+print_usage() {
+    cat <<'USAGE'
 Usage: bash bin/check_changelog.sh [--all] [--optional] [<base-ref>]
 
   --all       Check every change file under changelog/, not just the ones this
@@ -21,11 +18,23 @@ Usage: bash bin/check_changelog.sh [--all] [--optional] [<base-ref>]
   <base-ref>  Ref to diff against. Defaults to origin/trunk, or to the
               GITHUB_BASE_REF branch when running in GitHub Actions.
 USAGE
+}
+
+for argument in "$@"; do
+    case "$argument" in
+        --all|--optional) ;;
+        -h|--help)
+            print_usage
             exit 0
             ;;
-        -*) break ;;
+        -*)
+            printf 'Unknown option: %s\n' "$argument"
+            print_usage
+            exit 1
+            ;;
     esac
 done
 
+# The shared check discovers and validates files for valid invocations.
 echo "Run 'composer install' to install the shared extension checks." >&2
 exit 127
