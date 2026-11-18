@@ -1,6 +1,6 @@
 # Paths that stay out of deploy/woocommerce-accommodation-bookings.zip (pnpm run build:zip): one zip -x
 # wildcard per line, matched against woocommerce-accommodation-bookings/<path>; a leading / anchors it
-# at the plugin root. src/ and SECURITY.md keep shipping, as they always have.
+# at the plugin root.
 # Development folders.
 /.ai/*
 /.claude/*
@@ -17,6 +17,7 @@
 /coverage/*
 /logs/*
 /node_modules/*
+/src/*
 /tests/*
 /tools/*
 /vendor/*
