@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5fd5c2f0ea37408edc1ff785718b47f",
+    "content-hash": "fb8dcb468afb805b845554d553ec1013",
     "packages": [],
     "packages-dev": [
         {
@@ -3835,16 +3835,16 @@
         },
         {
             "name": "woocommerce/extension-changelogger",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/extension-changelogger.git",
-                "reference": "caa68336a6813f1d57b1a09edea8d797314b9041"
+                "reference": "f103cd0206a0462dcc1a1e76767c212fda45e727"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/extension-changelogger/zipball/caa68336a6813f1d57b1a09edea8d797314b9041",
-                "reference": "caa68336a6813f1d57b1a09edea8d797314b9041",
+                "url": "https://api.github.com/repos/woocommerce/extension-changelogger/zipball/f103cd0206a0462dcc1a1e76767c212fda45e727",
+                "reference": "f103cd0206a0462dcc1a1e76767c212fda45e727",
                 "shasum": ""
             },
             "require": {
@@ -3878,9 +3878,9 @@
             "description": "Jetpack Changelogger formatter for the WooCommerce extension changelog format",
             "support": {
                 "issues": "https://github.com/woocommerce/extension-changelogger/issues",
-                "source": "https://github.com/woocommerce/extension-changelogger/tree/v1.0.0"
+                "source": "https://github.com/woocommerce/extension-changelogger/tree/v1.1.0"
             },
-            "time": "2026-11-18T19:01:10+00:00"
+            "time": "2026-11-19T15:12:55+00:00"
         },
         {
             "name": "woocommerce/extension-checks",

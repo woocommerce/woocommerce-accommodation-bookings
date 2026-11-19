@@ -11,6 +11,7 @@
 		"./wp-content/bin": "./tests/_support/docker/bin",
 		"wp-content/e2e-fixtures": "./tests",
 		"./wp-content/debug.log": "./tests/_output/debug.log",
+		"wp-content/woo-extension-tooling/e2e-log-marker.php": "./node_modules/@woocommerce/extension-tooling/bin/e2e-log-marker.php",
 		"wp-cli.yml": "./tests/e2e/bin/wp-cli.yml"
 	},
 	"config": {
