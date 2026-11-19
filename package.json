@@ -156,7 +156,7 @@
     "@woocommerce/dependency-extraction-webpack-plugin": "^3.0.1",
     "@woocommerce/e2e-utils-playwright": "0.6.0",
     "@woocommerce/eslint-plugin": "4.1.0",
-    "@woocommerce/extension-tooling": "1.2.0",
+    "@woocommerce/extension-tooling": "1.3.0",
     "@wordpress/e2e-test-utils-playwright": "3.0.0",
     "@wordpress/env": "12.0.0",
     "@wordpress/prettier-config": "^2.8.0",

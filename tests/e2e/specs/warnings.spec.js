@@ -13,6 +13,7 @@
 const path = require( 'path' );
 const { test, expect } = require( '@playwright/test' );
 const { readPhpDebugLog } = require( '@woocommerce/e2e-utils-playwright' );
+const filterPhpWarnings = require( '@woocommerce/extension-tooling/php-warning-filter' );
 
 /*
  * wp-env mounts the checkout under its directory name: the slug in CI, but it
@@ -33,17 +34,7 @@ test( 'debug.log contains no PHP issues from the plugin', async ( {
 		logPrefix: 'e2e-log-marker-',
 	} );
 
-	const offending = log
-		.split( '\n' )
-		.filter(
-			( line ) =>
-				/PHP (Fatal error|Parse error|Warning|Notice|Deprecated)/.test(
-					line
-				) &&
-				PLUGIN_PATHS.some( ( pluginPath ) =>
-					line.includes( pluginPath )
-				)
-		);
+	const offending = filterPhpWarnings( log, PLUGIN_PATHS );
 
 	expect( offending ).toEqual( [] );
 } );
