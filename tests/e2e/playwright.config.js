@@ -1,11 +1,16 @@
 const { defineConfig, devices } = require( '@playwright/test' );
+const playwrightDefaults = require( '@woocommerce/extension-tooling/playwright-defaults' );
 
 const { baseUrl } = require( './config' );
+
+const defaults = playwrightDefaults( {
+	htmlReport: './test-results/playwright-report',
+} );
 
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-module.exports = defineConfig( {
+module.exports = defineConfig( defaults, {
 	testDir: '../../tests',
 	testMatch: process.env.ACCOM_E2E_REGRESSION
 		? '**/{persistence,admin-save-preservation}.spec.js'
@@ -14,47 +19,18 @@ module.exports = defineConfig( {
 	/* Maximum time one test can run for. */
 	timeout: 90 * 1000,
 
-	expect: { timeout: 10_000 },
-
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	outputDir: './test-results/report',
 
 	/* Run tests in files in parallel */
 	fullyParallel: false,
 
-	/* Fail the build on CI if you accidentally left test.only in the source code. */
-	forbidOnly: !! process.env.CI,
-
-	/* Retry on CI only */
-	retries: process.env.CI ? 1 : 0,
-
-	/* Opt out of parallel tests on CI. */
-	workers: process.env.CI ? 1 : 1,
-
-	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: [
-		[ 'list' ],
-		// On GitHub Actions, failures and retry-only (flaky) passes become annotations.
-		...( process.env.GITHUB_ACTIONS ? [ [ 'github' ] ] : [] ),
-		[
-			'html',
-			{
-				outputFolder: './test-results/playwright-report',
-				open: 'never',
-			},
-		],
-	],
+	workers: 1,
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
 		baseURL: baseUrl,
-
-		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: 'retain-on-failure',
-
-		// Capture screenshot after each test failure.
-		screenshot: 'only-on-failure',
 
 		stateDir: './tests/e2e/test-results/storage/',
 
