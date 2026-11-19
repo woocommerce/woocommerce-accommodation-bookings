@@ -47,4 +47,4 @@ pnpm --silent run wp-env:e2e run cli wp plugin install --force --activate "./${z
 # Local regression fixtures capture mail and block external services.
 pnpm --silent run wp-env:e2e run cli mkdir -p /var/www/html/wp-content/mu-plugins
 pnpm --silent run wp-env:e2e run cli cp "/var/www/html/${fixtures_dir}/fixtures/local.php" /var/www/html/wp-content/mu-plugins/accommodation-e2e.php
-pnpm --silent run wp-env:e2e run cli cp "/var/www/html/${fixtures_dir}/mu-plugins/e2e-log-marker.php" /var/www/html/wp-content/mu-plugins/e2e-log-marker.php
+pnpm --silent run wp-env:e2e run cli cp /var/www/html/wp-content/woo-extension-tooling/e2e-log-marker.php /var/www/html/wp-content/mu-plugins/e2e-log-marker.php

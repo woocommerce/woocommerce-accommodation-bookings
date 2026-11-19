@@ -15,6 +15,8 @@ pnpm run test:e2e:regression
 pnpm run test:e2e:regression --grep 'independent customers'
 ```
 
+After updating extension tooling, stop the browser test site with `pnpm run wp-env:e2e stop`, install the locked dependencies, and rerun `pnpm run test:e2e:setup` to refresh the marker mount.
+
 Setup uses the browser test site (`.wp-env.e2e.json`, written by `bin/e2e.sh` from
 `.wp-env.test.json`, port `$WP_ENV_TESTS_PORT`, default 8889). `bin/e2e.sh` finds its port, so
 worktrees on other ports need no `WP_BASE_URL`. `bash ./bin/e2e.sh start` and `pnpm run env:test:e2e:seed`
@@ -24,7 +26,7 @@ copy `fixtures/local.php` into `wp-content/mu-plugins/accommodation-e2e.php`, an
 run the seed command.
 The `warnings` check, which runs last, also needs `WP_DEBUG` and `WP_DEBUG_LOG` set
 to `true`, `WP_DEBUG_DISPLAY` set to `false`, and
-`tests/e2e/mu-plugins/e2e-log-marker.php` copied into that site's
+`node_modules/@woocommerce/extension-tooling/bin/e2e-log-marker.php` copied into that site's
 `wp-content/mu-plugins/`.
 Whenever `fixtures/local.php` changes, copy it into the test store again before running.
 For a native local WordPress server, set

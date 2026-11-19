@@ -38,8 +38,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0(@babel/core@7.29.7)(@typescript-eslint/eslint-plugin@8.71.1(@typescript-eslint/parser@8.71.1(eslint@10.12.0)(typescript@5.4.5))(eslint@10.12.0)(typescript@5.4.5))(@typescript-eslint/parser@8.71.1(eslint@10.12.0)(typescript@5.4.5))(eslint@10.12.0)(postcss@8.5.28)(react-dom@18.3.1(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(typescript@5.4.5))(typescript@5.4.5)
       '@woocommerce/extension-tooling':
-        specifier: 1.3.0
-        version: 1.3.0
+        specifier: 1.4.0
+        version: 1.4.0
       '@wordpress/e2e-test-utils-playwright':
         specifier: 3.0.0
         version: 3.0.0(@opentelemetry/core@2.12.0(@opentelemetry/api@1.9.1))(@playwright/test@1.63.0)(@types/node@26.6.4)
@@ -2169,8 +2169,8 @@ packages:
     peerDependencies:
       eslint: ^9.22.0 || ^10.0.0
 
-  '@woocommerce/extension-tooling@1.3.0':
-    resolution: {integrity: sha512-61Yp+Q0aT+ovBV1bv3gVPEIJpS8Eqve578QgR7vhqs+MxFZGG/2NJ3qVwW27/50VCA7/eDEkb8dvXV0gMrDuRw==}
+  '@woocommerce/extension-tooling@1.4.0':
+    resolution: {integrity: sha512-q9hU/tWHOI16kf9K1urHMsE8maN3M/FxtNJ7K+IlG6xWAQJWoboHdpBJlB1htiQYm0Rqg36an9qraoiQnqJctA==}
     engines: {node: ^24.15.0}
     hasBin: true
 
@@ -9228,7 +9228,7 @@ snapshots:
       - typescript
       - vite
 
-  '@woocommerce/extension-tooling@1.3.0':
+  '@woocommerce/extension-tooling@1.4.0':
     dependencies:
       uglify-js: 3.19.3
 
