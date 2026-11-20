@@ -2,7 +2,7 @@
   "name": "woocommerce-accommodation-bookings",
   "title": "WooCommerce Accommodation Bookings",
   "version": "1.4.1",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@12.22.0",
   "description": "An accommodations add-on for the WooCommerce Bookings extension.",
   "author": "WooCommerce",
   "license": "GPL-3.0-or-later",
@@ -17,6 +17,13 @@
   },
   "engines": {
     "node": "^24.22.3"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.22.3",
+      "onFail": "error"
+    }
   },
   "config": {
     "wp_org_slug": "woocommerce-accommodation-bookings",
