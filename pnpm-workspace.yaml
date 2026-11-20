@@ -35,3 +35,6 @@ allowBuilds:
 
 # The locked dependency graph uses registry packages throughout.
 blockExoticSubdeps: true
+
+# Keep installs explicit when running project scripts.
+verifyDepsBeforeRun: false
