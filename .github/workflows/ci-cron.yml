@@ -20,7 +20,7 @@ jobs:
           contents: read
           actions: read
           vulnerability-alerts: read
-        uses: woocommerce/.github/.github/workflows/plugin-cron-ci.yml@f6d65039987f655477f74513a810f18b210af5f9 # shared @ 2026-11-18
+        uses: woocommerce/.github/.github/workflows/plugin-cron-ci.yml@da62738dc200735804fe9d28160a3fad1be93798 # shared @ 2026-11-25
         with:
           slack-channel: '#team-somewherewarm-ci'
         secrets:
