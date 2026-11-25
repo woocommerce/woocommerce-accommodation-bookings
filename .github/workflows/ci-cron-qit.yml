@@ -16,7 +16,7 @@ jobs:
     # without config.woo.capabilities.qit skip it.
     qit:
         name: QIT
-        uses: woocommerce/.github/.github/workflows/plugin-cron-qit.yml@da62738dc200735804fe9d28160a3fad1be93798 # shared @ 2026-11-25
+        uses: woocommerce/.github/.github/workflows/plugin-cron-qit.yml@75d9ac309f32345d4560a75b8681058e479d7b63 # shared @ 2026-11-25
         with:
           slack-channel: '#team-somewherewarm-ci'
         secrets:
