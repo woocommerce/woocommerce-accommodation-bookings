@@ -313,6 +313,10 @@ test.describe( 'Product Tests', () => {
 		await expect( error ).toHaveText( 'The maximum duration is 5 nights' );
 		await expect( bookButton ).toHaveClass( /disabled/ );
 
+		// Start from a fresh form: moving check-out back across a month
+		// boundary passes through a check-out before check-in.
+		await visitProductPage( page, product );
+		await fillBookingStartDate( page, getFutureDate( 4 ), false );
 		await fillBookingEndDate( page, getFutureDate( 6 ), false );
 		await expect(
 			page.locator( '.wc-bookings-booking-cost .booking-cost-label' )
